@@ -1,0 +1,28 @@
+name: 'Tag actions'
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: publish
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+    - run: |
+        yarn install --dev
+        yarn test
+        yarn run compile
+    - uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}

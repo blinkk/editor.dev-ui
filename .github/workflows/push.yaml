@@ -1,0 +1,22 @@
+name: 'Push actions'
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: test
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+    - name: Run tests
+      run: |
+        yarn install --dev
+        yarn test

@@ -1,0 +1,41 @@
+name: 'Push to master actions'
+
+on:
+  push:
+    # TODO: Fix.
+    branches-ignore:
+      - main
+
+jobs:
+  gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: pages
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+    - name: Build docs
+      run: |
+        yarn install --dev
+
+        # Build the docs into docs/
+        yarn run docs
+    - name: Add example
+      run: |
+        mkdir -p docs/example
+        mkdir -p docs/example/css
+        yarn run compile
+        cp example/* docs/example/
+        cp dist/css/example* docs/example/css/
+        cp dist/src/example* docs/example/
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

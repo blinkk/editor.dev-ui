@@ -1,6 +1,6 @@
 {
-  "name": "@amagaki/live-edit",
-  "version": "0.1.0",
+  "name": "@blinkk/live-edit",
+  "version": "1.0.0",
   "license": "MIT",
   "homepage": "https://blinkkcode.github.com/live-edit",
   "description": "Structured text editor with live previews.",
@@ -80,6 +80,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "@blinkk/selective-edit": "^1.0.0",
     "marked": "^1.2.6"
   }
 }

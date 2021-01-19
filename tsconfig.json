@@ -11,7 +11,7 @@
   "declaration": true,
   "extends": "./node_modules/gts/tsconfig-google.json",
   "include": [
-    "src/**/*.ts",
+    "src/**/*.ts"
   ],
   "typedocOptions": {
     "excludeProtected": true,

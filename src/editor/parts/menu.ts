@@ -15,8 +15,15 @@ export class MenuPart extends BasePart implements Part {
   }
 
   protected createModal(): Modal {
-    // TODO: Create a modal for the menu.
-    return new Modal();
+    const modal = new Modal({
+      classes: [
+        'live_editor__modal--docked',
+        'live_editor__modal--docked-left',
+      ],
+    });
+    modal.modalTemplate = this.templateMenu.bind(this);
+    // modal.isVisible = true;
+    return modal;
   }
 
   template(editor: LiveEditor): TemplateResult {
@@ -28,6 +35,10 @@ export class MenuPart extends BasePart implements Part {
       // Let the modal handle the display of the menu.
       return html``;
     }
-    return html`<div>Menu Docked...</div>`;
+    return this.templateMenu(editor);
+  }
+
+  templateMenu(editor: LiveEditor): TemplateResult {
+    return html`Full menu goes here.`;
   }
 }

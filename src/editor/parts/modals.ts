@@ -28,7 +28,7 @@ export class ModalsPart extends BasePart implements Part {
     return html`${repeat(
       keys,
       (key: string) => key,
-      (key: string) => html`${this.modals[key].uid}`
+      (key: string) => this.modals[key].template(editor)
     )}`;
   }
 }

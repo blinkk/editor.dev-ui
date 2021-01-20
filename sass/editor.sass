@@ -1,9 +1,13 @@
 @import 'config'
 
 .live_editor
+  background: $le-color-back
   display: flex
   flex-flow: column
   overflow: hidden
+
+  *
+    border-box
 
 .live_editor__structure__header
   flex-grow: 0
@@ -18,3 +22,4 @@
   .live_editor--three-pane &
     grid-template-columns: 20% 40% 40%
 
+@import './ui/modal'

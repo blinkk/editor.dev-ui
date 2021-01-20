@@ -1,9 +1,9 @@
+import {BasePart, Part} from '.';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../editor';
-import {Part} from '.';
 
-export class ContentPart implements Part {
+export class ContentPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
-    return html`Content`;
+    return html`<div>Content</div>`;
   }
 }

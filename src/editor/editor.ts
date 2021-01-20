@@ -5,7 +5,6 @@ import {FieldConstructor} from '@blinkk/selective-edit/dist/src/selective/field'
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
 import {OverviewPart} from './parts/overview';
-import {Part} from './parts';
 import {PreviewPart} from './parts/preview';
 import {RuleConstructor} from '@blinkk/selective-edit/dist/src/selective/validationRules';
 import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
@@ -19,12 +18,20 @@ export interface LiveEditorConfig {
   selectiveConfig: SelectiveConfig;
 }
 
+export interface LiveEditorParts {
+  content: ContentPart;
+  menu: MenuPart;
+  modals: ModalsPart;
+  overview: OverviewPart;
+  preview: PreviewPart;
+}
+
 export class LiveEditor {
   config: LiveEditorConfig;
   container: HTMLElement;
   isPendingRender: boolean;
   isRendering: boolean;
-  parts: Record<string, Part>;
+  parts: LiveEditorParts;
 
   constructor(config: LiveEditorConfig, container: HTMLElement) {
     this.config = config;
@@ -43,8 +50,10 @@ export class LiveEditor {
   classesForEditor(): Array<string> {
     const classes: Array<string> = ['live_editor'];
 
-    // TODO: Add class based on number of panes to show.
-    // Ex: two_panes or three_panes if menu is expanded.
+    // When menu is docked, change to three panes.
+    if (this.parts.menu.isDocked) {
+      classes.push('live_editor--three-pane');
+    }
 
     return classes;
   }
@@ -69,10 +78,10 @@ export class LiveEditor {
 
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForEditor())}>
-      <div class="live_editor__header">
+      <div class="live_editor__structure__header">
         ${this.parts.overview.template(editor)}
       </div>
-      <div class="live_editor__panes">
+      <div class="live_editor__structure__panes">
         ${this.parts.menu.template(editor)}
         ${this.parts.content.template(editor)}
         ${this.parts.preview.template(editor)}

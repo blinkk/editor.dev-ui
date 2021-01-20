@@ -1,0 +1,20 @@
+@import 'config'
+
+.live_editor
+  display: flex
+  flex-flow: column
+  overflow: hidden
+
+.live_editor__structure__header
+  flex-grow: 0
+  flex-shrink: 1
+
+.live_editor__structure__panes
+  display: grid
+  flex-grow: 1
+  overflow: hidden
+  grid-template-columns: 40% 60%
+
+  .live_editor--three-pane &
+    grid-template-columns: 20% 40% 40%
+

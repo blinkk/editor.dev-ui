@@ -10,7 +10,8 @@
   overflow: hidden
 
   &--docked-menu
-    grid-template-columns: 25% 75%
+    // Min width for docked menu.
+    grid-template-columns: minmax(350px, 20%) 1fr
 
   *
     border-box
@@ -34,7 +35,7 @@
   display: grid
   flex-grow: 1
   overflow: hidden
-  grid-template-columns: 40% 60%
+  grid-template-columns: minmax(350px, 40%) 1fr
 
 .live_editor__clickable
   cursor: pointer

@@ -25,9 +25,9 @@ export class MenuPart extends BasePart implements Part {
     // TODO: Read from local storage.
     this.isDocked = false;
     this.parts = {
-      site: new SitePart(),
-      users: new UsersPart(),
-      workspaces: new WorkspacesPart(),
+      site: new SitePart({title: 'Site'}),
+      users: new UsersPart({title: 'Users'}),
+      workspaces: new WorkspacesPart({title: 'Workspaces'}),
     };
   }
 
@@ -39,7 +39,7 @@ export class MenuPart extends BasePart implements Part {
           'live_editor__modal--docked-left',
         ],
       });
-      modal.modalTemplate = this.templateMenu.bind(this);
+      modal.modalTemplate = this.templateStructure.bind(this);
       modal.isVisible = true; // TODO: Remove, debugging only.
       this.modal = modal;
       editor.parts.modals.modals[MODAL_KEY] = modal;
@@ -86,9 +86,7 @@ export class MenuPart extends BasePart implements Part {
       return html``;
     }
 
-    return html`<div class=${expandClasses(this.classesForPart())}>
-      ${this.templateMenu(editor)} ${this.templateContent(editor)}
-    </div>`;
+    return this.templateStructure(editor);
   }
 
   templateActionDocking(editor: LiveEditor): TemplateResult {
@@ -146,6 +144,12 @@ export class MenuPart extends BasePart implements Part {
           ${this.templateActionClose(editor)}
         </div>
       </div>
+    </div>`;
+  }
+
+  templateStructure(editor: LiveEditor): TemplateResult {
+    return html`<div class=${expandClasses(this.classesForPart())}>
+      ${this.templateMenu(editor)} ${this.templateContent(editor)}
     </div>`;
   }
 

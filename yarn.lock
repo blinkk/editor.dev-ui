@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@blinkk/selective-edit@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.0.tgz#b1f5f526693d80e6f75df58f6f309c96ae555b8d"
-  integrity sha512-Q4VeCL0B0UH5zWTWO0wIR8sAHogRRyik6bc+ViGYMk/4W/mXYA+wiJhdwAkNL5SK/+NSGNJ+CuTy4mB+jJI/Yw==
+"@blinkk/selective-edit@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.1.tgz#404c2e93f6ad6f17708d104d9d4826d879c011c3"
+  integrity sha512-FvVmZzBRd5jLlJWfBDUfveaCxqzlPHsqxKQs+B3HONOjNAu5DPsEVhFRIIwOzoBVTd4WlCWOn5615gYTbXyVWA==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"

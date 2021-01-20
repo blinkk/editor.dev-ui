@@ -2,12 +2,15 @@
 
 .live_editor
   background: $le-color-back
-  display: flex
-  flex-flow: column
+  display: grid
   font-family: $le-font-family
   font-size: $le-font-size
+  grid-template-columns: 100%
   line-height: $le-line-height
   overflow: hidden
+
+  &--docked-menu
+    grid-template-columns: 25% 75%
 
   *
     border-box
@@ -19,19 +22,22 @@
     font-size: $le-font-size-icon
     vertical-align: middle
 
+.live_editor__structure__content
+  display: flex
+  flex-flow: column
 
-.live_editor__structure__header
+.live_editor__structure__content_header
   flex-grow: 0
   flex-shrink: 1
 
-.live_editor__structure__panes
+.live_editor__structure__content_panes
   display: grid
   flex-grow: 1
   overflow: hidden
   grid-template-columns: 40% 60%
 
-  .live_editor--three-pane &
-    grid-template-columns: 20% 40% 40%
+.live_editor__clickable
+  cursor: pointer
 
 @import './ui/modal'
 

@@ -10,8 +10,7 @@ export class OverviewPart extends BasePart implements Part {
 
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForPart())}>
-      ${this.templateMenu(editor)}
-      <div class="live_editor__part__overview__title">Overview</div>
+      ${this.templateMenu(editor)} ${this.templateProject(editor)}
       ${this.templateWorkspace(editor)}
     </div>`;
   }
@@ -21,8 +20,28 @@ export class OverviewPart extends BasePart implements Part {
       return html``;
     }
 
-    return html`<div class="live_editor__part__overview__menu">
+    const handleMenuClick = () => {
+      editor.parts.menu.toggle();
+    };
+
+    return html`<div
+      class="live_editor__part__overview__menu live_editor__clickable"
+      @click=${handleMenuClick}
+    >
       <span class="material-icons">menu</span>
+    </div>`;
+  }
+
+  templateProject(editor: LiveEditor): TemplateResult {
+    let projectName = html`...Project name...`;
+
+    // Menu shows the project name when it is docked.
+    if (editor.parts.menu.isDocked) {
+      projectName = html`&nbsp;`;
+    }
+
+    return html`<div class="live_editor__part__overview__title">
+      ${projectName}
     </div>`;
   }
 

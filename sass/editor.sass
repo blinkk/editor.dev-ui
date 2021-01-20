@@ -4,10 +4,21 @@
   background: $le-color-back
   display: flex
   flex-flow: column
+  font-family: $le-font-family
+  font-size: $le-font-size
+  line-height: $le-line-height
   overflow: hidden
 
   *
     border-box
+
+  p
+    line-height: $le-line-height-paragraph
+
+  .material-icons
+    font-size: $le-font-size-icon
+    vertical-align: middle
+
 
 .live_editor__structure__header
   flex-grow: 0
@@ -23,3 +34,9 @@
     grid-template-columns: 20% 40% 40%
 
 @import './ui/modal'
+
+@import './parts/content'
+@import './parts/menu'
+@import './parts/modals'
+@import './parts/overview'
+@import './parts/preview'

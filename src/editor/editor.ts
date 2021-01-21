@@ -7,6 +7,7 @@ import {ModalsPart} from './parts/modals';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
 import {RuleConstructor} from '@blinkk/selective-edit/dist/src/selective/validationRules';
+import {Storage} from '../utility/storage';
 import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
 export interface SelectiveConfig {
@@ -16,6 +17,7 @@ export interface SelectiveConfig {
 
 export interface LiveEditorConfig {
   selectiveConfig: SelectiveConfig;
+  isTest?: boolean;
 }
 
 export interface LiveEditorParts {
@@ -32,15 +34,19 @@ export class LiveEditor {
   isPendingRender: boolean;
   isRendering: boolean;
   parts: LiveEditorParts;
+  storage: Storage;
 
   constructor(config: LiveEditorConfig, container: HTMLElement) {
     this.config = config;
     this.container = container;
     this.isRendering = false;
     this.isPendingRender = false;
+    this.storage = new Storage(Boolean(this.config.isTest));
     this.parts = {
       content: new ContentPart(),
-      menu: new MenuPart(),
+      menu: new MenuPart({
+        storage: this.storage,
+      }),
       modals: new ModalsPart(),
       overview: new OverviewPart(),
       preview: new PreviewPart(),

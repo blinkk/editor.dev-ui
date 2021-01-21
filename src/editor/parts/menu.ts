@@ -3,11 +3,16 @@ import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../editor';
 import {Modal} from '../ui/modal';
 import {SitePart} from './menu/site';
+import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';
 import {WorkspacesPart} from './menu/workspaces';
 import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
 const MODAL_KEY = 'menu';
+
+export interface MenuPartConfig {
+  storage: Storage;
+}
 
 export interface MenuParts {
   site: SitePart;
@@ -16,18 +21,19 @@ export interface MenuParts {
 }
 
 export class MenuPart extends BasePart implements Part {
+  config: MenuPartConfig;
   isDocked: boolean;
   modal?: Modal;
   parts: MenuParts;
 
-  constructor() {
+  constructor(config: MenuPartConfig) {
     super();
-    // TODO: Read from local storage.
-    this.isDocked = false;
+    this.config = config;
+    this.isDocked = this.config.storage.getItemBoolean('live.menu.isDocked');
     this.parts = {
-      site: new SitePart({title: 'Site'}),
-      users: new UsersPart({title: 'Users'}),
-      workspaces: new WorkspacesPart({title: 'Workspaces'}),
+      site: new SitePart({storage: this.config.storage}),
+      users: new UsersPart({storage: this.config.storage}),
+      workspaces: new WorkspacesPart({storage: this.config.storage}),
     };
   }
 
@@ -66,6 +72,7 @@ export class MenuPart extends BasePart implements Part {
    */
   dock() {
     this.isDocked = true;
+    this.config.storage.setItem('live.menu.isDocked', 'true');
     this.render();
   }
 
@@ -168,6 +175,7 @@ export class MenuPart extends BasePart implements Part {
    */
   undock() {
     this.isDocked = false;
+    this.config.storage.setItem('live.menu.isDocked', 'false');
     this.render();
   }
 }

@@ -5,7 +5,7 @@ import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
 export class OverviewPart extends BasePart implements Part {
   classesForPart(): Array<string> {
-    return ['live_editor__part__overview'];
+    return ['le__part__overview'];
   }
 
   template(editor: LiveEditor): TemplateResult {
@@ -25,7 +25,7 @@ export class OverviewPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="live_editor__part__overview__menu live_editor__clickable"
+      class="le__part__overview__menu le__clickable"
       @click=${handleMenuClick}
     >
       <span class="material-icons">menu</span>
@@ -40,13 +40,11 @@ export class OverviewPart extends BasePart implements Part {
       projectName = html`&nbsp;`;
     }
 
-    return html`<div class="live_editor__part__overview__title">
-      ${projectName}
-    </div>`;
+    return html`<div class="le__part__overview__title">${projectName}</div>`;
   }
 
   templateWorkspace(editor: LiveEditor): TemplateResult {
-    return html`<div class="live_editor__part__overview__workspace">
+    return html`<div class="le__part__overview__workspace">
       <span>Workspace:</span>
       <strong>...branch...</strong> @ <strong>...hash...</strong> by
       <strong>...name...</strong> (time ago)

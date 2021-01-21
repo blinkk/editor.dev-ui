@@ -40,10 +40,7 @@ export class MenuPart extends BasePart implements Part {
   protected createModal(editor: LiveEditor): Modal {
     if (!editor.parts.modals.modals[MODAL_KEY]) {
       const modal = new Modal({
-        classes: [
-          'live_editor__modal--docked',
-          'live_editor__modal--docked-left',
-        ],
+        classes: ['le__modal--docked', 'le__modal--docked-left'],
       });
       modal.modalTemplate = this.templateStructure.bind(this);
       modal.isVisible = true; // TODO: Remove, debugging only.
@@ -54,7 +51,7 @@ export class MenuPart extends BasePart implements Part {
   }
 
   classesForPart(): Array<string> {
-    return ['live_editor__part__menu'];
+    return ['le__part__menu'];
   }
 
   /**
@@ -113,7 +110,7 @@ export class MenuPart extends BasePart implements Part {
     }
 
     return html`<div
-      class="live_editor__part__menu__action live_editor__clickable tooltip--bottom-right"
+      class="le__part__menu__action le__clickable tooltip--bottom-right"
       @click=${handleClick}
       data-tip=${tip}
     >
@@ -131,7 +128,7 @@ export class MenuPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="live_editor__part__menu__action live_editor__clickable tooltip--bottom-right"
+      class="le__part__menu__action le__clickable tooltip--bottom-right"
       @click=${handleClick}
       data-tip="Close menu"
     >
@@ -140,17 +137,17 @@ export class MenuPart extends BasePart implements Part {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    return html`<div class="live_editor__part__menu__content">
+    return html`<div class="le__part__menu__content">
       ${this.parts.workspaces.template(editor)}
       ${this.parts.site.template(editor)} ${this.parts.users.template(editor)}
     </div>`;
   }
 
   templateMenu(editor: LiveEditor): TemplateResult {
-    return html`<div class="live_editor__part__menu__header">
-      <div class="live_editor__part__menu__project">...Project name...</div>
-      <div class="live_editor__part__menu__actions">
-        <div class="live_editor__part__menu__actions">
+    return html`<div class="le__part__menu__header">
+      <div class="le__part__menu__project">...Project name...</div>
+      <div class="le__part__menu__actions">
+        <div class="le__part__menu__actions">
           ${this.templateActionDocking(editor)}
           ${this.templateActionClose(editor)}
         </div>

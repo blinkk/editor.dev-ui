@@ -1,6 +1,6 @@
 @import 'config'
 
-.live_editor
+.le
   background: $le-color-back
   display: grid
   font-family: $le-font-family
@@ -23,22 +23,22 @@
     font-size: $le-font-size-icon
     vertical-align: middle
 
-.live_editor__structure__content
+.le__structure__content
   display: flex
   flex-flow: column
 
-.live_editor__structure__content_header
+.le__structure__content_header
   flex-grow: 0
   flex-shrink: 1
 
-.live_editor__structure__content_panes
+.le__structure__content_panes
   column-gap: $le-space-xxsmall
   display: grid
   flex-grow: 1
   overflow: hidden
   grid-template-columns: minmax(350px, 40%) 1fr
 
-.live_editor__clickable
+.le__clickable
   cursor: pointer
 
   .material-icons

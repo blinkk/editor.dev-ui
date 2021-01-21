@@ -1,4 +1,4 @@
-.live_editor__modal
+.le__modal
   backdrop-filter: blur(4px)
   background-color: $le-color-oclude
   bottom: 0
@@ -7,26 +7,26 @@
   right: 0
   top: 0
 
-.live_editor__modal__container
+.le__modal__container
   align-items: center
   display: flex
   flex-flow: column
   height: 100vh
   justify-content: center
 
-  .live_editor__modal--docked &
+  .le__modal--docked &
     justify-content: stretch
 
-  .live_editor__modal--docked-left &
+  .le__modal--docked-left &
     align-items: flex-start
 
-  .live_editor__modal--docked-right &
+  .le__modal--docked-right &
     align-items: flex-end
 
-.live_editor__modal__content
+.le__modal__content
   background: $le-color-back
 
-  .live_editor__modal--docked &
+  .le__modal--docked &
     flex-grow: 1
     min-width: 300px
     width: 30%

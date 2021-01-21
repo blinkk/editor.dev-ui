@@ -1,4 +1,4 @@
-.live_editor__part__menu__header
+.le__part__menu__header
   align-items: center
   background: $le-color-secondary-dark
   color: $le-color-on-secondary-dark
@@ -6,25 +6,25 @@
   flex-flow: row
   justify-content: space-between
 
-.live_editor__part__menu__project
+.le__part__menu__project
   flex-grow: 1
   overflow: hidden
   padding: $le-space-medium
   text-overflow: ellipsis
   white-space: nowrap
 
-.live_editor__part__menu__actions
+.le__part__menu__actions
   align-items: center
   display: flex
   flex-flow: row
 
-.live_editor__part__menu__action
+.le__part__menu__action
   margin-right: $le-space-small
 
   &:first-child
     margin-left: $le-space-small
 
-.live_editor__part__menu__section__header
+.le__part__menu__section__header
   align-items: center
   color: $le-color-primary
   display: flex
@@ -33,5 +33,29 @@
   justify-content: space-between
   text-transform: uppercase
 
-.live_editor__part__menu__section__title
+.le__part__menu__section__title
   padding: $le-space-medium
+
+.le__part__menu__section__content
+  margin-left: $le-space-large
+
+.le__part__menu__list
+  &--constrained
+    max-height: 20vh
+    overflow-y: auto
+
+.le__part__menu__list__item
+  align-items: center
+  display: flex
+  flex-flow: row
+
+  &--primary
+    color: $le-color-primary
+    font-weight: 700
+
+.le__part__menu__list__item__label
+  flex-grow: 1
+  padding: $le-space-medium
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap

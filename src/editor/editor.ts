@@ -54,11 +54,11 @@ export class LiveEditor {
   }
 
   classesForEditor(): Array<string> {
-    const classes: Array<string> = ['live_editor'];
+    const classes: Array<string> = ['le'];
 
     // When menu is docked, change to three panes.
     if (this.parts.menu.isDocked) {
-      classes.push('live_editor--docked-menu');
+      classes.push('le--docked-menu');
     }
 
     return classes;
@@ -85,11 +85,11 @@ export class LiveEditor {
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForEditor())}>
       ${this.parts.menu.template(editor)}
-      <div class="live_editor__structure__content">
-        <div class="live_editor__structure__content_header">
+      <div class="le__structure__content">
+        <div class="le__structure__content_header">
           ${this.parts.overview.template(editor)}
         </div>
-        <div class="live_editor__structure__content_panes">
+        <div class="le__structure__content_panes">
           ${this.parts.content.template(editor)}
           ${this.parts.preview.template(editor)}
         </div>

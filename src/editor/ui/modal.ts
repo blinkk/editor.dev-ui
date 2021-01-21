@@ -25,7 +25,7 @@ export class Modal extends UuidMixin(BaseUI) {
   }
 
   classesForModal(): Array<string> {
-    const classes: Array<string> = ['live_editor__modal'];
+    const classes: Array<string> = ['le__modal'];
 
     if (this.config.classes) {
       for (const classname of this.config.classes) {
@@ -39,7 +39,7 @@ export class Modal extends UuidMixin(BaseUI) {
   handleOffClick(evt: Event) {
     const modalContent = findParentByClassname(
       evt.target as HTMLElement,
-      'live_editor__modal__content'
+      'le__modal__content'
     );
 
     // Do not close when clicking on the modal content.
@@ -79,12 +79,10 @@ export class Modal extends UuidMixin(BaseUI) {
 
     return html`<div class=${expandClasses(this.classesForModal())}>
       <div
-        class="live_editor__modal__container"
+        class="le__modal__container"
         @click=${this.handleOffClick.bind(this)}
       >
-        <div class="live_editor__modal__content">
-          ${this.modalTemplate(editor)}
-        </div>
+        <div class="le__modal__content">${this.modalTemplate(editor)}</div>
       </div>
     </div>`;
   }

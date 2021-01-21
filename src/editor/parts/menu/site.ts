@@ -13,11 +13,11 @@ export class SitePart extends MenuSectionPart {
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
-    classes.push('live_editor__part__menu__site');
+    classes.push('le__part__menu__site');
     return classes;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    return html`section content`;
+    return html`<div class="le__part__menu__section__content">Site</div>`;
   }
 }

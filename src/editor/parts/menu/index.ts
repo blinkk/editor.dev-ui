@@ -24,7 +24,7 @@ export class MenuSectionPart extends BasePart implements Part {
   }
 
   classesForPart(): Array<string> {
-    return ['live_editor__part__menu__section'];
+    return ['le__part__menu__section'];
   }
 
   loadFromStorage() {
@@ -49,7 +49,7 @@ export class MenuSectionPart extends BasePart implements Part {
   templateActionExpandCollapse(editor: LiveEditor): TemplateResult {
     const icon = this.isExpanded ? 'expand_less' : 'expand_more';
 
-    return html`<div class="live_editor__part__menu__action">
+    return html`<div class="le__part__menu__action">
       <span class="material-icons">${icon}</span>
     </div>`;
   }
@@ -68,12 +68,12 @@ export class MenuSectionPart extends BasePart implements Part {
       this.render();
     };
     return html`<div
-      class="live_editor__part__menu__section__header live_editor__clickable"
+      class="le__part__menu__section__header le__clickable"
       @click=${handleClick}
     >
-      <div class="live_editor__part__menu__section__title">${this.title}</div>
-      <div class="live_editor__part__menu__actions">
-        <div class="live_editor__part__menu__actions">
+      <div class="le__part__menu__section__title">${this.title}</div>
+      <div class="le__part__menu__actions">
+        <div class="le__part__menu__actions">
           ${this.templateActionExpandCollapse(editor)}
         </div>
       </div>

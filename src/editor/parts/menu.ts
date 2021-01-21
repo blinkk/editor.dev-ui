@@ -98,6 +98,7 @@ export class MenuPart extends BasePart implements Part {
 
   templateActionDocking(editor: LiveEditor): TemplateResult {
     let icon = 'last_page';
+    let tip = 'Dock menu';
     let handleClick = () => {
       this.close();
       this.dock();
@@ -108,11 +109,13 @@ export class MenuPart extends BasePart implements Part {
         this.undock();
       };
       icon = 'first_page';
+      tip = 'Undock menu';
     }
 
     return html`<div
-      class="live_editor__part__menu__action live_editor__clickable"
+      class="live_editor__part__menu__action live_editor__clickable tooltip--bottom-right"
       @click=${handleClick}
+      data-tip=${tip}
     >
       <span class="material-icons">${icon}</span>
     </div>`;
@@ -128,8 +131,9 @@ export class MenuPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="live_editor__part__menu__action live_editor__clickable"
+      class="live_editor__part__menu__action live_editor__clickable tooltip--bottom-right"
       @click=${handleClick}
+      data-tip="Close menu"
     >
       <span class="material-icons">close</span>
     </div>`;

@@ -10,7 +10,7 @@
   overflow: hidden
 
   &--docked-menu
-    // Min width for docked menu.
+    column-gap: $le-space-xxsmall
     grid-template-columns: minmax(350px, 20%) 1fr
 
   *
@@ -32,6 +32,7 @@
   flex-shrink: 1
 
 .live_editor__structure__content_panes
+  column-gap: $le-space-xxsmall
   display: grid
   flex-grow: 1
   overflow: hidden
@@ -44,6 +45,7 @@
     padding: $le-space-xsmall
 
 @import './ui/modal'
+@import './ui/tooltip'
 
 @import './parts/content'
 @import './parts/menu'

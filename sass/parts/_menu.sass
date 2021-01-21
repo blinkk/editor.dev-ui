@@ -13,16 +13,11 @@
   text-overflow: ellipsis
   white-space: nowrap
 
-.le__part__menu__actions
-  align-items: center
-  display: flex
-  flex-flow: row
+.le__part__menu__section
+  border-bottom: $le-border-size-medium solid $le-color-border
 
-.le__part__menu__action
-  margin-right: $le-space-small
-
-  &:first-child
-    margin-left: $le-space-small
+  &:last-child
+    border-bottom: none
 
 .le__part__menu__section__header
   align-items: center
@@ -30,32 +25,7 @@
   display: flex
   flex-flow: row
   font-size: $le-font-size-small
-  justify-content: space-between
   text-transform: uppercase
 
 .le__part__menu__section__title
-  padding: $le-space-medium
-
-.le__part__menu__section__content
-  margin-left: $le-space-large
-
-.le__part__menu__list
-  &--constrained
-    max-height: 20vh
-    overflow-y: auto
-
-.le__part__menu__list__item
-  align-items: center
-  display: flex
-  flex-flow: row
-
-  &--primary
-    color: $le-color-primary
-    font-weight: 700
-
-.le__part__menu__list__item__label
-  flex-grow: 1
-  padding: $le-space-medium
-  overflow: hidden
-  text-overflow: ellipsis
-  white-space: nowrap
+  padding: $le-space-medium 0

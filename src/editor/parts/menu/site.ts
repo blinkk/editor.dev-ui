@@ -1,16 +1,8 @@
-import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../../..';
+import {MenuSectionPart} from './index';
 
 export class SitePart extends MenuSectionPart {
-  constructor(config: MenuSectionPartConfig) {
-    super(config);
-    this.title = 'Site';
-    // Need to wait for the correct title to be set before
-    // loading from storage.
-    this.loadFromStorage();
-  }
-
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
     classes.push('le__part__menu__site');
@@ -18,6 +10,69 @@ export class SitePart extends MenuSectionPart {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    return html`<div class="le__part__menu__section__content">Site</div>`;
+    return html`<div class="le__part__menu__section__content">
+      <div class="le__list le__list--indent">
+        <div class="le__list__item le__list__item--secondary">
+          <div class="le__list__item__icon">
+            <span class="material-icons">expand_more</span>
+          </div>
+          <div class="le__list__item__label">Collections</div>
+        </div>
+        <div class="le__list">
+          <div class="le__list__item le__list__item--secondary">
+            <div class="le__list__item__icon">
+              <span class="material-icons">expand_more</span>
+            </div>
+            <div class="le__list__item__label">pages</div>
+          </div>
+          <div class="le__list">
+            <div class="le__list__item le__list__item--primary">
+              <div class="le__list__item__icon">
+                <span class="material-icons">add_circle</span>
+              </div>
+              <div class="le__list__item__label">New file</div>
+            </div>
+            <div class="le__list__item le__list__item--selected">
+              <div class="le__list__item__icon">
+                <span class="material-icons">notes</span>
+              </div>
+              <div class="le__list__item__label">index</div>
+              <div class="le__actions">
+                <div class="le__actions__action">
+                  <span class="material-icons">file_copy</span>
+                </div>
+                <div class="le__actions__action le__actions__action--extreme">
+                  <span class="material-icons">remove_circle</span>
+                </div>
+              </div>
+            </div>
+            <div class="le__list__item">
+              <div class="le__list__item__icon">
+                <span class="material-icons">notes</span>
+              </div>
+              <div class="le__list__item__label">about</div>
+              <div class="le__actions">
+                <div class="le__actions__action">
+                  <span class="material-icons">file_copy</span>
+                </div>
+                <div class="le__actions__action le__actions__action--extreme">
+                  <span class="material-icons">remove_circle</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="le__list__item le__list__item--secondary">
+            <div class="le__list__item__icon">
+              <span class="material-icons">chevron_right</span>
+            </div>
+            <div class="le__list__item__label">strings</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  get title() {
+    return 'Site';
   }
 }

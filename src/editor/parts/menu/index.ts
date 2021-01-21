@@ -14,25 +14,20 @@ export interface MenuSectionPartConfig {
 
 export class MenuSectionPart extends BasePart implements Part {
   config: MenuSectionPartConfig;
-  title: string;
   isExpanded?: boolean;
 
   constructor(config: MenuSectionPartConfig) {
     super();
-    this.title = 'Section';
     this.config = config;
-  }
-
-  classesForPart(): Array<string> {
-    return ['le__part__menu__section'];
-  }
-
-  loadFromStorage() {
     if (this.isExpanded === undefined) {
       this.isExpanded = this.config.storage.getItemBoolean(
         `live.menu.section.${this.key}.isExpanded`
       );
     }
+  }
+
+  classesForPart(): Array<string> {
+    return ['le__part__menu__section'];
   }
 
   get key(): string {
@@ -47,7 +42,7 @@ export class MenuSectionPart extends BasePart implements Part {
   }
 
   templateActionExpandCollapse(editor: LiveEditor): TemplateResult {
-    const icon = this.isExpanded ? 'expand_less' : 'expand_more';
+    const icon = this.isExpanded ? 'expand_more' : 'chevron_right';
 
     return html`<div class="le__part__menu__action">
       <span class="material-icons">${icon}</span>
@@ -71,12 +66,14 @@ export class MenuSectionPart extends BasePart implements Part {
       class="le__part__menu__section__header le__clickable"
       @click=${handleClick}
     >
-      <div class="le__part__menu__section__title">${this.title}</div>
-      <div class="le__part__menu__actions">
-        <div class="le__part__menu__actions">
-          ${this.templateActionExpandCollapse(editor)}
-        </div>
+      <div class="le__actions">
+        ${this.templateActionExpandCollapse(editor)}
       </div>
+      <div class="le__part__menu__section__title">${this.title}</div>
     </div>`;
+  }
+
+  get title() {
+    return 'Section';
   }
 }

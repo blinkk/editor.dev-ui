@@ -43,7 +43,6 @@ export class MenuPart extends BasePart implements Part {
         classes: ['le__modal--docked', 'le__modal--docked-left'],
       });
       modal.modalTemplate = this.templateStructure.bind(this);
-      modal.isVisible = true; // TODO: Remove, debugging only.
       this.modal = modal;
       editor.parts.modals.modals[MODAL_KEY] = modal;
     }
@@ -146,8 +145,8 @@ export class MenuPart extends BasePart implements Part {
   templateMenu(editor: LiveEditor): TemplateResult {
     return html`<div class="le__part__menu__header">
       <div class="le__part__menu__project">...Project name...</div>
-      <div class="le__part__menu__actions">
-        <div class="le__part__menu__actions">
+      <div class="le__actions">
+        <div class="le__actions">
           ${this.templateActionDocking(editor)}
           ${this.templateActionClose(editor)}
         </div>

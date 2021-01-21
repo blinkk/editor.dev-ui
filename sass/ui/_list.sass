@@ -1,0 +1,55 @@
+.le__list
+  &:last-child
+    margin-bottom: $le-space-medium
+
+  &--constrained
+    max-height: 20vh
+    overflow-y: auto
+
+  &--indent
+    padding-left: $le-space-large
+
+  > .le__list
+    padding-left: $le-space-medium
+
+.le__list__item
+  align-items: center
+  display: flex
+  flex-flow: row
+
+  &--primary
+    color: $le-color-primary
+    font-weight: 700
+
+  &--secondary
+    color: $le-color-secondary
+    font-weight: 700
+
+  .le__actions
+    opacity: 0
+    transition: opacity $le-speed-xfast
+
+  &:hover
+    background-color: $le-color-back-dark
+    box-shadow: -15vw 0 0 $le-color-back-dark;
+    color: $le-color-on-back-dark
+
+    .le__actions
+      opacity: 1
+
+  &--selected,
+  &--selected:hover
+    background-color: $le-color-secondary
+    box-shadow: -15vw 0 0 $le-color-secondary;
+    color: $le-color-on-secondary
+
+.le__list__item__label
+  flex-grow: 1
+  margin: $le-space-small
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.le__list__item__aside
+  font-style: italic
+  margin: $le-space-small $le-space-medium $le-space-small 0

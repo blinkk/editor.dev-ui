@@ -2,6 +2,7 @@ import {TemplateResult, html, render} from 'lit-html';
 import {ContentPart} from './parts/content';
 import {EVENT_RENDER_COMPLETE} from './events';
 import {FieldConstructor} from '@blinkk/selective-edit/dist/src/selective/field';
+import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
 import {OverviewPart} from './parts/overview';
@@ -16,6 +17,7 @@ export interface SelectiveConfig {
 }
 
 export interface LiveEditorConfig {
+  api: LiveEditorApiComponent;
   selectiveConfig: SelectiveConfig;
   isTest?: boolean;
 }
@@ -45,10 +47,13 @@ export class LiveEditor {
     this.parts = {
       content: new ContentPart(),
       menu: new MenuPart({
+        api: this.config.api,
         storage: this.storage,
       }),
       modals: new ModalsPart(),
-      overview: new OverviewPart(),
+      overview: new OverviewPart({
+        api: this.config.api,
+      }),
       preview: new PreviewPart(),
     };
   }

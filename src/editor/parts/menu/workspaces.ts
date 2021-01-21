@@ -1,11 +1,23 @@
 import {DialogActionLevel, DialogModal} from '../../ui/modal';
+import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../../..';
-import {MenuSectionPart} from './index';
+import {LiveEditorApiComponent} from '../../api';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
+export interface WorkspacesPartConfig extends MenuSectionPartConfig {
+  api: LiveEditorApiComponent;
+}
+
 export class WorkspacesPart extends MenuSectionPart {
+  config: WorkspacesPartConfig;
+
+  constructor(config: WorkspacesPartConfig) {
+    super(config);
+    this.config = config;
+  }
+
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
     classes.push('le__part__menu__workspaces');

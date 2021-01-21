@@ -14,21 +14,21 @@ export class UsersPart extends MenuSectionPart {
       <div class="le__list le__list--constrained le__list--indent">
         <div class="le__list__item">
           <div class="le__list__item__icon">
-            <span class="material-icons">person</span>
+            <span class="material-icons">perm_identity</span>
           </div>
           <div class="le__list__item__label">Janet Slade</div>
           <div class="le__list__item__aside">Admin</div>
         </div>
         <div class="le__list__item">
           <div class="le__list__item__icon">
-            <span class="material-icons">dashboard</span>
+            <span class="material-icons">person</span>
           </div>
           <div class="le__list__item__label">Don Jules</div>
           <div class="le__list__item__aside">User</div>
         </div>
         <div class="le__list__item">
           <div class="le__list__item__icon">
-            <span class="material-icons">dashboard</span>
+            <span class="material-icons">person</span>
           </div>
           <div class="le__list__item__label">Yvonne Lars</div>
           <div class="le__list__item__aside">User</div>

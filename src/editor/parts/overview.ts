@@ -1,9 +1,35 @@
 import {BasePart, Part} from '.';
+import {LiveEditorApiComponent, ProjectData, WorkspaceData} from '../api';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../editor';
 import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
+export interface OverviewPartConfig {
+  api: LiveEditorApiComponent;
+}
+
 export class OverviewPart extends BasePart implements Part {
+  config: OverviewPartConfig;
+  project?: ProjectData;
+  workspace?: WorkspaceData;
+
+  constructor(config: OverviewPartConfig) {
+    super();
+    this.config = config;
+
+    // Load the project information.
+    this.config.api.getProject().then(data => {
+      this.project = data;
+      this.render();
+    });
+
+    // Load the workspace information.
+    this.config.api.getWorkspace().then(data => {
+      this.workspace = data;
+      this.render();
+    });
+  }
+
   classesForPart(): Array<string> {
     return ['le__part__overview'];
   }
@@ -33,7 +59,7 @@ export class OverviewPart extends BasePart implements Part {
   }
 
   templateProject(editor: LiveEditor): TemplateResult {
-    let projectName = html`...Project name...`;
+    let projectName = this.project?.title || html`&nbsp;`;
 
     // Menu shows the project name when it is docked.
     if (editor.parts.menu.isDocked) {
@@ -46,8 +72,10 @@ export class OverviewPart extends BasePart implements Part {
   templateWorkspace(editor: LiveEditor): TemplateResult {
     return html`<div class="le__part__overview__workspace">
       <span>Workspace:</span>
-      <strong>...branch...</strong> @ <strong>...hash...</strong> by
-      <strong>...name...</strong> (time ago)
+      <strong>${this.workspace?.name || '...'}</strong> @
+      <strong>${(this.workspace?.branch.commit || '...').slice(0, 7)}</strong>
+      by <strong>${this.workspace?.branch.author.name || '...'}</strong> (time
+      ago)
     </div>`;
   }
 }

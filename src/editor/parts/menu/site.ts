@@ -97,9 +97,9 @@ export class SitePart extends MenuSectionPart {
     };
     return html`<div class="le__part__menu__section__content">
       <div class="le__list le__list--indent">
-        <div class="le__list__item le__list__item--secondary">
+        <div class="le__list__item le__list__item--heading">
           <div class="le__list__item__icon">
-            <span class="material-icons">expand_more</span>
+            <span class="material-icons">list_alt</span>
           </div>
           <div class="le__list__item__label">Collections</div>
         </div>

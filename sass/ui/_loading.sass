@@ -1,0 +1,60 @@
+.le__loading
+  display: inline-block
+  height: $le-loading-size
+  position: relative
+  width: $le-loading-size
+
+  &:after
+    animation: editor__loading $le-speed-slow linear infinite
+    border: $le-loading-border-size solid $le-color-secondary
+    border-color: $le-color-secondary transparent $le-color-secondary transparent
+    border-radius: 50%
+    content: " "
+    display: block
+    height: $le-loading-size - ($le-loading-border-size * 4)
+    margin: $le-loading-border-size
+    position: absolute
+    width: $le-loading-size - ($le-loading-border-size * 4)
+
+  &:before
+    animation: editor__loading__inner $le-speed-slow * 1.5 linear infinite
+    border: $le-loading-border-size solid $le-color-secondary
+    border-color: $le-color-primary transparent $le-color-primary transparent
+    border-radius: 50%
+    content: " "
+    display: block
+    height: $le-loading-size - ($le-loading-border-size * 8)
+    margin: $le-loading-border-size * 3
+    position: absolute
+    width: $le-loading-size - ($le-loading-border-size * 8)
+
+  &--pad
+    margin: $le-space-medium
+
+  &--small
+    height: $le-loading-size / 2
+    width: $le-loading-size / 2
+
+    &:after
+      border-width: $le-loading-border-size / 2
+      height: ($le-loading-size - ($le-loading-border-size * 4)) / 2
+      margin: $le-loading-border-size / 2
+      width: ($le-loading-size - ($le-loading-border-size * 4)) / 2
+
+    &:before
+      border-width: $le-loading-border-size / 2
+      height: ($le-loading-size - ($le-loading-border-size * 8)) / 2
+      margin: $le-loading-border-size * 3 / 2
+      width: ($le-loading-size - ($le-loading-border-size * 8)) / 2
+
+@keyframes editor__loading__inner
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(-360deg)
+
+@keyframes editor__loading
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)

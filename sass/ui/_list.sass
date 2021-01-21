@@ -25,11 +25,15 @@
     color: $le-color-secondary
     font-weight: 700
 
+  &--heading
+    color: $le-color-secondary-dark
+    font-weight: 700
+
   .le__actions
     opacity: 0
     transition: opacity $le-speed-xfast
 
-  &:hover
+  &.le__clickable:hover
     background-color: $le-color-back-dark
     box-shadow: -15vw 0 0 $le-color-back-dark;
     color: $le-color-on-back-dark
@@ -37,8 +41,16 @@
     .le__actions
       opacity: 1
 
+  &--primary.le__clickable,
+  &--primary.le__clickable:hover
+    color: $le-color-primary
+
+  &--secondary.le__clickable,
+  &--secondary.le__clickable:hover
+    color: $le-color-secondary
+
   &--selected,
-  &--selected:hover
+  &--selected.le__clickable:hover
     background-color: $le-color-secondary
     box-shadow: -15vw 0 0 $le-color-secondary;
     color: $le-color-on-secondary

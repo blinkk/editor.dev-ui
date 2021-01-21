@@ -1,4 +1,5 @@
 import {BasePart, Part} from '.';
+import {LiveEditorApiComponent, ProjectData} from '../api';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../editor';
 import {Modal} from '../ui/modal';
@@ -11,6 +12,7 @@ import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 const MODAL_KEY = 'menu';
 
 export interface MenuPartConfig {
+  api: LiveEditorApiComponent;
   storage: Storage;
 }
 
@@ -25,6 +27,7 @@ export class MenuPart extends BasePart implements Part {
   isDocked: boolean;
   modal?: Modal;
   parts: MenuParts;
+  project?: ProjectData;
 
   constructor(config: MenuPartConfig) {
     super();
@@ -33,8 +36,16 @@ export class MenuPart extends BasePart implements Part {
     this.parts = {
       site: new SitePart({storage: this.config.storage}),
       users: new UsersPart({storage: this.config.storage}),
-      workspaces: new WorkspacesPart({storage: this.config.storage}),
+      workspaces: new WorkspacesPart({
+        api: this.config.api,
+        storage: this.config.storage,
+      }),
     };
+
+    this.config.api.getProject().then(projectData => {
+      this.project = projectData;
+      this.render();
+    });
   }
 
   protected createModal(editor: LiveEditor): Modal {
@@ -144,7 +155,9 @@ export class MenuPart extends BasePart implements Part {
 
   templateMenu(editor: LiveEditor): TemplateResult {
     return html`<div class="le__part__menu__header">
-      <div class="le__part__menu__project">...Project name...</div>
+      <div class="le__part__menu__project">
+        ${this.project?.title || html`&nbsp;`}
+      </div>
       <div class="le__actions">
         ${this.templateActionDocking(editor)}
         ${this.templateActionClose(editor)}

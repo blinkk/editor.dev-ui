@@ -109,7 +109,7 @@ export class MenuPart extends BasePart implements Part {
     }
 
     return html`<div
-      class="le__part__menu__action le__clickable tooltip--bottom-right"
+      class="le__part__menu__action le__clickable le__tooltip--bottom-right"
       @click=${handleClick}
       data-tip=${tip}
     >
@@ -127,7 +127,7 @@ export class MenuPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="le__part__menu__action le__clickable tooltip--bottom-right"
+      class="le__part__menu__action le__clickable le__tooltip--bottom-right"
       @click=${handleClick}
       data-tip="Close menu"
     >
@@ -146,10 +146,8 @@ export class MenuPart extends BasePart implements Part {
     return html`<div class="le__part__menu__header">
       <div class="le__part__menu__project">...Project name...</div>
       <div class="le__actions">
-        <div class="le__actions">
-          ${this.templateActionDocking(editor)}
-          ${this.templateActionClose(editor)}
-        </div>
+        ${this.templateActionDocking(editor)}
+        ${this.templateActionClose(editor)}
       </div>
     </div>`;
   }

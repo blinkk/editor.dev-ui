@@ -66,7 +66,7 @@ export class MenuSectionPart extends BasePart implements Part {
       class="le__part__menu__section__header le__clickable"
       @click=${handleClick}
     >
-      <div class="le__actions">
+      <div class="le__part__menu__section__icon">
         ${this.templateActionExpandCollapse(editor)}
       </div>
       <div class="le__part__menu__section__title">${this.title}</div>

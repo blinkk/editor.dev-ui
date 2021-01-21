@@ -26,7 +26,7 @@ export class SitePart extends MenuSectionPart {
             <div class="le__list__item__label">pages</div>
           </div>
           <div class="le__list">
-            <div class="le__list__item le__list__item--primary">
+            <div class="le__list__item le__list__item--primary le__clickable">
               <div class="le__list__item__icon">
                 <span class="material-icons">add_circle</span>
               </div>
@@ -37,11 +37,17 @@ export class SitePart extends MenuSectionPart {
                 <span class="material-icons">notes</span>
               </div>
               <div class="le__list__item__label">index</div>
-              <div class="le__actions">
-                <div class="le__actions__action">
+              <div class="le__actions le__actions--slim">
+                <div
+                  class="le__actions__action le__clickable le__tooltip--top"
+                  data-tip="Duplicate file"
+                >
                   <span class="material-icons">file_copy</span>
                 </div>
-                <div class="le__actions__action le__actions__action--extreme">
+                <div
+                  class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
+                  data-tip="Delete file"
+                >
                   <span class="material-icons">remove_circle</span>
                 </div>
               </div>
@@ -51,11 +57,17 @@ export class SitePart extends MenuSectionPart {
                 <span class="material-icons">notes</span>
               </div>
               <div class="le__list__item__label">about</div>
-              <div class="le__actions">
-                <div class="le__actions__action">
+              <div class="le__actions le__actions--slim">
+                <div
+                  class="le__actions__action le__clickable le__tooltip--top"
+                  data-tip="Duplicate file"
+                >
                   <span class="material-icons">file_copy</span>
                 </div>
-                <div class="le__actions__action le__actions__action--extreme">
+                <div
+                  class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
+                  data-tip="Delete file"
+                >
                   <span class="material-icons">remove_circle</span>
                 </div>
               </div>

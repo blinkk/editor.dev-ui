@@ -38,16 +38,16 @@
     transform: translateY(-50%)
     z-index: 51
 
-  &.tooltip--wrap
+  &.le__tooltip--wrap
     &:before
       max-width: $le-space-xxxlarge
       min-width: $le-space-xxlarge
       white-space: normal
       width: 10vw
 
-  &.tooltip--bottom,
-  &.tooltip--bottom-left,
-  &.tooltip--bottom-right
+  &.le__tooltip--bottom,
+  &.le__tooltip--bottom-left,
+  &.le__tooltip--bottom-right
     &:before
       // Reset
       left: initial
@@ -71,15 +71,15 @@
       margin-top: -$le-space-small
       transform: translateX(-50%)
 
-  &.tooltip--bottom-left
+  &.le__tooltip--bottom-left
     &:before
       transform: translateX(calc(-100% + #{$le-space-medium}))
 
-  &.tooltip--bottom-right
+  &.le__tooltip--bottom-right
     &:before
       transform: translateX(-$le-space-medium)
 
-  &.tooltip--left
+  &.le__tooltip--left
     &:before
       // Reset
       left: initial
@@ -97,9 +97,9 @@
       margin-right: -$le-space-small
       right: 100%
 
-  &.tooltip--top,
-  &.tooltip--top-left,
-  &.tooltip--top-right
+  &.le__tooltip--top,
+  &.le__tooltip--top-left,
+  &.le__tooltip--top-right
     &:before
       // Reset
       left: initial
@@ -123,10 +123,10 @@
       margin-bottom: -$le-space-small
       transform: translateX(-50%)
 
-  &.tooltip--top-left
+  &.le__tooltip--top-left
     &:before
       transform: translateX(calc(-100% + #{$le-space-medium}))
 
-  &.tooltip--top-right
+  &.le__tooltip--top-right
     &:before
       transform: translateX(-$le-space-medium)

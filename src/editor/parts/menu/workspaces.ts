@@ -12,7 +12,7 @@ export class WorkspacesPart extends MenuSectionPart {
   templateContent(editor: LiveEditor): TemplateResult {
     return html`<div class="le__part__menu__section__content">
       <div class="le__list le__list--constrained le__list--indent">
-        <div class="le__list__item le__list__item--primary">
+        <div class="le__list__item le__list__item--primary le__clickable">
           <div class="le__list__item__icon">
             <span class="material-icons">add_circle</span>
           </div>

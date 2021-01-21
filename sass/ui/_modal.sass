@@ -26,7 +26,37 @@
 .le__modal__content
   background: $le-color-back
 
+  .le__modal--dialog &
+    box-shadow: $le-shadow-medium
+    display: flex
+    flex-flow: column
+    min-width: 40vw
+    min-height: 250px
+
   .le__modal--docked &
     flex-grow: 1
     min-width: 300px
     width: 30%
+
+.le__modal__content__template
+  .le__modal--dialog &
+    flex-grow: 1
+    max-height: 70vh
+    max-width: 70vw
+    overflow: auto
+    padding: $le-space-medium
+
+.le__modal__content__footer
+  align-items: center
+  display: flex
+  flex-flow: row
+  justify-content: space-between
+  padding: $le-space-medium
+
+.le__modal__content__header
+  border-bottom: $le-border-size-medium solid $le-color-border
+  font-weight: 700
+  padding: $le-space-medium
+
+.le__modal__actions__tertiary
+  flex-grow: 1

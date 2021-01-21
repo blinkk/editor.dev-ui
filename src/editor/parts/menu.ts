@@ -42,7 +42,7 @@ export class MenuPart extends BasePart implements Part {
       const modal = new Modal({
         classes: ['le__modal--docked', 'le__modal--docked-left'],
       });
-      modal.modalTemplate = this.templateStructure.bind(this);
+      modal.templateModal = this.templateStructure.bind(this);
       this.modal = modal;
       editor.parts.modals.modals[MODAL_KEY] = modal;
     }

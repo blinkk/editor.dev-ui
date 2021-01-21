@@ -1,22 +1,17 @@
 import {DialogActionLevel, DialogModal} from '../../ui/modal';
-import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../../..';
-import {LiveEditorApiComponent} from '../../api';
+import {MenuSectionPart} from './index';
+import {WorkspaceData} from '../../api';
+import {repeat} from 'lit-html/directives/repeat';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
-export interface WorkspacesPartConfig extends MenuSectionPartConfig {
-  api: LiveEditorApiComponent;
-}
-
 export class WorkspacesPart extends MenuSectionPart {
-  config: WorkspacesPartConfig;
-
-  constructor(config: WorkspacesPartConfig) {
-    super(config);
-    this.config = config;
-  }
+  workspace?: WorkspaceData;
+  workspacePromise?: Promise<WorkspaceData>;
+  workspaces?: Array<WorkspaceData>;
+  workspacesPromise?: Promise<Array<WorkspaceData>>;
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
@@ -44,6 +39,30 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
+    // Lazy load the workspace information.
+    if (!this.workspace && !this.workspacePromise) {
+      this.workspacePromise = this.config.api.getWorkspace();
+      this.workspacePromise.then(data => {
+        this.workspace = data;
+        this.workspacePromise = undefined;
+        this.render();
+      });
+    }
+
+    // Lazy load the workspaces information.
+    if (!this.workspaces && !this.workspacesPromise) {
+      this.workspacesPromise = this.config.api.getWorkspaces();
+      this.workspacesPromise.then(data => {
+        this.workspaces = data;
+        this.workspacesPromise = undefined;
+        this.render();
+      });
+    }
+
+    if (!this.workspaces) {
+      return html`<div class="le__loading le__loading--pad"></div>`;
+    }
+
     const handleClick = () => {
       const modal = this.createModalNew(editor);
       modal.show();
@@ -60,18 +79,22 @@ export class WorkspacesPart extends MenuSectionPart {
           </div>
           <div class="le__list__item__label">Add workspace</div>
         </div>
-        <div class="le__list__item">
-          <div class="le__list__item__icon">
-            <span class="material-icons">dashboard</span>
-          </div>
-          <div class="le__list__item__label">main</div>
-        </div>
-        <div class="le__list__item">
-          <div class="le__list__item__icon">
-            <span class="material-icons">dashboard</span>
-          </div>
-          <div class="le__list__item__label">staging</div>
-        </div>
+        ${repeat(
+          this.workspaces || [],
+          workspace => workspace.name,
+          workspace => html`<div
+            class="le__list__item ${this.workspace?.name === workspace.name
+              ? 'le__list__item--selected'
+              : ''}"
+          >
+            <div class="le__list__item__icon">
+              <span class="material-icons">dashboard</span>
+            </div>
+            <div class="le__list__item__label">
+              ${workspace.name} @ ${workspace.branch.commit.slice(0, 5)}
+            </div>
+          </div>`
+        )}
       </div>
     </div>`;
   }

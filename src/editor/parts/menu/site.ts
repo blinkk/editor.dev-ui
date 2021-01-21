@@ -1,13 +1,27 @@
 import {DialogActionLevel, DialogModal} from '../../ui/modal';
 import {TemplateResult, html} from 'lit-html';
+import {FileData} from '../../api';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
+import {repeat} from 'lit-html/directives/repeat';
 
 const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
 
+interface DirectoryEventHandlers {
+  fileCopy: (evt: Event) => void;
+  fileDelete: (evt: Event) => void;
+  fileLoad: (evt: Event) => void;
+  fileNew: (evt: Event) => void;
+  render: () => void;
+}
+
 export class SitePart extends MenuSectionPart {
+  files?: Array<FileData>;
+  filesPromise?: Promise<Array<FileData>>;
+  fileStructure?: DirectoryStructure;
+
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
     classes.push('le__part__menu__site');
@@ -72,115 +86,56 @@ export class SitePart extends MenuSectionPart {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    const handleCopyClick = (evt: Event) => {
-      evt.stopPropagation();
-      const modal = this.createModalCopy(editor);
-      modal.show();
-    };
-    const handleDeleteClick = (evt: Event) => {
-      evt.stopPropagation();
-      const modal = this.createModalDelete(editor);
-      modal.show();
-    };
-    const handleNewClick = (evt: Event) => {
-      evt.stopPropagation();
-      const modal = this.createModalNew(editor);
-      modal.show();
-    };
-    const handleLoadClick = (evt: Event) => {
-      evt.stopPropagation();
-      console.log('load a path');
-    };
-    const handleToggleCollectionClick = (evt: Event) => {
-      evt.stopPropagation();
-      console.log('toggle a collection');
-    };
+    // Lazy load the workspaces information.
+    if (!this.files && !this.filesPromise) {
+      this.filesPromise = this.config.api.getFiles();
+      this.filesPromise.then(data => {
+        this.files = data;
+        this.filesPromise = undefined;
+        this.render();
+      });
+    }
+
+    if (!this.files) {
+      return html`<div class="le__loading le__loading--pad"></div>`;
+    }
+
+    if (!this.fileStructure) {
+      const eventHandlers: DirectoryEventHandlers = {
+        fileCopy: (evt: Event) => {
+          evt.stopPropagation();
+          const modal = this.createModalCopy(editor);
+          modal.show();
+        },
+        fileDelete: (evt: Event) => {
+          evt.stopPropagation();
+          const modal = this.createModalDelete(editor);
+          modal.show();
+        },
+        fileLoad: (evt: Event) => {
+          evt.stopPropagation();
+          console.log('load a path');
+        },
+        fileNew: (evt: Event) => {
+          evt.stopPropagation();
+          const modal = this.createModalNew(editor);
+          modal.show();
+        },
+        render: this.render.bind(this),
+      };
+
+      this.fileStructure = new DirectoryStructure(this.files, eventHandlers);
+    }
+
     return html`<div class="le__part__menu__section__content">
       <div class="le__list le__list--indent">
         <div class="le__list__item le__list__item--heading">
           <div class="le__list__item__icon">
-            <span class="material-icons">list_alt</span>
+            <span class="material-icons">folder</span>
           </div>
-          <div class="le__list__item__label">Collections</div>
+          <div class="le__list__item__label">Files</div>
         </div>
-        <div class="le__list">
-          <div
-            class="le__list__item le__list__item--secondary le__clickable"
-            @click=${handleToggleCollectionClick}
-          >
-            <div class="le__list__item__icon">
-              <span class="material-icons">expand_more</span>
-            </div>
-            <div class="le__list__item__label">pages</div>
-          </div>
-          <div class="le__list">
-            <div
-              class="le__list__item le__list__item--primary le__clickable"
-              @click=${handleNewClick}
-            >
-              <div class="le__list__item__icon">
-                <span class="material-icons">add_circle</span>
-              </div>
-              <div class="le__list__item__label">New file</div>
-            </div>
-            <div
-              class="le__list__item le__list__item--selected le__clickable"
-              @click=${handleLoadClick}
-            >
-              <div class="le__list__item__icon">
-                <span class="material-icons">notes</span>
-              </div>
-              <div class="le__list__item__label">index</div>
-              <div class="le__actions le__actions--slim">
-                <div
-                  class="le__actions__action le__clickable le__tooltip--top"
-                  @click=${handleCopyClick}
-                  data-tip="Duplicate file"
-                >
-                  <span class="material-icons">file_copy</span>
-                </div>
-                <div
-                  class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
-                  @click=${handleDeleteClick}
-                  data-tip="Delete file"
-                >
-                  <span class="material-icons">remove_circle</span>
-                </div>
-              </div>
-            </div>
-            <div class="le__list__item le__clickable" @click=${handleLoadClick}>
-              <div class="le__list__item__icon">
-                <span class="material-icons">notes</span>
-              </div>
-              <div class="le__list__item__label">about</div>
-              <div class="le__actions le__actions--slim">
-                <div
-                  class="le__actions__action le__clickable le__tooltip--top"
-                  @click=${handleCopyClick}
-                  data-tip="Duplicate file"
-                >
-                  <span class="material-icons">file_copy</span>
-                </div>
-                <div
-                  class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
-                  @click=${handleDeleteClick}
-                  data-tip="Delete file"
-                >
-                  <span class="material-icons">remove_circle</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="le__list__item le__list__item--secondary le__clickable"
-            @click=${handleToggleCollectionClick}
-          >
-            <div class="le__list__item__icon">
-              <span class="material-icons">chevron_right</span>
-            </div>
-            <div class="le__list__item__label">strings</div>
-          </div>
-        </div>
+        ${this.fileStructure.template(editor)}
       </div>
     </div>`;
   }
@@ -199,5 +154,170 @@ export class SitePart extends MenuSectionPart {
 
   get title() {
     return 'Site';
+  }
+}
+
+class DirectoryStructure {
+  rootFiles: Array<FileData>;
+  root: string;
+  directories: Record<string, DirectoryStructure>;
+  eventHandlers: DirectoryEventHandlers;
+  files: Array<FileData>;
+  isExpanded?: boolean;
+
+  constructor(
+    rootFiles: Array<FileData>,
+    eventHandlers: DirectoryEventHandlers,
+    root = '/'
+  ) {
+    this.rootFiles = rootFiles;
+    this.root = root;
+    this.eventHandlers = eventHandlers;
+    this.directories = {};
+    this.files = [];
+
+    if (this.root === '/') {
+      this.isExpanded = true;
+    }
+
+    for (const fileData of this.rootFiles) {
+      const relativePath = (fileData.shortcutPath || fileData.path).slice(
+        this.root.length
+      );
+      const pathParts = relativePath.split('/');
+      // Directories have more segments.
+      // First segment is empty string since it starts with /.
+      if (pathParts.length > 1) {
+        const directoryName = pathParts[0];
+        if (!this.directories[directoryName]) {
+          const subDirectoryRoot = `${this.root}${directoryName}/`;
+          const subFiles = this.rootFiles.filter(fileData => {
+            return (fileData.shortcutPath || fileData.path).startsWith(
+              subDirectoryRoot
+            );
+          });
+          this.directories[directoryName] = new DirectoryStructure(
+            subFiles,
+            this.eventHandlers,
+            subDirectoryRoot
+          );
+        }
+      } else {
+        this.files.push(fileData);
+      }
+    }
+  }
+
+  get base(): string {
+    const trimmedRoot = this.root.replace(/\/+/g, '').replace(/\/+$/g, '');
+    const rootParts = trimmedRoot.split('/');
+    return rootParts[rootParts.length - 1];
+  }
+
+  baseFromFilePath(file: FileData) {
+    const pathParts = file.path.split('/');
+    const fileParts = pathParts[pathParts.length - 1].split('.');
+    return fileParts.slice(0, -1).join('.');
+  }
+
+  expandToFile(fileData: FileData) {
+    // TODO: Expand out all directories to get to the file.
+  }
+
+  handleExpandCollapse() {
+    this.isExpanded = !this.isExpanded;
+    this.eventHandlers.render();
+  }
+
+  template(editor: LiveEditor): TemplateResult {
+    if (!this.isExpanded) {
+      return html``;
+    }
+
+    return html`${this.templateDirectories(editor)}
+    ${this.templateFiles(editor)}`;
+  }
+
+  templateDirectories(editor: LiveEditor): TemplateResult {
+    if (!this.directories) {
+      return html``;
+    }
+
+    return html`<div class="le__list">
+      ${repeat(
+        Object.keys(this.directories),
+        (key: string) => key,
+        (key: string) => html`<div
+            class="le__list__item le__list__item--secondary le__clickable"
+            @click=${this.directories[key].handleExpandCollapse.bind(
+              this.directories[key]
+            )}
+          >
+            <div class="le__list__item__icon">
+              <span class="material-icons"
+                >${this.directories[key].isExpanded
+                  ? 'expand_more'
+                  : 'chevron_right'}</span
+              >
+            </div>
+            <div class="le__list__item__label">
+              ${this.directories[key].base}
+            </div>
+          </div>
+          ${this.directories[key].template(editor)}`
+      )}
+    </div>`;
+  }
+
+  templateFiles(editor: LiveEditor): TemplateResult {
+    if (!this.files || !this.files.length) {
+      return html``;
+    }
+
+    // TODO: Add selected if matches the current document.
+    // le__list__item--selected
+
+    return html`<div class="le__list">
+      <div
+        class="le__list__item le__list__item--primary le__clickable"
+        @click=${this.eventHandlers.fileNew}
+      >
+        <div class="le__list__item__icon">
+          <span class="material-icons">add_circle</span>
+        </div>
+        <div class="le__list__item__label">New file</div>
+      </div>
+      ${repeat(
+        this.files,
+        (file: FileData) => file.path,
+        (file: FileData) => html`<div
+          class="le__list__item le__clickable"
+          @click=${this.eventHandlers.fileLoad}
+        >
+          <div class="le__list__item__icon">
+            <span class="material-icons">notes</span>
+          </div>
+          <div class="le__list__item__label">
+            ${this.baseFromFilePath(file)}
+          </div>
+          <div class="le__actions le__actions--slim">
+            <div
+              class="le__actions__action le__clickable le__tooltip--top"
+              @click=${this.eventHandlers.fileCopy}
+              data-tip="Duplicate file"
+            >
+              <span class="material-icons">file_copy</span>
+            </div>
+            <div
+              class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
+              @click=${this.eventHandlers.fileDelete}
+              data-tip="Delete file"
+            >
+              <span class="material-icons">remove_circle</span>
+            </div>
+          </div>
+        </div>`
+      )}
+    </div>`;
   }
 }

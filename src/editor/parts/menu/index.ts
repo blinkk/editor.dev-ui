@@ -4,8 +4,13 @@ import {LiveEditor} from '../../..';
 import {Storage} from '../../../utility/storage';
 import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 import {slugify} from '../../../utility/slugify';
+import {LiveEditorApiComponent} from '../../api';
 
 export interface MenuSectionPartConfig {
+  /**
+   * API for retrieving data for the editor.
+   */
+  api: LiveEditorApiComponent;
   /**
    * Storage class for working with settings.
    */

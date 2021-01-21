@@ -73,7 +73,7 @@ export class OverviewPart extends BasePart implements Part {
     return html`<div class="le__part__overview__workspace">
       <span>Workspace:</span>
       <strong>${this.workspace?.name || '...'}</strong> @
-      <strong>${(this.workspace?.branch.commit || '...').slice(0, 7)}</strong>
+      <strong>${(this.workspace?.branch.commit || '...').slice(0, 5)}</strong>
       by <strong>${this.workspace?.branch.author.name || '...'}</strong> (time
       ago)
     </div>`;

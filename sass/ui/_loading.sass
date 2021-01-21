@@ -5,7 +5,7 @@
   width: $le-loading-size
 
   &:after
-    animation: editor__loading $le-speed-slow linear infinite
+    animation: editor__loading $le-loading-speed linear infinite
     border: $le-loading-border-size solid $le-color-secondary
     border-color: $le-color-secondary transparent $le-color-secondary transparent
     border-radius: 50%
@@ -17,7 +17,7 @@
     width: $le-loading-size - ($le-loading-border-size * 4)
 
   &:before
-    animation: editor__loading__inner $le-speed-slow * 1.5 linear infinite
+    animation: editor__loading__inner $le-loading-speed * 1.5 linear infinite
     border: $le-loading-border-size solid $le-color-secondary
     border-color: $le-color-primary transparent $le-color-primary transparent
     border-radius: 50%

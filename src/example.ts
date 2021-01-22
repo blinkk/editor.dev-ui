@@ -7,6 +7,7 @@ import {
   PatternRule,
   RangeRule,
   RequireRule,
+  SelectField,
   TextField,
   TextareaField,
   VariantField,
@@ -25,6 +26,7 @@ const exampleEditor = new LiveEditor(
       fieldTypes: {
         group: (GroupField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
+        select: (SelectField as unknown) as FieldConstructor,
         text: (TextField as unknown) as FieldConstructor,
         textarea: (TextareaField as unknown) as FieldConstructor,
         variant: (VariantField as unknown) as FieldConstructor,

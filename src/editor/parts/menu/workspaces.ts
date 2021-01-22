@@ -82,8 +82,9 @@ export class WorkspacesPart extends MenuSectionPart {
                 {
                   type: 'match',
                   excluded: {
-                    values: ['master', 'staging'],
-                    message: 'Workspace name cannot be "master" or "staging".',
+                    values: ['main', 'master', 'staging'],
+                    message:
+                      'Workspace name cannot be "main", "master", or "staging".',
                   },
                 },
               ],

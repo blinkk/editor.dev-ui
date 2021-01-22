@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@blinkk/selective-edit@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.3.tgz#406a2833ae85db0f4d6417b6541265c9fb947a6f"
-  integrity sha512-lzhyROMTGx/jDu6axY1QRlcVYoY/L9CyqagvHmB8aG9Fk9ClORpGF0tfG/rDnELVRqCAQ8FxJIH+a1JX8lTdEg==
+"@blinkk/selective-edit@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.4.tgz#9b0dc017a7363c7037d69b43d5d7f1cf8236ab79"
+  integrity sha512-YSE+6X+PfUZyclgQEvyq3ZCFNsyAyRO0XZrsydC5kcb3WgMaFf/roLaaf478mzIME3gzu9Z9CvdhUZy52blKzw==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"
@@ -1981,9 +1981,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.634:
-  version "1.3.642"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.642.tgz#8b884f50296c2ae2a9997f024d0e3e57facc2b94"
-  integrity sha512-cev+jOrz/Zm1i+Yh334Hed6lQVOkkemk2wRozfMF4MtTR7pxf3r3L5Rbd7uX1zMcEqVJ7alJBnJL7+JffkC6FQ==
+  version "1.3.643"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.643.tgz#fc196e17d01f4d874ef2307b009c0cd993ebe1c7"
+  integrity sha512-TGomM4gj8adt/uqRgPbu9F0yhUVAR1deww5X0fvbQgpGr9suSMjLgc4IwQ9YKGkp1t03cDbZum20OfAkiTYjAg==
 
 emittery@^0.8.0:
   version "0.8.1"

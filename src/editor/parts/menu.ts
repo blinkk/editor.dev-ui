@@ -34,7 +34,11 @@ export class MenuPart extends BasePart implements Part {
     this.config = config;
     this.isDocked = this.config.storage.getItemBoolean('live.menu.isDocked');
     this.parts = {
-      site: new SitePart({api: this.config.api, storage: this.config.storage}),
+      site: new SitePart({
+        api: this.config.api,
+        isExpandedByDefault: true,
+        storage: this.config.storage,
+      }),
       users: new UsersPart({
         api: this.config.api,
         storage: this.config.storage,

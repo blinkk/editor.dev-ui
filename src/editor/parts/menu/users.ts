@@ -29,34 +29,35 @@ export class UsersPart extends MenuSectionPart {
       return html`<div class="le__loading le__loading--pad"></div>`;
     }
 
-    const templateGroup = (user: UserData): TemplateResult => {
-      return html`<div class="le__list__item">
-        <div class="le__list__item__icon">
-          <span class="material-icons">group</span>
-        </div>
-        <div class="le__list__item__label">${user.name}</div>
-        <div class="le__list__item__aside">${user.email}</div>
-      </div>`;
-    };
-
-    const templateUser = (user: UserData): TemplateResult => {
-      return html`<div class="le__list__item">
-        <div class="le__list__item__icon">
-          <span class="material-icons">person</span>
-        </div>
-        <div class="le__list__item__label">
-          <a href="mailto:${user.email}">${user.name}</a>
-        </div>
-      </div>`;
-    };
-
     return html`<div class="le__part__menu__section__content">
       <div class="le__list le__list--constrained le__list--indent">
         ${repeat(
           this.users || [],
           user => user.name,
-          user => (user.isGroup ? templateGroup(user) : templateUser(user))
+          user =>
+            user.isGroup ? this.templateGroup(user) : this.templateUser(user)
         )}
+      </div>
+    </div>`;
+  }
+
+  templateGroup(user: UserData): TemplateResult {
+    return html`<div class="le__list__item">
+      <div class="le__list__item__icon">
+        <span class="material-icons">group</span>
+      </div>
+      <div class="le__list__item__label">${user.name}</div>
+      <div class="le__list__item__aside">${user.email}</div>
+    </div>`;
+  }
+
+  templateUser(user: UserData): TemplateResult {
+    return html`<div class="le__list__item">
+      <div class="le__list__item__icon">
+        <span class="material-icons">person</span>
+      </div>
+      <div class="le__list__item__label">
+        <a href="mailto:${user.email}">${user.name}</a>
       </div>
     </div>`;
   }

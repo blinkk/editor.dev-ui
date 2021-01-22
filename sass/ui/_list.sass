@@ -36,8 +36,10 @@
 
   &.le__clickable:hover
     background-color: $le-color-back-dark
-    box-shadow: -15vw 0 0 $le-color-back-dark;
     color: $le-color-on-back-dark
+
+    .le__part__menu &
+      box-shadow: -15vw 0 0 $le-color-back-dark;
 
     .le__actions
       opacity: 1
@@ -53,8 +55,10 @@
   &--selected,
   &--selected.le__clickable:hover
     background-color: $le-color-secondary
-    box-shadow: -15vw 0 0 $le-color-secondary;
     color: $le-color-on-secondary
+
+    .le__part__menu &
+      box-shadow: -15vw 0 0 $le-color-secondary;
 
 .le__list__item__label
   flex-grow: 1

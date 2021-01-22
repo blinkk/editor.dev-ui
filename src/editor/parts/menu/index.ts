@@ -11,6 +11,7 @@ export interface MenuSectionPartConfig {
    * API for retrieving data for the editor.
    */
   api: LiveEditorApiComponent;
+  isExpandedByDefault?: boolean;
   /**
    * Storage class for working with settings.
    */
@@ -26,7 +27,8 @@ export class MenuSectionPart extends BasePart implements Part {
     this.config = config;
     if (this.isExpanded === undefined) {
       this.isExpanded = this.config.storage.getItemBoolean(
-        `live.menu.section.${this.key}.isExpanded`
+        `live.menu.section.${this.key}.isExpanded`,
+        this.config.isExpandedByDefault ? true : false
       );
     }
   }

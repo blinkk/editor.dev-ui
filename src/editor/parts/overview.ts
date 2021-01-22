@@ -1,8 +1,7 @@
 import {BasePart, Part} from '.';
 import {LiveEditorApiComponent, ProjectData, WorkspaceData} from '../api';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
-import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
 export interface OverviewPartConfig {
   api: LiveEditorApiComponent;

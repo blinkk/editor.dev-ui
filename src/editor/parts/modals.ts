@@ -1,8 +1,8 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
 import {Modal} from '../ui/modal';
-import {repeat} from 'lit-html/directives/repeat';
+import {repeat} from '@blinkk/selective-edit';
 
 /**
  * Modals are centralized in the display to be outside of other

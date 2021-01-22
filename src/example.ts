@@ -1,13 +1,42 @@
+import {
+  FieldConstructor,
+  GroupField,
+  LengthRule,
+  ListField,
+  MatchRule,
+  PatternRule,
+  RangeRule,
+  RequireRule,
+  TextField,
+  TextareaField,
+  VariantField,
+} from '@blinkk/selective-edit';
 import {EVENT_RENDER} from './editor/events';
 import {ExampleApi} from './exampleApi';
 import {LiveEditor} from './editor/editor';
+import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
 const container = document.querySelector('.container');
 const exampleEditor = new LiveEditor(
   {
     api: new ExampleApi(),
-    selectiveConfig: {},
+    selectiveConfig: {
+      fieldTypes: {
+        group: (GroupField as unknown) as FieldConstructor,
+        list: (ListField as unknown) as FieldConstructor,
+        text: (TextField as unknown) as FieldConstructor,
+        textarea: (TextareaField as unknown) as FieldConstructor,
+        variant: (VariantField as unknown) as FieldConstructor,
+      },
+      ruleTypes: {
+        length: (LengthRule as unknown) as RuleConstructor,
+        match: (MatchRule as unknown) as RuleConstructor,
+        pattern: (PatternRule as unknown) as RuleConstructor,
+        range: (RangeRule as unknown) as RuleConstructor,
+        require: (RequireRule as unknown) as RuleConstructor,
+      },
+    },
   },
   container as HTMLElement
 );

@@ -1,10 +1,9 @@
 import {BasePart, Part} from '..';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../../..';
-import {Storage} from '../../../utility/storage';
-import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
-import {slugify} from '../../../utility/slugify';
 import {LiveEditorApiComponent} from '../../api';
+import {Storage} from '../../../utility/storage';
+import {slugify} from '../../../utility/slugify';
 
 export interface MenuSectionPartConfig {
   /**

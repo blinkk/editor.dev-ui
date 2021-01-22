@@ -1,17 +1,21 @@
+import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, DialogModal} from '../../ui/modal';
-import {TemplateResult, html} from 'lit-html';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
+import {SelectiveEditor} from '@blinkk/selective-edit';
 import {WorkspaceData} from '../../api';
-import {repeat} from 'lit-html/directives/repeat';
+import merge from 'lodash.merge';
+import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
 export class WorkspacesPart extends MenuSectionPart {
+  dataNew?: DeepObject;
   workspace?: WorkspaceData;
   workspacePromise?: Promise<WorkspaceData>;
   workspaces?: Array<WorkspaceData>;
   workspacesPromise?: Promise<Array<WorkspaceData>>;
+  selectiveNew?: SelectiveEditor;
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
@@ -33,6 +37,64 @@ export class WorkspacesPart extends MenuSectionPart {
         },
       });
       modal.addCancelAction();
+
+      const options = [];
+      for (const workspace of this.workspaces || []) {
+        options.push({
+          label: workspace.name,
+          value: workspace.branch.name,
+        });
+      }
+
+      // Setup the editor.
+      const selectiveConfig = merge(
+        {
+          fields: [
+            {
+              type: 'select',
+              key: 'base',
+              label: 'Parent workspace',
+              help: 'Workspace to start the new workspace from.',
+              options: options,
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Parent workspace is required.',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              key: 'workspace',
+              label: 'New workspace name',
+              help: 'Used for the workspace url and the git branch.',
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Workspace name is required.',
+                },
+                {
+                  type: 'pattern',
+                  pattern: '^[a-z0-9-]*$',
+                  message:
+                    'Workspace name can only contain lowercase alpha-numeric characters and - (dash).',
+                },
+                {
+                  type: 'match',
+                  excluded: {
+                    values: ['master', 'staging'],
+                    message: 'Workspace name cannot be "master" or "staging".',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        editor.config.selectiveConfig
+      );
+      this.selectiveNew = new SelectiveEditor(selectiveConfig);
+      this.dataNew = new DeepObject({});
+
       editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
     }
     return editor.parts.modals.modals[MODAL_KEY_NEW] as DialogModal;
@@ -90,9 +152,7 @@ export class WorkspacesPart extends MenuSectionPart {
             <div class="le__list__item__icon">
               <span class="material-icons">dashboard</span>
             </div>
-            <div class="le__list__item__label">
-              ${workspace.name} @ ${workspace.branch.commit.slice(0, 5)}
-            </div>
+            <div class="le__list__item__label">${workspace.name}</div>
           </div>`
         )}
       </div>
@@ -100,7 +160,10 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   templateNewWorkspace(editor: LiveEditor): TemplateResult {
-    return html`...New workspace form...`;
+    if (!this.selectiveNew || !this.dataNew) {
+      return html``;
+    }
+    return this.selectiveNew?.template(this.selectiveNew, this.dataNew);
   }
 
   get title() {

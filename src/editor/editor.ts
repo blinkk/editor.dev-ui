@@ -1,24 +1,17 @@
-import {TemplateResult, html, render} from 'lit-html';
+import {EditorConfig, expandClasses} from '@blinkk/selective-edit';
+import {TemplateResult, html, render} from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
 import {EVENT_RENDER_COMPLETE} from './events';
-import {FieldConstructor} from '@blinkk/selective-edit/dist/src/selective/field';
 import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
-import {RuleConstructor} from '@blinkk/selective-edit/dist/src/selective/validationRules';
 import {Storage} from '../utility/storage';
-import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
-
-export interface SelectiveConfig {
-  fieldTypes?: Record<string, FieldConstructor>;
-  ruleTypes?: Record<string, RuleConstructor>;
-}
 
 export interface LiveEditorConfig {
   api: LiveEditorApiComponent;
-  selectiveConfig: SelectiveConfig;
+  selectiveConfig: EditorConfig;
   isTest?: boolean;
 }
 

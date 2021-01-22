@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
 
 export class PreviewPart extends BasePart implements Part {

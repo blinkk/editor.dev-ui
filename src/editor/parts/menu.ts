@@ -1,13 +1,12 @@
 import {BasePart, Part} from '.';
 import {LiveEditorApiComponent, ProjectData} from '../api';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
 import {Modal} from '../ui/modal';
 import {SitePart} from './menu/site';
 import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';
 import {WorkspacesPart} from './menu/workspaces';
-import {expandClasses} from '@blinkk/selective-edit/dist/src/utility/dom';
 
 const MODAL_KEY = 'menu';
 

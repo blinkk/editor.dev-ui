@@ -1,13 +1,14 @@
-import {TemplateResult, html} from 'lit-html';
 import {
+  TemplateResult,
   expandClasses,
   findParentByClassname,
-} from '@blinkk/selective-edit/dist/src/utility/dom';
+  html,
+  repeat,
+} from '@blinkk/selective-edit';
 import {BaseUI} from '.';
 import {LiveEditor} from '../editor';
 import {LiveTemplate} from '../template';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
-import {repeat} from 'lit-html/directives/repeat';
 
 export interface ModalConfig {
   classes?: Array<string>;

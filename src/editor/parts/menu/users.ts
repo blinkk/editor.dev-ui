@@ -1,8 +1,8 @@
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
 import {UserData} from '../../api';
-import {repeat} from 'lit-html/directives/repeat';
+import {repeat} from '@blinkk/selective-edit';
 
 export class UsersPart extends MenuSectionPart {
   users?: Array<UserData>;

@@ -1,9 +1,9 @@
 import {DialogActionLevel, DialogModal} from '../../ui/modal';
-import {TemplateResult, html} from 'lit-html';
+import {TemplateResult, html} from '@blinkk/selective-edit';
 import {FileData} from '../../api';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
-import {repeat} from 'lit-html/directives/repeat';
+import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';

@@ -100,6 +100,12 @@ export interface ApiError extends EditorNotification {
   details?: any;
 }
 
+/**
+ * Interface for the live editor api.
+ *
+ * **Note:** Caching needs to be done by the api. The editor does not cache
+ * the responses and will call the api method whenever it needs the data.
+ */
 export interface LiveEditorApiComponent {
   /**
    * Copy a file.

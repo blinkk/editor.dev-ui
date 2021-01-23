@@ -21,6 +21,72 @@ function simulateNetwork(callback: Function, response: any) {
   }, Math.random() * (MAX_RESPONSE_MS - MIN_RESPONSE_MS) + MIN_RESPONSE_MS);
 }
 
+const currentFileset: Array<FileData> = [
+  {
+    path: '/content/pages/index.yaml',
+    shortcutPath: '/pages/index.yaml',
+  },
+  {
+    path: '/content/pages/about.yaml',
+    shortcutPath: '/pages/about.yaml',
+  },
+  {
+    path: '/content/strings/about.yaml',
+    shortcutPath: '/strings/products.yaml',
+  },
+];
+
+const currentUsers: Array<UserData> = [
+  {
+    name: 'Example User',
+    email: 'example@example.com',
+  },
+  {
+    name: 'Domain users',
+    email: '@domain.com',
+    isGroup: true,
+  },
+];
+
+const currentWorkspaces: Array<WorkspaceData> = [
+  {
+    branch: {
+      name: 'main',
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
+      commitSummary: 'Example commit summary.',
+    },
+    name: 'main',
+  },
+  {
+    branch: {
+      name: 'staging',
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      commit: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
+      commitSummary: 'Example commit summary.',
+    },
+    name: 'staging',
+  },
+  {
+    branch: {
+      name: 'workspace/redesign',
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      commit: 'db29a258dacdd416bb24bb63c689d669df08d409',
+      commitSummary: 'Example commit summary.',
+    },
+    name: 'redesign',
+  },
+];
+
 /**
  * Example api that returns data through a 'simulated' network.
  */
@@ -29,9 +95,11 @@ export class ExampleApi implements LiveEditorApiComponent {
     return new Promise<FileData>(resolve => {
       console.log('API: copyFile', originalPath, path);
 
-      simulateNetwork(resolve, {
+      const newFile: FileData = {
         path: path,
-      } as FileData);
+      };
+      currentFileset.push(newFile);
+      simulateNetwork(resolve, newFile);
     });
   }
 
@@ -39,9 +107,11 @@ export class ExampleApi implements LiveEditorApiComponent {
     return new Promise<FileData>(resolve => {
       console.log('API: createFile', path);
 
-      simulateNetwork(resolve, {
+      const newFile: FileData = {
         path: path,
-      } as FileData);
+      };
+      currentFileset.push(newFile);
+      simulateNetwork(resolve, newFile);
     });
   }
 
@@ -52,7 +122,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     return new Promise<WorkspaceData>(resolve => {
       console.log('API: createWorkspace', base, workspace);
 
-      simulateNetwork(resolve, {
+      const newWorkspace: WorkspaceData = {
         branch: {
           name: `workspace/${workspace}`,
           commit: base.branch.commit,
@@ -60,26 +130,30 @@ export class ExampleApi implements LiveEditorApiComponent {
           author: base.branch.author,
         },
         name: workspace,
-      } as WorkspaceData);
+      };
+      currentWorkspaces.push(newWorkspace);
+      simulateNetwork(resolve, newWorkspace);
+    });
+  }
+
+  async deleteFile(path: string): Promise<null> {
+    return new Promise<null>(resolve => {
+      console.log('API: deleteFile', path);
+
+      for (let i = 0; i < currentFileset.length; i++) {
+        if (currentFileset[i].path === path) {
+          currentFileset.splice(i, 1);
+          break;
+        }
+      }
+
+      simulateNetwork(resolve, null);
     });
   }
 
   async getFiles(): Promise<Array<FileData>> {
     return new Promise<Array<FileData>>(resolve => {
-      simulateNetwork(resolve, [
-        {
-          path: '/content/pages/index.yaml',
-          shortcutPath: '/pages/index.yaml',
-        },
-        {
-          path: '/content/pages/about.yaml',
-          shortcutPath: '/pages/about.yaml',
-        },
-        {
-          path: '/content/strings/about.yaml',
-          shortcutPath: '/strings/products.yaml',
-        },
-      ]);
+      simulateNetwork(resolve, [...currentFileset]);
     });
   }
 
@@ -93,17 +167,7 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getUsers(): Promise<Array<UserData>> {
     return new Promise<Array<UserData>>(resolve => {
-      simulateNetwork(resolve, [
-        {
-          name: 'Example User',
-          email: 'example@example.com',
-        },
-        {
-          name: 'Domain users',
-          email: '@domain.com',
-          isGroup: true,
-        },
-      ]);
+      simulateNetwork(resolve, [...currentUsers]);
     });
   }
 
@@ -126,44 +190,7 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
     return new Promise<Array<WorkspaceData>>(resolve => {
-      simulateNetwork(resolve, [
-        {
-          branch: {
-            name: 'main',
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
-            commitSummary: 'Example commit summary.',
-          },
-          name: 'main',
-        },
-        {
-          branch: {
-            name: 'staging',
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            commit: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
-            commitSummary: 'Example commit summary.',
-          },
-          name: 'staging',
-        },
-        {
-          branch: {
-            name: 'workspace/redesign',
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            commit: 'db29a258dacdd416bb24bb63c689d669df08d409',
-            commitSummary: 'Example commit summary.',
-          },
-          name: 'redesign',
-        },
-      ]);
+      simulateNetwork(resolve, [...currentWorkspaces]);
     });
   }
 }

@@ -124,6 +124,13 @@ export interface LiveEditorApiComponent {
   ): Promise<WorkspaceData>;
 
   /**
+   * Delete an existing file.
+   *
+   * @param path Full path for the file being deleted.
+   */
+  deleteFile(path: string): Promise<null>;
+
+  /**
    * Retrieve the files that can be edited in the editor.
    */
   getFiles(): Promise<Array<FileData>>;

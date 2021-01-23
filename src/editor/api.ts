@@ -1,3 +1,5 @@
+import {EditorNotification} from './notification';
+
 export interface RepoAuthor {
   name: string;
   email: string;
@@ -26,28 +28,36 @@ export interface UserData {
 }
 
 export interface WorkspaceData {
+  /**
+   * Full branch information from the workspace.
+   */
   branch: RepoBranch;
+  /**
+   * Short name for the workspace used in labels and lists.
+   */
   name: string;
 }
 
 /**
- * Where there are errors with an api call the promise should
+ * When there are errors with an api call the promise should
  * be rejected with an ApiError argument.
  *
  * ```typescript
  * createWorkspace(base: WorkspaceData, workspace: string): Promise<null> {
  *   return new Promise<null>((resolve, reject) => {
- *     // Create the workspace, calling resolve() when done.
- *     // Failure should reject the promise with an ApiError argument.
+ *     // Successful api calls resolve() when done.
+ *     // Failure should reject() the promise with an ApiError argument.
  *     reject({message: 'Houston we have a problem'});
  *   });
  * }
  * ```
  */
-export interface ApiError {
-  message: string;
-  description?: string;
-  meta?: any;
+export interface ApiError extends EditorNotification {
+  /**
+   * Additional meta information that can be used for a full report
+   * or debugging of the error.
+   */
+  details?: any;
 }
 
 export interface LiveEditorApiComponent {

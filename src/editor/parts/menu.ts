@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {LiveEditorApiComponent, ProjectData} from '../api';
+import {LiveEditorApiComponent, ProjectData, catchError} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
 import {Modal} from '../ui/modal';
@@ -48,10 +48,13 @@ export class MenuPart extends BasePart implements Part {
       }),
     };
 
-    this.config.api.getProject().then(projectData => {
-      this.project = projectData;
-      this.render();
-    });
+    this.config.api
+      .getProject()
+      .then(projectData => {
+        this.project = projectData;
+        this.render();
+      })
+      .catch(catchError);
   }
 
   protected createModal(editor: LiveEditor): Modal {

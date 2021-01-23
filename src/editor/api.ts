@@ -1,4 +1,8 @@
-import {EditorNotification} from './parts/notifications';
+import {
+  EditorNotification,
+  NotificationLevel,
+  announceNotification,
+} from './parts/notifications';
 
 export interface RepoAuthor {
   /**
@@ -154,4 +158,14 @@ export interface LiveEditorApiComponent {
    * Retrieve information about available workspaces.
    */
   getWorkspaces(): Promise<Array<WorkspaceData>>;
+}
+
+/**
+ * Catch and announce the api error.
+ *
+ * @param error Error from api.
+ */
+export function catchError(error: ApiError) {
+  error.level = NotificationLevel.Error;
+  announceNotification(error);
 }

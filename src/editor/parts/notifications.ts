@@ -1,6 +1,11 @@
 import {BasePart, Part} from '.';
 import {DialogActionLevel, DialogModal} from '../ui/modal';
-import {TemplateResult, html, repeat} from '@blinkk/selective-edit';
+import {
+  TemplateResult,
+  expandClasses,
+  html,
+  repeat,
+} from '@blinkk/selective-edit';
 import {EVENT_NOTIFICATION} from '../events';
 import {LiveEditor} from '../editor';
 
@@ -92,6 +97,7 @@ export class NotificationsPart extends BasePart implements Part {
 
     document.addEventListener(EVENT_NOTIFICATION, (evt: Event) => {
       this.addInfo((evt as CustomEvent).detail);
+      this.render();
     });
   }
 
@@ -117,6 +123,16 @@ export class NotificationsPart extends BasePart implements Part {
     this.notifications.push(
       this.scrubNewNotification(notification, NotificationLevel.Warning)
     );
+  }
+
+  classesForPart(): Array<string> {
+    const classes = ['le__part__notifications', 'le__clickable'];
+
+    if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
+      classes.push('le__part__notifications--errors');
+    }
+
+    return classes;
   }
 
   protected getOrCreateModalNotifications(editor: LiveEditor): DialogModal {
@@ -199,13 +215,13 @@ export class NotificationsPart extends BasePart implements Part {
       icon = 'notifications_active';
     }
 
-    const handleOpenNotifications = (evt: Event) => {
+    const handleOpenNotifications = () => {
       const modal = this.getOrCreateModalNotifications(editor);
       modal.show();
     };
 
     return html`<div
-      class="le__part__notifications le__clickable"
+      class=${expandClasses(this.classesForPart())}
       @click=${handleOpenNotifications}
     >
       <span class="material-icons">${icon}</span>

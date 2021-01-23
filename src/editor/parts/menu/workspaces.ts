@@ -1,4 +1,4 @@
-import {ApiError, WorkspaceData} from '../../api';
+import {ApiError, WorkspaceData, catchError} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {EVENT_WORKSPACE_LOAD} from '../../events';
@@ -145,21 +145,25 @@ export class WorkspacesPart extends MenuSectionPart {
     // Lazy load the workspace information.
     if (!this.workspace && !this.workspacePromise) {
       this.workspacePromise = this.config.api.getWorkspace();
-      this.workspacePromise.then(data => {
-        this.workspace = data;
-        this.workspacePromise = undefined;
-        this.render();
-      });
+      this.workspacePromise
+        .then(data => {
+          this.workspace = data;
+          this.workspacePromise = undefined;
+          this.render();
+        })
+        .catch(catchError);
     }
 
     // Lazy load the workspaces information.
     if (!this.workspaces && !this.workspacesPromise) {
       this.workspacesPromise = this.config.api.getWorkspaces();
-      this.workspacesPromise.then(data => {
-        this.workspaces = data;
-        this.workspacesPromise = undefined;
-        this.render();
-      });
+      this.workspacesPromise
+        .then(data => {
+          this.workspaces = data;
+          this.workspacesPromise = undefined;
+          this.render();
+        })
+        .catch(catchError);
     }
 
     if (!this.workspaces) {

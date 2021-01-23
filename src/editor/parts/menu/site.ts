@@ -1,6 +1,6 @@
-import {ApiError, FileData} from '../../api';
+import {ApiError, FileData, catchError} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
-import {DialogActionLevel, DialogModal, FormDialogModal} from '../../ui/modal';
+import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
@@ -214,11 +214,13 @@ export class SitePart extends MenuSectionPart {
     // Lazy load the workspaces information.
     if (!this.files && !this.filesPromise) {
       this.filesPromise = this.config.api.getFiles();
-      this.filesPromise.then(data => {
-        this.files = data;
-        this.filesPromise = undefined;
-        this.render();
-      });
+      this.filesPromise
+        .then(data => {
+          this.files = data;
+          this.filesPromise = undefined;
+          this.render();
+        })
+        .catch(catchError);
     }
 
     if (!this.files) {

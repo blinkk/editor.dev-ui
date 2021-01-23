@@ -1,4 +1,5 @@
 import {
+  ApiError,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -91,9 +92,23 @@ const currentWorkspaces: Array<WorkspaceData> = [
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
+  respondWithErrors: boolean;
+
+  constructor() {
+    this.respondWithErrors = false;
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
-    return new Promise<FileData>(resolve => {
+    return new Promise<FileData>((resolve, reject) => {
       console.log('API: copyFile', originalPath, path);
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to copy the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
 
       const newFile: FileData = {
         path: path,
@@ -104,8 +119,16 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 
   async createFile(path: string): Promise<FileData> {
-    return new Promise<FileData>(resolve => {
+    return new Promise<FileData>((resolve, reject) => {
       console.log('API: createFile', path);
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to create the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
 
       const newFile: FileData = {
         path: path,
@@ -119,8 +142,16 @@ export class ExampleApi implements LiveEditorApiComponent {
     base: WorkspaceData,
     workspace: string
   ): Promise<WorkspaceData> {
-    return new Promise<WorkspaceData>(resolve => {
+    return new Promise<WorkspaceData>((resolve, reject) => {
       console.log('API: createWorkspace', base, workspace);
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to create the workspace.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
 
       const newWorkspace: WorkspaceData = {
         branch: {
@@ -137,8 +168,16 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 
   async deleteFile(path: string): Promise<null> {
-    return new Promise<null>(resolve => {
+    return new Promise<null>((resolve, reject) => {
       console.log('API: deleteFile', path);
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to delete the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
 
       for (let i = 0; i < currentFileset.length; i++) {
         if (currentFileset[i].path === path) {
@@ -152,13 +191,33 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 
   async getFiles(): Promise<Array<FileData>> {
-    return new Promise<Array<FileData>>(resolve => {
+    return new Promise<Array<FileData>>((resolve, reject) => {
+      console.log('API: getFiles');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the files.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
       simulateNetwork(resolve, [...currentFileset]);
     });
   }
 
   async getProject(): Promise<ProjectData> {
-    return new Promise<ProjectData>(resolve => {
+    return new Promise<ProjectData>((resolve, reject) => {
+      console.log('API: getProject');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the project.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
       simulateNetwork(resolve, {
         title: 'Example project',
       });
@@ -166,13 +225,33 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 
   async getUsers(): Promise<Array<UserData>> {
-    return new Promise<Array<UserData>>(resolve => {
+    return new Promise<Array<UserData>>((resolve, reject) => {
+      console.log('API: getUsers');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the users.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
       simulateNetwork(resolve, [...currentUsers]);
     });
   }
 
   async getWorkspace(): Promise<WorkspaceData> {
-    return new Promise<WorkspaceData>(resolve => {
+    return new Promise<WorkspaceData>((resolve, reject) => {
+      console.log('API: getWorkspace');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the workspace.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
       simulateNetwork(resolve, {
         branch: {
           name: 'main',
@@ -189,7 +268,17 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
-    return new Promise<Array<WorkspaceData>>(resolve => {
+    return new Promise<Array<WorkspaceData>>((resolve, reject) => {
+      console.log('API: getWorkspaces');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the workspaces.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
       simulateNetwork(resolve, [...currentWorkspaces]);
     });
   }

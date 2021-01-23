@@ -1,5 +1,10 @@
 import {BasePart, Part} from '.';
-import {LiveEditorApiComponent, ProjectData, WorkspaceData} from '../api';
+import {
+  LiveEditorApiComponent,
+  ProjectData,
+  WorkspaceData,
+  catchError,
+} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
 
@@ -17,16 +22,22 @@ export class OverviewPart extends BasePart implements Part {
     this.config = config;
 
     // Load the project information.
-    this.config.api.getProject().then(data => {
-      this.project = data;
-      this.render();
-    });
+    this.config.api
+      .getProject()
+      .then(data => {
+        this.project = data;
+        this.render();
+      })
+      .catch(catchError);
 
     // Load the workspace information.
-    this.config.api.getWorkspace().then(data => {
-      this.workspace = data;
-      this.render();
-    });
+    this.config.api
+      .getWorkspace()
+      .then(data => {
+        this.workspace = data;
+        this.render();
+      })
+      .catch(catchError);
   }
 
   classesForPart(): Array<string> {

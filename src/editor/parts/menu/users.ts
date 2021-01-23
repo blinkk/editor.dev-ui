@@ -1,7 +1,7 @@
 import {TemplateResult, html} from '@blinkk/selective-edit';
+import {UserData, catchError} from '../../api';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
-import {UserData} from '../../api';
 import {repeat} from '@blinkk/selective-edit';
 
 export class UsersPart extends MenuSectionPart {
@@ -18,11 +18,13 @@ export class UsersPart extends MenuSectionPart {
     // Lazy load the workspace information.
     if (!this.users && !this.usersPromise) {
       this.usersPromise = this.config.api.getUsers();
-      this.usersPromise.then(data => {
-        this.users = data;
-        this.usersPromise = undefined;
-        this.render();
-      });
+      this.usersPromise
+        .then(data => {
+          this.users = data;
+          this.usersPromise = undefined;
+          this.render();
+        })
+        .catch(catchError);
     }
 
     if (!this.users) {

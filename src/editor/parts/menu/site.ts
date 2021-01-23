@@ -65,6 +65,9 @@ export class SitePart extends MenuSectionPart {
                   },
                 ],
               });
+              this.loadFiles();
+              // Reset the data for the next time the form is shown.
+              modal.data = new DeepObject();
               modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {
@@ -104,6 +107,7 @@ export class SitePart extends MenuSectionPart {
               editor.parts.notifications.addInfo({
                 message: `Deleted '${path}' file successfully.`,
               });
+              this.loadFiles();
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
               modal.stopProcessing(true);
@@ -192,6 +196,7 @@ export class SitePart extends MenuSectionPart {
                   },
                 ],
               });
+              this.loadFiles();
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
               modal.stopProcessing(true);
@@ -210,17 +215,20 @@ export class SitePart extends MenuSectionPart {
     return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
   }
 
+  loadFiles() {
+    this.filesPromise = this.config.api.getFiles();
+    this.filesPromise
+      .then(data => {
+        this.files = data;
+        this.filesPromise = undefined;
+        this.render();
+      })
+      .catch(catchError);
+  }
+
   templateContent(editor: LiveEditor): TemplateResult {
-    // Lazy load the workspaces information.
     if (!this.files && !this.filesPromise) {
-      this.filesPromise = this.config.api.getFiles();
-      this.filesPromise
-        .then(data => {
-          this.files = data;
-          this.filesPromise = undefined;
-          this.render();
-        })
-        .catch(catchError);
+      this.loadFiles();
     }
 
     if (!this.files) {

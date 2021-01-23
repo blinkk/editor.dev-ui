@@ -50,7 +50,7 @@ export class SitePart extends MenuSectionPart {
           modal.startProcessing();
 
           this.config.api
-            .copyFile(value.originalPath, value.fileName)
+            .copyFile(value.originalPath, value.path)
             .then((newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
@@ -81,10 +81,12 @@ export class SitePart extends MenuSectionPart {
     return editor.parts.modals.modals[MODAL_KEY_COPY] as FormDialogModal;
   }
 
-  protected getOrCreateModalDelete(editor: LiveEditor): DialogModal {
+  protected getOrCreateModalDelete(editor: LiveEditor): FormDialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_DELETE]) {
-      const modal = new DialogModal({
+      const selectiveConfig = merge({}, editor.config.selectiveConfig);
+      const modal = new FormDialogModal({
         title: 'Delete file',
+        selectiveConfig: selectiveConfig,
       });
       modal.templateModal = this.templateFileDelete.bind(this);
       modal.actions.push({
@@ -92,8 +94,26 @@ export class SitePart extends MenuSectionPart {
         level: DialogActionLevel.Extreme,
         isDisabledFunc: () => false,
         onClick: () => {
-          // TODO: Add api call to delete.
-          modal.hide();
+          const path = modal.data.get('path');
+          modal.startProcessing();
+
+          this.config.api
+            .deleteFile(path)
+            .then(() => {
+              // Log the success to the notifications.
+              editor.parts.notifications.addInfo({
+                message: `Deleted '${path}' file successfully.`,
+              });
+              // Reset the data for the next time the form is shown.
+              modal.data = new DeepObject();
+              modal.stopProcessing(true);
+            })
+            .catch((error: ApiError) => {
+              // Log the error to the notifications.
+              editor.parts.notifications.addError(error);
+              modal.error = error;
+              modal.stopProcessing();
+            });
         },
       });
       modal.addCancelAction();
@@ -108,7 +128,7 @@ export class SitePart extends MenuSectionPart {
         fields: [
           {
             type: 'text',
-            key: 'fileName',
+            key: 'path',
             label: 'File name',
             help: 'May also be used for the url stub.',
             validation: [
@@ -157,7 +177,7 @@ export class SitePart extends MenuSectionPart {
           modal.startProcessing();
 
           this.config.api
-            .createFile(value.fileName)
+            .createFile(value.path)
             .then((newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
@@ -276,6 +296,9 @@ export class SitePart extends MenuSectionPart {
         fileDelete: (evt: Event) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalDelete(editor);
+          // TODO: Use the file information from the clicked item.
+          const originalPath = '/content/todo/path.yaml';
+          modal.data.set('path', originalPath);
           modal.show();
         },
         fileLoad: (evt: Event) => {
@@ -312,7 +335,9 @@ export class SitePart extends MenuSectionPart {
   }
 
   templateFileDelete(editor: LiveEditor): TemplateResult {
-    return html`...Delete file info...`;
+    const modal = this.getOrCreateModalDelete(editor);
+    return html`Do you want to delete the
+      <code>${modal.data.get('path')}</code> file?`;
   }
 
   templateFileNew(editor: LiveEditor): TemplateResult {

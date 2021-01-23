@@ -30,6 +30,8 @@ export class ExampleApi implements LiveEditorApiComponent {
     workspace: string
   ): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>(resolve => {
+      console.log('API: createWorkspace', base, workspace);
+
       simulateNetwork(resolve, {
         branch: {
           name: `workspace/${workspace}`,

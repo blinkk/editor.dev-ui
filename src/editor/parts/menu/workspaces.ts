@@ -130,6 +130,7 @@ export class WorkspacesPart extends MenuSectionPart {
               modal.hide();
             })
             .catch((error: ApiError) => {
+              // TODO: Add action to error for retrying.
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;

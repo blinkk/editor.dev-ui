@@ -43,6 +43,13 @@ export interface EditorNotification {
    */
   description?: string;
   /**
+   * Has the notification been read by the user.
+   *
+   * **Note:** This will automatically be set to false when a notification
+   * is added to the editor notifications.
+   */
+  isRead?: boolean;
+  /**
    * The level of priority to give the message. Lower priority
    * messages will be quickly displayed then disappear (like a toast).
    * Higher priority messages will display a modal to ensure it is
@@ -67,7 +74,7 @@ export interface EditorNotification {
  * This also allows reuse of modals across parts of the editor.
  */
 export class NotificationsPart extends BasePart implements Part {
-  notifications: Array<EditorNotification>;
+  protected notifications: Array<EditorNotification>;
 
   constructor() {
     super();
@@ -79,36 +86,58 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   addDebug(notification: EditorNotification) {
-    if (!notification.level) {
-      notification.level = NotificationLevel.Debug;
-    }
-    this.notifications.push(notification);
+    this.notifications.push(
+      this.scrubNewNotification(notification, NotificationLevel.Debug)
+    );
   }
 
   addError(notification: EditorNotification) {
-    if (!notification.level) {
-      notification.level = NotificationLevel.Error;
-    }
-    this.notifications.push(notification);
+    this.notifications.push(
+      this.scrubNewNotification(notification, NotificationLevel.Error)
+    );
   }
 
   addInfo(notification: EditorNotification) {
-    if (!notification.level) {
-      notification.level = NotificationLevel.Info;
-    }
-    this.notifications.push(notification);
+    this.notifications.push(
+      this.scrubNewNotification(notification, NotificationLevel.Info)
+    );
   }
 
   addWarning(notification: EditorNotification) {
-    if (!notification.level) {
-      notification.level = NotificationLevel.Warning;
+    this.notifications.push(
+      this.scrubNewNotification(notification, NotificationLevel.Warning)
+    );
+  }
+
+  get hasUnreadNotifications() {
+    for (const notification of this.notifications) {
+      if (!notification.isRead) {
+        return true;
+      }
     }
-    this.notifications.push(notification);
+    return false;
+  }
+
+  protected scrubNewNotification(
+    notification: EditorNotification,
+    defaultLevel: NotificationLevel
+  ): EditorNotification {
+    if (!notification.level) {
+      notification.level = defaultLevel;
+    }
+    notification.isRead = false;
+    return notification;
   }
 
   template(editor: LiveEditor): TemplateResult {
+    let icon = 'notifications';
+
+    if (this.hasUnreadNotifications) {
+      icon = 'notifications_active';
+    }
+
     return html`<div class="le__part__notifications">
-      <span class="material-icons">notifications</span>
+      <span class="material-icons">${icon}</span>
     </div>`;
   }
 }

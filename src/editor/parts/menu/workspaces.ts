@@ -91,6 +91,7 @@ export class WorkspacesPart extends MenuSectionPart {
         },
         onClick: () => {
           const value = modal.selective.value;
+          modal.startProcessing();
 
           // Find the full workspace information for the base workspace.
           let baseWorkspace: WorkspaceData | undefined = undefined;
@@ -104,11 +105,9 @@ export class WorkspacesPart extends MenuSectionPart {
             modal.error = {
               message: `Unable to find the base workspace information for '${value.base}'`,
             };
+            modal.stopProcessing();
             return;
           }
-
-          modal.isProcessing = true;
-          this.render();
 
           this.config.api
             .createWorkspace(baseWorkspace, value.workspace)
@@ -124,15 +123,13 @@ export class WorkspacesPart extends MenuSectionPart {
                   },
                 ],
               });
-              modal.isProcessing = false;
-              modal.hide();
+              modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
-              modal.isProcessing = false;
-              this.render();
+              modal.stopProcessing();
             });
         },
       });

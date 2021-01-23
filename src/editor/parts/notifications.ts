@@ -263,7 +263,7 @@ export class NotificationsPart extends BasePart implements Part {
       </div>`;
     }
 
-    return html`<div class="le__list__item le__list__item--pad">
+    return html`<div class="le__list__item le__list__item--pad_horizontal">
       <div class="le__list__item__icon">
         <span class="material-icons"
           >${this.getIconForNotificationLevel(

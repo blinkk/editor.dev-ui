@@ -189,6 +189,19 @@ export class DialogModal extends Modal {
     return classes;
   }
 
+  startProcessing() {
+    this.isProcessing = true;
+    this.render();
+  }
+
+  stopProcessing(hideModal = false) {
+    this.isProcessing = false;
+    if (hideModal) {
+      this.isVisible = false;
+    }
+    this.render();
+  }
+
   templateContent(editor: LiveEditor): TemplateResult {
     return html`<div class="le__modal__content">
       ${this.templateHeader(editor)} ${this.templateTemplate(editor)}

@@ -188,9 +188,7 @@ export class SitePart extends MenuSectionPart {
         },
         onClick: () => {
           const value = modal.selective.value;
-
-          modal.isProcessing = true;
-          this.render();
+          modal.startProcessing();
 
           this.config.api
             .createFile(value.fileName)
@@ -208,15 +206,13 @@ export class SitePart extends MenuSectionPart {
                   },
                 ],
               });
-              modal.isProcessing = false;
-              modal.hide();
+              modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
-              modal.isProcessing = false;
-              this.render();
+              modal.stopProcessing();
             });
         },
       });

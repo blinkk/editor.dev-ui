@@ -1,7 +1,10 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, html} from '@blinkk/selective-edit';
+import {DialogActionLevel, DialogModal} from '../ui/modal';
+import {TemplateResult, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_NOTIFICATION} from '../events';
 import {LiveEditor} from '../editor';
+
+const MODAL_KEY_NOTIFICATIONS = 'notifications';
 
 export enum NotificationLevel {
   Debug,
@@ -34,9 +37,16 @@ export interface NotificationAction {
  */
 export interface EditorNotification {
   /**
-   * Message to display to the user.
+   * Actions that can be taken based on the notification.
    */
-  message: string;
+  actions?: Array<NotificationAction>;
+  /**
+   * Date the notification was added.
+   *
+   * **Note:** This will automatically be set to a new date object when
+   * a notification is added to the editor notifications.
+   */
+  addedOn?: Date;
   /**
    * Additional details that the user needs to know or possible
    * resolutions to an issue.
@@ -57,9 +67,9 @@ export interface EditorNotification {
    */
   level?: NotificationLevel;
   /**
-   * Actions that can be taken based on the notification.
+   * Message to display to the user.
    */
-  actions?: Array<NotificationAction>;
+  message: string;
 }
 
 /**
@@ -109,6 +119,37 @@ export class NotificationsPart extends BasePart implements Part {
     );
   }
 
+  protected getOrCreateModalNotifications(editor: LiveEditor): DialogModal {
+    if (!editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS]) {
+      const modal = new DialogModal({
+        title: 'Notifications',
+      });
+      modal.templateModal = this.templateNotifications.bind(this);
+      modal.actions.push({
+        label: 'Mark all read',
+        level: DialogActionLevel.Primary,
+        isDisabledFunc: () => false,
+        onClick: () => {
+          this.markAllAsRead();
+          modal.hide();
+        },
+      });
+      modal.addCancelAction();
+      editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] = modal;
+    }
+    return editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] as DialogModal;
+  }
+
+  getIconForNotificationLevel(level: NotificationLevel, isRead: boolean) {
+    if (level === NotificationLevel.Error) {
+      return 'notification_important';
+    }
+    if (!isRead) {
+      return 'notifications_active';
+    }
+    return 'notifications';
+  }
+
   get hasUnreadNotifications() {
     for (const notification of this.notifications) {
       if (!notification.isRead) {
@@ -118,6 +159,25 @@ export class NotificationsPart extends BasePart implements Part {
     return false;
   }
 
+  hasUnreadNotificationsAtLevel(level: NotificationLevel) {
+    for (const notification of this.notifications) {
+      if (!notification.level) {
+        continue;
+      }
+
+      if (!notification.isRead && notification.level >= level) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  markAllAsRead() {
+    for (const notification of this.notifications) {
+      notification.isRead = true;
+    }
+  }
+
   protected scrubNewNotification(
     notification: EditorNotification,
     defaultLevel: NotificationLevel
@@ -125,6 +185,7 @@ export class NotificationsPart extends BasePart implements Part {
     if (!notification.level) {
       notification.level = defaultLevel;
     }
+    notification.addedOn = new Date();
     notification.isRead = false;
     return notification;
   }
@@ -132,12 +193,69 @@ export class NotificationsPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
     let icon = 'notifications';
 
-    if (this.hasUnreadNotifications) {
+    if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
+      icon = 'notification_important';
+    } else if (this.hasUnreadNotifications) {
       icon = 'notifications_active';
     }
 
-    return html`<div class="le__part__notifications">
+    const handleOpenNotifications = (evt: Event) => {
+      const modal = this.getOrCreateModalNotifications(editor);
+      modal.show();
+    };
+
+    return html`<div
+      class="le__part__notifications le__clickable"
+      @click=${handleOpenNotifications}
+    >
       <span class="material-icons">${icon}</span>
+    </div>`;
+  }
+
+  templateNotifications(editor: LiveEditor): TemplateResult {
+    // TODO: Sort notifications by the timestamp in latest first.
+
+    return html`<div class="le__part__notifications__modal">
+      <div class="le__list">
+        ${repeat(
+          this.notifications,
+          notification => notification.addedOn?.getUTCDate(),
+          (notification: EditorNotification) =>
+            this.templateNotification(editor, notification)
+        )}
+      </div>
+    </div>`;
+  }
+
+  templateNotification(
+    editor: LiveEditor,
+    notification: EditorNotification
+  ): TemplateResult {
+    let markReadButton = html``;
+    if (!notification.isRead) {
+      markReadButton = html`<button
+        class="le__button le__clickable"
+        @click=${(evt: Event) => {
+          evt.stopPropagation();
+          notification.isRead = true;
+          this.render();
+        }}
+      >
+        Mark read
+      </button>`;
+    }
+
+    return html`<div class="le__list__item">
+      <div class="le__list__item__icon">
+        <span class="material-icons"
+          >${this.getIconForNotificationLevel(
+            notification.level || NotificationLevel.Info,
+            notification.isRead || false
+          )}</span
+        >
+      </div>
+      <div class="le__list__item__label">${notification.message}</div>
+      <div class="le__list__item__aside ">${markReadButton}</div>
     </div>`;
   }
 }

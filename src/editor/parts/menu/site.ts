@@ -5,12 +5,14 @@ import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
 import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
+import {Storage} from '../../../utility/storage';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
+const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
 
 interface DirectoryEventHandlers {
   fileCopy: (evt: Event) => void;
@@ -323,7 +325,11 @@ export class SitePart extends MenuSectionPart {
         render: this.render.bind(this),
       };
 
-      this.fileStructure = new DirectoryStructure(this.files, eventHandlers);
+      this.fileStructure = new DirectoryStructure(
+        this.files,
+        eventHandlers,
+        this.config.storage
+      );
     }
 
     return html`<div class="le__part__menu__section__content">
@@ -367,19 +373,29 @@ class DirectoryStructure {
   eventHandlers: DirectoryEventHandlers;
   files: Array<FileData>;
   isExpanded?: boolean;
+  storage: Storage;
 
   constructor(
     rootFiles: Array<FileData>,
     eventHandlers: DirectoryEventHandlers,
+    storage: Storage,
     root = '/'
   ) {
     this.rootFiles = rootFiles;
     this.root = root;
+    this.storage = storage;
     this.eventHandlers = eventHandlers;
     this.directories = {};
     this.files = [];
 
     if (this.root === '/') {
+      this.isExpanded = true;
+    }
+
+    const currentExpandedPaths = this.storage.getItemArray(
+      STORAGE_FILE_EXPANDED
+    );
+    if (currentExpandedPaths.includes(this.root)) {
       this.isExpanded = true;
     }
 
@@ -402,6 +418,7 @@ class DirectoryStructure {
           this.directories[directoryName] = new DirectoryStructure(
             subFiles,
             this.eventHandlers,
+            this.storage,
             subDirectoryRoot
           );
         }
@@ -429,6 +446,24 @@ class DirectoryStructure {
 
   handleExpandCollapse() {
     this.isExpanded = !this.isExpanded;
+
+    const currentExpandedPaths = this.storage.getItemArray(
+      STORAGE_FILE_EXPANDED
+    );
+    if (this.isExpanded) {
+      // Add to the storage.
+      currentExpandedPaths.push(this.root);
+    } else {
+      // Remove from the storage.
+      for (let i = 0; i < currentExpandedPaths.length; i++) {
+        if (currentExpandedPaths[i] === this.root) {
+          currentExpandedPaths.splice(i, 1);
+          break;
+        }
+      }
+    }
+    this.storage.setItemArray(STORAGE_FILE_EXPANDED, currentExpandedPaths);
+
     this.eventHandlers.render();
   }
 

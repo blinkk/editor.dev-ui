@@ -19,6 +19,17 @@ export class Storage {
     return localStorage.getItem(key);
   }
 
+  getItemArray(key: string): Array<any> {
+    if (this.isTesting) {
+      return [];
+    }
+    const value = this.getItem(key);
+    if (!value) {
+      return [];
+    }
+    return JSON.parse(value) as Array<any>;
+  }
+
   getItemBoolean(key: string, defaultValue = false): boolean {
     if (this.isTesting) {
       return defaultValue;
@@ -28,6 +39,17 @@ export class Storage {
       return defaultValue;
     }
     return value === 'true';
+  }
+
+  getItemRecord(key: string): Record<string, any> {
+    if (this.isTesting) {
+      return {};
+    }
+    const value = this.getItem(key);
+    if (!value) {
+      return {};
+    }
+    return JSON.parse(value) as Record<string, any>;
   }
 
   removeItem(key: string) {
@@ -42,5 +64,19 @@ export class Storage {
       return;
     }
     return localStorage.setItem(key, value);
+  }
+
+  setItemArray(key: string, value: Array<any>) {
+    if (this.isTesting) {
+      return;
+    }
+    return localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  setItemRecord(key: string, value: Record<string, any>) {
+    if (this.isTesting) {
+      return;
+    }
+    return localStorage.setItem(key, JSON.stringify(value));
   }
 }

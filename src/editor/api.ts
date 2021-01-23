@@ -34,14 +34,14 @@ export interface WorkspaceData {
  * Where there are errors with an api call the promise should
  * be rejected with an ApiError argument.
  *
- * ```
+ * ```typescript
  * createWorkspace(base: WorkspaceData, workspace: string): Promise<null> {
-    return new Promise<null>((resolve, reject) => {
-      // Create the workspace, calling resolve() when done.
-      // Failure should reject the promise with an ApiError argument.
-      reject({message: 'Houston we have a problem'});
-    });
-  }
+ *   return new Promise<null>((resolve, reject) => {
+ *     // Create the workspace, calling resolve() when done.
+ *     // Failure should reject the promise with an ApiError argument.
+ *     reject({message: 'Houston we have a problem'});
+ *   });
+ * }
  * ```
  */
 export interface ApiError {

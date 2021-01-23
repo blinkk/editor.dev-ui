@@ -1,4 +1,4 @@
-import {EditorNotification} from './notification';
+import {EditorNotification} from './parts/notifications';
 
 export interface RepoAuthor {
   name: string;
@@ -67,7 +67,10 @@ export interface LiveEditorApiComponent {
    * @param base Workspace to base new workspace from.
    * @param workspace New workspace name.
    */
-  createWorkspace(base: WorkspaceData, workspace: string): Promise<null>;
+  createWorkspace(
+    base: WorkspaceData,
+    workspace: string
+  ): Promise<WorkspaceData>;
 
   /**
    * Retrieve the files that can be edited in the editor.

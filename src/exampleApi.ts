@@ -25,17 +25,20 @@ function simulateNetwork(callback: Function, response: any) {
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
-  async createWorkspace(base: WorkspaceData, workspace: string): Promise<null> {
-    return new Promise<null>((resolve, reject) => {
-      simulateNetwork((response: any) => {
-        console.log(`API: createWorkspace '${workspace}'`, base);
-        resolve(response);
-        // reject({
-        //   message: 'Testing an error!',
-        //   description:
-        //     'More information about the error! And something that you should do next, like try to resubmit?',
-        // });
-      }, null);
+  async createWorkspace(
+    base: WorkspaceData,
+    workspace: string
+  ): Promise<WorkspaceData> {
+    return new Promise<WorkspaceData>(resolve => {
+      simulateNetwork(resolve, {
+        branch: {
+          name: `workspace/${workspace}`,
+          commit: base.branch.commit,
+          commitSummary: base.branch.commitSummary,
+          author: base.branch.author,
+        },
+        name: workspace,
+      } as WorkspaceData);
     });
   }
 

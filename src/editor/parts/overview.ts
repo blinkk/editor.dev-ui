@@ -37,6 +37,7 @@ export class OverviewPart extends BasePart implements Part {
     return html`<div class=${expandClasses(this.classesForPart())}>
       ${this.templateMenu(editor)} ${this.templateProject(editor)}
       ${this.templateWorkspace(editor)}
+      ${editor.parts.notifications.template(editor)}
     </div>`;
   }
 

@@ -1,7 +1,8 @@
 import {ApiError, WorkspaceData} from '../../api';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {LiveEditor} from '../../..';
+import {EVENT_WORKSPACE_LOAD} from '../../events';
+import {LiveEditor} from '../../editor';
 import {MenuSectionPart} from './index';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
@@ -113,12 +114,24 @@ export class WorkspacesPart extends MenuSectionPart {
 
           this.config.api
             .createWorkspace(baseWorkspace, value.workspace)
-            .then(() => {
+            .then((newWorkspace: WorkspaceData) => {
+              // Log the success to the notifications.
+              editor.parts.notifications.addInfo({
+                message: `New '${newWorkspace.name}' workspace successfully created.`,
+                actions: [
+                  {
+                    label: 'Visit workspace',
+                    customEvent: EVENT_WORKSPACE_LOAD,
+                    details: newWorkspace,
+                  },
+                ],
+              });
               modal.isProcessing = false;
               modal.hide();
             })
             .catch((error: ApiError) => {
-              // TODO: Log the error to the central manifest.
+              // Log the error to the notifications.
+              editor.parts.notifications.addError(error);
               modal.error = error;
               modal.isProcessing = false;
               this.render();

@@ -1,10 +1,16 @@
-import {EditorConfig, expandClasses} from '@blinkk/selective-edit';
-import {TemplateResult, html, render} from '@blinkk/selective-edit';
+import {
+  EditorConfig,
+  TemplateResult,
+  expandClasses,
+  html,
+  render,
+} from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
 import {EVENT_RENDER_COMPLETE} from './events';
 import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
+import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
 import {Storage} from '../utility/storage';
@@ -19,6 +25,7 @@ export interface LiveEditorParts {
   content: ContentPart;
   menu: MenuPart;
   modals: ModalsPart;
+  notifications: NotificationsPart;
   overview: OverviewPart;
   preview: PreviewPart;
 }
@@ -44,6 +51,7 @@ export class LiveEditor {
         storage: this.storage,
       }),
       modals: new ModalsPart(),
+      notifications: new NotificationsPart(),
       overview: new OverviewPart({
         api: this.config.api,
       }),

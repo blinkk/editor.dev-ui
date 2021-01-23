@@ -1,6 +1,6 @@
 import {ApiError, WorkspaceData} from '../../api';
+import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
-import {TemplateResult, html} from '@blinkk/selective-edit';
 import {EVENT_WORKSPACE_LOAD} from '../../events';
 import {LiveEditor} from '../../editor';
 import {MenuSectionPart} from './index';
@@ -123,6 +123,8 @@ export class WorkspacesPart extends MenuSectionPart {
                   },
                 ],
               });
+              // Reset the data for the next time the form is shown.
+              modal.data = new DeepObject();
               modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {

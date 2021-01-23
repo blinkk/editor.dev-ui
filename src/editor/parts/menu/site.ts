@@ -1,9 +1,10 @@
 import {ApiError, FileData} from '../../api';
+import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, DialogModal, FormDialogModal} from '../../ui/modal';
-import {TemplateResult, html} from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
+import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 
@@ -32,67 +33,7 @@ export class SitePart extends MenuSectionPart {
 
   protected getOrCreateModalCopy(editor: LiveEditor): FormDialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_COPY]) {
-      const selectiveConfig = merge(
-        {
-          fields: [
-            {
-              type: 'text',
-              key: 'fileName',
-              label: 'File name',
-              // TODO: Full in the original file name.
-              help: "Copy '...' to this new file.",
-              validation: [
-                {
-                  type: 'require',
-                  message: 'File name is required.',
-                },
-                {
-                  type: 'pattern',
-                  pattern: '^[a-z0-9-_./]*$',
-                  message:
-                    'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
-                },
-                {
-                  type: 'pattern',
-                  pattern: '/[a-z0-9]+[a-z0-9-_./]*$',
-                  message:
-                    'File name in the sub directory needs to start with alpha-numeric characters.',
-                },
-                {
-                  type: 'pattern',
-                  pattern: '^/content/[a-z0-9]+/',
-                  message:
-                    'File name needs to be in a collection (ex: /content/pages/).',
-                },
-                // TODO: Extension matching.
-                // {
-                //   type: 'pattern',
-                //   pattern: `^.*\.(${originalExt})$`,
-                //   message: `File name needs to end with ".${originalExt}" to match the original file.`,
-                // },
-                // TODO: File match checking.
-                // {
-                //   type: 'match',
-                //   excluded: {
-                //     values: [podPath],
-                //     message: 'Cannot copy to the same file.',
-                //   },
-                // },
-                // {
-                //   type: 'match',
-                //   level: 'warning',
-                //   excluded: {
-                //     values: otherPodPaths,
-                //     message:
-                //       'File name already exists. Copying will overwrite the existing file.',
-                //   },
-                // },
-              ],
-            },
-          ],
-        },
-        editor.config.selectiveConfig
-      );
+      const selectiveConfig = merge({}, editor.config.selectiveConfig);
       const modal = new FormDialogModal({
         title: 'Copy file',
         selectiveConfig: selectiveConfig,
@@ -105,8 +46,33 @@ export class SitePart extends MenuSectionPart {
           return modal.isProcessing || !modal.selective.isValid;
         },
         onClick: () => {
-          // TODO: Add form processing.
-          modal.hide();
+          const value = modal.selective.value;
+          modal.startProcessing();
+
+          this.config.api
+            .copyFile(value.originalPath, value.fileName)
+            .then((newFile: FileData) => {
+              // Log the success to the notifications.
+              editor.parts.notifications.addInfo({
+                message: `New '${
+                  newFile.shortcutPath || newFile.path
+                }' file successfully created.`,
+                actions: [
+                  {
+                    label: 'Load file',
+                    customEvent: EVENT_FILE_LOAD,
+                    details: newFile,
+                  },
+                ],
+              });
+              modal.stopProcessing(true);
+            })
+            .catch((error: ApiError) => {
+              // Log the error to the notifications.
+              editor.parts.notifications.addError(error);
+              modal.error = error;
+              modal.stopProcessing();
+            });
         },
       });
       modal.addCancelAction();
@@ -200,12 +166,14 @@ export class SitePart extends MenuSectionPart {
                 }' file successfully created.`,
                 actions: [
                   {
-                    label: 'Visit file',
+                    label: 'Load file',
                     customEvent: EVENT_FILE_LOAD,
                     details: newFile,
                   },
                 ],
               });
+              // Reset the data for the next time the form is shown.
+              modal.data = new DeepObject();
               modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {
@@ -242,6 +210,67 @@ export class SitePart extends MenuSectionPart {
         fileCopy: (evt: Event) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalCopy(editor);
+          // TODO: Use the file information from the clicked item.
+          const originalPath = '/content/todo/path.yaml';
+          modal.data.set('originalPath', originalPath);
+          modal.data.set('path', originalPath);
+
+          // Make the form field custom to the file being copied.
+          modal.selective.resetFields();
+          modal.selective.fields.addField({
+            type: 'text',
+            key: 'path',
+            label: 'File path',
+            help: `Copy '${originalPath}' file to this new file.`,
+            validation: [
+              {
+                type: 'require',
+                message: 'File name is required.',
+              } as RuleConfig,
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9-_./]*$',
+                message:
+                  'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
+              } as RuleConfig,
+              {
+                type: 'pattern',
+                pattern: '/[a-z0-9]+[a-z0-9-_./]*$',
+                message:
+                  'File name in the sub directory needs to start with alpha-numeric characters.',
+              } as RuleConfig,
+              {
+                type: 'pattern',
+                pattern: '^/content/[a-z0-9]+/',
+                message:
+                  'File name needs to be in a collection (ex: /content/pages/).',
+              } as RuleConfig,
+              // TODO: Extension matching.
+              // {
+              //   type: 'pattern',
+              //   pattern: `^.*\.(${originalExt})$`,
+              //   message: `File name needs to end with ".${originalExt}" to match the original file.`,
+              // },
+              {
+                type: 'match',
+                excluded: {
+                  values: [originalPath],
+                  message: 'Cannot copy to the same file.',
+                },
+              } as RuleConfig,
+              // TODO: Existing file match checking.
+              // {
+              //   type: 'match',
+              //   level: 'warning',
+              //   excluded: {
+              //     values: otherPodPaths,
+              //     message:
+              //       'File name already exists. Copying will overwrite the existing file.',
+              //   },
+              // },
+            ],
+          });
+
           modal.show();
         },
         fileDelete: (evt: Event) => {

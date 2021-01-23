@@ -98,6 +98,14 @@ export interface ApiError extends EditorNotification {
 
 export interface LiveEditorApiComponent {
   /**
+   * Copy a file.
+   *
+   * @param path Full path for the original file.
+   * @param path Full path for the new file.
+   */
+  copyFile(originalPath: string, path: string): Promise<FileData>;
+
+  /**
    * Create a new file from scratch.
    *
    * @param path Full path for the new file.

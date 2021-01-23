@@ -164,6 +164,14 @@ export interface LiveEditorApiComponent {
    * Retrieve information about available workspaces.
    */
   getWorkspaces(): Promise<Array<WorkspaceData>>;
+
+  /**
+   * Load the workspace.
+   *
+   * This may redirect to a different URL.
+   * (ex: workspaces may be domain based.)
+   */
+  loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData>;
 }
 
 /**

@@ -1,5 +1,10 @@
 import {ApiError, WorkspaceData, catchError} from '../../api';
-import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
+import {
+  DeepObject,
+  TemplateResult,
+  expandClasses,
+  html,
+} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {EVENT_WORKSPACE_LOAD} from '../../events';
 import {LiveEditor} from '../../editor';
@@ -18,6 +23,14 @@ export class WorkspacesPart extends MenuSectionPart {
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
     classes.push('le__part__menu__workspaces');
+    return classes;
+  }
+
+  classesForWorkspace(workspace: WorkspaceData): Array<string> {
+    const classes = ['le__list__item', 'le__clickable'];
+    if (this.workspace?.name === workspace.name) {
+      classes.push('le__list__item--selected');
+    }
     return classes;
   }
 
@@ -170,7 +183,7 @@ export class WorkspacesPart extends MenuSectionPart {
       return html`<div class="le__loading le__loading--pad"></div>`;
     }
 
-    const handleClick = () => {
+    const handleNewClick = () => {
       const modal = this.getOrCreateModalNew(editor);
       modal.show();
     };
@@ -179,7 +192,7 @@ export class WorkspacesPart extends MenuSectionPart {
       <div class="le__list le__list--constrained le__list--indent">
         <div
           class="le__list__item le__list__item--primary le__clickable"
-          @click=${handleClick}
+          @click=${handleNewClick}
         >
           <div class="le__list__item__icon">
             <span class="material-icons">add_circle</span>
@@ -190,9 +203,16 @@ export class WorkspacesPart extends MenuSectionPart {
           this.workspaces || [],
           workspace => workspace.name,
           workspace => html`<div
-            class="le__list__item ${this.workspace?.name === workspace.name
-              ? 'le__list__item--selected'
-              : ''}"
+            class=${expandClasses(this.classesForWorkspace(workspace))}
+            @click=${() => {
+              this.config.api
+                .loadWorkspace(workspace)
+                .then((workspace: WorkspaceData) => {
+                  this.workspace = workspace;
+                  this.render();
+                })
+                .catch(catchError);
+            }}
           >
             <div class="le__list__item__icon">
               <span class="material-icons">dashboard</span>

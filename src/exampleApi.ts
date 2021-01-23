@@ -49,19 +49,21 @@ const currentUsers: Array<UserData> = [
   },
 ];
 
-const currentWorkspaces: Array<WorkspaceData> = [
-  {
-    branch: {
-      name: 'main',
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
-      commitSummary: 'Example commit summary.',
-    },
+let currentWorkspace: WorkspaceData = {
+  branch: {
     name: 'main',
+    author: {
+      name: 'Example User',
+      email: 'example@example.com',
+    },
+    commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
+    commitSummary: 'Example commit summary.',
   },
+  name: 'main',
+};
+
+const currentWorkspaces: Array<WorkspaceData> = [
+  currentWorkspace,
   {
     branch: {
       name: 'staging',
@@ -252,18 +254,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, {
-        branch: {
-          name: 'main',
-          author: {
-            name: 'Example User',
-            email: 'example@example.com',
-          },
-          commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
-          commitSummary: 'Example commit summary.',
-        },
-        name: 'main',
-      });
+      simulateNetwork(resolve, currentWorkspace);
     });
   }
 
@@ -280,6 +271,24 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, [...currentWorkspaces]);
+    });
+  }
+
+  async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
+    return new Promise<WorkspaceData>((resolve, reject) => {
+      console.log('API: loadWorkspace');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to load the workspaces.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      currentWorkspace = workspace;
+
+      simulateNetwork(resolve, currentWorkspace);
     });
   }
 }

@@ -1,14 +1,19 @@
 import {
+  DeepObject,
+  EditorConfig,
+  SelectiveEditor,
   TemplateResult,
   expandClasses,
   findParentByClassname,
   html,
   repeat,
 } from '@blinkk/selective-edit';
+import {ApiError, LiveEditorApiComponent} from '../api';
 import {BaseUI} from '.';
 import {LiveEditor} from '../editor';
 import {LiveTemplate} from '../template';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
+import {templateApiError} from './error';
 
 export interface ModalConfig {
   classes?: Array<string>;
@@ -17,6 +22,10 @@ export interface ModalConfig {
 
 export interface DialogModalConfig extends ModalConfig {
   title?: string;
+}
+
+export interface FormDialogModalConfig extends DialogModalConfig {
+  selectiveConfig: EditorConfig;
 }
 
 export enum DialogActionLevel {
@@ -30,6 +39,7 @@ export interface DialogActionConfig {
   classes?: Array<string>;
   level?: DialogActionLevel;
   label: string;
+  isDisabledFunc: () => boolean;
   onClick: (evt: Event) => void;
 }
 
@@ -122,6 +132,7 @@ export class Modal extends UuidMixin(BaseUI) {
 export class DialogModal extends Modal {
   actions: Array<DialogActionConfig>;
   config: DialogModalConfig;
+  isProcessing?: boolean;
 
   constructor(config: DialogModalConfig) {
     super(config);
@@ -135,6 +146,7 @@ export class DialogModal extends Modal {
   addCancelAction() {
     this.actions.push({
       label: 'Cancel',
+      isDisabledFunc: () => false,
       onClick: () => {
         this.hide();
       },
@@ -170,19 +182,16 @@ export class DialogModal extends Modal {
 
     classes.push('le__modal--dialog');
 
+    if (this.isProcessing) {
+      classes.push('le__modal--processing');
+    }
+
     return classes;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    if (!this.templateModal) {
-      return html`Modal missing template.`;
-    }
-
     return html`<div class="le__modal__content">
-      ${this.templateHeader(editor)}
-      <div class="le__modal__content__template">
-        ${this.templateModal(editor)}
-      </div>
+      ${this.templateHeader(editor)} ${this.templateTemplate(editor)}
       ${this.templateFooter(editor)}
     </div>`;
   }
@@ -214,6 +223,7 @@ export class DialogModal extends Modal {
     const templateActionButton = (config: DialogActionConfig) =>
       html`<button
         class=${expandClasses(this.classesForAction(config))}
+        ?disabled=${config.isDisabledFunc()}
         @click=${config.onClick}
       >
         ${config.label}
@@ -227,6 +237,9 @@ export class DialogModal extends Modal {
           templateActionButton
         )}
       </div>
+      ${this.isProcessing
+        ? html`<div class="le__loading le__loading--pad-horizontal"></div>`
+        : ''}
       <div class="le__modal__actions__secondary">
         ${repeat(
           secondaryActions,
@@ -250,6 +263,38 @@ export class DialogModal extends Modal {
     }
     return html`<div class="le__modal__content__header">
       ${this.config.title}
+    </div>`;
+  }
+
+  templateTemplate(editor: LiveEditor): TemplateResult {
+    if (!this.templateModal) {
+      return html`Modal missing template.`;
+    }
+
+    return html` <div class="le__modal__content__template">
+      ${this.templateModal(editor)}
+    </div>`;
+  }
+}
+
+export class FormDialogModal extends DialogModal {
+  config: FormDialogModalConfig;
+  data: DeepObject;
+  error?: ApiError;
+  selective: SelectiveEditor;
+
+  constructor(config: FormDialogModalConfig) {
+    super(config);
+    this.config = config;
+    this.data = new DeepObject({});
+    this.selective = new SelectiveEditor(this.config.selectiveConfig);
+  }
+
+  templateContent(editor: LiveEditor): TemplateResult {
+    return html`<div class="le__modal__content">
+      ${this.templateHeader(editor)} ${this.templateTemplate(editor)}
+      ${templateApiError(editor, this.error, {pad: true})}
+      ${this.templateFooter(editor)}
     </div>`;
   }
 }

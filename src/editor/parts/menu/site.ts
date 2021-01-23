@@ -1,8 +1,9 @@
-import {DialogActionLevel, DialogModal} from '../../ui/modal';
+import {DialogActionLevel, DialogModal, FormDialogModal} from '../../ui/modal';
 import {TemplateResult, html} from '@blinkk/selective-edit';
 import {FileData} from '../../api';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
+import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_COPY = 'menu_file_copy';
@@ -28,26 +29,92 @@ export class SitePart extends MenuSectionPart {
     return classes;
   }
 
-  protected createModalCopy(editor: LiveEditor): DialogModal {
+  protected getOrCreateModalCopy(editor: LiveEditor): FormDialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_COPY]) {
-      const modal = new DialogModal({
+      const selectiveConfig = merge(
+        {
+          fields: [
+            {
+              type: 'text',
+              key: 'fileName',
+              label: 'File name',
+              // TODO: Full in the original file name.
+              help: "Copy '...' to this new file.",
+              validation: [
+                {
+                  type: 'require',
+                  message: 'File name is required.',
+                },
+                {
+                  type: 'pattern',
+                  pattern: '^[a-z0-9-_./]*$',
+                  message:
+                    'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
+                },
+                {
+                  type: 'pattern',
+                  pattern: '/[a-z0-9]+[a-z0-9-_./]*$',
+                  message:
+                    'File name in the sub directory needs to start with alpha-numeric characters.',
+                },
+                {
+                  type: 'pattern',
+                  pattern: '^/content/[a-z0-9]+/',
+                  message:
+                    'File name needs to be in a collection (ex: /content/pages/).',
+                },
+                // TODO: Extension matching.
+                // {
+                //   type: 'pattern',
+                //   pattern: `^.*\.(${originalExt})$`,
+                //   message: `File name needs to end with ".${originalExt}" to match the original file.`,
+                // },
+                // TODO: File match checking.
+                // {
+                //   type: 'match',
+                //   excluded: {
+                //     values: [podPath],
+                //     message: 'Cannot copy to the same file.',
+                //   },
+                // },
+                // {
+                //   type: 'match',
+                //   level: 'warning',
+                //   excluded: {
+                //     values: otherPodPaths,
+                //     message:
+                //       'File name already exists. Copying will overwrite the existing file.',
+                //   },
+                // },
+              ],
+            },
+          ],
+        },
+        editor.config.selectiveConfig
+      );
+      const modal = new FormDialogModal({
         title: 'Copy file',
+        selectiveConfig: selectiveConfig,
       });
       modal.templateModal = this.templateFileCopy.bind(this);
       modal.actions.push({
         label: 'Copy file',
         level: DialogActionLevel.Primary,
+        isDisabledFunc: () => {
+          return modal.isProcessing || !modal.selective.isValid;
+        },
         onClick: () => {
+          // TODO: Add form processing.
           modal.hide();
         },
       });
       modal.addCancelAction();
       editor.parts.modals.modals[MODAL_KEY_COPY] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_COPY] as DialogModal;
+    return editor.parts.modals.modals[MODAL_KEY_COPY] as FormDialogModal;
   }
 
-  protected createModalDelete(editor: LiveEditor): DialogModal {
+  protected getOrCreateModalDelete(editor: LiveEditor): DialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_DELETE]) {
       const modal = new DialogModal({
         title: 'Delete file',
@@ -56,33 +123,77 @@ export class SitePart extends MenuSectionPart {
       modal.actions.push({
         label: 'Delete file',
         level: DialogActionLevel.Extreme,
+        isDisabledFunc: () => false,
         onClick: () => {
+          // TODO: Add api call to delete.
           modal.hide();
         },
       });
       modal.addCancelAction();
       editor.parts.modals.modals[MODAL_KEY_DELETE] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_DELETE] as DialogModal;
+    return editor.parts.modals.modals[MODAL_KEY_DELETE] as FormDialogModal;
   }
 
-  protected createModalNew(editor: LiveEditor): DialogModal {
+  protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
+    const selectiveConfig = merge(
+      {
+        fields: [
+          {
+            type: 'text',
+            key: 'fileName',
+            label: 'File name',
+            help: 'May also be used for the url stub.',
+            validation: [
+              {
+                type: 'require',
+                message: 'File name is required.',
+              },
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9-_./]*$',
+                message:
+                  'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
+              },
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9]+',
+                message:
+                  'File name can only start with an alpha-numeric character.',
+              },
+              {
+                type: 'pattern',
+                pattern: '^.*.(yaml|md|html)$',
+                message:
+                  'File name needs to end with ".yaml", ".md", or ".html".',
+              },
+            ],
+          },
+        ],
+      },
+      editor.config.selectiveConfig
+    );
     if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
-      const modal = new DialogModal({
+      const modal = new FormDialogModal({
         title: 'New file',
+        selectiveConfig: selectiveConfig,
       });
       modal.templateModal = this.templateFileNew.bind(this);
       modal.actions.push({
         label: 'Create file',
         level: DialogActionLevel.Primary,
+        isDisabledFunc: () => {
+          return modal.isProcessing || !modal.selective.isValid;
+        },
         onClick: () => {
+          // TODO: Add form processing.
           modal.hide();
         },
       });
       modal.addCancelAction();
       editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NEW] as DialogModal;
+    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
@@ -104,12 +215,12 @@ export class SitePart extends MenuSectionPart {
       const eventHandlers: DirectoryEventHandlers = {
         fileCopy: (evt: Event) => {
           evt.stopPropagation();
-          const modal = this.createModalCopy(editor);
+          const modal = this.getOrCreateModalCopy(editor);
           modal.show();
         },
         fileDelete: (evt: Event) => {
           evt.stopPropagation();
-          const modal = this.createModalDelete(editor);
+          const modal = this.getOrCreateModalDelete(editor);
           modal.show();
         },
         fileLoad: (evt: Event) => {
@@ -118,7 +229,7 @@ export class SitePart extends MenuSectionPart {
         },
         fileNew: (evt: Event) => {
           evt.stopPropagation();
-          const modal = this.createModalNew(editor);
+          const modal = this.getOrCreateModalNew(editor);
           modal.show();
         },
         render: this.render.bind(this),
@@ -141,15 +252,17 @@ export class SitePart extends MenuSectionPart {
   }
 
   templateFileCopy(editor: LiveEditor): TemplateResult {
-    return html`...Copy file form...`;
+    const modal = this.getOrCreateModalCopy(editor);
+    return modal.selective.template(modal.selective, modal.data);
   }
 
   templateFileDelete(editor: LiveEditor): TemplateResult {
-    return html`...Delete file form...`;
+    return html`...Delete file info...`;
   }
 
   templateFileNew(editor: LiveEditor): TemplateResult {
-    return html`...New file form...`;
+    const modal = this.getOrCreateModalNew(editor);
+    return modal.selective.template(modal.selective, modal.data);
   }
 
   get title() {

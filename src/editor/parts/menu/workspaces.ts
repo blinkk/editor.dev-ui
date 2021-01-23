@@ -1,21 +1,18 @@
-import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
-import {DialogActionLevel, DialogModal} from '../../ui/modal';
+import {ApiError, WorkspaceData} from '../../api';
+import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {TemplateResult, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
-import {SelectiveEditor} from '@blinkk/selective-edit';
-import {WorkspaceData} from '../../api';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
 export class WorkspacesPart extends MenuSectionPart {
-  dataNew?: DeepObject;
   workspace?: WorkspaceData;
   workspacePromise?: Promise<WorkspaceData>;
   workspaces?: Array<WorkspaceData>;
   workspacesPromise?: Promise<Array<WorkspaceData>>;
-  selectiveNew?: SelectiveEditor;
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
@@ -23,21 +20,9 @@ export class WorkspacesPart extends MenuSectionPart {
     return classes;
   }
 
-  protected createModalNew(editor: LiveEditor): DialogModal {
+  protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
-      const modal = new DialogModal({
-        title: 'New workspace',
-      });
-      modal.templateModal = this.templateNewWorkspace.bind(this);
-      modal.actions.push({
-        label: 'Create workspace',
-        level: DialogActionLevel.Primary,
-        onClick: () => {
-          modal.hide();
-        },
-      });
-      modal.addCancelAction();
-
+      // Setup the editor.
       const options = [];
       for (const workspace of this.workspaces || []) {
         options.push({
@@ -46,7 +31,6 @@ export class WorkspacesPart extends MenuSectionPart {
         });
       }
 
-      // Setup the editor.
       const selectiveConfig = merge(
         {
           fields: [
@@ -58,7 +42,7 @@ export class WorkspacesPart extends MenuSectionPart {
               options: options,
               validation: [
                 {
-                  type: 'required',
+                  type: 'require',
                   message: 'Parent workspace is required.',
                 },
               ],
@@ -70,7 +54,7 @@ export class WorkspacesPart extends MenuSectionPart {
               help: 'Used for the workspace url and the git branch.',
               validation: [
                 {
-                  type: 'required',
+                  type: 'require',
                   message: 'Workspace name is required.',
                 },
                 {
@@ -93,12 +77,58 @@ export class WorkspacesPart extends MenuSectionPart {
         },
         editor.config.selectiveConfig
       );
-      this.selectiveNew = new SelectiveEditor(selectiveConfig);
-      this.dataNew = new DeepObject({});
+      const modal = new FormDialogModal({
+        title: 'New workspace',
+        selectiveConfig: selectiveConfig,
+      });
+      modal.templateModal = this.templateNewWorkspace.bind(this);
+      modal.actions.push({
+        label: 'Create workspace',
+        level: DialogActionLevel.Primary,
+        isDisabledFunc: () => {
+          return modal.isProcessing || !modal.selective.isValid;
+        },
+        onClick: () => {
+          const value = modal.selective.value;
 
+          // Find the full workspace information for the base workspace.
+          let baseWorkspace: WorkspaceData | undefined = undefined;
+          for (const workspace of this.workspaces || []) {
+            if (workspace.branch.name === value.base) {
+              baseWorkspace = workspace;
+            }
+          }
+
+          if (!baseWorkspace) {
+            // TODO: Better way to show this error that should not happen.
+            console.error(
+              'Unable to find the base workspace information:',
+              value.base
+            );
+            return;
+          }
+
+          modal.isProcessing = true;
+          this.render();
+
+          this.config.api
+            .createWorkspace(baseWorkspace, value.workspace)
+            .then(() => {
+              modal.isProcessing = false;
+              modal.hide();
+            })
+            .catch((error: ApiError) => {
+              // TODO: Log the error to the central manifest.
+              modal.error = error;
+              modal.isProcessing = false;
+              this.render();
+            });
+        },
+      });
+      modal.addCancelAction();
       editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NEW] as DialogModal;
+    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
@@ -127,7 +157,7 @@ export class WorkspacesPart extends MenuSectionPart {
     }
 
     const handleClick = () => {
-      const modal = this.createModalNew(editor);
+      const modal = this.getOrCreateModalNew(editor);
       modal.show();
     };
 
@@ -161,10 +191,8 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   templateNewWorkspace(editor: LiveEditor): TemplateResult {
-    if (!this.selectiveNew || !this.dataNew) {
-      return html``;
-    }
-    return this.selectiveNew?.template(this.selectiveNew, this.dataNew);
+    const modal = this.getOrCreateModalNew(editor);
+    return modal.selective.template(modal.selective, modal.data);
   }
 
   get title() {

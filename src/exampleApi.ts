@@ -6,7 +6,7 @@ import {
   WorkspaceData,
 } from './editor/api';
 
-const MAX_RESPONSE_MS = 1500;
+const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
 
 /**
@@ -25,7 +25,21 @@ function simulateNetwork(callback: Function, response: any) {
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
-  getFiles(): Promise<Array<FileData>> {
+  async createWorkspace(base: WorkspaceData, workspace: string): Promise<null> {
+    return new Promise<null>((resolve, reject) => {
+      simulateNetwork((response: any) => {
+        console.log(`API: createWorkspace '${workspace}'`, base);
+        resolve(response);
+        // reject({
+        //   message: 'Testing an error!',
+        //   description:
+        //     'More information about the error! And something that you should do next, like try to resubmit?',
+        // });
+      }, null);
+    });
+  }
+
+  async getFiles(): Promise<Array<FileData>> {
     return new Promise<Array<FileData>>(resolve => {
       simulateNetwork(resolve, [
         {
@@ -44,7 +58,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  getProject(): Promise<ProjectData> {
+  async getProject(): Promise<ProjectData> {
     return new Promise<ProjectData>(resolve => {
       simulateNetwork(resolve, {
         title: 'Example project',
@@ -52,7 +66,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  getUsers(): Promise<Array<UserData>> {
+  async getUsers(): Promise<Array<UserData>> {
     return new Promise<Array<UserData>>(resolve => {
       simulateNetwork(resolve, [
         {
@@ -68,7 +82,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  getWorkspace(): Promise<WorkspaceData> {
+  async getWorkspace(): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>(resolve => {
       simulateNetwork(resolve, {
         branch: {
@@ -85,7 +99,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  getWorkspaces(): Promise<Array<WorkspaceData>> {
+  async getWorkspaces(): Promise<Array<WorkspaceData>> {
     return new Promise<Array<WorkspaceData>>(resolve => {
       simulateNetwork(resolve, [
         {

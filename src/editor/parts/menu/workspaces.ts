@@ -101,11 +101,9 @@ export class WorkspacesPart extends MenuSectionPart {
           }
 
           if (!baseWorkspace) {
-            // TODO: Better way to show this error that should not happen.
-            console.error(
-              'Unable to find the base workspace information:',
-              value.base
-            );
+            modal.error = {
+              message: `Unable to find the base workspace information for '${value.base}'`,
+            };
             return;
           }
 
@@ -130,7 +128,6 @@ export class WorkspacesPart extends MenuSectionPart {
               modal.hide();
             })
             .catch((error: ApiError) => {
-              // TODO: Add action to error for retrying.
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;

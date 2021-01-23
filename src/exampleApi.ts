@@ -25,6 +25,16 @@ function simulateNetwork(callback: Function, response: any) {
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
+  async createFile(path: string): Promise<FileData> {
+    return new Promise<FileData>(resolve => {
+      console.log('API: createFile', path);
+
+      simulateNetwork(resolve, {
+        path: path,
+      } as FileData);
+    });
+  }
+
   async createWorkspace(
     base: WorkspaceData,
     workspace: string

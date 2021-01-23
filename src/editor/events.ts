@@ -1,5 +1,13 @@
 /**
- * Custom event name for triggering a notification.
+ * Custom event name for loading a file in the editor.
+ *
+ * Expects a FileData as the event details.
+ * @see editor.api.FileData
+ */
+export const EVENT_FILE_LOAD = 'live.file.load';
+
+/**
+ * Custom event name for adding a notification.
  */
 export const EVENT_NOTIFICATION = 'live.notification';
 

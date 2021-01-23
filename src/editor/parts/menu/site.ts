@@ -1,6 +1,7 @@
+import {ApiError, FileData} from '../../api';
 import {DialogActionLevel, DialogModal, FormDialogModal} from '../../ui/modal';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {FileData} from '../../api';
+import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
 import merge from 'lodash.merge';
@@ -186,8 +187,37 @@ export class SitePart extends MenuSectionPart {
           return modal.isProcessing || !modal.selective.isValid;
         },
         onClick: () => {
-          // TODO: Add form processing.
-          modal.hide();
+          const value = modal.selective.value;
+
+          modal.isProcessing = true;
+          this.render();
+
+          this.config.api
+            .createFile(value.fileName)
+            .then((newFile: FileData) => {
+              // Log the success to the notifications.
+              editor.parts.notifications.addInfo({
+                message: `New '${
+                  newFile.shortcutPath || newFile.path
+                }' file successfully created.`,
+                actions: [
+                  {
+                    label: 'Visit file',
+                    customEvent: EVENT_FILE_LOAD,
+                    details: newFile,
+                  },
+                ],
+              });
+              modal.isProcessing = false;
+              modal.hide();
+            })
+            .catch((error: ApiError) => {
+              // Log the error to the notifications.
+              editor.parts.notifications.addError(error);
+              modal.error = error;
+              modal.isProcessing = false;
+              this.render();
+            });
         },
       });
       modal.addCancelAction();

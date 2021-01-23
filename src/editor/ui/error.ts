@@ -1,5 +1,4 @@
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
-import {options} from 'marked';
 import {ApiError} from '../api';
 import {LiveEditor} from '../editor';
 

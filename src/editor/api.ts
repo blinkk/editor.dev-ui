@@ -1,29 +1,65 @@
 import {EditorNotification} from './parts/notifications';
 
 export interface RepoAuthor {
+  /**
+   * Name of the author.
+   */
   name: string;
+  /**
+   * Email address of the author.
+   */
   email: string;
 }
 
 export interface RepoBranch {
+  /**
+   * Full branch name.
+   */
   name: string;
+  /**
+   * Commit hash of the last commit.
+   */
   commit: string;
+  /**
+   * Summary of the last commit.
+   */
   commitSummary: string;
+  /**
+   * Author of the last commit.
+   */
   author: RepoAuthor;
 }
 
 export interface FileData {
+  /**
+   * Complete path for the file.
+   */
   path: string;
+  /**
+   * Shortcut path to use in the editor to reduce file tree size.
+   */
   shortcutPath?: string;
 }
 
 export interface ProjectData {
+  /**
+   * Project title
+   */
   title: string;
 }
 
 export interface UserData {
+  /**
+   * Name of the user.
+   */
   name: string;
+  /**
+   * Email representing the user.
+   */
   email: string;
+  /**
+   * Is the user data a group?
+   */
   isGroup?: boolean;
 }
 
@@ -61,6 +97,13 @@ export interface ApiError extends EditorNotification {
 }
 
 export interface LiveEditorApiComponent {
+  /**
+   * Create a new file from scratch.
+   *
+   * @param path Full path for the new file.
+   */
+  createFile(path: string): Promise<FileData>;
+
   /**
    * Create a new workspace based off an existing workspace.
    *

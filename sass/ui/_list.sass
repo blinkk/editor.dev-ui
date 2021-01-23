@@ -18,6 +18,15 @@
   font-weight: 300
   flex-flow: row
 
+  &--pad
+    padding: $le-space-medium
+
+  &--pad_horizontal
+    padding: 0 $le-space-medium
+
+  &--pad_vertical
+    padding: $le-space-medium 0
+
   &--primary
     color: $le-color-primary
     font-weight: 700
@@ -70,3 +79,10 @@
 .le__list__item__aside
   font-style: italic
   margin: $le-space-small $le-space-medium $le-space-small 0
+
+  .le__list__item--pad &,
+  .le__list__item--pad_horizontal &
+    margin: $le-space-small 0
+
+  .le__list__item--pad_vertical &
+    margin: 0 $le-space-medium 0 0

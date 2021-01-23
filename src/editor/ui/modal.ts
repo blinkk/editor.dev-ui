@@ -8,7 +8,7 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {ApiError, LiveEditorApiComponent} from '../api';
+import {ApiError} from '../api';
 import {BaseUI} from '.';
 import {LiveEditor} from '../editor';
 import {LiveTemplate} from '../template';
@@ -143,9 +143,9 @@ export class DialogModal extends Modal {
   /**
    * Add a cancel action to the dialog.
    */
-  addCancelAction() {
+  addCancelAction(label = 'Cancel') {
     this.actions.push({
-      label: 'Cancel',
+      label: label,
       isDisabledFunc: () => false,
       onClick: () => {
         this.hide();

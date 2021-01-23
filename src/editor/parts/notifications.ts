@@ -134,7 +134,7 @@ export class NotificationsPart extends BasePart implements Part {
           modal.hide();
         },
       });
-      modal.addCancelAction();
+      modal.addCancelAction('Close');
       editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] = modal;
     }
     return editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] as DialogModal;
@@ -213,7 +213,25 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   templateNotifications(editor: LiveEditor): TemplateResult {
-    // TODO: Sort notifications by the timestamp in latest first.
+    if (!this.notifications.length) {
+      return html`<div class="le__part__notifications__modal">
+        <div class="le__list">
+          <div class="le__list__item le__list__item--pad">
+            <div class="le__list__item__icon">
+              <span class="material-icons">check</span>
+            </div>
+            <div class="le__list__item__label">
+              No notifications yet. Please check back later.
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // Sort notifications by the timestamp in latest first.
+    this.notifications.sort(
+      (a, b) => (b.addedOn?.getTime() || 0) - (a.addedOn?.getTime() || 0)
+    );
 
     return html`<div class="le__part__notifications__modal">
       <div class="le__list">
@@ -233,8 +251,8 @@ export class NotificationsPart extends BasePart implements Part {
   ): TemplateResult {
     let markReadButton = html``;
     if (!notification.isRead) {
-      markReadButton = html`<button
-        class="le__button le__clickable"
+      markReadButton = html`<div
+        class="le__clickable"
         @click=${(evt: Event) => {
           evt.stopPropagation();
           notification.isRead = true;
@@ -242,10 +260,10 @@ export class NotificationsPart extends BasePart implements Part {
         }}
       >
         Mark read
-      </button>`;
+      </div>`;
     }
 
-    return html`<div class="le__list__item">
+    return html`<div class="le__list__item le__list__item--pad">
       <div class="le__list__item__icon">
         <span class="material-icons"
           >${this.getIconForNotificationLevel(

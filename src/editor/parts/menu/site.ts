@@ -507,6 +507,7 @@ class DirectoryStructure {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateFiles(editor: LiveEditor): TemplateResult {
     if (!this.files || !this.files.length) {
       return html``;

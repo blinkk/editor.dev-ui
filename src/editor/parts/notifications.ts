@@ -46,24 +46,10 @@ export interface EditorNotification {
    */
   actions?: Array<NotificationAction>;
   /**
-   * Date the notification was added.
-   *
-   * **Note:** This will automatically be set to a new date object when
-   * a notification is added to the editor notifications.
-   */
-  addedOn?: Date;
-  /**
    * Additional details that the user needs to know or possible
    * resolutions to an issue.
    */
   description?: string;
-  /**
-   * Has the notification been read by the user.
-   *
-   * **Note:** This will automatically be set to false when a notification
-   * is added to the editor notifications.
-   */
-  isRead?: boolean;
   /**
    * The level of priority to give the message. Lower priority
    * messages will be quickly displayed then disappear (like a toast).
@@ -78,6 +64,28 @@ export interface EditorNotification {
 }
 
 /**
+ * Used to track notification state in the notification part.
+ */
+interface InternalNotification extends EditorNotification {
+  /**
+   * Date the notification was added.
+   */
+  addedOn?: Date;
+  /**
+   * Is the notification expanded?
+   */
+  isExpanded?: boolean;
+  /**
+   * Has the notification been read by the user?
+   */
+  isRead?: boolean;
+  /**
+   * Some sub-notification types have addition properties.
+   */
+  [x: string]: any;
+}
+
+/**
  * Modals are centralized in the display to be outside of other
  * modals and structures. Modal windows live as siblings in the
  * DOM.
@@ -89,7 +97,7 @@ export interface EditorNotification {
  * This also allows reuse of modals across parts of the editor.
  */
 export class NotificationsPart extends BasePart implements Part {
-  protected notifications: Array<EditorNotification>;
+  protected notifications: Array<InternalNotification>;
 
   constructor() {
     super();
@@ -197,13 +205,14 @@ export class NotificationsPart extends BasePart implements Part {
   protected scrubNewNotification(
     notification: EditorNotification,
     defaultLevel: NotificationLevel
-  ): EditorNotification {
-    if (!notification.level) {
-      notification.level = defaultLevel;
+  ): InternalNotification {
+    const internalNotification: InternalNotification = notification;
+    if (!internalNotification.level) {
+      internalNotification.level = defaultLevel;
     }
-    notification.addedOn = new Date();
-    notification.isRead = false;
-    return notification;
+    internalNotification.addedOn = new Date();
+    internalNotification.isRead = false;
+    return internalNotification;
   }
 
   template(editor: LiveEditor): TemplateResult {
@@ -226,6 +235,92 @@ export class NotificationsPart extends BasePart implements Part {
     >
       <span class="material-icons">${icon}</span>
     </div>`;
+  }
+
+  templateNotification(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    let markReadButton = html``;
+    if (!notification.isRead) {
+      markReadButton = html`<div
+        class="le__clickable"
+        @click=${(evt: Event) => {
+          evt.stopPropagation();
+          notification.isRead = true;
+          this.render();
+        }}
+      >
+        Mark read
+      </div>`;
+    }
+
+    const handleClick = (evt: Event) => {
+      evt.stopPropagation();
+      notification.isExpanded = !notification.isExpanded;
+      this.render();
+    };
+
+    return html`<div
+        class="le__list__item le__list__item--pad_horizontal le__clickable"
+        @click=${handleClick}
+      >
+        <div class="le__list__item__icon">
+          <span class="material-icons"
+            >${notification.isExpanded
+              ? 'arrow_drop_down'
+              : 'arrow_right'}</span
+          >
+        </div>
+        <div class="le__list__item__icon">
+          <span class="material-icons"
+            >${this.getIconForNotificationLevel(
+              notification.level || NotificationLevel.Info,
+              notification.isRead || false
+            )}</span
+          >
+        </div>
+        <div class="le__list__item__label">${notification.message}</div>
+        <div class="le__list__item__aside ">${markReadButton}</div>
+      </div>
+      ${this.templateNotificationDetails(editor, notification)}
+      ${this.templateNotificationMeta(editor, notification)}`;
+  }
+
+  templateNotificationDetails(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    let additionalDetails = html``;
+
+    if (notification.isExpanded) {
+      additionalDetails = html`<div
+        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
+      >
+        <div class="le__list__item__label">${notification.description}</div>
+      </div>`;
+    }
+
+    return additionalDetails;
+  }
+
+  templateNotificationMeta(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    let additionalDetails = html``;
+
+    if (notification.isExpanded && notification.meta) {
+      additionalDetails = html`<div
+        class="le__list__item le__list__item--constrained le__list__item--pad_horizontal le__list__item--indent_large"
+      >
+        <div class="le__list__item__label">
+          <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
+        </div>
+      </div>`;
+    }
+
+    return additionalDetails;
   }
 
   templateNotifications(editor: LiveEditor): TemplateResult {
@@ -254,42 +349,10 @@ export class NotificationsPart extends BasePart implements Part {
         ${repeat(
           this.notifications,
           notification => notification.addedOn?.getUTCDate(),
-          (notification: EditorNotification) =>
+          (notification: InternalNotification) =>
             this.templateNotification(editor, notification)
         )}
       </div>
-    </div>`;
-  }
-
-  templateNotification(
-    editor: LiveEditor,
-    notification: EditorNotification
-  ): TemplateResult {
-    let markReadButton = html``;
-    if (!notification.isRead) {
-      markReadButton = html`<div
-        class="le__clickable"
-        @click=${(evt: Event) => {
-          evt.stopPropagation();
-          notification.isRead = true;
-          this.render();
-        }}
-      >
-        Mark read
-      </div>`;
-    }
-
-    return html`<div class="le__list__item le__list__item--pad_horizontal">
-      <div class="le__list__item__icon">
-        <span class="material-icons"
-          >${this.getIconForNotificationLevel(
-            notification.level || NotificationLevel.Info,
-            notification.isRead || false
-          )}</span
-        >
-      </div>
-      <div class="le__list__item__label">${notification.message}</div>
-      <div class="le__list__item__aside ">${markReadButton}</div>
     </div>`;
   }
 }

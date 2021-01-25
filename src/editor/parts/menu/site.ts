@@ -15,10 +15,10 @@ const MODAL_KEY_NEW = 'menu_file_new';
 const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
 
 interface DirectoryEventHandlers {
-  fileCopy: (evt: Event) => void;
-  fileDelete: (evt: Event) => void;
-  fileLoad: (evt: Event) => void;
-  fileNew: (evt: Event) => void;
+  fileCopy: (evt: Event, path: string) => void;
+  fileDelete: (evt: Event, path: string) => void;
+  fileLoad: (evt: Event, path: string) => void;
+  fileNew: (evt: Event, directory: string) => void;
   render: () => void;
 }
 
@@ -129,44 +129,8 @@ export class SitePart extends MenuSectionPart {
   }
 
   protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
-    const selectiveConfig = merge(
-      {
-        fields: [
-          {
-            type: 'text',
-            key: 'path',
-            label: 'File name',
-            help: 'May also be used for the url stub.',
-            validation: [
-              {
-                type: 'require',
-                message: 'File name is required.',
-              },
-              {
-                type: 'pattern',
-                pattern: '^[a-z0-9-_./]*$',
-                message:
-                  'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
-              },
-              {
-                type: 'pattern',
-                pattern: '^[a-z0-9]+',
-                message:
-                  'File name can only start with an alpha-numeric character.',
-              },
-              {
-                type: 'pattern',
-                pattern: '^.*.(yaml|md|html)$',
-                message:
-                  'File name needs to end with ".yaml", ".md", or ".html".',
-              },
-            ],
-          },
-        ],
-      },
-      editor.config.selectiveConfig
-    );
     if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
+      const selectiveConfig = merge({}, editor.config.selectiveConfig);
       const modal = new FormDialogModal({
         title: 'New file',
         selectiveConfig: selectiveConfig,
@@ -238,13 +202,13 @@ export class SitePart extends MenuSectionPart {
 
     if (!this.fileStructure) {
       const eventHandlers: DirectoryEventHandlers = {
-        fileCopy: (evt: Event) => {
+        fileCopy: (evt: Event, path: string) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalCopy(editor);
-          // TODO: Use the file information from the clicked item.
-          const originalPath = '/content/todo/path.yaml';
-          modal.data.set('originalPath', originalPath);
-          modal.data.set('path', originalPath);
+          modal.data.set('originalPath', path);
+
+          // TODO: Modify the new path so it is not automatically an error.
+          modal.data.set('path', path);
 
           // Make the form field custom to the file being copied.
           modal.selective.resetFields();
@@ -252,7 +216,7 @@ export class SitePart extends MenuSectionPart {
             type: 'text',
             key: 'path',
             label: 'File path',
-            help: `Copy '${originalPath}' file to this new file.`,
+            help: `Copy '${path}' file to this new file.`,
             validation: [
               {
                 type: 'require',
@@ -285,7 +249,7 @@ export class SitePart extends MenuSectionPart {
               {
                 type: 'match',
                 excluded: {
-                  values: [originalPath],
+                  values: [path],
                   message: 'Cannot copy to the same file.',
                 },
               } as RuleConfig,
@@ -304,21 +268,47 @@ export class SitePart extends MenuSectionPart {
 
           modal.show();
         },
-        fileDelete: (evt: Event) => {
+        fileDelete: (evt: Event, path: string) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalDelete(editor);
-          // TODO: Use the file information from the clicked item.
-          const originalPath = '/content/todo/path.yaml';
-          modal.data.set('path', originalPath);
+          modal.data.set('path', path);
           modal.show();
         },
-        fileLoad: (evt: Event) => {
+        fileLoad: (evt: Event, path: string) => {
           evt.stopPropagation();
-          console.log('load a path');
+          console.log('load a path', path);
         },
-        fileNew: (evt: Event) => {
+        fileNew: (evt: Event, directory: string) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalNew(editor);
+          modal.data.set('directory', directory);
+
+          modal.selective.resetFields();
+          modal.selective.fields.addField({
+            type: 'text',
+            key: 'path',
+            label: 'File name',
+            help: `Creating new file in the '${directory}' directory. File name may also be used in the url.`,
+            validation: [
+              {
+                type: 'require',
+                message: 'File name is required.',
+              } as RuleConfig,
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9-_./]*$',
+                message:
+                  'File name can only contain lowercase alpha-numeric characters, . (period), _ (underscore), / (forward slash), and - (dash).',
+              } as RuleConfig,
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9]+',
+                message:
+                  'File name needs to start with an alpha-numeric character.',
+              } as RuleConfig,
+            ],
+          });
+
           modal.show();
         },
         render: this.render.bind(this),
@@ -521,7 +511,7 @@ class DirectoryStructure {
     return html`<div class="le__list">
       <div
         class="le__list__item le__list__item--primary le__clickable"
-        @click=${this.eventHandlers.fileNew}
+        @click=${(evt: Event) => this.eventHandlers.fileNew(evt, this.root)}
       >
         <div class="le__list__item__icon">
           <span class="material-icons">add_circle</span>
@@ -533,7 +523,7 @@ class DirectoryStructure {
         (file: FileData) => file.path,
         (file: FileData) => html`<div
           class="le__list__item le__clickable"
-          @click=${this.eventHandlers.fileLoad}
+          @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file.path)}
         >
           <div class="le__list__item__icon">
             <span class="material-icons">notes</span>
@@ -544,14 +534,16 @@ class DirectoryStructure {
           <div class="le__actions le__actions--slim">
             <div
               class="le__actions__action le__clickable le__tooltip--top"
-              @click=${this.eventHandlers.fileCopy}
+              @click=${(evt: Event) =>
+                this.eventHandlers.fileCopy(evt, file.path)}
               data-tip="Duplicate file"
             >
               <span class="material-icons">file_copy</span>
             </div>
             <div
               class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
-              @click=${this.eventHandlers.fileDelete}
+              @click=${(evt: Event) =>
+                this.eventHandlers.fileDelete(evt, file.path)}
               data-tip="Delete file"
             >
               <span class="material-icons">remove_circle</span>

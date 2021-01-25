@@ -5,10 +5,7 @@ const sass = require('gulp-sass');
 
 const config = {
   SASS_SOURCE_DIR: './sass/**/*.{sass,scss}',
-  SASS_SOURCES: [
-    './sass/**/*.{sass,scss}',
-    './node_modules/@material/**/*.{sass,scss}',
-  ],
+  SASS_SOURCES: ['./sass/**/*.{sass,scss}'],
   SASS_OUT_DIR: './dist/css/',
 };
 

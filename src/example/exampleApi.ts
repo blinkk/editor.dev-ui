@@ -1,5 +1,6 @@
 import {
   ApiError,
+  DeviceData,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -192,6 +193,43 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, null);
+    });
+  }
+
+  async getDevices(): Promise<Array<DeviceData>> {
+    return new Promise<Array<DeviceData>>((resolve, reject) => {
+      console.log('API: getFiles');
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to get the devices.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, [
+        {
+          label: 'Mobile',
+          width: 411,
+          height: 731,
+          canRotate: true,
+        } as DeviceData,
+        {
+          label: 'Tablet',
+          width: 1024,
+          height: 768,
+          canRotate: true,
+        } as DeviceData,
+        {
+          label: 'Desktop',
+          width: 1440,
+        } as DeviceData,
+        {
+          label: 'Desktop (Large)',
+          width: 2200,
+        } as DeviceData,
+      ]);
     });
   }
 

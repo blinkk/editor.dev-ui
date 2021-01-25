@@ -4,6 +4,9 @@ import {
   announceNotification,
 } from './parts/notifications';
 
+/**
+ * Repository author information.
+ */
 export interface RepoAuthor {
   /**
    * Name of the author.
@@ -15,6 +18,9 @@ export interface RepoAuthor {
   email: string;
 }
 
+/**
+ * Repository branch information.
+ */
 export interface RepoBranch {
   /**
    * Full branch name.
@@ -34,6 +40,19 @@ export interface RepoBranch {
   author: RepoAuthor;
 }
 
+/**
+ * Device information used for previews.
+ */
+export interface DeviceData {
+  canRotate?: boolean;
+  height?: number;
+  label: string;
+  width?: number;
+}
+
+/**
+ * File information.
+ */
 export interface FileData {
   /**
    * Complete path for the file.
@@ -41,6 +60,9 @@ export interface FileData {
   path: string;
 }
 
+/**
+ * Overall project information.
+ */
 export interface ProjectData {
   /**
    * Project title
@@ -48,6 +70,9 @@ export interface ProjectData {
   title: string;
 }
 
+/**
+ * User information.
+ */
 export interface UserData {
   /**
    * Name of the user.
@@ -63,6 +88,9 @@ export interface UserData {
   isGroup?: boolean;
 }
 
+/**
+ * Workspace information.
+ */
 export interface WorkspaceData {
   /**
    * Full branch information from the workspace.
@@ -83,7 +111,7 @@ export interface WorkspaceData {
  *   return new Promise<null>((resolve, reject) => {
  *     // Successful api calls resolve() when done.
  *     // Failure should reject() the promise with an ApiError argument.
- *     reject({message: 'Houston we have a problem'});
+ *     reject({message: 'Houston we have a problem'} as ApiError);
  *   });
  * }
  * ```
@@ -137,6 +165,11 @@ export interface LiveEditorApiComponent {
   deleteFile(path: string): Promise<null>;
 
   /**
+   * Retrieve the devices that used for previews.
+   */
+  getDevices(): Promise<Array<DeviceData>>;
+
+  /**
    * Retrieve the files that can be edited in the editor.
    */
   getFiles(): Promise<Array<FileData>>;
@@ -171,7 +204,7 @@ export interface LiveEditorApiComponent {
 }
 
 /**
- * Catch and announce the api error.
+ * Catch and announce an api error.
  *
  * @param error Error from api.
  */

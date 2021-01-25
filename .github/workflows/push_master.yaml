@@ -33,7 +33,9 @@ jobs:
         yarn run compile
         cp example/* docs/example/
         cp dist/css/example* docs/example/css/
-        cp dist/src/example* docs/example/
+        cp dist/src/example/* docs/example/
+        cp dist/src/example.* docs/example/
+
     - name: Deploy to gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:

@@ -2,7 +2,7 @@
  * Custom event name for loading a file in the editor.
  *
  * Expects a FileData as the event details.
- * @see editor.api.FileData
+ * @see FileData
  */
 export const EVENT_FILE_LOAD = 'live.file.load';
 

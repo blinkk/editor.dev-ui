@@ -1,3 +1,4 @@
+import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {
   EditorNotification,
   NotificationLevel,
@@ -44,10 +45,52 @@ export interface RepoBranch {
  * Device information used for previews.
  */
 export interface DeviceData {
+  /**
+   * Can the device preview be rotated?
+   */
   canRotate?: boolean;
+  /**
+   * Height of the device view.
+   */
   height?: number;
+  /**
+   * Label for the device.
+   */
   label: string;
+  /**
+   * Width of the device view.
+   */
   width?: number;
+}
+
+/**
+ * Configuration for rendering the file editor.
+ */
+export interface EditorFileConfig {
+  /**
+   * Field configurations for the editor.
+   */
+  fields: Array<FieldConfig>;
+}
+
+/**
+ * Full file information for rendering the file editor.
+ */
+export interface EditorFileData {
+  /**
+   * File information.
+   */
+  file: FileData;
+  /**
+   * Editor configuration for the file.
+   */
+  editor: EditorFileConfig;
+  /**
+   * URL for previewing the file.
+   *
+   * If no url is provided the preview will be hidden.
+   */
+  url?: string;
 }
 
 /**
@@ -162,7 +205,7 @@ export interface LiveEditorApiComponent {
    *
    * @param path Full path for the file being deleted.
    */
-  deleteFile(path: string): Promise<null>;
+  deleteFile(file: FileData): Promise<null>;
 
   /**
    * Retrieve the devices used for previews.
@@ -193,6 +236,15 @@ export interface LiveEditorApiComponent {
    * Retrieve information about available workspaces.
    */
   getWorkspaces(): Promise<Array<WorkspaceData>>;
+
+  /**
+   * Load the file.
+   *
+   * This is a complete loading of the file information and
+   * configuration for use in rendering the editor for the
+   * file.
+   */
+  loadFile(file: FileData): Promise<EditorFileData>;
 
   /**
    * Load the workspace.

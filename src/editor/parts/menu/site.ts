@@ -15,9 +15,9 @@ const MODAL_KEY_NEW = 'menu_file_new';
 const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
 
 interface DirectoryEventHandlers {
-  fileCopy: (evt: Event, path: string) => void;
-  fileDelete: (evt: Event, path: string) => void;
-  fileLoad: (evt: Event, path: string) => void;
+  fileCopy: (evt: Event, file: FileData) => void;
+  fileDelete: (evt: Event, file: FileData) => void;
+  fileLoad: (evt: Event, file: FileData) => void;
   fileNew: (evt: Event, directory: string) => void;
   render: () => void;
 }
@@ -215,13 +215,13 @@ export class SitePart extends MenuSectionPart {
 
     if (!this.fileStructure) {
       const eventHandlers: DirectoryEventHandlers = {
-        fileCopy: (evt: Event, path: string) => {
+        fileCopy: (evt: Event, file: FileData) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalCopy(editor);
-          modal.data.set('originalPath', path);
+          modal.data.set('originalPath', file.path);
 
           // TODO: Modify the new path so it is not automatically an error.
-          modal.data.set('path', path);
+          modal.data.set('path', file.path);
 
           // Make the form field custom to the file being copied.
           modal.selective.resetFields();
@@ -229,7 +229,7 @@ export class SitePart extends MenuSectionPart {
             type: 'text',
             key: 'path',
             label: 'File path',
-            help: `Copy '${path}' file to this new file.`,
+            help: `Copy '${file.path}' file to this new file.`,
             validation: [
               {
                 type: 'require',
@@ -262,7 +262,7 @@ export class SitePart extends MenuSectionPart {
               {
                 type: 'match',
                 excluded: {
-                  values: [path],
+                  values: [file.path],
                   message: 'Cannot copy to the same file.',
                 },
               } as RuleConfig,
@@ -281,15 +281,19 @@ export class SitePart extends MenuSectionPart {
 
           modal.show();
         },
-        fileDelete: (evt: Event, path: string) => {
+        fileDelete: (evt: Event, file: FileData) => {
           evt.stopPropagation();
           const modal = this.getOrCreateModalDelete(editor);
-          modal.data.set('path', path);
+          modal.data.set('path', file.path);
           modal.show();
         },
-        fileLoad: (evt: Event, path: string) => {
+        fileLoad: (evt: Event, file: FileData) => {
           evt.stopPropagation();
-          console.log('load a path', path);
+          document.dispatchEvent(
+            new CustomEvent(EVENT_FILE_LOAD, {
+              detail: file,
+            })
+          );
         },
         fileNew: (evt: Event, directory: string) => {
           evt.stopPropagation();
@@ -536,7 +540,7 @@ class DirectoryStructure {
         (file: FileData) => file.path,
         (file: FileData) => html`<div
           class="le__list__item le__clickable"
-          @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file.path)}
+          @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file)}
         >
           <div class="le__list__item__icon">
             <span class="material-icons">notes</span>
@@ -547,16 +551,14 @@ class DirectoryStructure {
           <div class="le__actions le__actions--slim">
             <div
               class="le__actions__action le__clickable le__tooltip--top"
-              @click=${(evt: Event) =>
-                this.eventHandlers.fileCopy(evt, file.path)}
+              @click=${(evt: Event) => this.eventHandlers.fileCopy(evt, file)}
               data-tip="Duplicate file"
             >
               <span class="material-icons">file_copy</span>
             </div>
             <div
               class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
-              @click=${(evt: Event) =>
-                this.eventHandlers.fileDelete(evt, file.path)}
+              @click=${(evt: Event) => this.eventHandlers.fileDelete(evt, file)}
               data-tip="Delete file"
             >
               <span class="material-icons">remove_circle</span>

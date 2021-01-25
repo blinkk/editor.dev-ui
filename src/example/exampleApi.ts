@@ -1,12 +1,14 @@
 import {
   ApiError,
   DeviceData,
+  EditorFileData,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
   UserData,
   WorkspaceData,
 } from '../editor/api';
+import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
@@ -173,9 +175,9 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  async deleteFile(path: string): Promise<null> {
+  async deleteFile(file: FileData): Promise<null> {
     return new Promise<null>((resolve, reject) => {
-      console.log('API: deleteFile', path);
+      console.log('API: deleteFile', file.path);
 
       if (this.respondWithErrors) {
         reject({
@@ -186,7 +188,7 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       for (let i = 0; i < currentFileset.length; i++) {
-        if (currentFileset[i].path === path) {
+        if (currentFileset[i].path === file.path) {
           currentFileset.splice(i, 1);
           break;
         }
@@ -312,6 +314,33 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, [...currentWorkspaces]);
+    });
+  }
+
+  async loadFile(file: FileData): Promise<EditorFileData> {
+    return new Promise<EditorFileData>((resolve, reject) => {
+      console.log('API: loadFile', file);
+
+      if (this.respondWithErrors) {
+        reject({
+          message: 'Failed to load the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Make the fields for each file dynamic for the example.
+      simulateNetwork(resolve, {
+        file: file,
+        editor: {
+          fields: [
+            {
+              type: 'text',
+              label: 'Title',
+            } as FieldConfig,
+          ],
+        },
+      } as EditorFileData);
     });
   }
 

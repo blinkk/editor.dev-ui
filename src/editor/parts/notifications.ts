@@ -267,13 +267,6 @@ export class NotificationsPart extends BasePart implements Part {
       >
         <div class="le__list__item__icon">
           <span class="material-icons"
-            >${notification.isExpanded
-              ? 'arrow_drop_down'
-              : 'arrow_right'}</span
-          >
-        </div>
-        <div class="le__list__item__icon">
-          <span class="material-icons"
             >${this.getIconForNotificationLevel(
               notification.level || NotificationLevel.Info,
               notification.isRead || false
@@ -284,7 +277,50 @@ export class NotificationsPart extends BasePart implements Part {
         <div class="le__list__item__aside ">${markReadButton}</div>
       </div>
       ${this.templateNotificationDetails(editor, notification)}
-      ${this.templateNotificationMeta(editor, notification)}`;
+      ${this.templateNotificationMeta(editor, notification)}
+      ${this.templateNotificationActions(editor, notification)}`;
+  }
+
+  templateNotificationActions(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    let additionalDetails = html``;
+
+    if (notification.actions) {
+      additionalDetails = html`<div
+        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
+      >
+        <div class="le__list__item__actions">
+          ${repeat(
+            notification.actions,
+            action => action.label,
+            action => {
+              const handleClick = (evt: Event) => {
+                evt.preventDefault();
+                evt.stopPropagation();
+                document.dispatchEvent(
+                  new CustomEvent(action.customEvent, {
+                    detail: action.details,
+                  })
+                );
+
+                const modal = this.getOrCreateModalNotifications(editor);
+                modal.hide();
+              };
+              return html`<button
+                class="le__button le__clickable"
+                @click=${handleClick}
+              >
+                ${action.label}
+              </button>`;
+            }
+          )}
+        </div>
+      </div>`;
+    }
+
+    return additionalDetails;
   }
 
   templateNotificationDetails(
@@ -293,7 +329,7 @@ export class NotificationsPart extends BasePart implements Part {
   ): TemplateResult {
     let additionalDetails = html``;
 
-    if (notification.isExpanded) {
+    if (notification.isExpanded && notification.description) {
       additionalDetails = html`<div
         class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
       >

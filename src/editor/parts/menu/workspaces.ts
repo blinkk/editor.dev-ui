@@ -6,9 +6,9 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {EVENT_WORKSPACE_LOAD} from '../../events';
 import {LiveEditor} from '../../editor';
-import {MenuSectionPart} from './index';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 
@@ -19,6 +19,15 @@ export class WorkspacesPart extends MenuSectionPart {
   workspacePromise?: Promise<WorkspaceData>;
   workspaces?: Array<WorkspaceData>;
   workspacesPromise?: Promise<Array<WorkspaceData>>;
+
+  constructor(config: MenuSectionPartConfig) {
+    super(config);
+
+    document.addEventListener(EVENT_WORKSPACE_LOAD, (evt: Event) => {
+      const customEvent: CustomEvent = evt as CustomEvent;
+      this.config.api.loadWorkspace(customEvent.detail as WorkspaceData);
+    });
+  }
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();

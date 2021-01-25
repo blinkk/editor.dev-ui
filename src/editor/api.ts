@@ -165,7 +165,7 @@ export interface LiveEditorApiComponent {
   deleteFile(path: string): Promise<null>;
 
   /**
-   * Retrieve the devices that used for previews.
+   * Retrieve the devices used for previews.
    */
   getDevices(): Promise<Array<DeviceData>>;
 

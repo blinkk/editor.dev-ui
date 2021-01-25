@@ -200,7 +200,7 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getDevices(): Promise<Array<DeviceData>> {
     return new Promise<Array<DeviceData>>((resolve, reject) => {
-      console.log('API: getFiles');
+      console.log('API: getDevices');
 
       if (this.respondWithErrors) {
         reject({

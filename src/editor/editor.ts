@@ -55,7 +55,10 @@ export class LiveEditor {
       overview: new OverviewPart({
         api: this.config.api,
       }),
-      preview: new PreviewPart(),
+      preview: new PreviewPart({
+        api: this.config.api,
+        storage: this.storage,
+      }),
     };
   }
 

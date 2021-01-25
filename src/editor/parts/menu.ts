@@ -9,6 +9,7 @@ import {UsersPart} from './menu/users';
 import {WorkspacesPart} from './menu/workspaces';
 
 const MODAL_KEY = 'menu';
+const STORAGE_DOCKED_KEY = 'live.menu.isDocked';
 
 export interface MenuPartConfig {
   api: LiveEditorApiComponent;
@@ -31,7 +32,7 @@ export class MenuPart extends BasePart implements Part {
   constructor(config: MenuPartConfig) {
     super();
     this.config = config;
-    this.isDocked = this.config.storage.getItemBoolean('live.menu.isDocked');
+    this.isDocked = this.config.storage.getItemBoolean(STORAGE_DOCKED_KEY);
     this.parts = {
       site: new SitePart({
         api: this.config.api,
@@ -88,7 +89,7 @@ export class MenuPart extends BasePart implements Part {
    */
   dock() {
     this.isDocked = true;
-    this.config.storage.setItem('live.menu.isDocked', 'true');
+    this.config.storage.setItem(STORAGE_DOCKED_KEY, 'true');
     this.render();
   }
 
@@ -195,7 +196,7 @@ export class MenuPart extends BasePart implements Part {
    */
   undock() {
     this.isDocked = false;
-    this.config.storage.setItem('live.menu.isDocked', 'false');
+    this.config.storage.setItem(STORAGE_DOCKED_KEY, 'false');
     this.render();
   }
 }

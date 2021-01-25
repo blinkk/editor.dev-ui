@@ -12,9 +12,9 @@ import {
   TextareaField,
   VariantField,
 } from '@blinkk/selective-edit';
-import {EVENT_RENDER} from './editor/events';
+import {EVENT_RENDER} from '../editor/events';
 import {ExampleApi} from './exampleApi';
-import {LiveEditor} from './editor/editor';
+import {LiveEditor} from '../editor/editor';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 

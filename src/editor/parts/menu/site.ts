@@ -57,9 +57,7 @@ export class SitePart extends MenuSectionPart {
             .then((newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
-                message: `New '${
-                  newFile.shortcutPath || newFile.path
-                }' file successfully created.`,
+                message: `New '${newFile.path}' file successfully created.`,
                 actions: [
                   {
                     label: 'Load file',
@@ -190,9 +188,7 @@ export class SitePart extends MenuSectionPart {
             .then((newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
-                message: `New '${
-                  newFile.shortcutPath || newFile.path
-                }' file successfully created.`,
+                message: `New '${newFile.path}' file successfully created.`,
                 actions: [
                   {
                     label: 'Load file',
@@ -403,9 +399,7 @@ class DirectoryStructure {
     }
 
     for (const fileData of this.rootFiles) {
-      const relativePath = (fileData.shortcutPath || fileData.path).slice(
-        this.root.length
-      );
+      const relativePath = fileData.path.slice(this.root.length);
       const pathParts = relativePath.split('/');
       // Directories have more segments.
       // First segment is empty string since it starts with /.
@@ -414,9 +408,7 @@ class DirectoryStructure {
         if (!this.directories[directoryName]) {
           const subDirectoryRoot = `${this.root}${directoryName}/`;
           const subFiles = this.rootFiles.filter(fileData => {
-            return (fileData.shortcutPath || fileData.path).startsWith(
-              subDirectoryRoot
-            );
+            return fileData.path.startsWith(subDirectoryRoot);
           });
           this.directories[directoryName] = new DirectoryStructure(
             subFiles,
@@ -432,7 +424,7 @@ class DirectoryStructure {
   }
 
   get base(): string {
-    const trimmedRoot = this.root.replace(/\/+/g, '').replace(/\/+$/g, '');
+    const trimmedRoot = this.root.replace(/^\/+/, '').replace(/\/+$/, '');
     const rootParts = trimmedRoot.split('/');
     return rootParts[rootParts.length - 1];
   }
@@ -444,7 +436,14 @@ class DirectoryStructure {
   }
 
   expandToFile(fileData: FileData) {
-    // TODO: Expand out all directories to get to the file.
+    // As long as the directory starts with the same path, expand it.
+    if (fileData.path.startsWith(this.root)) {
+      this.isExpanded = true;
+
+      for (const key of Object.keys(this.directories)) {
+        this.directories[key].expandToFile(fileData);
+      }
+    }
   }
 
   handleExpandCollapse() {

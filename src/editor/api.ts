@@ -39,10 +39,6 @@ export interface FileData {
    * Complete path for the file.
    */
   path: string;
-  /**
-   * Shortcut path to use in the editor to reduce file tree size.
-   */
-  shortcutPath?: string;
 }
 
 export interface ProjectData {

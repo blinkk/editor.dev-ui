@@ -5,7 +5,7 @@ import {
   ProjectData,
   UserData,
   WorkspaceData,
-} from './editor/api';
+} from '../editor/api';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
@@ -25,15 +25,18 @@ function simulateNetwork(callback: Function, response: any) {
 const currentFileset: Array<FileData> = [
   {
     path: '/content/pages/index.yaml',
-    shortcutPath: '/pages/index.yaml',
   },
   {
     path: '/content/pages/about.yaml',
-    shortcutPath: '/pages/about.yaml',
+  },
+  {
+    path: '/content/pages/sub/page.yaml',
+  },
+  {
+    path: '/content/pages/sub/another.yaml',
   },
   {
     path: '/content/strings/about.yaml',
-    shortcutPath: '/strings/products.yaml',
   },
 ];
 

@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    example: './src/example.ts',
+    example: './src/example/example.ts',
   },
   mode: 'development',
   module: {

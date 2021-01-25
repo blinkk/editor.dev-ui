@@ -148,6 +148,8 @@ export class WorkspacesPart extends MenuSectionPart {
               });
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
+              // Reload the list of workspaces.
+              this.loadWorkspaces();
               modal.stopProcessing(true);
             })
             .catch((error: ApiError) => {
@@ -164,29 +166,43 @@ export class WorkspacesPart extends MenuSectionPart {
     return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
   }
 
+  loadWorkspace() {
+    if (this.workspacePromise) {
+      return;
+    }
+    this.workspacePromise = this.config.api.getWorkspace();
+    this.workspacePromise
+      .then(data => {
+        this.workspace = data;
+        this.workspacePromise = undefined;
+        this.render();
+      })
+      .catch(catchError);
+  }
+
+  loadWorkspaces() {
+    if (this.workspacesPromise) {
+      return;
+    }
+    this.workspacesPromise = this.config.api.getWorkspaces();
+    this.workspacesPromise
+      .then(data => {
+        this.workspaces = data;
+        this.workspacesPromise = undefined;
+        this.render();
+      })
+      .catch(catchError);
+  }
+
   templateContent(editor: LiveEditor): TemplateResult {
     // Lazy load the workspace information.
-    if (!this.workspace && !this.workspacePromise) {
-      this.workspacePromise = this.config.api.getWorkspace();
-      this.workspacePromise
-        .then(data => {
-          this.workspace = data;
-          this.workspacePromise = undefined;
-          this.render();
-        })
-        .catch(catchError);
+    if (!this.workspace) {
+      this.loadWorkspace();
     }
 
     // Lazy load the workspaces information.
-    if (!this.workspaces && !this.workspacesPromise) {
-      this.workspacesPromise = this.config.api.getWorkspaces();
-      this.workspacesPromise
-        .then(data => {
-          this.workspaces = data;
-          this.workspacesPromise = undefined;
-          this.render();
-        })
-        .catch(catchError);
+    if (!this.workspaces) {
+      this.loadWorkspaces();
     }
 
     if (!this.workspaces) {

@@ -40,6 +40,7 @@ export interface DialogActionConfig {
   level?: DialogActionLevel;
   label: string;
   isDisabledFunc: () => boolean;
+  isSubmit?: boolean;
   onClick: (evt: Event) => void;
 }
 
@@ -64,6 +65,23 @@ export class Modal extends UuidMixin(BaseUI) {
     }
 
     return classes;
+  }
+
+  handleKeyup(evt: KeyboardEvent) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      evt.stopPropagation();
+
+      // Allow for overriding the ability to close when clicking
+      // out of the modal content.
+      if (this.config.canClickToCloseFunc) {
+        if (this.config.canClickToCloseFunc()) {
+          this.hide();
+        }
+      } else {
+        this.hide();
+      }
+    }
   }
 
   handleOffClick(evt: Event) {
@@ -103,7 +121,10 @@ export class Modal extends UuidMixin(BaseUI) {
       return html``;
     }
 
-    return html`<div class=${expandClasses(this.classesForModal())}>
+    return html`<div
+      class=${expandClasses(this.classesForModal())}
+      @keyup=${this.handleKeyup.bind(this)}
+    >
       <div
         class="le__modal__container"
         @click=${this.handleOffClick.bind(this)}
@@ -301,6 +322,27 @@ export class FormDialogModal extends DialogModal {
     this.config = config;
     this.data = new DeepObject({});
     this.selective = new SelectiveEditor(this.config.selectiveConfig);
+  }
+
+  handleKeyup(evt: KeyboardEvent) {
+    super.handleKeyup(evt);
+
+    if (evt.key === 'Enter') {
+      for (const action of this.actions) {
+        if (action.isSubmit) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          if (action.isDisabledFunc && action.isDisabledFunc()) {
+            // Disabled, do nothing.
+            return;
+          }
+
+          // 'Submit' the form.
+          action.onClick(evt);
+        }
+      }
+    }
   }
 
   templateContent(editor: LiveEditor): TemplateResult {

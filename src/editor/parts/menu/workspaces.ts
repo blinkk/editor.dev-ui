@@ -102,6 +102,7 @@ export class WorkspacesPart extends MenuSectionPart {
         isDisabledFunc: () => {
           return modal.isProcessing || !modal.selective.isValid;
         },
+        isSubmit: true,
         onClick: () => {
           const value = modal.selective.value;
           modal.startProcessing();

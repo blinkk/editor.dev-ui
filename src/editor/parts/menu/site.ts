@@ -47,6 +47,7 @@ export class SitePart extends MenuSectionPart {
         isDisabledFunc: () => {
           return modal.isProcessing || !modal.selective.isValid;
         },
+        isSubmit: true,
         onClick: () => {
           const value = modal.selective.value;
           modal.startProcessing();
@@ -98,6 +99,7 @@ export class SitePart extends MenuSectionPart {
         label: 'Delete file',
         level: DialogActionLevel.Extreme,
         isDisabledFunc: () => false,
+        isSubmit: true,
         onClick: () => {
           const path = modal.data.get('path');
           modal.startProcessing();
@@ -178,6 +180,7 @@ export class SitePart extends MenuSectionPart {
         isDisabledFunc: () => {
           return modal.isProcessing || !modal.selective.isValid;
         },
+        isSubmit: true,
         onClick: () => {
           const value = modal.selective.value;
           modal.startProcessing();

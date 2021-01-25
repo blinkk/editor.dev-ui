@@ -1,9 +1,9 @@
 import {ApiError, FileData, catchError} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
-import {MenuSectionPart} from './index';
 import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
 import {Storage} from '../../../utility/storage';
 import merge from 'lodash.merge';
@@ -26,6 +26,18 @@ export class SitePart extends MenuSectionPart {
   files?: Array<FileData>;
   filesPromise?: Promise<Array<FileData>>;
   fileStructure?: DirectoryStructure;
+
+  constructor(config: MenuSectionPartConfig) {
+    super(config);
+
+    document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
+      if (!this.fileStructure) {
+        return;
+      }
+      const customEvent: CustomEvent = evt as CustomEvent;
+      this.fileStructure.expandToFile(customEvent.detail as FileData);
+    });
+  }
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();

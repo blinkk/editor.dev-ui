@@ -7,6 +7,8 @@ export const EVENT_FILE_LOAD = 'live.file.load';
 
 /**
  * Custom event name for adding a notification.
+ *
+ * Expects a {@link EditorNotification} as the event details.
  */
 export const EVENT_NOTIFICATION = 'live.notification';
 
@@ -22,5 +24,7 @@ export const EVENT_RENDER_COMPLETE = 'live.render.complete';
 
 /**
  * Custom event for loading a workspace.
+ *
+ * Expects a {@link WorkspaceData} as the event details.
  */
 export const EVENT_WORKSPACE_LOAD = 'live.workspace.load';

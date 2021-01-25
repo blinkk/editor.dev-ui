@@ -148,7 +148,7 @@ export class SitePart extends MenuSectionPart {
           modal.startProcessing();
 
           this.config.api
-            .createFile(value.path)
+            .createFile(`${value.directory}${value.path}`)
             .then((newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
@@ -186,6 +186,7 @@ export class SitePart extends MenuSectionPart {
       .then(data => {
         this.files = data;
         this.filesPromise = undefined;
+        this.fileStructure = undefined;
         this.render();
       })
       .catch(catchError);

@@ -15,16 +15,42 @@ import {LiveTemplate} from '../template';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
 import {templateApiError} from './error';
 
+/**
+ * Priority of the modal.
+ *
+ * Used to determine the stacking order when multiple modals are
+ * displayed at once.
+ */
+export enum DialogPriorityLevel {
+  Low,
+  Normal,
+  High,
+}
+
 export interface ModalConfig {
+  /**
+   * Custom classes for the modal window.
+   */
   classes?: Array<string>;
+  /**
+   * Method to determine if the modal can be closed by clicking outside
+   * of the modal content or by pressing ESC.
+   */
   canClickToCloseFunc?: () => boolean;
+  priority?: DialogPriorityLevel;
 }
 
 export interface DialogModalConfig extends ModalConfig {
+  /**
+   * Title for the dialog modal.
+   */
   title?: string;
 }
 
 export interface FormDialogModalConfig extends DialogModalConfig {
+  /**
+   * Configuration for creating the selective editor.
+   */
   selectiveConfig: EditorConfig;
 }
 
@@ -62,6 +88,12 @@ export class Modal extends UuidMixin(BaseUI) {
       for (const classname of this.config.classes) {
         classes.push(classname);
       }
+    }
+
+    if (this.config.priority === DialogPriorityLevel.Low) {
+      classes.push('le__modal--low_priority');
+    } else if (this.config.priority === DialogPriorityLevel.High) {
+      classes.push('le__modal--high_priority');
     }
 
     return classes;

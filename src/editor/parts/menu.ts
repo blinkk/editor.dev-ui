@@ -1,8 +1,8 @@
 import {BasePart, Part} from '.';
+import {DialogPriorityLevel, Modal} from '../ui/modal';
 import {LiveEditorApiComponent, ProjectData, catchError} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../editor';
-import {Modal} from '../ui/modal';
 import {SitePart} from './menu/site';
 import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';
@@ -62,6 +62,7 @@ export class MenuPart extends BasePart implements Part {
     if (!editor.parts.modals.modals[MODAL_KEY]) {
       const modal = new Modal({
         classes: ['le__modal--docked', 'le__modal--docked-left'],
+        priority: DialogPriorityLevel.Low,
       });
       modal.templateModal = this.templateStructure.bind(this);
       this.modal = modal;

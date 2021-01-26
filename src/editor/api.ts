@@ -1,9 +1,9 @@
-import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {
   EditorNotification,
   NotificationLevel,
   announceNotification,
 } from './parts/notifications';
+import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 
 /**
  * Repository author information.
@@ -73,6 +73,30 @@ export interface EditorFileConfig {
   fields: Array<FieldConfig>;
 }
 
+export enum EditorUrlLevel {
+  PRIVATE,
+  PROTECTED,
+  PUBLIC,
+}
+
+/**
+ * Configuration for url the file editor.
+ */
+export interface EditorUrlConfig {
+  /**
+   * Label for the url.
+   */
+  label: string;
+  /**
+   * Access level for the url
+   */
+  level: EditorUrlLevel;
+  /**
+   * URL for viewing the file.
+   */
+  url: string;
+}
+
 /**
  * Full file information for rendering the file editor.
  */
@@ -86,11 +110,11 @@ export interface EditorFileData {
    */
   editor: EditorFileConfig;
   /**
-   * URL for previewing the file.
+   * URLs for previewing the file in different environments.
    *
    * If no url is provided the preview will be hidden.
    */
-  url?: string;
+  urls?: Array<EditorUrlConfig>;
 }
 
 /**

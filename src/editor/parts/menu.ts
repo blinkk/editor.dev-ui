@@ -1,7 +1,8 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
-import {LiveEditorApiComponent, ProjectData, catchError} from '../api';
+import {LiveEditorApiComponent, ProjectData} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {SitePart} from './menu/site';
 import {Storage} from '../../utility/storage';
@@ -13,6 +14,10 @@ const STORAGE_DOCKED_KEY = 'live.menu.isDocked';
 
 export interface MenuPartConfig {
   api: LiveEditorApiComponent;
+  /**
+   * State class for working with editor state.
+   */
+  state: EditorState;
   storage: Storage;
 }
 
@@ -37,25 +42,24 @@ export class MenuPart extends BasePart implements Part {
       site: new SitePart({
         api: this.config.api,
         isExpandedByDefault: true,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       users: new UsersPart({
-        api: this.config.api,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       workspaces: new WorkspacesPart({
         api: this.config.api,
+        state: this.config.state,
         storage: this.config.storage,
       }),
     };
 
-    this.config.api
-      .getProject()
-      .then(projectData => {
-        this.project = projectData;
-        this.render();
-      })
-      .catch(catchError);
+    this.project = this.config.state.getProject((project: ProjectData) => {
+      this.project = project;
+      this.render();
+    });
   }
 
   protected createModal(editor: LiveEditor): Modal {

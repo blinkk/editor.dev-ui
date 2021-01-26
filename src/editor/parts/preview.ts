@@ -1,6 +1,7 @@
 import {BasePart, Part} from '.';
-import {DeviceData, LiveEditorApiComponent, catchError} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {DeviceData} from '../api';
+import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {Storage} from '../../utility/storage';
 
@@ -8,9 +9,9 @@ const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';
 
 export interface PreviewPartConfig {
   /**
-   * API for retrieving data for the editor.
+   * State class for working with editor state.
    */
-  api: LiveEditorApiComponent;
+  state: EditorState;
   /**
    * Storage class for working with settings.
    */
@@ -21,7 +22,6 @@ export class PreviewPart extends BasePart implements Part {
   config: PreviewPartConfig;
   device?: DeviceData;
   devices?: Array<DeviceData>;
-  devicesPromise?: Promise<Array<DeviceData>>;
   isDeviceMode?: boolean;
 
   constructor(config: PreviewPartConfig) {
@@ -32,8 +32,10 @@ export class PreviewPart extends BasePart implements Part {
       STORAGE_DEVICE_MODE_KEY,
       true
     );
-
-    this.loadDevices();
+    this.devices = this.config.state.getDevices((data: Array<DeviceData>) => {
+      this.devices = data;
+      this.render();
+    });
   }
 
   classesForPart(): Array<string> {
@@ -44,20 +46,6 @@ export class PreviewPart extends BasePart implements Part {
     }
 
     return classes;
-  }
-
-  loadDevices() {
-    if (this.devicesPromise) {
-      return;
-    }
-    this.devicesPromise = this.config.api.getDevices();
-    this.devicesPromise
-      .then(data => {
-        this.devices = data;
-        this.devicesPromise = undefined;
-        this.render();
-      })
-      .catch(catchError);
   }
 
   template(editor: LiveEditor): TemplateResult {

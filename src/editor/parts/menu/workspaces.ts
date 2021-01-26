@@ -1,4 +1,4 @@
-import {ApiError, WorkspaceData, catchError} from '../../api';
+import {ApiError, LiveEditorApiComponent, WorkspaceData} from '../../api';
 import {
   DeepObject,
   TemplateResult,
@@ -14,18 +14,25 @@ import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
-export class WorkspacesPart extends MenuSectionPart {
-  workspace?: WorkspaceData;
-  workspacePromise?: Promise<WorkspaceData>;
-  workspaces?: Array<WorkspaceData>;
-  workspacesPromise?: Promise<Array<WorkspaceData>>;
+export interface WorkspacePartConfig extends MenuSectionPartConfig {
+  api: LiveEditorApiComponent;
+}
 
-  constructor(config: MenuSectionPartConfig) {
+export class WorkspacesPart extends MenuSectionPart {
+  config: WorkspacePartConfig;
+
+  constructor(config: WorkspacePartConfig) {
     super(config);
+    this.config = config;
 
     document.addEventListener(EVENT_WORKSPACE_LOAD, (evt: Event) => {
       const customEvent: CustomEvent = evt as CustomEvent;
-      this.config.api.loadWorkspace(customEvent.detail as WorkspaceData);
+      this.config.state.loadWorkspace(
+        customEvent.detail as WorkspaceData,
+        () => {
+          this.render();
+        }
+      );
     });
   }
 
@@ -37,7 +44,7 @@ export class WorkspacesPart extends MenuSectionPart {
 
   classesForWorkspace(workspace: WorkspaceData): Array<string> {
     const classes = ['le__list__item', 'le__clickable'];
-    if (this.workspace?.name === workspace.name) {
+    if (this.config.state.workspace?.name === workspace.name) {
       classes.push('le__list__item--selected');
     }
     return classes;
@@ -47,7 +54,7 @@ export class WorkspacesPart extends MenuSectionPart {
     if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
       // Setup the editor.
       const options = [];
-      for (const workspace of this.workspaces || []) {
+      for (const workspace of this.config.state.workspaces || []) {
         options.push({
           label: workspace.name,
           value: workspace.branch.name,
@@ -118,7 +125,7 @@ export class WorkspacesPart extends MenuSectionPart {
 
           // Find the full workspace information for the base workspace.
           let baseWorkspace: WorkspaceData | undefined = undefined;
-          for (const workspace of this.workspaces || []) {
+          for (const workspace of this.config.state.workspaces || []) {
             if (workspace.branch.name === value.base) {
               baseWorkspace = workspace;
             }
@@ -167,45 +174,29 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   loadWorkspace() {
-    if (this.workspacePromise) {
-      return;
-    }
-    this.workspacePromise = this.config.api.getWorkspace();
-    this.workspacePromise
-      .then(data => {
-        this.workspace = data;
-        this.workspacePromise = undefined;
-        this.render();
-      })
-      .catch(catchError);
+    this.config.state.getWorkspace(() => {
+      this.render();
+    });
   }
 
   loadWorkspaces() {
-    if (this.workspacesPromise) {
-      return;
-    }
-    this.workspacesPromise = this.config.api.getWorkspaces();
-    this.workspacesPromise
-      .then(data => {
-        this.workspaces = data;
-        this.workspacesPromise = undefined;
-        this.render();
-      })
-      .catch(catchError);
+    this.config.state.getWorkspaces(() => {
+      this.render();
+    });
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
     // Lazy load the workspace information.
-    if (!this.workspace) {
+    if (!this.config.state.workspace) {
       this.loadWorkspace();
     }
 
     // Lazy load the workspaces information.
-    if (!this.workspaces) {
+    if (!this.config.state.workspaces) {
       this.loadWorkspaces();
     }
 
-    if (!this.workspaces) {
+    if (!this.config.state.workspaces) {
       return html`<div class="le__loading le__loading--pad"></div>`;
     }
 
@@ -226,18 +217,14 @@ export class WorkspacesPart extends MenuSectionPart {
           <div class="le__list__item__label">Add workspace</div>
         </div>
         ${repeat(
-          this.workspaces || [],
+          this.config.state.workspaces || [],
           workspace => workspace.name,
           workspace => html`<div
             class=${expandClasses(this.classesForWorkspace(workspace))}
             @click=${() => {
-              this.config.api
-                .loadWorkspace(workspace)
-                .then((workspace: WorkspaceData) => {
-                  this.workspace = workspace;
-                  this.render();
-                })
-                .catch(catchError);
+              this.config.state.loadWorkspace(workspace, () => {
+                this.render();
+              });
             }}
           >
             <div class="le__list__item__icon">

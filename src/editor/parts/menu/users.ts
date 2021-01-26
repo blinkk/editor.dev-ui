@@ -1,12 +1,11 @@
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {UserData, catchError} from '../../api';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
+import {UserData} from '../../api';
 import {repeat} from '@blinkk/selective-edit';
 
 export class UsersPart extends MenuSectionPart {
   users?: Array<UserData>;
-  usersPromise?: Promise<Array<UserData>>;
 
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
@@ -14,20 +13,17 @@ export class UsersPart extends MenuSectionPart {
     return classes;
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
-    // Lazy load the workspace information.
-    if (!this.users && !this.usersPromise) {
-      this.usersPromise = this.config.api.getUsers();
-      this.usersPromise
-        .then(data => {
-          this.users = data;
-          this.usersPromise = undefined;
-          this.render();
-        })
-        .catch(catchError);
-    }
+  loadUsers() {
+    this.users = this.config.state.getUsers((users: Array<UserData>) => {
+      this.users = users;
+      this.render();
+    });
+  }
 
+  templateContent(editor: LiveEditor): TemplateResult {
+    // Lazy load the users information.
     if (!this.users) {
+      this.loadUsers();
       return html`<div class="le__loading le__loading--pad"></div>`;
     }
 

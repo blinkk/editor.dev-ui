@@ -1,4 +1,4 @@
-import {ApiError, FileData, catchError} from '../../api';
+import {ApiError, FileData, LiveEditorApiComponent} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
@@ -14,6 +14,10 @@ const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
 const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
 
+export interface SitePartConfig extends MenuSectionPartConfig {
+  api: LiveEditorApiComponent;
+}
+
 interface DirectoryEventHandlers {
   fileCopy: (evt: Event, file: FileData) => void;
   fileDelete: (evt: Event, file: FileData) => void;
@@ -23,12 +27,12 @@ interface DirectoryEventHandlers {
 }
 
 export class SitePart extends MenuSectionPart {
-  files?: Array<FileData>;
-  filesPromise?: Promise<Array<FileData>>;
+  config: SitePartConfig;
   fileStructure?: DirectoryStructure;
 
-  constructor(config: MenuSectionPartConfig) {
+  constructor(config: SitePartConfig) {
     super(config);
+    this.config = config;
 
     document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
       if (!this.fileStructure) {
@@ -193,23 +197,15 @@ export class SitePart extends MenuSectionPart {
   }
 
   loadFiles() {
-    this.filesPromise = this.config.api.getFiles();
-    this.filesPromise
-      .then(data => {
-        this.files = data;
-        this.filesPromise = undefined;
-        this.fileStructure = undefined;
-        this.render();
-      })
-      .catch(catchError);
+    this.config.state.getFiles(() => {
+      this.fileStructure = undefined;
+      this.render();
+    });
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    if (!this.files && !this.filesPromise) {
+    if (!this.config.state.files) {
       this.loadFiles();
-    }
-
-    if (!this.files) {
       return html`<div class="le__loading le__loading--pad"></div>`;
     }
 
@@ -332,7 +328,7 @@ export class SitePart extends MenuSectionPart {
       };
 
       this.fileStructure = new DirectoryStructure(
-        this.files,
+        this.config.state.files,
         eventHandlers,
         this.config.storage
       );

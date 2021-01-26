@@ -7,6 +7,7 @@ import {
 } from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
 import {EVENT_RENDER_COMPLETE} from './events';
+import {EditorState} from './state';
 import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
@@ -36,6 +37,7 @@ export class LiveEditor {
   isPendingRender: boolean;
   isRendering: boolean;
   parts: LiveEditorParts;
+  state: EditorState;
   storage: Storage;
 
   constructor(config: LiveEditorConfig, container: HTMLElement) {
@@ -44,6 +46,7 @@ export class LiveEditor {
     this.isRendering = false;
     this.isPendingRender = false;
     this.storage = new Storage(Boolean(this.config.isTest));
+    this.state = new EditorState(this.config.api);
     this.parts = {
       content: new ContentPart({
         api: this.config.api,
@@ -51,6 +54,7 @@ export class LiveEditor {
       }),
       menu: new MenuPart({
         api: this.config.api,
+        state: this.state,
         storage: this.storage,
       }),
       modals: new ModalsPart(),
@@ -59,7 +63,7 @@ export class LiveEditor {
         api: this.config.api,
       }),
       preview: new PreviewPart({
-        api: this.config.api,
+        state: this.state,
         storage: this.storage,
       }),
     };

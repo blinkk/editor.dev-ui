@@ -1,16 +1,16 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {EditorState} from '../../state';
 import {LiveEditor} from '../../..';
-import {LiveEditorApiComponent} from '../../api';
 import {Storage} from '../../../utility/storage';
 import {slugify} from '../../../utility/slugify';
 
 export interface MenuSectionPartConfig {
-  /**
-   * API for retrieving data for the editor.
-   */
-  api: LiveEditorApiComponent;
   isExpandedByDefault?: boolean;
+  /**
+   * State class for working with editor state.
+   */
+  state: EditorState;
   /**
    * Storage class for working with settings.
    */

@@ -103,7 +103,7 @@ export class ExampleApi implements LiveEditorApiComponent {
   respondWithErrors: boolean;
 
   constructor() {
-    this.respondWithErrors = true;
+    this.respondWithErrors = false;
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {

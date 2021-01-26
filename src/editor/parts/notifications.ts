@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {DialogActionLevel, DialogModal} from '../ui/modal';
+import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../ui/modal';
 import {
   TemplateResult,
   expandClasses,
@@ -98,10 +98,12 @@ interface InternalNotification extends EditorNotification {
  */
 export class NotificationsPart extends BasePart implements Part {
   protected notifications: Array<InternalNotification>;
+  protected hasNewError: boolean;
 
   constructor() {
     super();
     this.notifications = [];
+    this.hasNewError = false;
 
     document.addEventListener(EVENT_NOTIFICATION, (evt: Event) => {
       this.addInfo((evt as CustomEvent).detail);
@@ -110,27 +112,32 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   addDebug(notification: EditorNotification) {
-    this.notifications.push(
-      this.scrubNewNotification(notification, NotificationLevel.Debug)
-    );
+    this.addNotification(notification, NotificationLevel.Debug);
   }
 
   addError(notification: EditorNotification) {
-    this.notifications.push(
-      this.scrubNewNotification(notification, NotificationLevel.Error)
-    );
+    this.addNotification(notification, NotificationLevel.Error);
   }
 
   addInfo(notification: EditorNotification) {
+    this.addNotification(notification, NotificationLevel.Info);
+  }
+
+  addNotification(
+    notification: EditorNotification,
+    defaultLevel = NotificationLevel.Info
+  ) {
     this.notifications.push(
-      this.scrubNewNotification(notification, NotificationLevel.Info)
+      this.scrubNewNotification(notification, defaultLevel)
     );
+
+    if (notification.level === NotificationLevel.Error) {
+      this.hasNewError = true;
+    }
   }
 
   addWarning(notification: EditorNotification) {
-    this.notifications.push(
-      this.scrubNewNotification(notification, NotificationLevel.Warning)
-    );
+    this.addNotification(notification, NotificationLevel.Warning);
   }
 
   classesForNotification(notification: InternalNotification): Array<string> {
@@ -161,6 +168,7 @@ export class NotificationsPart extends BasePart implements Part {
     if (!editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS]) {
       const modal = new DialogModal({
         title: 'Notifications',
+        priority: DialogPriorityLevel.High,
       });
       modal.templateModal = this.templateNotifications.bind(this);
       modal.actions.push({
@@ -234,6 +242,15 @@ export class NotificationsPart extends BasePart implements Part {
 
     if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
       icon = 'notification_important';
+
+      // Show the modal when there are unread error notifications.
+      // Just shows the first time it has a new error, can close
+      // without needing to mark the notification as read.
+      if (this.hasNewError) {
+        const modal = this.getOrCreateModalNotifications(editor);
+        modal.isVisible = true;
+        this.hasNewError = false;
+      }
     } else if (this.hasUnreadNotifications) {
       icon = 'notifications_active';
     }

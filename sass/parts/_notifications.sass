@@ -8,25 +8,30 @@
     font-size: $le-font-size-icon-large
 
 .ls__part__notifications__notification
+  align-items: center
   display: grid;
   grid-template-columns: $le-space-large 1fr $le-space-xlarge
-  grid-template-areas: "status label mark" ". description description" ". meta meta" ". actions actions";
-  margin: $le-space-medium
+  padding: $le-space-medium
+
+  &:hover
+    background-color: $le-color-tertiary
+    color: $le-color-on-tertiary
 
 .ls__part__notifications__notification__status
-  grid-area: status
+  grid-column: 1
 
 .ls__part__notifications__notification__label
-  grid-area: label
+  grid-column: 2
+  margin: $le-space-small 0
 
 .ls__part__notifications__notification__mark
-  grid-area: mark
+  grid-column: 3;
 
 .ls__part__notifications__notification__description
-  grid-area: description
+  grid-column: 2 / span 2;
 
 .ls__part__notifications__notification__actions
-  grid-area: actions
+  grid-column: 2 / span 2;
 
   button
     margin-right: $le-space-medium

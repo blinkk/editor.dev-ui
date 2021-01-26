@@ -244,7 +244,7 @@ export class NotificationsPart extends BasePart implements Part {
     let markReadButton = html``;
     if (!notification.isRead) {
       markReadButton = html`<div
-        class="le__clickable"
+        class="ls__part__notifications__notification__mark le__clickable"
         @click=${(evt: Event) => {
           evt.stopPropagation();
           notification.isRead = true;
@@ -268,27 +268,20 @@ export class NotificationsPart extends BasePart implements Part {
     let description = html``;
     if (notification.isExpanded && notification.description) {
       description = html`<div
-        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
+        class="ls__part__notifications__notification__description"
       >
-        <div class="le__list__item__label">${notification.description}</div>
+        ${notification.description}
       </div>`;
     }
 
     let meta = html``;
     if (notification.isExpanded && notification.meta) {
-      meta = html`<div
-        class="le__list__item le__list__item--constrained le__list__item--pad_horizontal le__list__item--indent_large"
-      >
-        <div class="le__list__item__label">
-          <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
-        </div>
+      meta = html`<div class="ls__part__notifications__notification__meta">
+        <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
       </div>`;
     }
 
-    return html`<div
-      class="ls__part__notifications__notification"
-      @click=${handleClick}
-    >
+    return html`<div class="ls__part__notifications__notification">
       <div class="ls__part__notifications__notification__status">
         <span class="material-icons"
           >${this.getIconForNotificationLevel(
@@ -297,16 +290,22 @@ export class NotificationsPart extends BasePart implements Part {
           )}</span
         >
       </div>
-      <div class="ls__part__notifications__notification__label">
+      <div
+        class="ls__part__notifications__notification__label ${hasExtra
+          ? 'le__clickable'
+          : ''}"
+        @click=${handleClick}
+      >
+        ${hasExtra
+          ? html`<span class="material-icons"
+              >${notification.isExpanded
+                ? 'keyboard_arrow_down'
+                : 'keyboard_arrow_right'}</span
+            >`
+          : ''}
         ${notification.message}
       </div>
-      <div class="ls__part__notifications__notification__mark">
-        ${markReadButton}
-      </div>
-      <div class="ls__part__notifications__notification__description">
-        ${description}
-      </div>
-      <div class="ls__part__notifications__notification__meta">${meta}</div>
+      ${markReadButton} ${description} ${meta}
       <div class="ls__part__notifications__notification__actions">
         ${this.templateNotificationActions(editor, notification)}
       </div>
@@ -318,36 +317,31 @@ export class NotificationsPart extends BasePart implements Part {
     notification: InternalNotification
   ): TemplateResult {
     let additionalDetails = html``;
-
     if (notification.actions) {
-      additionalDetails = html`<div
-        class="ls__part__notifications__notification__action"
-      >
-        ${repeat(
-          notification.actions,
-          action => action.label,
-          action => {
-            const handleClick = (evt: Event) => {
-              evt.preventDefault();
-              evt.stopPropagation();
-              document.dispatchEvent(
-                new CustomEvent(action.customEvent, {
-                  detail: action.details,
-                })
-              );
+      additionalDetails = html` ${repeat(
+        notification.actions,
+        action => action.label,
+        action => {
+          const handleClick = (evt: Event) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+            document.dispatchEvent(
+              new CustomEvent(action.customEvent, {
+                detail: action.details,
+              })
+            );
 
-              const modal = this.getOrCreateModalNotifications(editor);
-              modal.hide();
-            };
-            return html`<button
-              class="le__button le__clickable"
-              @click=${handleClick}
-            >
-              ${action.label}
-            </button>`;
-          }
-        )}
-      </div>`;
+            const modal = this.getOrCreateModalNotifications(editor);
+            modal.hide();
+          };
+          return html`<button
+            class="le__button le__clickable"
+            @click=${handleClick}
+          >
+            ${action.label}
+          </button>`;
+        }
+      )}`;
     }
 
     return additionalDetails;
@@ -375,7 +369,7 @@ export class NotificationsPart extends BasePart implements Part {
     );
 
     return html`<div class="le__part__notifications__modal">
-      <div class="le__list">
+      <div class="ls__part__notifications__notifications">
         ${repeat(
           this.notifications,
           notification => notification.addedOn?.getUTCDate(),

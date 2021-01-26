@@ -1,15 +1,19 @@
 import {BasePart, Part} from '..';
+import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './index';
 import {
   TemplateResult,
   expandClasses,
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {ContentSectionPart} from './index';
 import {LiveEditor} from '../../editor';
+import {LiveEditorApiComponent} from '../../api';
+import {Storage} from '../../../utility/storage';
 
 export interface ContentHeaderConfig {
+  api: LiveEditorApiComponent;
   sections: Array<ContentSectionPart>;
+  storage: Storage;
 }
 
 export class ContentHeaderPart extends BasePart implements Part {
@@ -29,6 +33,7 @@ export class ContentHeaderPart extends BasePart implements Part {
     for (const sectionPart of this.config.sections) {
       sectionPart.isVisible = false;
     }
+    this.config.storage.setItem(STORAGE_CONTENT_SECTION, section.section);
     section.isVisible = true;
     this.render();
   }

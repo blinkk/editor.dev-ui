@@ -4,7 +4,7 @@ import {LiveEditor} from '../../..';
 import {LiveEditorApiComponent} from '../../api';
 import {Storage} from '../../../utility/storage';
 
-const STORAGE_CONTENT_SECTION = 'live.content.section';
+export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
 export interface ContentSectionPartConfig {
   /**

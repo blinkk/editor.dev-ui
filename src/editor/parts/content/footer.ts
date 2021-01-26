@@ -22,9 +22,27 @@ export class ContentFooterPart extends BasePart implements Part {
       <div class="le__part__content__logo">...logo...</div>
       <div class="le__part__content__dev_tools">Developer tools:</div>
       <div class="le__part__content__dev_tools__icons">
-        <span class="material-icons le__clickable">assistant</span>
-        <span class="material-icons le__clickable">link</span>
-        <span class="material-icons le__clickable">change_history</span>
+        <span
+          class="material-icons tooltip--top"
+          aria-label="Highlight auto fields"
+          aria-role="link"
+          data-tip="Highlight auto fields"
+          >assistant</span
+        >
+        <span
+          class="material-icons tooltip--top"
+          aria-label="Deep link to fields"
+          aria-role="link"
+          data-tip="Deep link to fields"
+          >link</span
+        >
+        <span
+          class="material-icons tooltip--top"
+          aria-label="Highlight dirty fields"
+          aria-role="link"
+          data-tip="Highlight dirty fields"
+          >change_history</span
+        >
       </div>
     </div>`;
   }

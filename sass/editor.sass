@@ -41,12 +41,14 @@
   overflow: hidden
   grid-template-columns: minmax(435px, 40%) 1fr
 
+[aria-role="link"],
 .le__clickable
   cursor: pointer
 
   .material-icons
     padding: $le-space-xsmall
 
+.material-icons[aria-role="link"],
 .material-icons.le__clickable
   padding: $le-space-xsmall
 

@@ -133,6 +133,20 @@ export class NotificationsPart extends BasePart implements Part {
     );
   }
 
+  classesForNotification(notification: InternalNotification): Array<string> {
+    const classes = ['ls__part__notifications__notification'];
+
+    if (notification.level === NotificationLevel.Error) {
+      classes.push('ls__part__notifications__notification--error');
+    }
+
+    if (notification.level === NotificationLevel.Warning) {
+      classes.push('ls__part__notifications__notification--warning');
+    }
+
+    return classes;
+  }
+
   classesForPart(): Array<string> {
     const classes = ['le__part__notifications', 'le__clickable'];
 
@@ -281,7 +295,9 @@ export class NotificationsPart extends BasePart implements Part {
       </div>`;
     }
 
-    return html`<div class="ls__part__notifications__notification">
+    return html`<div
+      class=${expandClasses(this.classesForNotification(notification))}
+    >
       <div class="ls__part__notifications__notification__status">
         <span class="material-icons"
           >${this.getIconForNotificationLevel(

@@ -53,14 +53,13 @@ export class LiveEditor {
         storage: this.storage,
       }),
       menu: new MenuPart({
-        api: this.config.api,
         state: this.state,
         storage: this.storage,
       }),
       modals: new ModalsPart(),
       notifications: new NotificationsPart(),
       overview: new OverviewPart({
-        api: this.config.api,
+        state: this.state,
       }),
       preview: new PreviewPart({
         state: this.state,

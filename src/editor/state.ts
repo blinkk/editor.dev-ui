@@ -8,8 +8,10 @@ import {
   WorkspaceData,
   catchError,
 } from './api';
+import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {EVENT_RENDER} from './events';
 import {EditorFile} from './file';
+import {ListenersMixin} from '../mixin/listeners';
 
 /**
  * Track the references to the editor state.
@@ -18,7 +20,7 @@ import {EditorFile} from './file';
  * with part configs and always have access to the latest
  * value without each part having to request the same information.
  */
-export class EditorState {
+export class EditorState extends ListenersMixin(Base) {
   /**
    * API for retrieving data for the editor.
    */
@@ -35,10 +37,6 @@ export class EditorState {
    * Editor file loaded in the editor.
    */
   file?: EditorFile;
-  /**
-   * Allow binding to a callback whenever an event happens.
-   */
-  protected listeners: Record<string, Array<() => void>>;
   /**
    * Project information.
    */
@@ -62,16 +60,9 @@ export class EditorState {
   workspaces?: Array<WorkspaceData>;
 
   constructor(api: LiveEditorApiComponent) {
+    super();
     this.api = api;
-    this.listeners = {};
     this.promises = {};
-  }
-
-  addListener(eventName: string, callback: () => void) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
-    }
-    this.listeners[eventName].push(callback);
   }
 
   copyFile(
@@ -304,18 +295,5 @@ export class EditorState {
    */
   render() {
     document.dispatchEvent(new CustomEvent(EVENT_RENDER));
-  }
-
-  /**
-   * Trigger the listener callbacks for a given event.
-   *
-   * @param eventName Event name to trigger.
-   */
-  triggerListener(eventName: string) {
-    if (this.listeners[eventName]) {
-      for (const listener of this.listeners[eventName]) {
-        listener();
-      }
-    }
   }
 }

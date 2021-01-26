@@ -1,47 +1,33 @@
 import {BasePart, Part} from '.';
-import {
-  LiveEditorApiComponent,
-  ProjectData,
-  WorkspaceData,
-  catchError,
-} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 
 export interface OverviewPartConfig {
-  api: LiveEditorApiComponent;
+  /**
+   * State class for working with editor state.
+   */
+  state: EditorState;
 }
 
 export class OverviewPart extends BasePart implements Part {
   config: OverviewPartConfig;
-  project?: ProjectData;
-  workspace?: WorkspaceData;
 
   constructor(config: OverviewPartConfig) {
     super();
     this.config = config;
-
-    // Load the project information.
-    this.config.api
-      .getProject()
-      .then(data => {
-        this.project = data;
-        this.render();
-      })
-      .catch(catchError);
-
-    // Load the workspace information.
-    this.config.api
-      .getWorkspace()
-      .then(data => {
-        this.workspace = data;
-        this.render();
-      })
-      .catch(catchError);
   }
 
   classesForPart(): Array<string> {
     return ['le__part__overview'];
+  }
+
+  loadProject() {
+    this.config.state.getProject();
+  }
+
+  loadWorkspace() {
+    this.config.state.getWorkspace();
   }
 
   template(editor: LiveEditor): TemplateResult {
@@ -70,7 +56,14 @@ export class OverviewPart extends BasePart implements Part {
   }
 
   templateProject(editor: LiveEditor): TemplateResult {
-    let projectName = this.project?.title || html`&nbsp;`;
+    const project = this.config.state.project;
+
+    // Lazy load the project.
+    if (!project) {
+      this.loadProject();
+    }
+
+    let projectName = project?.title || html`&nbsp;`;
 
     // Menu shows the project name when it is docked.
     if (editor.parts.menu.isDocked) {
@@ -81,12 +74,20 @@ export class OverviewPart extends BasePart implements Part {
   }
 
   templateWorkspace(editor: LiveEditor): TemplateResult {
+    const workspace = this.config.state.workspace;
+
+    // Lazy load the workspace.
+    if (!workspace) {
+      this.loadWorkspace();
+    }
+
     return html`<div class="le__part__overview__workspace">
       <span>Workspace:</span>
-      <strong>${this.workspace?.name || '...'}</strong> @
-      <strong>${(this.workspace?.branch.commit || '...').slice(0, 5)}</strong>
-      by <strong>${this.workspace?.branch.author.name || '...'}</strong> (time
-      ago)
+      <strong>${workspace?.name || '...'}</strong> @
+      <strong>${(workspace?.branch.commit || '...').slice(0, 5)}</strong>
+      by
+      <strong>${workspace?.branch.author.name || '...'}</strong>
+      (time ago)
     </div>`;
   }
 }

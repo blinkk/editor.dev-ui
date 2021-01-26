@@ -1,9 +1,9 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
-import {LiveEditorApiComponent, ProjectData} from '../api';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
+import {ProjectData} from '../api';
 import {SitePart} from './menu/site';
 import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';
@@ -13,7 +13,6 @@ const MODAL_KEY = 'menu';
 const STORAGE_DOCKED_KEY = 'live.menu.isDocked';
 
 export interface MenuPartConfig {
-  api: LiveEditorApiComponent;
   /**
    * State class for working with editor state.
    */
@@ -32,7 +31,6 @@ export class MenuPart extends BasePart implements Part {
   isDocked: boolean;
   modal?: Modal;
   parts: MenuParts;
-  project?: ProjectData;
 
   constructor(config: MenuPartConfig) {
     super();
@@ -53,11 +51,6 @@ export class MenuPart extends BasePart implements Part {
         storage: this.config.storage,
       }),
     };
-
-    this.project = this.config.state.getProject((project: ProjectData) => {
-      this.project = project;
-      this.render();
-    });
   }
 
   protected createModal(editor: LiveEditor): Modal {
@@ -94,6 +87,10 @@ export class MenuPart extends BasePart implements Part {
     this.isDocked = true;
     this.config.storage.setItem(STORAGE_DOCKED_KEY, 'true');
     this.render();
+  }
+
+  loadProject() {
+    this.config.state.getProject();
   }
 
   /**
@@ -167,9 +164,16 @@ export class MenuPart extends BasePart implements Part {
   }
 
   templateMenu(editor: LiveEditor): TemplateResult {
+    const project = this.config.state.project;
+
+    // Lazy load the project.
+    if (!project) {
+      this.loadProject();
+    }
+
     return html`<div class="le__part__menu__header">
       <div class="le__part__menu__project">
-        ${this.project?.title || html`&nbsp;`}
+        ${project?.title || html`&nbsp;`}
       </div>
       <div class="le__actions">
         ${this.templateActionDocking(editor)}

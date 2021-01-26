@@ -1,4 +1,5 @@
 import {
+  ApiError,
   DeviceData,
   FileData,
   LiveEditorApiComponent,
@@ -7,6 +8,7 @@ import {
   WorkspaceData,
   catchError,
 } from './api';
+import {EVENT_RENDER} from './events';
 import {EditorFile} from './file';
 
 /**
@@ -34,14 +36,18 @@ export class EditorState {
    */
   file?: EditorFile;
   /**
+   * Allow binding to a callback whenever an event happens.
+   */
+  protected listeners: Record<string, Array<() => void>>;
+  /**
    * Project information.
    */
   project?: ProjectData;
   /**
-   * Allow keeping track of active promises if parts want to keep
-   * from actively requesting the same data at the same time.
+   * Keep track of active promises to keep from requesting the same data
+   * multiple times.
    */
-  promises: Record<string, Promise<any>>;
+  protected promises: Record<string, Promise<any>>;
   /**
    * Users in the project that have access to the editor.
    */
@@ -57,11 +63,90 @@ export class EditorState {
 
   constructor(api: LiveEditorApiComponent) {
     this.api = api;
+    this.listeners = {};
     this.promises = {};
   }
 
+  addListener(eventName: string, callback: () => void) {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
+    }
+    this.listeners[eventName].push(callback);
+  }
+
+  copyFile(
+    originalPath: string,
+    path: string,
+    callback?: (file: FileData) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    this.api
+      .copyFile(originalPath, path)
+      .then(data => {
+        if (callback) {
+          callback(data);
+        }
+        // Reload the files.
+        this.getFiles();
+      })
+      .catch(callbackError || catchError);
+  }
+
+  createFile(
+    path: string,
+    callback?: (file: FileData) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    this.api
+      .createFile(path)
+      .then(data => {
+        if (callback) {
+          callback(data);
+        }
+        // Reload the files.
+        this.getFiles();
+      })
+      .catch(callbackError || catchError);
+  }
+
+  createWorkspace(
+    base: WorkspaceData,
+    workspace: string,
+    callback?: (workspace: WorkspaceData) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    this.api
+      .createWorkspace(base, workspace)
+      .then(data => {
+        if (callback) {
+          callback(data);
+        }
+        // Reload the workspaces.
+        this.getWorkspaces();
+      })
+      .catch(callbackError || catchError);
+  }
+
+  deleteFile(
+    file: FileData,
+    callback?: () => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    this.api
+      .deleteFile(file)
+      .then(() => {
+        if (callback) {
+          callback();
+        }
+        // Reload the files.
+        this.getFiles();
+      })
+      .catch(callbackError || catchError);
+  }
+
   getDevices(
-    callback: (devices: Array<DeviceData>) => void
+    callback?: (devices: Array<DeviceData>) => void,
+    callbackError?: (error: ApiError) => void
   ): Array<DeviceData> | undefined {
     const promiseKey = 'getDevices';
     if (this.promises[promiseKey]) {
@@ -72,14 +157,19 @@ export class EditorState {
       .then(data => {
         this.devices = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.devices;
   }
 
   getFiles(
-    callback: (files: Array<FileData>) => void
+    callback?: (files: Array<FileData>) => void,
+    callbackError?: (error: ApiError) => void
   ): Array<FileData> | undefined {
     const promiseKey = 'getFiles';
     if (this.promises[promiseKey]) {
@@ -90,14 +180,19 @@ export class EditorState {
       .then(data => {
         this.files = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.files;
   }
 
   getProject(
-    callback: (project: ProjectData) => void
+    callback?: (project: ProjectData) => void,
+    callbackError?: (error: ApiError) => void
   ): ProjectData | undefined {
     const promiseKey = 'getProject';
     if (this.promises[promiseKey]) {
@@ -108,14 +203,19 @@ export class EditorState {
       .then(data => {
         this.project = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.project;
   }
 
   getUsers(
-    callback: (files: Array<UserData>) => void
+    callback?: (files: Array<UserData>) => void,
+    callbackError?: (error: ApiError) => void
   ): Array<UserData> | undefined {
     const promiseKey = 'getUsers';
     if (this.promises[promiseKey]) {
@@ -126,14 +226,19 @@ export class EditorState {
       .then(data => {
         this.users = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.users;
   }
 
   getWorkspace(
-    callback: (project: WorkspaceData) => void
+    callback?: (project: WorkspaceData) => void,
+    callbackError?: (error: ApiError) => void
   ): WorkspaceData | undefined {
     const promiseKey = 'getWorkspace';
     if (this.promises[promiseKey]) {
@@ -144,14 +249,19 @@ export class EditorState {
       .then(data => {
         this.workspace = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.workspace;
   }
 
   getWorkspaces(
-    callback: (workspaces: Array<WorkspaceData>) => void
+    callback?: (workspaces: Array<WorkspaceData>) => void,
+    callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
     const promiseKey = 'getUsers';
     if (this.promises[promiseKey]) {
@@ -162,22 +272,50 @@ export class EditorState {
       .then(data => {
         this.workspaces = data;
         delete this.promises[promiseKey];
-        callback(data);
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
     return this.workspaces;
   }
 
   loadWorkspace(
     workspace: WorkspaceData,
-    callback: (workspace: WorkspaceData) => void
+    callback?: (workspace: WorkspaceData) => void,
+    callbackError?: (error: ApiError) => void
   ) {
     this.api
       .loadWorkspace(workspace)
-      .then((workspace: WorkspaceData) => {
-        this.workspace = workspace;
-        callback(workspace);
+      .then((data: WorkspaceData) => {
+        this.workspace = data;
+        if (callback) {
+          callback(data);
+        }
+        this.render();
       })
-      .catch(catchError);
+      .catch(callbackError || catchError);
+  }
+
+  /**
+   * Signal for the editor to re-render.
+   */
+  render() {
+    document.dispatchEvent(new CustomEvent(EVENT_RENDER));
+  }
+
+  /**
+   * Trigger the listener callbacks for a given event.
+   *
+   * @param eventName Event name to trigger.
+   */
+  triggerListener(eventName: string) {
+    if (this.listeners[eventName]) {
+      for (const listener of this.listeners[eventName]) {
+        listener();
+      }
+    }
   }
 }

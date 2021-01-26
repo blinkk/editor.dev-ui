@@ -1,4 +1,4 @@
-import {ApiError, FileData, LiveEditorApiComponent} from '../../api';
+import {ApiError, FileData} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
@@ -14,10 +14,6 @@ const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
 const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
 
-export interface SitePartConfig extends MenuSectionPartConfig {
-  api: LiveEditorApiComponent;
-}
-
 interface DirectoryEventHandlers {
   fileCopy: (evt: Event, file: FileData) => void;
   fileDelete: (evt: Event, file: FileData) => void;
@@ -27,12 +23,16 @@ interface DirectoryEventHandlers {
 }
 
 export class SitePart extends MenuSectionPart {
-  config: SitePartConfig;
   fileStructure?: DirectoryStructure;
 
-  constructor(config: SitePartConfig) {
+  constructor(config: MenuSectionPartConfig) {
     super(config);
-    this.config = config;
+
+    // Recreate the file structure whenever the files are reloaded.
+    this.config.state.addListener('getFiles', () => {
+      this.fileStructure = undefined;
+      this.render();
+    });
 
     document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
       if (!this.fileStructure) {
@@ -68,9 +68,10 @@ export class SitePart extends MenuSectionPart {
           const value = modal.selective.value;
           modal.startProcessing();
 
-          this.config.api
-            .copyFile(value.originalPath, value.path)
-            .then((newFile: FileData) => {
+          this.config.state.copyFile(
+            value.originalPath,
+            value.path,
+            (newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
                 message: `New '${newFile.path}' file successfully created.`,
@@ -82,17 +83,17 @@ export class SitePart extends MenuSectionPart {
                   },
                 ],
               });
-              this.loadFiles();
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
               modal.stopProcessing(true);
-            })
-            .catch((error: ApiError) => {
+            },
+            (error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
               modal.stopProcessing();
-            });
+            }
+          );
         },
       });
       modal.addCancelAction();
@@ -118,24 +119,26 @@ export class SitePart extends MenuSectionPart {
           const path = modal.data.get('path');
           modal.startProcessing();
 
-          this.config.api
-            .deleteFile(path)
-            .then(() => {
+          this.config.state.deleteFile(
+            {
+              path: path,
+            },
+            () => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
                 message: `Deleted '${path}' file successfully.`,
               });
-              this.loadFiles();
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
               modal.stopProcessing(true);
-            })
-            .catch((error: ApiError) => {
+            },
+            (error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
               modal.stopProcessing();
-            });
+            }
+          );
         },
       });
       modal.addCancelAction();
@@ -163,9 +166,9 @@ export class SitePart extends MenuSectionPart {
           const value = modal.selective.value;
           modal.startProcessing();
 
-          this.config.api
-            .createFile(`${value.directory}${value.path}`)
-            .then((newFile: FileData) => {
+          this.config.state.createFile(
+            `${value.directory}${value.path}`,
+            (newFile: FileData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
                 message: `New '${newFile.path}' file successfully created.`,
@@ -177,17 +180,17 @@ export class SitePart extends MenuSectionPart {
                   },
                 ],
               });
-              this.loadFiles();
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
               modal.stopProcessing(true);
-            })
-            .catch((error: ApiError) => {
+            },
+            (error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
               modal.stopProcessing();
-            });
+            }
+          );
         },
       });
       modal.addCancelAction();

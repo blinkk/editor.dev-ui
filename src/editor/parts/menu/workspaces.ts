@@ -14,25 +14,13 @@ import {repeat} from '@blinkk/selective-edit';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
-export interface WorkspacePartConfig extends MenuSectionPartConfig {
-  api: LiveEditorApiComponent;
-}
-
 export class WorkspacesPart extends MenuSectionPart {
-  config: WorkspacePartConfig;
-
-  constructor(config: WorkspacePartConfig) {
+  constructor(config: MenuSectionPartConfig) {
     super(config);
-    this.config = config;
 
     document.addEventListener(EVENT_WORKSPACE_LOAD, (evt: Event) => {
       const customEvent: CustomEvent = evt as CustomEvent;
-      this.config.state.loadWorkspace(
-        customEvent.detail as WorkspaceData,
-        () => {
-          this.render();
-        }
-      );
+      this.config.state.loadWorkspace(customEvent.detail as WorkspaceData);
     });
   }
 
@@ -139,32 +127,32 @@ export class WorkspacesPart extends MenuSectionPart {
             return;
           }
 
-          this.config.api
-            .createWorkspace(baseWorkspace, value.workspace)
-            .then((newWorkspace: WorkspaceData) => {
+          this.config.state.createWorkspace(
+            baseWorkspace,
+            value.workspace,
+            (workspace: WorkspaceData) => {
               // Log the success to the notifications.
               editor.parts.notifications.addInfo({
-                message: `New '${newWorkspace.name}' workspace successfully created.`,
+                message: `New '${workspace.name}' workspace successfully created.`,
                 actions: [
                   {
                     label: 'Visit workspace',
                     customEvent: EVENT_WORKSPACE_LOAD,
-                    details: newWorkspace,
+                    details: workspace,
                   },
                 ],
               });
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
-              // Reload the list of workspaces.
-              this.loadWorkspaces();
               modal.stopProcessing(true);
-            })
-            .catch((error: ApiError) => {
+            },
+            (error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error);
               modal.error = error;
               modal.stopProcessing();
-            });
+            }
+          );
         },
       });
       modal.addCancelAction();
@@ -174,15 +162,11 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   loadWorkspace() {
-    this.config.state.getWorkspace(() => {
-      this.render();
-    });
+    this.config.state.getWorkspace();
   }
 
   loadWorkspaces() {
-    this.config.state.getWorkspaces(() => {
-      this.render();
-    });
+    this.config.state.getWorkspaces();
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
@@ -222,9 +206,7 @@ export class WorkspacesPart extends MenuSectionPart {
           workspace => html`<div
             class=${expandClasses(this.classesForWorkspace(workspace))}
             @click=${() => {
-              this.config.state.loadWorkspace(workspace, () => {
-                this.render();
-              });
+              this.config.state.loadWorkspace(workspace);
             }}
           >
             <div class="le__list__item__icon">

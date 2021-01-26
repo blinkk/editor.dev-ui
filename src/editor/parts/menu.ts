@@ -40,7 +40,6 @@ export class MenuPart extends BasePart implements Part {
     this.isDocked = this.config.storage.getItemBoolean(STORAGE_DOCKED_KEY);
     this.parts = {
       site: new SitePart({
-        api: this.config.api,
         isExpandedByDefault: true,
         state: this.config.state,
         storage: this.config.storage,
@@ -50,7 +49,6 @@ export class MenuPart extends BasePart implements Part {
         storage: this.config.storage,
       }),
       workspaces: new WorkspacesPart({
-        api: this.config.api,
         state: this.config.state,
         storage: this.config.storage,
       }),

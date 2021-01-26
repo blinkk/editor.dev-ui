@@ -45,7 +45,10 @@ export class LiveEditor {
     this.isPendingRender = false;
     this.storage = new Storage(Boolean(this.config.isTest));
     this.parts = {
-      content: new ContentPart(),
+      content: new ContentPart({
+        api: this.config.api,
+        storage: this.storage,
+      }),
       menu: new MenuPart({
         api: this.config.api,
         storage: this.storage,

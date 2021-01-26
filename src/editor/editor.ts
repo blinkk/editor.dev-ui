@@ -49,7 +49,7 @@ export class LiveEditor {
     this.state = new EditorState(this.config.api);
     this.parts = {
       content: new ContentPart({
-        api: this.config.api,
+        state: this.state,
         storage: this.storage,
       }),
       menu: new MenuPart({

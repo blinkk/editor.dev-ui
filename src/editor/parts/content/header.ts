@@ -6,13 +6,16 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
+import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {LiveEditorApiComponent} from '../../api';
 import {Storage} from '../../../utility/storage';
 
 export interface ContentHeaderConfig {
-  api: LiveEditorApiComponent;
   sections: Array<ContentSectionPart>;
+  /**
+   * State class for working with editor state.
+   */
+  state: EditorState;
   storage: Storage;
 }
 

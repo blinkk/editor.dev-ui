@@ -1,4 +1,4 @@
-import {ApiError, FileData} from '../../api';
+import {ApiError, EditorFileData, FileData} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
@@ -32,14 +32,6 @@ export class SitePart extends MenuSectionPart {
     this.config.state.addListener('getFiles', () => {
       this.fileStructure = undefined;
       this.render();
-    });
-
-    document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
-      if (!this.fileStructure) {
-        return;
-      }
-      const customEvent: CustomEvent = evt as CustomEvent;
-      this.fileStructure.expandToFile(customEvent.detail as FileData);
     });
   }
 
@@ -335,6 +327,11 @@ export class SitePart extends MenuSectionPart {
         eventHandlers,
         this.config.storage
       );
+
+      // If there is a file loaded, expand the directory out to show it.
+      if (this.config.state.file) {
+        this.fileStructure.expandToFile(this.config.state.file);
+      }
     }
 
     return html`<div class="le__part__menu__section__content">
@@ -441,13 +438,13 @@ class DirectoryStructure {
     return fileParts.slice(0, -1).join('.');
   }
 
-  expandToFile(fileData: FileData) {
+  expandToFile(file: EditorFileData) {
     // As long as the directory starts with the same path, expand it.
-    if (fileData.path.startsWith(this.root)) {
+    if (file.file.path.startsWith(this.root)) {
       this.isExpanded = true;
 
       for (const key of Object.keys(this.directories)) {
-        this.directories[key].expandToFile(fileData);
+        this.directories[key].expandToFile(file);
       }
     }
   }

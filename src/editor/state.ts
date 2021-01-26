@@ -1,6 +1,7 @@
 import {
   ApiError,
   DeviceData,
+  EditorFileData,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -10,7 +11,6 @@ import {
 } from './api';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {EVENT_RENDER} from './events';
-import {EditorFile} from './file';
 import {ListenersMixin} from '../mixin/listeners';
 
 /**
@@ -36,7 +36,7 @@ export class EditorState extends ListenersMixin(Base) {
   /**
    * Editor file loaded in the editor.
    */
-  file?: EditorFile;
+  file?: EditorFileData;
   /**
    * Project information.
    */
@@ -271,6 +271,30 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(callbackError || catchError);
     return this.workspaces;
+  }
+
+  loadFile(
+    file: FileData,
+    callback?: (file: EditorFileData) => void,
+    callbackError?: (error: ApiError) => void
+  ): EditorFileData | undefined {
+    const promiseKey = 'loadFile';
+    if (this.promises[promiseKey]) {
+      return;
+    }
+    this.promises[promiseKey] = this.api
+      .loadFile(file)
+      .then(data => {
+        this.file = data;
+        delete this.promises[promiseKey];
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
+      })
+      .catch(callbackError || catchError);
+    return this.file;
   }
 
   loadWorkspace(

@@ -3,7 +3,6 @@ import {DialogPriorityLevel, Modal} from '../ui/modal';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
-import {ProjectData} from '../api';
 import {SitePart} from './menu/site';
 import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';

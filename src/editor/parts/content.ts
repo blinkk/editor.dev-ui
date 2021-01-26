@@ -9,16 +9,18 @@ import {ContentFooterPart} from './content/footer';
 import {ContentHeaderPart} from './content/header';
 import {ContentSectionPart} from './content/index';
 import {ContentToolbarPart} from './content/toolbar';
+import {EVENT_FILE_LOAD} from '../events';
+import {EditorState} from '../state';
 import {FieldsPart} from './content/sectionFields';
+import {FileData} from '../api';
 import {HistoryPart} from './content/sectionHistory';
 import {LiveEditor} from '../editor';
-import {LiveEditorApiComponent} from '../api';
 import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
 import {Storage} from '../../utility/storage';
 
 export interface ContentPartConfig {
-  api: LiveEditorApiComponent;
+  state: EditorState;
   storage: Storage;
 }
 
@@ -41,20 +43,20 @@ export class ContentPart extends BasePart implements Part {
     // Order of appearance.
     this.sections = [
       new FieldsPart({
-        api: this.config.api,
+        state: this.config.state,
         isDefaultSection: true,
         storage: this.config.storage,
       }),
       new MediaPart({
-        api: this.config.api,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       new RawPart({
-        api: this.config.api,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       new HistoryPart({
-        api: this.config.api,
+        state: this.config.state,
         storage: this.config.storage,
       }),
     ];
@@ -62,12 +64,18 @@ export class ContentPart extends BasePart implements Part {
     this.parts = {
       footer: new ContentFooterPart({}),
       header: new ContentHeaderPart({
-        api: this.config.api,
         sections: this.sections,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       toolbar: new ContentToolbarPart({}),
     };
+
+    // Watch for a load file event and load the file.
+    document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
+      const customEvent: CustomEvent = evt as CustomEvent;
+      this.config.state.loadFile(customEvent.detail as FileData);
+    });
   }
 
   classesForPart(): Array<string> {

@@ -1,20 +1,20 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {EditorState} from '../../state';
 import {LiveEditor} from '../../..';
-import {LiveEditorApiComponent} from '../../api';
 import {Storage} from '../../../utility/storage';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
 export interface ContentSectionPartConfig {
   /**
-   * API for retrieving data for the editor.
-   */
-  api: LiveEditorApiComponent;
-  /**
    * Is this section the default visible?
    */
   isDefaultSection?: boolean;
+  /**
+   * State class for working with editor state.
+   */
+  state: EditorState;
   /**
    * Storage class for working with settings.
    */

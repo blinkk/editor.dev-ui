@@ -255,30 +255,62 @@ export class NotificationsPart extends BasePart implements Part {
       </div>`;
     }
 
+    const hasExtra = notification.description || notification.meta;
     const handleClick = (evt: Event) => {
+      if (!hasExtra) {
+        return;
+      }
       evt.stopPropagation();
       notification.isExpanded = !notification.isExpanded;
       this.render();
     };
 
-    return html`<div
-        class="le__list__item le__list__item--pad_horizontal le__clickable"
-        @click=${handleClick}
+    let description = html``;
+    if (notification.isExpanded && notification.description) {
+      description = html`<div
+        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
       >
-        <div class="le__list__item__icon">
-          <span class="material-icons"
-            >${this.getIconForNotificationLevel(
-              notification.level || NotificationLevel.Info,
-              notification.isRead || false
-            )}</span
-          >
+        <div class="le__list__item__label">${notification.description}</div>
+      </div>`;
+    }
+
+    let meta = html``;
+    if (notification.isExpanded && notification.meta) {
+      meta = html`<div
+        class="le__list__item le__list__item--constrained le__list__item--pad_horizontal le__list__item--indent_large"
+      >
+        <div class="le__list__item__label">
+          <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
         </div>
-        <div class="le__list__item__label">${notification.message}</div>
-        <div class="le__list__item__aside ">${markReadButton}</div>
+      </div>`;
+    }
+
+    return html`<div
+      class="ls__part__notifications__notification"
+      @click=${handleClick}
+    >
+      <div class="ls__part__notifications__notification__status">
+        <span class="material-icons"
+          >${this.getIconForNotificationLevel(
+            notification.level || NotificationLevel.Info,
+            notification.isRead || false
+          )}</span
+        >
       </div>
-      ${this.templateNotificationDetails(editor, notification)}
-      ${this.templateNotificationMeta(editor, notification)}
-      ${this.templateNotificationActions(editor, notification)}`;
+      <div class="ls__part__notifications__notification__label">
+        ${notification.message}
+      </div>
+      <div class="ls__part__notifications__notification__mark">
+        ${markReadButton}
+      </div>
+      <div class="ls__part__notifications__notification__description">
+        ${description}
+      </div>
+      <div class="ls__part__notifications__notification__meta">${meta}</div>
+      <div class="ls__part__notifications__notification__actions">
+        ${this.templateNotificationActions(editor, notification)}
+      </div>
+    </div>`;
   }
 
   templateNotificationActions(
@@ -289,70 +321,32 @@ export class NotificationsPart extends BasePart implements Part {
 
     if (notification.actions) {
       additionalDetails = html`<div
-        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
+        class="ls__part__notifications__notification__action"
       >
-        <div class="le__list__item__actions">
-          ${repeat(
-            notification.actions,
-            action => action.label,
-            action => {
-              const handleClick = (evt: Event) => {
-                evt.preventDefault();
-                evt.stopPropagation();
-                document.dispatchEvent(
-                  new CustomEvent(action.customEvent, {
-                    detail: action.details,
-                  })
-                );
+        ${repeat(
+          notification.actions,
+          action => action.label,
+          action => {
+            const handleClick = (evt: Event) => {
+              evt.preventDefault();
+              evt.stopPropagation();
+              document.dispatchEvent(
+                new CustomEvent(action.customEvent, {
+                  detail: action.details,
+                })
+              );
 
-                const modal = this.getOrCreateModalNotifications(editor);
-                modal.hide();
-              };
-              return html`<button
-                class="le__button le__clickable"
-                @click=${handleClick}
-              >
-                ${action.label}
-              </button>`;
-            }
-          )}
-        </div>
-      </div>`;
-    }
-
-    return additionalDetails;
-  }
-
-  templateNotificationDetails(
-    editor: LiveEditor,
-    notification: InternalNotification
-  ): TemplateResult {
-    let additionalDetails = html``;
-
-    if (notification.isExpanded && notification.description) {
-      additionalDetails = html`<div
-        class="le__list__item le__list__item--pad_horizontal le__list__item--indent_large"
-      >
-        <div class="le__list__item__label">${notification.description}</div>
-      </div>`;
-    }
-
-    return additionalDetails;
-  }
-
-  templateNotificationMeta(
-    editor: LiveEditor,
-    notification: InternalNotification
-  ): TemplateResult {
-    let additionalDetails = html``;
-
-    if (notification.isExpanded && notification.meta) {
-      additionalDetails = html`<div
-        class="le__list__item le__list__item--constrained le__list__item--pad_horizontal le__list__item--indent_large"
-      >
-        <div class="le__list__item__label">
-          <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
-        </div>
+              const modal = this.getOrCreateModalNotifications(editor);
+              modal.hide();
+            };
+            return html`<button
+              class="le__button le__clickable"
+              @click=${handleClick}
+            >
+              ${action.label}
+            </button>`;
+          }
+        )}
       </div>`;
     }
 

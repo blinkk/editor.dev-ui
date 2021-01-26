@@ -7,7 +7,23 @@
   justify-content: space-between
 
 .le__part__content__header__sections
+  display: flex
+  flex-flow: row
+
+.le__part__content__header__section
   padding: $le-space-medium
+  border-bottom: $le-border-size-large solid transparent
+
+  &:hover
+    border-bottom: $le-border-size-large solid $le-color-secondary-light
+
+  &--selected
+    border-bottom: $le-border-size-large solid $le-color-secondary
+
+  &--selected:hover
+    border-bottom: $le-border-size-large solid $le-color-secondary-dark
+
 
 .le__part__content__header__actions
   margin-right: $le-space-medium
+

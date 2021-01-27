@@ -2,6 +2,7 @@ import {
   ApiError,
   DeviceData,
   EditorFileData,
+  EditorUrlLevel,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -340,6 +341,23 @@ export class ExampleApi implements LiveEditorApiComponent {
             } as FieldConfig,
           ],
         },
+        urls: [
+          {
+            url: 'http://localhost:8888',
+            label: 'Live editor preview',
+            level: EditorUrlLevel.PRIVATE,
+          },
+          {
+            url: 'http://localhost:8888',
+            label: 'Staging',
+            level: EditorUrlLevel.PROTECTED,
+          },
+          {
+            url: 'http://localhost:8888',
+            label: 'Live',
+            level: EditorUrlLevel.PUBLIC,
+          },
+        ],
       } as EditorFileData);
     });
   }

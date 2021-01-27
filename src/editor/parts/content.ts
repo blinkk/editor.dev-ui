@@ -68,7 +68,9 @@ export class ContentPart extends BasePart implements Part {
         state: this.config.state,
         storage: this.config.storage,
       }),
-      toolbar: new ContentToolbarPart({}),
+      toolbar: new ContentToolbarPart({
+        state: this.config.state,
+      }),
     };
 
     // Watch for a load file event and load the file.

@@ -14,6 +14,7 @@ import {
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER} from '../editor/events';
 import {ExampleApi} from './exampleApi';
+import {ExampleTool} from './exampleTool';
 import {LiveEditor} from '../editor/editor';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
@@ -58,3 +59,13 @@ document.addEventListener(EVENT_RENDER, () => {
 document.addEventListener(SELECTIVE_EVENT_RENDER, () => {
   exampleEditor.render();
 });
+
+/**
+ * Tool for working with the api through the UI.
+ */
+const toolContainer = document.querySelector('.example_tool');
+const tool = new ExampleTool(
+  exampleEditor.config.api as ExampleApi,
+  toolContainer as HTMLElement
+);
+tool.render();

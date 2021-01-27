@@ -1,0 +1,47 @@
+.example_tool
+  position: fixed
+  bottom: $le-space-large
+  right: $le-space-large
+  z-index: 10000
+
+.example_tool__float_button
+  align-items: center
+  background-color: $le-color-tertiary
+  border-radius: 50%
+  box-shadow: $le-shadow-medium
+  color: $le-color-on-tertiary
+  display: flex
+  font-size: $le-font-size-icon-large
+  flex-flow: row
+  height: $le-font-size-icon-large * 2
+  justify-content: center
+  width: $le-font-size-icon-large * 2
+
+.example_tool__api_response
+  position: fixed
+  background-color: $le-color-tertiary
+  border-radius: $le-radius-medium
+  bottom: $le-space-large
+  box-shadow: $le-shadow-medium
+  color: $le-color-on-tertiary
+  right: $le-space-large * 2 + $le-font-size-icon-large * 2
+  padding: $le-space-medium
+
+.example_tool__api_method
+  align-items: center
+  display: flex
+  flex-flow: row
+  margin: $le-space-small 0
+
+  &--should-error
+    color: $le-color-extreme
+
+  &:first-child
+    margin-top: 0
+
+  &:last-child
+    margin-bottom: 0
+
+  .material-icons
+    font-size: $le-font-size-icon
+    margin-right: $le-space-small

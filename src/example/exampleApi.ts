@@ -101,17 +101,18 @@ const currentWorkspaces: Array<WorkspaceData> = [
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
-  respondWithErrors: boolean;
+  errorController: ErrorController;
 
   constructor() {
-    this.respondWithErrors = false;
+    this.errorController = new ErrorController();
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
-      console.log('API: copyFile', originalPath, path);
+      const methodName = 'copyFile';
+      console.log(`API: ${methodName}`, originalPath, path);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to copy the file.',
           description: 'Api is set to always return an error.',
@@ -129,9 +130,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async createFile(path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
-      console.log('API: createFile', path);
+      const methodName = 'createFile';
+      console.log(`API: ${methodName}`, path);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to create the file.',
           description: 'Api is set to always return an error.',
@@ -152,9 +154,10 @@ export class ExampleApi implements LiveEditorApiComponent {
     workspace: string
   ): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>((resolve, reject) => {
-      console.log('API: createWorkspace', base, workspace);
+      const methodName = 'createWorkspace';
+      console.log(`API: ${methodName}`, base, workspace);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to create the workspace.',
           description: 'Api is set to always return an error.',
@@ -178,9 +181,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async deleteFile(file: FileData): Promise<null> {
     return new Promise<null>((resolve, reject) => {
-      console.log('API: deleteFile', file.path);
+      const methodName = 'deleteFile';
+      console.log(`API: ${methodName}`, file.path);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to delete the file.',
           description: 'Api is set to always return an error.',
@@ -201,9 +205,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getDevices(): Promise<Array<DeviceData>> {
     return new Promise<Array<DeviceData>>((resolve, reject) => {
-      console.log('API: getDevices');
+      const methodName = 'getDevices';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the devices.',
           description: 'Api is set to always return an error.',
@@ -238,9 +243,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getFiles(): Promise<Array<FileData>> {
     return new Promise<Array<FileData>>((resolve, reject) => {
-      console.log('API: getFiles');
+      const methodName = 'getFiles';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the files.',
           description: 'Api is set to always return an error.',
@@ -254,9 +260,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getProject(): Promise<ProjectData> {
     return new Promise<ProjectData>((resolve, reject) => {
-      console.log('API: getProject');
+      const methodName = 'getProject';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the project.',
           description: 'Api is set to always return an error.',
@@ -272,9 +279,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getUsers(): Promise<Array<UserData>> {
     return new Promise<Array<UserData>>((resolve, reject) => {
-      console.log('API: getUsers');
+      const methodName = 'getUsers';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the users.',
           description: 'Api is set to always return an error.',
@@ -288,9 +296,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getWorkspace(): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>((resolve, reject) => {
-      console.log('API: getWorkspace');
+      const methodName = 'getWorkspace';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the workspace.',
           description: 'Api is set to always return an error.',
@@ -304,9 +313,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
     return new Promise<Array<WorkspaceData>>((resolve, reject) => {
-      console.log('API: getWorkspaces');
+      const methodName = 'getWorkspaces';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to get the workspaces.',
           description: 'Api is set to always return an error.',
@@ -320,9 +330,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async loadFile(file: FileData): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {
-      console.log('API: loadFile', file);
+      const methodName = 'loadFile';
+      console.log(`API: ${methodName}`, file);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to load the file.',
           description: 'Api is set to always return an error.',
@@ -374,9 +385,10 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>((resolve, reject) => {
-      console.log('API: loadWorkspace');
+      const methodName = 'loadWorkspace';
+      console.log(`API: ${methodName}`);
 
-      if (this.respondWithErrors) {
+      if (this.errorController.shouldError(methodName)) {
         reject({
           message: 'Failed to load the workspaces.',
           description: 'Api is set to always return an error.',
@@ -388,5 +400,33 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       simulateNetwork(resolve, currentWorkspace);
     });
+  }
+}
+
+export class ErrorController {
+  errorMethods: Set<string>;
+
+  constructor() {
+    this.errorMethods = new Set();
+  }
+
+  makeError(methodName: string) {
+    return this.errorMethods.add(methodName);
+  }
+
+  makeSuccess(methodName: string) {
+    return this.errorMethods.delete(methodName);
+  }
+
+  shouldError(methodName: string) {
+    return this.errorMethods.has(methodName);
+  }
+
+  toggleError(methodName: string) {
+    if (this.errorMethods.has(methodName)) {
+      this.errorMethods.delete(methodName);
+    } else {
+      this.errorMethods.add(methodName);
+    }
   }
 }

@@ -115,8 +115,8 @@ export class NotificationsPart extends BasePart implements Part {
     this.addNotification(notification, NotificationLevel.Debug);
   }
 
-  addError(notification: EditorNotification) {
-    this.addNotification(notification, NotificationLevel.Error);
+  addError(notification: EditorNotification, isDisplayed = false) {
+    this.addNotification(notification, NotificationLevel.Error, isDisplayed);
   }
 
   addInfo(notification: EditorNotification) {
@@ -125,13 +125,14 @@ export class NotificationsPart extends BasePart implements Part {
 
   addNotification(
     notification: EditorNotification,
-    defaultLevel = NotificationLevel.Info
+    defaultLevel = NotificationLevel.Info,
+    isDisplayed = false
   ) {
     this.notifications.push(
       this.scrubNewNotification(notification, defaultLevel)
     );
 
-    if (notification.level === NotificationLevel.Error) {
+    if (notification.level === NotificationLevel.Error && !isDisplayed) {
       this.hasNewError = true;
     }
   }

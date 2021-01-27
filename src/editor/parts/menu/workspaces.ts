@@ -148,7 +148,7 @@ export class WorkspacesPart extends MenuSectionPart {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error);
+              editor.parts.notifications.addError(error, true);
               modal.error = error;
               modal.stopProcessing();
             }

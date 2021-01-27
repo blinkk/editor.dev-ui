@@ -1,4 +1,5 @@
 import {BasePart, Part} from '..';
+import {EditorUrlConfig, EditorUrlLevel} from '../../api';
 import {
   TemplateResult,
   expandClasses,
@@ -7,7 +8,6 @@ import {
 } from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {EditorUrlConfig, EditorUrlLevel} from '../../api';
 
 export interface ContentToolbarConfig {
   /**
@@ -41,7 +41,9 @@ export class ContentToolbarPart extends BasePart implements Part {
 
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForPart())}>
-      <div class="le__part__content__toolbar__label">Page: ...</div>
+      <div class="le__part__content__toolbar__label">
+        <strong>Page:</strong> ...guess label...
+      </div>
       <div class="le__part__content__toolbar__icons">
         ${repeat(
           this.config.state?.file?.urls || [],
@@ -49,12 +51,24 @@ export class ContentToolbarPart extends BasePart implements Part {
             url.label;
           },
           url => {
-            return html`<a href="${url.url}"
+            return html`<a
+              href="${url.url}"
+              class="le__tooltip--top"
+              data-tip=${url.label}
+              target="_blank"
               ><span class="material-icons">${this.getIconForUrl(url)}</span></a
             >`;
           }
         )}
-        <span class="material-icons le__clickable">fullscreen</span>
+        <div
+          class="le__clickable le__tooltip--top"
+          data-tip="Content only"
+          @click=${() => {
+            console.log('TODO: Expand to only content.');
+          }}
+        >
+          <span class="material-icons">fullscreen</span>
+        </div>
       </div>
     </div>`;
   }

@@ -43,6 +43,10 @@ const exampleEditor = new LiveEditor(
   container as HTMLElement
 );
 
+exampleEditor.state.loadFile({
+  path: '/content/pages/index.yaml',
+});
+
 exampleEditor.render();
 
 // Bind to the custom event to re-render the editor.

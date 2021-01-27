@@ -155,7 +155,11 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   classesForPart(): Array<string> {
-    const classes = ['le__part__notifications', 'le__clickable'];
+    const classes = [
+      'le__part__notifications',
+      'le__clickable',
+      'le__tooltip--bottom-left',
+    ];
 
     if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
       classes.push('le__part__notifications--errors');
@@ -262,6 +266,7 @@ export class NotificationsPart extends BasePart implements Part {
 
     return html`<div
       class=${expandClasses(this.classesForPart())}
+      data-tip="Notifications"
       @click=${handleOpenNotifications}
     >
       <span class="material-icons">${icon}</span>

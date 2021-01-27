@@ -102,6 +102,20 @@ export interface EditorUrlConfig {
  */
 export interface EditorFileData {
   /**
+   * File contents.
+   *
+   * For example, the html in an html file, or the markdown body
+   * in a markdown file.
+   */
+  content?: string;
+  /**
+   * File data.
+   *
+   * For example, the frontmatter for a markdown file or the contents
+   * of a yaml file.
+   */
+  data?: any;
+  /**
    * File information.
    */
   file: FileData;

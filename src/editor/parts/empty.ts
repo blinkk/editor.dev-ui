@@ -25,7 +25,7 @@ export class EmptyPart extends BasePart implements Part {
 
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForPart())}>
-      ...Empty...
+      Select a file from the menu to begin editing.
     </div>`;
   }
 }

@@ -343,17 +343,17 @@ export class ExampleApi implements LiveEditorApiComponent {
         },
         urls: [
           {
-            url: 'http://localhost:8888',
+            url: '#private',
             label: 'Live editor preview',
             level: EditorUrlLevel.PRIVATE,
           },
           {
-            url: 'http://localhost:8888',
+            url: '#protected',
             label: 'Staging',
             level: EditorUrlLevel.PROTECTED,
           },
           {
-            url: 'http://localhost:8888',
+            url: '#public',
             label: 'Live',
             level: EditorUrlLevel.PUBLIC,
           },

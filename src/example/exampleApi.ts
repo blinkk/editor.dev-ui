@@ -342,6 +342,12 @@ export class ExampleApi implements LiveEditorApiComponent {
               type: 'text',
               key: 'title',
               label: 'Title',
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Title is required.',
+                },
+              ],
             } as FieldConfig,
           ],
         },

@@ -349,7 +349,14 @@ export class SitePart extends MenuSectionPart {
 
   templateFileCopy(editor: LiveEditor): TemplateResult {
     const modal = this.getOrCreateModalCopy(editor);
-    return modal.selective.template(modal.selective, modal.data);
+    const isValid = modal.selective.isValid;
+    try {
+      return modal.selective.template(modal.selective, modal.data);
+    } finally {
+      if (isValid !== modal.selective.isValid) {
+        this.render();
+      }
+    }
   }
 
   templateFileDelete(editor: LiveEditor): TemplateResult {
@@ -360,7 +367,14 @@ export class SitePart extends MenuSectionPart {
 
   templateFileNew(editor: LiveEditor): TemplateResult {
     const modal = this.getOrCreateModalNew(editor);
-    return modal.selective.template(modal.selective, modal.data);
+    const isValid = modal.selective.isValid;
+    try {
+      return modal.selective.template(modal.selective, modal.data);
+    } finally {
+      if (isValid !== modal.selective.isValid) {
+        this.render();
+      }
+    }
   }
 
   get title() {

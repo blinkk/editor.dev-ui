@@ -36,8 +36,12 @@ export class FieldsPart extends ContentSectionPart {
   classesForAction(): Array<string> {
     const classes = super.classesForAction();
 
-    // TODO: Base the button classes on the form status.
-    classes.push('le__button--primary');
+    // Base the button classes on the form status.
+    if (!this.selective.isValid) {
+      classes.push('le__button--extreme');
+    } else {
+      classes.push('le__button--primary');
+    }
 
     return classes;
   }
@@ -49,7 +53,9 @@ export class FieldsPart extends ContentSectionPart {
   }
 
   get isActionDisabled(): boolean {
-    return this.isProcessing || !this.selective.isValid;
+    return (
+      this.isProcessing || !this.selective.isValid || this.selective.isClean
+    );
   }
 
   get label(): string {
@@ -60,6 +66,8 @@ export class FieldsPart extends ContentSectionPart {
     // TODO: Base label on the state of the form.
     if (this.isProcessing) {
       return 'Saving';
+    } else if (!this.selective.isValid) {
+      return 'Form errors';
     }
 
     return 'Save changes';
@@ -79,6 +87,13 @@ export class FieldsPart extends ContentSectionPart {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    return this.selective.template(this.selective, this.data);
+    const isValid = this.selective.isValid;
+    try {
+      return this.selective.template(this.selective, this.data);
+    } finally {
+      if (isValid !== this.selective.isValid) {
+        this.render();
+      }
+    }
   }
 }

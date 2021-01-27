@@ -221,7 +221,14 @@ export class WorkspacesPart extends MenuSectionPart {
 
   templateNewWorkspace(editor: LiveEditor): TemplateResult {
     const modal = this.getOrCreateModalNew(editor);
-    return modal.selective.template(modal.selective, modal.data);
+    const isValid = modal.selective.isValid;
+    try {
+      return modal.selective.template(modal.selective, modal.data);
+    } finally {
+      if (isValid !== modal.selective.isValid) {
+        this.render();
+      }
+    }
   }
 
   get title() {

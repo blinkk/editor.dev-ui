@@ -8,12 +8,19 @@ import {
 } from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
+import {Storage} from '../../../utility/storage';
+
+const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';
 
 export interface ContentToolbarConfig {
   /**
    * State class for working with editor state.
    */
   state: EditorState;
+  /**
+   * Storage class for working with settings.
+   */
+  storage: Storage;
 }
 
 export class ContentToolbarPart extends BasePart implements Part {
@@ -23,6 +30,7 @@ export class ContentToolbarPart extends BasePart implements Part {
   constructor(config: ContentToolbarConfig) {
     super();
     this.config = config;
+    this.isExpanded = this.config.storage.getItemBoolean(STORAGE_EXPANDED_KEY);
   }
 
   classesForPart(): Array<string> {
@@ -74,6 +82,10 @@ export class ContentToolbarPart extends BasePart implements Part {
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}
       @click=${() => {
         this.isExpanded = !this.isExpanded;
+        this.config.storage.setItem(
+          STORAGE_EXPANDED_KEY,
+          this.isExpanded ? 'true' : 'false'
+        );
         this.render();
       }}
     >

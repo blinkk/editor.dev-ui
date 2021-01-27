@@ -26,6 +26,9 @@ export interface ContentPartConfig {
    */
   selectiveConfig: EditorConfig;
   state: EditorState;
+  /**
+   * Storage class for working with settings.
+   */
   storage: Storage;
 }
 
@@ -76,6 +79,7 @@ export class ContentPart extends BasePart implements Part {
       }),
       toolbar: new ContentToolbarPart({
         state: this.config.state,
+        storage: this.config.storage,
       }),
     };
 

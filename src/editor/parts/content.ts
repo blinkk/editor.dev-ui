@@ -7,7 +7,7 @@ import {
 } from '@blinkk/selective-edit';
 import {ContentFooterPart} from './content/footer';
 import {ContentHeaderPart} from './content/header';
-import {ContentSectionPart} from './content/index';
+import {ContentSectionPart} from './content/section';
 import {ContentToolbarPart} from './content/toolbar';
 import {EVENT_FILE_LOAD} from '../events';
 import {EditorState} from '../state';

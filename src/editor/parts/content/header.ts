@@ -1,5 +1,5 @@
 import {BasePart, Part} from '..';
-import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './index';
+import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {
   TemplateResult,
   expandClasses,
@@ -42,6 +42,14 @@ export class ContentHeaderPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
+    let currentSection: ContentSectionPart | undefined = undefined;
+    for (const sectionPart of this.config.sections) {
+      if (sectionPart.isVisible) {
+        currentSection = sectionPart;
+        break;
+      }
+    }
+
     return html`<div class=${expandClasses(this.classesForPart())}>
       <div class="le__part__content__header__sections">
         ${repeat(
@@ -59,7 +67,7 @@ export class ContentHeaderPart extends BasePart implements Part {
         )}
       </div>
       <div class="le__part__content__header__actions">
-        <button class="le__button le__button--primary">Save changes</button>
+        ${currentSection?.templateAction(editor) || html``}
       </div>
     </div>`;
   }

@@ -1,6 +1,6 @@
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {ContentSectionPart} from './index';
-import {LiveEditor} from '../../..';
+import {ContentSectionPart} from './section';
+import {LiveEditor} from '../../editor';
 import {UserData} from '../../api';
 
 export class HistoryPart extends ContentSectionPart {
@@ -19,6 +19,10 @@ export class HistoryPart extends ContentSectionPart {
 
   get section(): string {
     return 'history';
+  }
+
+  templateAction(editor: LiveEditor): TemplateResult {
+    return html``;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {

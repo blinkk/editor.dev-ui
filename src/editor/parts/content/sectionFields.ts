@@ -4,6 +4,7 @@ import {
   EditorConfig,
   SelectiveEditor,
   TemplateResult,
+  html,
 } from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD_COMPLETE} from '../../events';
 import {LiveEditor} from '../../editor';
@@ -68,6 +69,8 @@ export class FieldsPart extends ContentSectionPart {
       return 'Saving';
     } else if (!this.selective.isValid) {
       return 'Form errors';
+    } else if (this.selective.isClean) {
+      return 'No changes';
     }
 
     return 'Save changes';
@@ -95,5 +98,16 @@ export class FieldsPart extends ContentSectionPart {
         this.render();
       }
     }
+  }
+
+  templateStatus(editor: LiveEditor): TemplateResult {
+    if (!this.selective.isValid) {
+      return html`<div
+        class="le__part__content__header__status le__part__content__header__status--error"
+      >
+        <span class="material-icons">error</span>
+      </div>`;
+    }
+    return html``;
   }
 }

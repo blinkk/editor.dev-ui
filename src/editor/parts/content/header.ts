@@ -70,6 +70,7 @@ export class ContentHeaderPart extends BasePart implements Part {
         ${currentSection?.isProcessing
           ? html`<div class="le__loading"></div>`
           : ''}
+        ${currentSection?.templateStatus(editor) || html``}
         ${currentSection?.templateAction(editor) || html``}
       </div>
     </div>`;

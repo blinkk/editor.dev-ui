@@ -93,4 +93,8 @@ export class ContentSectionPart extends BasePart implements Part {
   templateContent(editor: LiveEditor): TemplateResult {
     return html`section content`;
   }
+
+  templateStatus(editor: LiveEditor): TemplateResult {
+    return html``;
+  }
 }

@@ -1,5 +1,11 @@
 import {BasePart, Part} from '..';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {
+  EditorConfig,
+  SelectiveEditor,
+  TemplateResult,
+  expandClasses,
+  html,
+} from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -11,6 +17,10 @@ export interface ContentSectionPartConfig {
    * Is this section the default visible?
    */
   isDefaultSection?: boolean;
+  /**
+   * Configuration for creating the selective editor.
+   */
+  selectiveConfig: EditorConfig;
   /**
    * State class for working with editor state.
    */
@@ -25,10 +35,12 @@ export class ContentSectionPart extends BasePart implements Part {
   config: ContentSectionPartConfig;
   isProcessing?: boolean;
   isVisible?: boolean;
+  selective: SelectiveEditor;
 
   constructor(config: ContentSectionPartConfig) {
     super();
     this.config = config;
+    this.selective = new SelectiveEditor(this.config.selectiveConfig);
 
     if (this.isVisible === undefined) {
       const currentSection = this.config.storage.getItem(
@@ -43,7 +55,16 @@ export class ContentSectionPart extends BasePart implements Part {
   }
 
   classesForAction(): Array<string> {
-    return ['le__button'];
+    const classes = ['le__part__content__header__action', 'le__button'];
+
+    // Base the button classes on the form status.
+    if (!this.selective.isValid) {
+      classes.push('le__button--extreme');
+    } else {
+      classes.push('le__button--primary');
+    }
+
+    return classes;
   }
 
   classesForPart(): Array<string> {
@@ -55,7 +76,9 @@ export class ContentSectionPart extends BasePart implements Part {
   }
 
   get isActionDisabled(): boolean {
-    return false;
+    return (
+      this.isProcessing || !this.selective.isValid || this.selective.isClean
+    );
   }
 
   get label(): string {
@@ -63,7 +86,15 @@ export class ContentSectionPart extends BasePart implements Part {
   }
 
   labelForAction(): string {
-    return 'Save changes';
+    if (this.isProcessing) {
+      return 'Saving';
+    } else if (!this.selective.isValid) {
+      return 'Form errors';
+    } else if (this.selective.isClean) {
+      return 'No changes';
+    }
+
+    return 'Save';
   }
 
   get section(): string {
@@ -95,6 +126,13 @@ export class ContentSectionPart extends BasePart implements Part {
   }
 
   templateStatus(editor: LiveEditor): TemplateResult {
+    if (!this.selective.isValid) {
+      return html`<div
+        class="le__part__content__header__status le__part__content__header__status--error"
+      >
+        <span class="material-icons">error</span>
+      </div>`;
+    }
     return html``;
   }
 }

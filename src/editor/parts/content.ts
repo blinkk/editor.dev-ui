@@ -57,14 +57,17 @@ export class ContentPart extends BasePart implements Part {
         storage: this.config.storage,
       }),
       new MediaPart({
+        selectiveConfig: this.config.selectiveConfig,
         state: this.config.state,
         storage: this.config.storage,
       }),
       new RawPart({
+        selectiveConfig: this.config.selectiveConfig,
         state: this.config.state,
         storage: this.config.storage,
       }),
       new HistoryPart({
+        selectiveConfig: this.config.selectiveConfig,
         state: this.config.state,
         storage: this.config.storage,
       }),

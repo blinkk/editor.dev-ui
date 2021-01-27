@@ -1,31 +1,14 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
-import {
-  DeepObject,
-  EditorConfig,
-  SelectiveEditor,
-  TemplateResult,
-  html,
-} from '@blinkk/selective-edit';
+import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD_COMPLETE} from '../../events';
 import {LiveEditor} from '../../editor';
 
-export interface FieldsPartConfig extends ContentSectionPartConfig {
-  /**
-   * Configuration for creating the selective editor.
-   */
-  selectiveConfig: EditorConfig;
-}
-
 export class FieldsPart extends ContentSectionPart {
-  config: FieldsPartConfig;
   data: DeepObject;
-  selective: SelectiveEditor;
 
-  constructor(config: FieldsPartConfig) {
+  constructor(config: ContentSectionPartConfig) {
     super(config);
-    this.config = config;
     this.data = new DeepObject();
-    this.selective = new SelectiveEditor(this.config.selectiveConfig);
 
     this.loadEditorConfig();
 
@@ -34,46 +17,14 @@ export class FieldsPart extends ContentSectionPart {
     });
   }
 
-  classesForAction(): Array<string> {
-    const classes = super.classesForAction();
-
-    // Base the button classes on the form status.
-    if (!this.selective.isValid) {
-      classes.push('le__button--extreme');
-    } else {
-      classes.push('le__button--primary');
-    }
-
-    return classes;
-  }
-
   classesForPart(): Array<string> {
     const classes = super.classesForPart();
     classes.push('le__part__content__fields');
     return classes;
   }
 
-  get isActionDisabled(): boolean {
-    return (
-      this.isProcessing || !this.selective.isValid || this.selective.isClean
-    );
-  }
-
   get label(): string {
     return 'Fields';
-  }
-
-  labelForAction(): string {
-    // TODO: Base label on the state of the form.
-    if (this.isProcessing) {
-      return 'Saving';
-    } else if (!this.selective.isValid) {
-      return 'Form errors';
-    } else if (this.selective.isClean) {
-      return 'No changes';
-    }
-
-    return 'Save changes';
   }
 
   loadEditorConfig() {
@@ -98,16 +49,5 @@ export class FieldsPart extends ContentSectionPart {
         this.render();
       }
     }
-  }
-
-  templateStatus(editor: LiveEditor): TemplateResult {
-    if (!this.selective.isValid) {
-      return html`<div
-        class="le__part__content__header__status le__part__content__header__status--error"
-      >
-        <span class="material-icons">error</span>
-      </div>`;
-    }
-    return html``;
   }
 }

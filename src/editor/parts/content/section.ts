@@ -23,6 +23,7 @@ export interface ContentSectionPartConfig {
 
 export class ContentSectionPart extends BasePart implements Part {
   config: ContentSectionPartConfig;
+  isProcessing?: boolean;
   isVisible?: boolean;
 
   constructor(config: ContentSectionPartConfig) {
@@ -53,11 +54,15 @@ export class ContentSectionPart extends BasePart implements Part {
     console.log('missing action handler.');
   }
 
-  get label() {
+  get isActionDisabled(): boolean {
+    return false;
+  }
+
+  get label(): string {
     return 'Section';
   }
 
-  labelForAction() {
+  labelForAction(): string {
     return 'Save changes';
   }
 
@@ -79,6 +84,7 @@ export class ContentSectionPart extends BasePart implements Part {
     return html`<button
       class=${expandClasses(this.classesForAction())}
       @click=${this.handleAction.bind(this)}
+      ?disabled=${this.isActionDisabled}
     >
       ${this.labelForAction()}
     </button>`;

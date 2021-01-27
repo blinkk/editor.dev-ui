@@ -1,12 +1,8 @@
 import {TemplateResult, html} from '@blinkk/selective-edit';
 import {ContentSectionPart} from './section';
 import {LiveEditor} from '../../editor';
-import {UserData} from '../../api';
 
 export class MediaPart extends ContentSectionPart {
-  users?: Array<UserData>;
-  usersPromise?: Promise<Array<UserData>>;
-
   classesForAction(): Array<string> {
     const classes = super.classesForAction();
 

@@ -6,6 +6,11 @@
 export const EVENT_FILE_LOAD = 'live.file.load';
 
 /**
+ * Custom event name for finished a file load in the editor.
+ */
+export const EVENT_FILE_LOAD_COMPLETE = 'live.file.load.complete';
+
+/**
  * Custom event name for adding a notification.
  *
  * Expects a {@link EditorNotification} as the event details.

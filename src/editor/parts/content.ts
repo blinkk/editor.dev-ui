@@ -1,5 +1,6 @@
 import {BasePart, Part} from '.';
 import {
+  EditorConfig,
   TemplateResult,
   expandClasses,
   html,
@@ -20,6 +21,10 @@ import {RawPart} from './content/sectionRaw';
 import {Storage} from '../../utility/storage';
 
 export interface ContentPartConfig {
+  /**
+   * Configuration for creating the selective editor.
+   */
+  selectiveConfig: EditorConfig;
   state: EditorState;
   storage: Storage;
 }
@@ -43,6 +48,7 @@ export class ContentPart extends BasePart implements Part {
     // Order of appearance.
     this.sections = [
       new FieldsPart({
+        selectiveConfig: this.config.selectiveConfig,
         state: this.config.state,
         isDefaultSection: true,
         storage: this.config.storage,

@@ -1,11 +1,37 @@
-import {TemplateResult, html} from '@blinkk/selective-edit';
-import {ContentSectionPart} from './section';
+import {ContentSectionPart, ContentSectionPartConfig} from './section';
+import {
+  DeepObject,
+  EditorConfig,
+  SelectiveEditor,
+  TemplateResult,
+} from '@blinkk/selective-edit';
+import {EVENT_FILE_LOAD_COMPLETE} from '../../events';
 import {LiveEditor} from '../../editor';
-import {UserData} from '../../api';
+
+export interface FieldsPartConfig extends ContentSectionPartConfig {
+  /**
+   * Configuration for creating the selective editor.
+   */
+  selectiveConfig: EditorConfig;
+}
 
 export class FieldsPart extends ContentSectionPart {
-  users?: Array<UserData>;
-  usersPromise?: Promise<Array<UserData>>;
+  config: FieldsPartConfig;
+  data: DeepObject;
+  selective: SelectiveEditor;
+
+  constructor(config: FieldsPartConfig) {
+    super(config);
+    this.config = config;
+    this.data = new DeepObject();
+    this.selective = new SelectiveEditor(this.config.selectiveConfig);
+
+    this.loadEditorConfig();
+
+    document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
+      this.loadEditorConfig();
+    });
+  }
 
   classesForAction(): Array<string> {
     const classes = super.classesForAction();
@@ -22,13 +48,30 @@ export class FieldsPart extends ContentSectionPart {
     return classes;
   }
 
-  get label() {
+  get isActionDisabled(): boolean {
+    return this.isProcessing || !this.selective.isValid;
+  }
+
+  get label(): string {
     return 'Fields';
   }
 
-  labelForAction() {
+  labelForAction(): string {
     // TODO: Base label on the state of the form.
+    if (this.isProcessing) {
+      return 'Saving';
+    }
+
     return 'Save changes';
+  }
+
+  loadEditorConfig() {
+    this.data = new DeepObject(this.config.state.file?.data || {});
+    this.selective.resetFields();
+    for (const fieldConfig of this.config.state.file?.editor.fields || []) {
+      this.selective.fields.addField(fieldConfig);
+    }
+    this.render();
   }
 
   get section(): string {
@@ -36,6 +79,6 @@ export class FieldsPart extends ContentSectionPart {
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
-    return html`Fields...`;
+    return this.selective.template(this.selective, this.data);
   }
 }

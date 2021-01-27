@@ -51,6 +51,7 @@ export class LiveEditor {
     this.state = new EditorState(this.config.api);
     this.parts = {
       content: new ContentPart({
+        selectiveConfig: this.config.selectiveConfig,
         state: this.state,
         storage: this.storage,
       }),

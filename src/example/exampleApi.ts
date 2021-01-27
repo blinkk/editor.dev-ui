@@ -332,11 +332,15 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       // TODO: Make the fields for each file dynamic for the example.
       simulateNetwork(resolve, {
+        data: {
+          title: 'Testing',
+        },
         file: file,
         editor: {
           fields: [
             {
               type: 'text',
+              key: 'title',
               label: 'Title',
             } as FieldConfig,
           ],

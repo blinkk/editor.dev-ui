@@ -10,7 +10,7 @@ import {
   catchError,
 } from './api';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
-import {EVENT_RENDER} from './events';
+import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
 import {ListenersMixin} from '../mixin/listeners';
 
 /**
@@ -291,6 +291,7 @@ export class EditorState extends ListenersMixin(Base) {
           callback(data);
         }
         this.triggerListener(promiseKey);
+        document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
       .catch(callbackError || catchError);

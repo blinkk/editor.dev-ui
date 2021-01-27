@@ -21,7 +21,6 @@ export interface PreviewPartConfig {
 export class PreviewPart extends BasePart implements Part {
   config: PreviewPartConfig;
   device?: DeviceData;
-  devices?: Array<DeviceData>;
   isDeviceMode?: boolean;
 
   constructor(config: PreviewPartConfig) {
@@ -32,10 +31,6 @@ export class PreviewPart extends BasePart implements Part {
       STORAGE_DEVICE_MODE_KEY,
       true
     );
-    this.devices = this.config.state.getDevices((data: Array<DeviceData>) => {
-      this.devices = data;
-      this.render();
-    });
   }
 
   classesForPart(): Array<string> {
@@ -48,7 +43,18 @@ export class PreviewPart extends BasePart implements Part {
     return classes;
   }
 
+  loadDevices() {
+    this.config.state.getDevices();
+  }
+
   template(editor: LiveEditor): TemplateResult {
+    const devices = this.config.state.devices;
+
+    // Lazy load the devices.
+    if (!devices) {
+      this.loadDevices();
+    }
+
     return html`<div class=${expandClasses(this.classesForPart())}>
       <div class="le__part__preview__toolbar"></div>
       <div class="le__part__preview__container">

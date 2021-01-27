@@ -8,6 +8,7 @@ import {
 import {ContentPart} from './parts/content';
 import {EVENT_RENDER_COMPLETE} from './events';
 import {EditorState} from './state';
+import {EmptyPart} from './parts/empty';
 import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
@@ -24,6 +25,7 @@ export interface LiveEditorConfig {
 
 export interface LiveEditorParts {
   content: ContentPart;
+  empty: EmptyPart;
   menu: MenuPart;
   modals: ModalsPart;
   notifications: NotificationsPart;
@@ -51,6 +53,9 @@ export class LiveEditor {
       content: new ContentPart({
         state: this.state,
         storage: this.storage,
+      }),
+      empty: new EmptyPart({
+        state: this.state,
       }),
       menu: new MenuPart({
         state: this.state,
@@ -104,12 +109,20 @@ export class LiveEditor {
         <div class="le__structure__content_header">
           ${this.parts.overview.template(editor)}
         </div>
-        <div class="le__structure__content_panes">
-          ${this.parts.content.template(editor)}
-          ${this.parts.preview.template(editor)}
-        </div>
+        ${this.templateContentStructure(editor)}
       </div>
       ${this.parts.modals.template(editor)}
+    </div>`;
+  }
+
+  templateContentStructure(editor: LiveEditor): TemplateResult {
+    if (!this.state.file) {
+      return this.parts.empty.template(editor);
+    }
+
+    return html`<div class="le__structure__content_panes">
+      ${this.parts.content.template(editor)}
+      ${this.parts.preview.template(editor)}
     </div>`;
   }
 }

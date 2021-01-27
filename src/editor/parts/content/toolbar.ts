@@ -18,6 +18,7 @@ export interface ContentToolbarConfig {
 
 export class ContentToolbarPart extends BasePart implements Part {
   config: ContentToolbarConfig;
+  isExpanded?: boolean;
 
   constructor(config: ContentToolbarConfig) {
     super();
@@ -60,16 +61,25 @@ export class ContentToolbarPart extends BasePart implements Part {
             >`;
           }
         )}
-        <div
-          class="le__clickable le__tooltip--top"
-          data-tip="Content only"
-          @click=${() => {
-            console.log('TODO: Expand to only content.');
-          }}
-        >
-          <span class="material-icons">fullscreen</span>
-        </div>
+        ${this.templateExpanded(editor)}
       </div>
+    </div>`;
+  }
+
+  templateExpanded(editor: LiveEditor): TemplateResult {
+    // TODO: If there is nothing to preview, do not need an expand button.
+
+    return html`<div
+      class="le__clickable le__tooltip--top"
+      data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}
+      @click=${() => {
+        this.isExpanded = !this.isExpanded;
+        this.render();
+      }}
+    >
+      <span class="material-icons"
+        >${this.isExpanded ? 'fullscreen_exit' : 'fullscreen'}</span
+      >
     </div>`;
   }
 }

@@ -22,6 +22,7 @@ export class PreviewPart extends BasePart implements Part {
   config: PreviewPartConfig;
   device?: DeviceData;
   isDeviceMode?: boolean;
+  isExpanded?: boolean;
 
   constructor(config: PreviewPartConfig) {
     super();

@@ -91,6 +91,10 @@ export class ContentPart extends BasePart implements Part {
     return classes;
   }
 
+  get isExpanded(): boolean {
+    return this.parts.toolbar.isExpanded || false;
+  }
+
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${expandClasses(this.classesForPart())}>
       ${this.parts.toolbar.template(editor)}

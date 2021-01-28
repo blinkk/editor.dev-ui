@@ -6,15 +6,28 @@ import {
   repeat,
 } from '@blinkk/selective-edit';
 import {ExampleApi} from './exampleApi';
+import {Storage} from '../utility/storage';
+
+const STORAGE_EXAMPLE_ERROR_METHODS = 'example.api.error.methods';
 
 export class ExampleTool {
   api: ExampleApi;
   container: HTMLElement;
   isExpanded?: boolean;
+  storage: Storage;
 
-  constructor(api: ExampleApi, container: HTMLElement) {
+  constructor(api: ExampleApi, storage: Storage, container: HTMLElement) {
     this.api = api;
+    this.storage = storage;
     this.container = container;
+
+    // Load any existing error methods.
+    const errorMethods = this.storage.getItemArray(
+      STORAGE_EXAMPLE_ERROR_METHODS
+    );
+    for (const errorMethod of errorMethods) {
+      this.api.errorController.makeError(errorMethod);
+    }
 
     // Auto close when clicking out of expanded list.
     document.addEventListener('click', (evt: Event) => {
@@ -47,6 +60,13 @@ export class ExampleTool {
     render(this.template(this), this.container);
   }
 
+  storeErrorMethods() {
+    this.storage.setItemArray(
+      STORAGE_EXAMPLE_ERROR_METHODS,
+      Array.from(this.api.errorController.errorMethods) as Array<string>
+    );
+  }
+
   template(tool: ExampleTool): TemplateResult {
     return html`${this.templateFloatButton(tool)}
     ${this.templateApiResponse(tool)}`;
@@ -71,6 +91,7 @@ export class ExampleTool {
               : ''} le__clickable"
             @click=${() => {
               this.api.errorController.toggleError(methodName);
+              this.storeErrorMethods();
               this.render();
             }}
           >
@@ -86,7 +107,10 @@ export class ExampleTool {
 
   templateFloatButton(tool: ExampleTool): TemplateResult {
     return html`<div
-      class="example_tool__float_button le__clickable"
+      class="example_tool__float_button ${this.api.errorController.errorMethods
+        .size > 0
+        ? 'example_tool__float_button--should-error'
+        : ''} le__clickable"
       @click=${this.handleToggle.bind(this)}
     >
       <span class="material-icons">bug_report</span>

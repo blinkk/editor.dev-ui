@@ -48,8 +48,6 @@ exampleEditor.state.loadFile({
   path: '/content/pages/index.yaml',
 });
 
-exampleEditor.render();
-
 // Bind to the custom event to re-render the editor.
 document.addEventListener(EVENT_RENDER, () => {
   exampleEditor.render();
@@ -66,6 +64,11 @@ document.addEventListener(SELECTIVE_EVENT_RENDER, () => {
 const toolContainer = document.querySelector('.example_tool');
 const tool = new ExampleTool(
   exampleEditor.config.api as ExampleApi,
+  exampleEditor.storage,
   toolContainer as HTMLElement
 );
 tool.render();
+
+// Render the editor after the tool is created so that stored
+// error states can be loaded before the editor calls them.
+exampleEditor.render();

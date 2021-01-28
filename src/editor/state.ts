@@ -9,8 +9,8 @@ import {
   WorkspaceData,
   catchError,
 } from './api';
-import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
+import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {ListenersMixin} from '../mixin/listeners';
 
 /**

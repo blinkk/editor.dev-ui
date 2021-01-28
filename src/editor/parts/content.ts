@@ -74,7 +74,9 @@ export class ContentPart extends BasePart implements Part {
     ];
 
     this.parts = {
-      footer: new ContentFooterPart({}),
+      footer: new ContentFooterPart({
+        storage: this.config.storage,
+      }),
       header: new ContentHeaderPart({
         sections: this.sections,
         state: this.config.state,

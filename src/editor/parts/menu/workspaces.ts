@@ -11,6 +11,7 @@ import {EVENT_WORKSPACE_LOAD} from '../../events';
 import {LiveEditor} from '../../editor';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
+import {templateLoading} from '../../template';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
@@ -181,7 +182,9 @@ export class WorkspacesPart extends MenuSectionPart {
     }
 
     if (!this.config.state.workspaces) {
-      return html`<div class="le__loading le__loading--pad"></div>`;
+      return templateLoading(editor, {
+        pad: true,
+      });
     }
 
     const handleNewClick = () => {

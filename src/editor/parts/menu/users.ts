@@ -3,6 +3,7 @@ import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
 import {UserData} from '../../api';
 import {repeat} from '@blinkk/selective-edit';
+import {templateLoading} from '../../template';
 
 export class UsersPart extends MenuSectionPart {
   users?: Array<UserData>;
@@ -24,7 +25,9 @@ export class UsersPart extends MenuSectionPart {
     // Lazy load the users information.
     if (!this.users) {
       this.loadUsers();
-      return html`<div class="le__loading le__loading--pad"></div>`;
+      return templateLoading(editor, {
+        pad: true,
+      });
     }
 
     return html`<div class="le__part__menu__section__content">

@@ -8,6 +8,7 @@ import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRu
 import {Storage} from '../../../utility/storage';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
+import {templateLoading} from '../../template';
 
 const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';
@@ -201,7 +202,9 @@ export class SitePart extends MenuSectionPart {
   templateContent(editor: LiveEditor): TemplateResult {
     if (!this.config.state.files) {
       this.loadFiles();
-      return html`<div class="le__loading le__loading--pad"></div>`;
+      return templateLoading(editor, {
+        pad: true,
+      });
     }
 
     if (!this.fileStructure) {

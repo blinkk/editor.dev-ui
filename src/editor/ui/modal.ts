@@ -8,10 +8,10 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
+import {LiveTemplate, templateLoading} from '../template';
 import {ApiError} from '../api';
 import {BaseUI} from '.';
 import {LiveEditor} from '../editor';
-import {LiveTemplate} from '../template';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
 import {templateApiError} from './error';
 
@@ -304,7 +304,9 @@ export class DialogModal extends Modal {
         )}
       </div>
       ${this.isProcessing
-        ? html`<div class="le__loading le__loading--pad-horizontal"></div>`
+        ? templateLoading(editor, {
+            padHorizontal: true,
+          })
         : ''}
       <div class="le__modal__actions__secondary">
         ${repeat(

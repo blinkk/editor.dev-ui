@@ -9,6 +9,7 @@ import {
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
+import {templateLoading} from '../../template';
 
 export interface ContentHeaderConfig {
   sections: Array<ContentSectionPart>;
@@ -67,9 +68,7 @@ export class ContentHeaderPart extends BasePart implements Part {
         )}
       </div>
       <div class="le__part__content__header__actions">
-        ${currentSection?.isProcessing
-          ? html`<div class="le__loading"></div>`
-          : ''}
+        ${currentSection?.isProcessing ? html`${templateLoading(editor)}` : ''}
         ${currentSection?.templateStatus(editor) || html``}
         ${currentSection?.templateAction(editor) || html``}
       </div>

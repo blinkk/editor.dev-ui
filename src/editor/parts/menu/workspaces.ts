@@ -134,7 +134,7 @@ export class WorkspacesPart extends MenuSectionPart {
             value.workspace,
             (workspace: WorkspaceData) => {
               // Log the success to the notifications.
-              editor.parts.notifications.addInfo({
+              editor.parts.notifications.showNotification({
                 message: `New '${workspace.name}' workspace successfully created.`,
                 actions: [
                   {
@@ -143,6 +143,7 @@ export class WorkspacesPart extends MenuSectionPart {
                     details: workspace,
                   },
                 ],
+                title: 'New workspace created',
               });
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();

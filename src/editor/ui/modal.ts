@@ -11,6 +11,7 @@ import {
 import {LiveTemplate, templateLoading} from '../template';
 import {ApiError} from '../api';
 import {BaseUI} from '.';
+import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
 import {templateApiError} from './error';
@@ -70,7 +71,7 @@ export interface DialogActionConfig {
   onClick: (evt: Event) => void;
 }
 
-export class Modal extends UuidMixin(BaseUI) {
+export class Modal extends ListenersMixin(UuidMixin(BaseUI)) {
   config: ModalConfig;
   isVisible: boolean;
   templateModal?: LiveTemplate;
@@ -140,11 +141,13 @@ export class Modal extends UuidMixin(BaseUI) {
 
   hide() {
     this.isVisible = false;
+    this.triggerListener('hide');
     this.render();
   }
 
   show() {
     this.isVisible = true;
+    this.triggerListener('show');
     this.render();
   }
 
@@ -177,8 +180,11 @@ export class Modal extends UuidMixin(BaseUI) {
   }
 
   toggle() {
-    this.isVisible = !this.isVisible;
-    this.render();
+    if (this.isVisible) {
+      this.hide();
+    } else {
+      this.show();
+    }
   }
 }
 

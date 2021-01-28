@@ -29,6 +29,10 @@
     &:hover
       color: $le-color-warning
 
+.ls__part__notifications__notification__message
+  display: grid
+  grid-template-columns: 0 1fr $le-space-xlarge
+  padding: $le-space-medium
 
 .ls__part__notifications__notification__status
   grid-column: 1
@@ -40,8 +44,15 @@
 .ls__part__notifications__notification__mark
   grid-column: 3;
 
-.ls__part__notifications__notification__description
+.ls__part__notifications__notification__description,
+.ls__part__notifications__notification__expand,
+.ls__part__notifications__notification__meta
   grid-column: 2 / span 2;
+  padding: $le-space-small 0
+
+.ls__part__notifications__notification__expand
+  font-size: $le-font-size-small
+  text-transform: uppercase
 
 .ls__part__notifications__notification__actions
   grid-column: 2 / span 2;

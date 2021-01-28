@@ -4,6 +4,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_NOTIFICATION} from '../events';
 import {LiveEditor} from '../editor';
 
+const MODAL_KEY_NOTIFICATION = 'notification';
 const MODAL_KEY_NOTIFICATIONS = 'notifications';
 
 export enum NotificationLevel {
@@ -22,8 +23,17 @@ export enum NotificationLevel {
  * custom event that contains additional details.
  */
 export interface NotificationAction {
+  /**
+   * Action label.
+   */
   label: string;
+  /**
+   * Custom event to dispatch.
+   */
   customEvent: string;
+  /**
+   * Details to send along with the custom event.
+   */
   details?: Record<string, any>;
 }
 
@@ -56,6 +66,11 @@ export interface EditorNotification {
    * Message to display to the user.
    */
   message: string;
+  /**
+   * Title to use in the modal title when viewing individual
+   * notifications.
+   */
+  title?: string;
 }
 
 /**
@@ -94,6 +109,7 @@ interface InternalNotification extends EditorNotification {
 export class NotificationsPart extends BasePart implements Part {
   protected notifications: Array<InternalNotification>;
   protected hasNewError: boolean;
+  protected currentNotification?: InternalNotification;
 
   constructor() {
     super();
@@ -157,6 +173,28 @@ export class NotificationsPart extends BasePart implements Part {
       ),
       'le__tooltip--bottom-left': true,
     };
+  }
+
+  protected getOrCreateModalNotificationSingle(
+    editor: LiveEditor
+  ): DialogModal {
+    if (!editor.parts.modals.modals[MODAL_KEY_NOTIFICATION]) {
+      const modal = new DialogModal({
+        title: 'Notification',
+        priority: DialogPriorityLevel.High,
+      });
+      modal.templateModal = this.templateNotificationSingle.bind(this);
+
+      // When the modal is hidden, remove the current notification so it does
+      // not open again instantly.
+      modal.addListener('hide', () => {
+        this.currentNotification = undefined;
+        this.render();
+      });
+
+      editor.parts.modals.modals[MODAL_KEY_NOTIFICATION] = modal;
+    }
+    return editor.parts.modals.modals[MODAL_KEY_NOTIFICATION] as DialogModal;
   }
 
   protected getOrCreateModalNotifications(editor: LiveEditor): DialogModal {
@@ -232,6 +270,18 @@ export class NotificationsPart extends BasePart implements Part {
     return internalNotification;
   }
 
+  showNotification(
+    notification: EditorNotification,
+    defaultLevel = NotificationLevel.Info
+  ) {
+    const newNotification = this.scrubNewNotification(
+      notification,
+      defaultLevel
+    );
+    this.notifications.push(notification);
+    this.currentNotification = newNotification;
+  }
+
   template(editor: LiveEditor): TemplateResult {
     let icon = 'notifications';
 
@@ -248,6 +298,35 @@ export class NotificationsPart extends BasePart implements Part {
       }
     } else if (this.hasUnreadNotifications) {
       icon = 'notifications_active';
+    }
+
+    if (this.currentNotification) {
+      this.currentNotification.isRead = true;
+      const modal = this.getOrCreateModalNotificationSingle(editor);
+      modal.config.title = this.currentNotification.title || modal.config.title;
+
+      // Reset the actions to match the notification.
+      modal.actions = [];
+
+      for (const action of this.currentNotification.actions || []) {
+        modal.actions.push({
+          isDisabledFunc: () => false,
+          label: action.label,
+          level: DialogActionLevel.Primary,
+          onClick: (evt: Event) => {
+            evt.preventDefault();
+            document.dispatchEvent(
+              new CustomEvent(action.customEvent, {
+                detail: action.details,
+              })
+            );
+            modal.hide();
+          },
+        });
+      }
+      modal.addCancelAction('Close');
+
+      modal.isVisible = true;
     }
 
     const handleOpenNotifications = () => {
@@ -292,22 +371,6 @@ export class NotificationsPart extends BasePart implements Part {
       this.render();
     };
 
-    let description = html``;
-    if (notification.isExpanded && notification.description) {
-      description = html`<div
-        class="ls__part__notifications__notification__description"
-      >
-        ${notification.description}
-      </div>`;
-    }
-
-    let meta = html``;
-    if (notification.isExpanded && notification.meta) {
-      meta = html`<div class="ls__part__notifications__notification__meta">
-        <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
-      </div>`;
-    }
-
     return html`<div
       class=${classMap(this.classesForNotification(notification))}
     >
@@ -334,7 +397,13 @@ export class NotificationsPart extends BasePart implements Part {
           : ''}
         ${notification.message}
       </div>
-      ${markReadButton} ${description} ${meta}
+      ${markReadButton}
+      ${notification.isExpanded
+        ? this.templateNotificationDescription(editor, notification)
+        : ''}
+      ${notification.isExpanded
+        ? this.templateNotificationMeta(editor, notification)
+        : ''}
       <div class="ls__part__notifications__notification__actions">
         ${this.templateNotificationActions(editor, notification)}
       </div>
@@ -374,6 +443,70 @@ export class NotificationsPart extends BasePart implements Part {
     }
 
     return additionalDetails;
+  }
+
+  templateNotificationDescription(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    if (!notification.description) {
+      return html``;
+    }
+
+    return html`<div class="ls__part__notifications__notification__description">
+      ${notification.description}
+    </div>`;
+  }
+
+  templateNotificationMeta(
+    editor: LiveEditor,
+    notification: InternalNotification
+  ): TemplateResult {
+    if (!notification.meta) {
+      return html``;
+    }
+
+    return html`<div class="ls__part__notifications__notification__meta">
+      <pre><code>${JSON.stringify(notification.meta, null, 2)}</code></pre>
+    </div>`;
+  }
+
+  templateNotificationSingle(editor: LiveEditor): TemplateResult {
+    if (!this.currentNotification) {
+      return html``;
+    }
+
+    let expandMeta = html``;
+    if (!this.currentNotification.isExpanded && this.currentNotification.meta) {
+      expandMeta = html`<div
+        class="ls__part__notifications__notification__expand"
+        @click=${(evt: Event) => {
+          if (!this.currentNotification) {
+            return;
+          }
+          evt.stopPropagation();
+          this.currentNotification.isExpanded = true;
+          this.render();
+        }}
+      >
+        Show more
+      </div>`;
+    }
+
+    return html`<div class="le__part__notifications__modal">
+      <div class="ls__part__notifications__notification__message">
+        <div class="ls__part__notifications__notification__label">
+          ${this.currentNotification?.message}
+        </div>
+        ${this.templateNotificationDescription(
+          editor,
+          this.currentNotification
+        )}
+        ${this.currentNotification.isExpanded
+          ? this.templateNotificationMeta(editor, this.currentNotification)
+          : expandMeta}
+      </div>
+    </div>`;
   }
 
   templateNotifications(editor: LiveEditor): TemplateResult {

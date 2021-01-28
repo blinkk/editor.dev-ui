@@ -6,6 +6,7 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
+import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {ContentFooterPart} from './content/footer';
 import {ContentHeaderPart} from './content/header';
 import {ContentSectionPart} from './content/section';
@@ -15,10 +16,15 @@ import {EditorState} from '../state';
 import {FieldsPart} from './content/sectionFields';
 import {FileData} from '../api';
 import {HistoryPart} from './content/sectionHistory';
+import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
 import {Storage} from '../../utility/storage';
+
+const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
+const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';
+const STORAGE_SETTING_SHOW_DEEP_LINKS = 'live.content.dev.showDeepLinks';
 
 export interface ContentPartConfig {
   /**
@@ -40,6 +46,7 @@ export interface ContentParts {
 
 export class ContentPart extends BasePart implements Part {
   config: ContentPartConfig;
+  contentSettings: ContentSettings;
   parts: ContentParts;
   sections: Array<ContentSectionPart>;
 
@@ -47,6 +54,7 @@ export class ContentPart extends BasePart implements Part {
     super();
 
     this.config = config;
+    this.contentSettings = new ContentSettings(this.config.storage);
 
     // Order of appearance.
     this.sections = [
@@ -75,6 +83,7 @@ export class ContentPart extends BasePart implements Part {
 
     this.parts = {
       footer: new ContentFooterPart({
+        contentSettings: this.contentSettings,
         storage: this.config.storage,
       }),
       header: new ContentHeaderPart({
@@ -120,5 +129,101 @@ export class ContentPart extends BasePart implements Part {
         part => part.template(editor)
       )}
     </div>`;
+  }
+}
+
+export class ContentSettings extends ListenersMixin(Base) {
+  protected _highlightAuto?: boolean;
+  protected _highlightDirty?: boolean;
+  protected _showDeepLinks?: boolean;
+  storage: Storage;
+
+  constructor(storage: Storage) {
+    super();
+    this.storage = storage;
+    this._highlightAuto = this.storage.getItemBoolean(
+      STORAGE_SETTING_HIGHLIGHT_AUTO
+    );
+    this._highlightDirty = this.storage.getItemBoolean(
+      STORAGE_SETTING_HIGHLIGHT_DIRTY
+    );
+    this._showDeepLinks = this.storage.getItemBoolean(
+      STORAGE_SETTING_SHOW_DEEP_LINKS
+    );
+  }
+
+  hideHighlightAuto() {
+    this.highlightAuto = false;
+    this.triggerListener('highlightAuto', this.highlightAuto);
+  }
+
+  hideHighlightDirty() {
+    this.highlightDirty = false;
+    this.triggerListener('highlightDirty', this.highlightDirty);
+  }
+
+  hideShowDeepLinks() {
+    this.showDeepLinks = false;
+    this.triggerListener('showDeepLinks', this.showDeepLinks);
+  }
+
+  get highlightAuto(): boolean {
+    return this._highlightAuto || false;
+  }
+
+  set highlightAuto(value: boolean) {
+    this._highlightAuto = value;
+    this.storage.setItemBoolean(STORAGE_SETTING_HIGHLIGHT_AUTO, value);
+  }
+
+  get highlightDirty(): boolean {
+    return this._highlightDirty || false;
+  }
+
+  set highlightDirty(value: boolean) {
+    this._highlightDirty = value;
+    this.storage.setItemBoolean(STORAGE_SETTING_HIGHLIGHT_DIRTY, value);
+  }
+
+  showHighlightAuto() {
+    this.highlightAuto = true;
+    this.triggerListener('highlightAuto', this.highlightAuto);
+  }
+
+  showHighlightDirty() {
+    this.highlightDirty = true;
+    this.triggerListener('highlightDirty', this.highlightDirty);
+  }
+
+  showShowDeepLinks() {
+    this.showDeepLinks = true;
+    this.triggerListener('showDeepLinks', this.showDeepLinks);
+  }
+
+  get showDeepLinks(): boolean {
+    return this._showDeepLinks || false;
+  }
+
+  set showDeepLinks(value: boolean) {
+    this._showDeepLinks = value;
+    this.storage.setItemBoolean(STORAGE_SETTING_SHOW_DEEP_LINKS, value);
+  }
+
+  toggleHighlightAuto() {
+    this.highlightAuto = !this.highlightAuto;
+    console.log(this.highlightAuto);
+    this.triggerListener('highlightAuto', this.highlightAuto);
+  }
+
+  toggleHighlightDirty() {
+    this.highlightDirty = !this.highlightDirty;
+    console.log(this.highlightDirty);
+    this.triggerListener('highlightDirty', this.highlightDirty);
+  }
+
+  toggleShowDeepLinks() {
+    this.showDeepLinks = !this.showDeepLinks;
+    console.log(this.showDeepLinks);
+    this.triggerListener('showDeepLinks', this.showDeepLinks);
   }
 }

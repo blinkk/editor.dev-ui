@@ -73,6 +73,13 @@ export class Storage {
     return localStorage.setItem(key, JSON.stringify(value));
   }
 
+  setItemBoolean(key: string, value: boolean) {
+    if (this.isTesting) {
+      return;
+    }
+    return localStorage.setItem(key, value ? 'true' : 'false');
+  }
+
   setItemRecord(key: string, value: Record<string, any>) {
     if (this.isTesting) {
       return;

@@ -2,7 +2,7 @@ import {Constructor} from '@blinkk/selective-edit/dist/src/mixins';
 
 export function ListenersMixin<TBase extends Constructor>(Base: TBase) {
   return class ListenersClass extends Base {
-    _listeners?: Record<string, Array<() => void>>;
+    _listeners?: Record<string, Array<(...args: any) => void>>;
 
     /**
      * Add a new event listener for watching for events to happen.
@@ -10,14 +10,14 @@ export function ListenersMixin<TBase extends Constructor>(Base: TBase) {
      * @param eventName Event name for the listener.
      * @param callback Callback to know when the listener triggers.
      */
-    addListener(eventName: string, callback: () => void) {
+    addListener(eventName: string, callback: (...args: any) => void) {
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
       }
       this.listeners[eventName].push(callback);
     }
 
-    get listeners(): Record<string, Array<() => void>> {
+    get listeners(): Record<string, Array<(...args: any) => void>> {
       if (!this._listeners) {
         this._listeners = {};
       }
@@ -29,10 +29,10 @@ export function ListenersMixin<TBase extends Constructor>(Base: TBase) {
      *
      * @param eventName Event name to trigger.
      */
-    triggerListener(eventName: string) {
+    triggerListener(eventName: string, ...args: any) {
       if (this.listeners[eventName]) {
         for (const listener of this.listeners[eventName]) {
-          listener();
+          listener(...args);
         }
       }
     }

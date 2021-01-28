@@ -90,7 +90,7 @@ export class MenuPart extends BasePart implements Part {
    */
   dock() {
     this.isDocked = true;
-    this.config.storage.setItem(STORAGE_DOCKED_KEY, 'true');
+    this.config.storage.setItemBoolean(STORAGE_DOCKED_KEY, this.isDocked);
     this.render();
   }
 
@@ -208,7 +208,7 @@ export class MenuPart extends BasePart implements Part {
    */
   undock() {
     this.isDocked = false;
-    this.config.storage.setItem(STORAGE_DOCKED_KEY, 'false');
+    this.config.storage.setItemBoolean(STORAGE_DOCKED_KEY, this.isDocked);
     this.render();
   }
 }

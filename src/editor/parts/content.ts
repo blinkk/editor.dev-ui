@@ -152,21 +152,6 @@ export class ContentSettings extends ListenersMixin(Base) {
     );
   }
 
-  hideHighlightAuto() {
-    this.highlightAuto = false;
-    this.triggerListener('highlightAuto', this.highlightAuto);
-  }
-
-  hideHighlightDirty() {
-    this.highlightDirty = false;
-    this.triggerListener('highlightDirty', this.highlightDirty);
-  }
-
-  hideShowDeepLinks() {
-    this.showDeepLinks = false;
-    this.triggerListener('showDeepLinks', this.showDeepLinks);
-  }
-
   get highlightAuto(): boolean {
     return this._highlightAuto || false;
   }
@@ -174,6 +159,7 @@ export class ContentSettings extends ListenersMixin(Base) {
   set highlightAuto(value: boolean) {
     this._highlightAuto = value;
     this.storage.setItemBoolean(STORAGE_SETTING_HIGHLIGHT_AUTO, value);
+    this.triggerListener('highlightAuto', this.highlightAuto);
   }
 
   get highlightDirty(): boolean {
@@ -183,21 +169,7 @@ export class ContentSettings extends ListenersMixin(Base) {
   set highlightDirty(value: boolean) {
     this._highlightDirty = value;
     this.storage.setItemBoolean(STORAGE_SETTING_HIGHLIGHT_DIRTY, value);
-  }
-
-  showHighlightAuto() {
-    this.highlightAuto = true;
-    this.triggerListener('highlightAuto', this.highlightAuto);
-  }
-
-  showHighlightDirty() {
-    this.highlightDirty = true;
     this.triggerListener('highlightDirty', this.highlightDirty);
-  }
-
-  showShowDeepLinks() {
-    this.showDeepLinks = true;
-    this.triggerListener('showDeepLinks', this.showDeepLinks);
   }
 
   get showDeepLinks(): boolean {
@@ -207,23 +179,18 @@ export class ContentSettings extends ListenersMixin(Base) {
   set showDeepLinks(value: boolean) {
     this._showDeepLinks = value;
     this.storage.setItemBoolean(STORAGE_SETTING_SHOW_DEEP_LINKS, value);
+    this.triggerListener('showDeepLinks', this.showDeepLinks);
   }
 
   toggleHighlightAuto() {
     this.highlightAuto = !this.highlightAuto;
-    console.log(this.highlightAuto);
-    this.triggerListener('highlightAuto', this.highlightAuto);
   }
 
   toggleHighlightDirty() {
     this.highlightDirty = !this.highlightDirty;
-    console.log(this.highlightDirty);
-    this.triggerListener('highlightDirty', this.highlightDirty);
   }
 
   toggleShowDeepLinks() {
     this.showDeepLinks = !this.showDeepLinks;
-    console.log(this.showDeepLinks);
-    this.triggerListener('showDeepLinks', this.showDeepLinks);
   }
 }

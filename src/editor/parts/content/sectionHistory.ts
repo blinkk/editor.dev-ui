@@ -9,6 +9,10 @@ export class HistoryPart extends ContentSectionPart {
     return classes;
   }
 
+  get canChangeSection(): boolean {
+    return true;
+  }
+
   get label() {
     return 'History';
   }

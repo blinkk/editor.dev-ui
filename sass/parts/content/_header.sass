@@ -17,8 +17,12 @@
   font-size: $le-font-size-small
   font-weight: 700
   text-transform: uppercase
+  transition: opacity $le-speed-xslow
 
-  &:hover
+  &--disabled
+    opacity: $le-opacity-disabled
+
+  &:hover:not(.le__part__content__header__section--disabled)
     border-bottom: $le-border-size-large solid $le-color-secondary-light
     color: $le-color-secondary
 

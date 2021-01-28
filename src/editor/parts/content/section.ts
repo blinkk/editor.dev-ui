@@ -54,6 +54,10 @@ export class ContentSectionPart extends BasePart implements Part {
     }
   }
 
+  get canChangeSection(): boolean {
+    return this.selective.isClean;
+  }
+
   classesForAction(): Array<string> {
     const classes = ['le__part__content__header__action', 'le__button'];
 

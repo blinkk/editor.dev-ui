@@ -2,6 +2,7 @@ import {BasePart, Part} from '..';
 import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {
   TemplateResult,
+  classMap,
   expandClasses,
   html,
   repeat,
@@ -58,10 +59,24 @@ export class ContentHeaderPart extends BasePart implements Part {
           section => section.section,
           section =>
             html`<div
-              class="le__part__content__header__section le__clickable ${section.isVisible
-                ? 'le__part__content__header__section--selected'
-                : ''}"
-              @click=${(evt: Event) => this.handleSectionClick(evt, section)}
+              class=${classMap({
+                le__part__content__header__section: true,
+                le__clickable:
+                  section.isVisible ||
+                  currentSection?.canChangeSection ||
+                  false,
+                'le__part__content__header__section--selected':
+                  section.isVisible || false,
+                'le__part__content__header__section--disabled':
+                  !section.isVisible && !currentSection?.canChangeSection,
+              })}
+              @click=${(evt: Event) => {
+                // Block switching sections when
+                if (!currentSection?.canChangeSection) {
+                  return;
+                }
+                this.handleSectionClick(evt, section);
+              }}
             >
               ${section.label}
             </div>`

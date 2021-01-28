@@ -19,6 +19,7 @@ import {Storage} from '../utility/storage';
 
 export interface LiveEditorConfig {
   api: LiveEditorApiComponent;
+  labels?: LiveEditorLabels;
   selectiveConfig: EditorConfig;
   isTest?: boolean;
 }
@@ -134,4 +135,62 @@ export class LiveEditor {
       ${this.parts.preview.template(editor)}
     </div>`;
   }
+}
+
+/**
+ * Custom labels for the editor UI.
+ */
+export interface LiveEditorLabels {
+  /**
+   * Label for content save action.
+   */
+  contentSave?: string;
+  /**
+   * Label for content save action clean state.
+   */
+  contentSaveClean?: string;
+  /**
+   * Label for content save action processing.
+   */
+  contentSaveErrors?: string;
+  /**
+   * Label for content save action processing.
+   */
+  contentSaveProcessing?: string;
+  /**
+   * Label for the file.
+   */
+  file?: string;
+  /**
+   * Label for action to create new file.
+   */
+  fileNew?: string;
+  /**
+   * Label for the files structure.
+   */
+  files?: string;
+  /**
+   * Label for the site section of the menu.
+   */
+  menuSite?: string;
+  /**
+   * Label for the users section of the menu.
+   */
+  menuUsers?: string;
+  /**
+   * Label for the workspaces section of the menu.
+   */
+  menuWorkspaces?: string;
+  /**
+   * Label for the workspace.
+   */
+  workspace?: string;
+  /**
+   * Label for the action to create a new workspace.
+   */
+  workspaceNew?: string;
+  /**
+   * Label for the workspace.
+   */
+  workspaces?: string;
 }

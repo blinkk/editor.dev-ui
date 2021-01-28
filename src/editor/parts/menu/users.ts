@@ -52,6 +52,12 @@ export class UsersPart extends MenuSectionPart {
     </div>`;
   }
 
+  templateTitle(editor: LiveEditor): TemplateResult {
+    return html`<div class="le__part__menu__section__title">
+      ${editor.config.labels?.menuUsers || this.title}
+    </div>`;
+  }
+
   templateUser(user: UserData): TemplateResult {
     return html`<div class="le__list__item">
       <div class="le__list__item__icon">

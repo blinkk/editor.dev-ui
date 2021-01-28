@@ -202,7 +202,9 @@ export class WorkspacesPart extends MenuSectionPart {
           <div class="le__list__item__icon">
             <span class="material-icons">add_circle</span>
           </div>
-          <div class="le__list__item__label">Add workspace</div>
+          <div class="le__list__item__label">
+            ${editor.config.labels?.workspaceNew || 'Add workspace'}
+          </div>
         </div>
         ${repeat(
           this.config.state.workspaces || [],
@@ -235,7 +237,13 @@ export class WorkspacesPart extends MenuSectionPart {
     }
   }
 
-  get title() {
+  templateTitle(editor: LiveEditor): TemplateResult {
+    return html`<div class="le__part__menu__section__title">
+      ${editor.config.labels?.menuWorkspaces || this.title}
+    </div>`;
+  }
+
+  get title(): string {
     return 'Workspaces';
   }
 }

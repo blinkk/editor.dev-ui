@@ -89,16 +89,16 @@ export class ContentSectionPart extends BasePart implements Part {
     return 'Section';
   }
 
-  labelForAction(): string {
+  labelForAction(editor: LiveEditor): string {
     if (this.isProcessing) {
-      return 'Saving';
+      return editor.config.labels?.contentSaveProcessing || 'Saving';
     } else if (!this.selective.isValid) {
-      return 'Form errors';
+      return editor.config.labels?.contentSaveErrors || 'Form errors';
     } else if (this.selective.isClean) {
-      return 'No changes';
+      return editor.config.labels?.contentSaveClean || 'No changes';
     }
 
-    return 'Save';
+    return editor.config.labels?.contentSave || 'Save';
   }
 
   get section(): string {
@@ -121,7 +121,7 @@ export class ContentSectionPart extends BasePart implements Part {
       @click=${this.handleAction.bind(this)}
       ?disabled=${this.isActionDisabled}
     >
-      ${this.labelForAction()}
+      ${this.labelForAction(editor)}
     </button>`;
   }
 

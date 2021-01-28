@@ -77,7 +77,13 @@ export class MenuSectionPart extends BasePart implements Part {
       <div class="le__part__menu__section__icon">
         ${this.templateActionExpandCollapse(editor)}
       </div>
-      <div class="le__part__menu__section__title">${this.title}</div>
+      ${this.templateTitle(editor)}
+    </div>`;
+  }
+
+  templateTitle(editor: LiveEditor): TemplateResult {
+    return html`<div class="le__part__menu__section__title">
+      ${this.title}
     </div>`;
   }
 

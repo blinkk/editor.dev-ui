@@ -47,7 +47,7 @@ export class ContentToolbarPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__toolbar__label">
-        <strong>Page:</strong> ...guess label...
+        <strong>${editor.config.labels?.file || 'File'}:</strong> ...guess...
       </div>
       <div class="le__part__content__toolbar__icons">
         ${repeat(

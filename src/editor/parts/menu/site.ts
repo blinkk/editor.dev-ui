@@ -343,7 +343,9 @@ export class SitePart extends MenuSectionPart {
           <div class="le__list__item__icon">
             <span class="material-icons">folder</span>
           </div>
-          <div class="le__list__item__label">Files</div>
+          <div class="le__list__item__label">
+            ${editor.config.labels?.files || 'Files'}
+          </div>
         </div>
         ${this.fileStructure.template(editor)}
       </div>
@@ -378,6 +380,12 @@ export class SitePart extends MenuSectionPart {
         this.render();
       }
     }
+  }
+
+  templateTitle(editor: LiveEditor): TemplateResult {
+    return html`<div class="le__part__menu__section__title">
+      ${editor.config.labels?.menuSite || this.title}
+    </div>`;
   }
 
   get title() {
@@ -546,7 +554,9 @@ class DirectoryStructure {
         <div class="le__list__item__icon">
           <span class="material-icons">add_circle</span>
         </div>
-        <div class="le__list__item__label">New file</div>
+        <div class="le__list__item__label">
+          ${editor.config.labels?.fileNew || 'New file'}
+        </div>
       </div>
       ${repeat(
         this.files,

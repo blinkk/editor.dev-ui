@@ -3,6 +3,7 @@ import {
   EditorConfig,
   SelectiveEditor,
   TemplateResult,
+  classMap,
   expandClasses,
   html,
 } from '@blinkk/selective-edit';
@@ -132,7 +133,12 @@ export class ContentSectionPart extends BasePart implements Part {
   templateStatus(editor: LiveEditor): TemplateResult {
     if (!this.selective.isValid) {
       return html`<div
-        class="le__part__content__header__status le__part__content__header__status--error"
+        class=${classMap({
+          le__part__content__header__status: true,
+          'le__part__content__header__status--error': true,
+          'le__tooltip--top': true,
+        })}
+        data-tip="Form errors"
       >
         <span class="material-icons">error</span>
       </div>`;

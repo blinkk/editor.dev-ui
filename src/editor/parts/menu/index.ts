@@ -1,5 +1,5 @@
 import {BasePart, Part} from '..';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../..';
 import {Storage} from '../../../utility/storage';
@@ -32,8 +32,10 @@ export class MenuSectionPart extends BasePart implements Part {
     }
   }
 
-  classesForPart(): Array<string> {
-    return ['le__part__menu__section'];
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__menu__section: true,
+    };
   }
 
   get key(): string {
@@ -41,7 +43,7 @@ export class MenuSectionPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateHeader(editor)}
       ${this.isExpanded ? this.templateContent(editor) : ''}
     </div>`;

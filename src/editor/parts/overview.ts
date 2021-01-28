@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 
@@ -18,8 +18,10 @@ export class OverviewPart extends BasePart implements Part {
     this.config = config;
   }
 
-  classesForPart(): Array<string> {
-    return ['le__part__overview'];
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__overview: true,
+    };
   }
 
   loadProject() {
@@ -31,7 +33,7 @@ export class OverviewPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateMenu(editor)} ${this.templateProject(editor)}
       ${this.templateWorkspace(editor)}
       ${editor.parts.notifications.template(editor)}

@@ -2,7 +2,7 @@ import {BasePart, Part} from '.';
 import {
   EditorConfig,
   TemplateResult,
-  expandClasses,
+  classMap,
   html,
   repeat,
 } from '@blinkk/selective-edit';
@@ -104,9 +104,10 @@ export class ContentPart extends BasePart implements Part {
     });
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__content'];
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__content: true,
+    };
   }
 
   get isExpanded(): boolean {
@@ -114,7 +115,7 @@ export class ContentPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       ${this.parts.toolbar.template(editor)}
       ${this.parts.header.template(editor)} ${this.templateSections(editor)}
       ${this.parts.footer.template(editor)}

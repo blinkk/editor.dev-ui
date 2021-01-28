@@ -1,6 +1,6 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD_COMPLETE} from '../events';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
@@ -71,8 +71,10 @@ export class MenuPart extends BasePart implements Part {
     return editor.parts.modals.modals[MODAL_KEY];
   }
 
-  classesForPart(): Array<string> {
-    return ['le__part__menu'];
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__menu: true,
+    };
   }
 
   /**
@@ -188,7 +190,7 @@ export class MenuPart extends BasePart implements Part {
   }
 
   templateStructure(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateMenu(editor)} ${this.templateContent(editor)}
     </div>`;
   }

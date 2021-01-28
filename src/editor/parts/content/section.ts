@@ -4,7 +4,6 @@ import {
   SelectiveEditor,
   TemplateResult,
   classMap,
-  expandClasses,
   html,
 } from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
@@ -59,21 +58,21 @@ export class ContentSectionPart extends BasePart implements Part {
     return this.selective.isClean;
   }
 
-  classesForAction(): Array<string> {
-    const classes = ['le__part__content__header__action', 'le__button'];
-
-    // Base the button classes on the form status.
-    if (!this.selective.isValid) {
-      classes.push('le__button--extreme');
-    } else {
-      classes.push('le__button--primary');
-    }
-
-    return classes;
+  classesForAction(): Record<string, boolean> {
+    return {
+      le__part__content__header__action: true,
+      le__button: true,
+      'le__button--extreme': !this.selective.isValid,
+      'le__button--primary': this.selective.isValid,
+    };
   }
 
-  classesForPart(): Array<string> {
-    return ['le__part__content__section'];
+  classesForPart(): Record<string, boolean> {
+    const classes: Record<string, boolean> = {
+      le__part__content__section: true,
+    };
+    classes[`le__part__content__${this.section}`] = true;
+    return classes;
   }
 
   handleAction(evt: Event) {
@@ -111,14 +110,14 @@ export class ContentSectionPart extends BasePart implements Part {
       return html``;
     }
 
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateContent(editor)}
     </div>`;
   }
 
   templateAction(editor: LiveEditor): TemplateResult {
     return html`<button
-      class=${expandClasses(this.classesForAction())}
+      class=${classMap(this.classesForAction())}
       @click=${this.handleAction.bind(this)}
       ?disabled=${this.isActionDisabled}
     >

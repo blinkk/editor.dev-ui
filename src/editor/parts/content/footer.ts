@@ -1,10 +1,5 @@
 import {BasePart, Part} from '..';
-import {
-  TemplateResult,
-  classMap,
-  expandClasses,
-  html,
-} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {ContentSettings} from '../content';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -22,13 +17,14 @@ export class ContentFooterPart extends BasePart implements Part {
     this.config = config;
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__content__footer'];
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__content__footer: true,
+    };
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__logo">
         <svg
           xmlns="http://www.w3.org/2000/svg"

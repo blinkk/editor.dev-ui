@@ -1,4 +1,4 @@
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {LiveEditor} from './editor';
 
 export interface LiveTemplate {
@@ -15,19 +15,12 @@ export function templateLoading(
   editor: LiveEditor,
   options?: TemplateOptions
 ): TemplateResult {
-  const classes = ['le__loading'];
+  const classes = {
+    le__loading: true,
+    'le__loading--pad': options?.pad || false,
+    'le__loading--pad-horizontal': options?.padHorizontal || false,
+    'le__loading--pad-vertical': options?.padVertical || false,
+  };
 
-  if (options?.pad) {
-    classes.push('le__loading--pad');
-  }
-
-  if (options?.padHorizontal) {
-    classes.push('le__loading--pad-horizontal');
-  }
-
-  if (options?.padVertical) {
-    classes.push('le__loading--pad-vertical');
-  }
-
-  return html`<div class=${expandClasses(classes)}></div>`;
+  return html`<div class=${classMap(classes)}></div>`;
 }

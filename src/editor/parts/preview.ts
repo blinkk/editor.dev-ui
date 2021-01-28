@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {DeviceData} from '../api';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
@@ -34,14 +34,11 @@ export class PreviewPart extends BasePart implements Part {
     );
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__preview'];
-
-    if (this.isDeviceMode) {
-      classes.push('le__part__preview--device_mode');
-    }
-
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__preview: true,
+      'le__part__preview--device_mode': this.isDeviceMode || false,
+    };
   }
 
   loadDevices() {
@@ -56,7 +53,7 @@ export class PreviewPart extends BasePart implements Part {
       this.loadDevices();
     }
 
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__preview__toolbar"></div>
       <div class="le__part__preview__container">
         <div class="le__part__preview__frame">

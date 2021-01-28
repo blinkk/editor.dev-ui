@@ -1,5 +1,5 @@
 import {BasePart, Part} from '.';
-import {TemplateResult, expandClasses, html} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 
@@ -18,13 +18,14 @@ export class EmptyPart extends BasePart implements Part {
     this.config = config;
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__empty'];
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__empty: true,
+    };
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       Select a file from the menu to begin editing.
     </div>`;
   }

@@ -36,9 +36,9 @@ export class SitePart extends MenuSectionPart {
     });
   }
 
-  classesForPart(): Array<string> {
+  classesForPart(): Record<string, boolean> {
     const classes = super.classesForPart();
-    classes.push('le__part__menu__site');
+    classes.le__part__menu__site = true;
     return classes;
   }
 

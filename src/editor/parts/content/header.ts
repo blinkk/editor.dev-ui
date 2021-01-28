@@ -1,12 +1,6 @@
 import {BasePart, Part} from '..';
 import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
-import {
-  TemplateResult,
-  classMap,
-  expandClasses,
-  html,
-  repeat,
-} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -29,9 +23,10 @@ export class ContentHeaderPart extends BasePart implements Part {
     this.config = config;
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__content__header'];
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__content__header: true,
+    };
   }
 
   handleSectionClick(evt: Event, section: ContentSectionPart) {
@@ -52,7 +47,7 @@ export class ContentHeaderPart extends BasePart implements Part {
       }
     }
 
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__header__sections">
         ${repeat(
           this.config.sections,

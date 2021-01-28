@@ -1,5 +1,5 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
-import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
+import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD_COMPLETE} from '../../events';
 import {LiveEditor} from '../../editor';
 
@@ -15,12 +15,6 @@ export class FieldsPart extends ContentSectionPart {
     document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
       this.loadEditorConfig();
     });
-  }
-
-  classesForPart(): Array<string> {
-    const classes = super.classesForPart();
-    classes.push('le__part__content__fields');
-    return classes;
   }
 
   get label(): string {

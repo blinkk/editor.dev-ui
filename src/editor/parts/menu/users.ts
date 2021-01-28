@@ -8,9 +8,9 @@ import {templateLoading} from '../../template';
 export class UsersPart extends MenuSectionPart {
   users?: Array<UserData>;
 
-  classesForPart(): Array<string> {
+  classesForPart(): Record<string, boolean> {
     const classes = super.classesForPart();
-    classes.push('le__part__menu__users');
+    classes.le__part__menu__users = true;
     return classes;
   }
 

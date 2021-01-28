@@ -3,7 +3,7 @@ import {
   EditorConfig,
   SelectiveEditor,
   TemplateResult,
-  expandClasses,
+  classMap,
   findParentByClassname,
   html,
   repeat,
@@ -81,19 +81,19 @@ export class Modal extends UuidMixin(BaseUI) {
     this.isVisible = false;
   }
 
-  classesForModal(): Array<string> {
-    const classes: Array<string> = ['le__modal'];
+  classesForModal(): Record<string, boolean> {
+    const classes: Record<string, boolean> = {
+      le__modal: true,
+      'le__modal--low_priority':
+        this.config.priority === DialogPriorityLevel.Low,
+      'le__modal--high_priority':
+        this.config.priority === DialogPriorityLevel.High,
+    };
 
     if (this.config.classes) {
       for (const classname of this.config.classes) {
-        classes.push(classname);
+        classes[classname] = true;
       }
-    }
-
-    if (this.config.priority === DialogPriorityLevel.Low) {
-      classes.push('le__modal--low_priority');
-    } else if (this.config.priority === DialogPriorityLevel.High) {
-      classes.push('le__modal--high_priority');
     }
 
     return classes;
@@ -154,7 +154,7 @@ export class Modal extends UuidMixin(BaseUI) {
     }
 
     return html`<div
-      class=${expandClasses(this.classesForModal())}
+      class=${classMap(this.classesForModal())}
       @keyup=${this.handleKeyup.bind(this)}
     >
       <div
@@ -206,38 +206,29 @@ export class DialogModal extends Modal {
     });
   }
 
-  classesForAction(config: DialogActionConfig): Array<string> {
-    const classes = ['le__button le__modal__action'];
+  classesForAction(config: DialogActionConfig): Record<string, boolean> {
+    const classes: Record<string, boolean> = {
+      le__button: true,
+      le__modal__action: true,
+      'le__button--extreme': config.level === DialogActionLevel.Extreme,
+      'le__button--primary': config.level === DialogActionLevel.Primary,
+      'le__button--secondary': config.level === DialogActionLevel.Secondary,
+    };
 
     if (config.classes) {
       for (const classname of config.classes) {
-        classes.push(classname);
+        classes[classname] = true;
       }
-    }
-
-    if (config.level === DialogActionLevel.Extreme) {
-      classes.push('le__button--extreme');
-    }
-
-    if (config.level === DialogActionLevel.Primary) {
-      classes.push('le__button--primary');
-    }
-
-    if (config.level === DialogActionLevel.Secondary) {
-      classes.push('le__button--secondary');
     }
 
     return classes;
   }
 
-  classesForModal(): Array<string> {
+  classesForModal(): Record<string, boolean> {
     const classes = super.classesForModal();
 
-    classes.push('le__modal--dialog');
-
-    if (this.isProcessing) {
-      classes.push('le__modal--processing');
-    }
+    classes['le__modal--dialog'] = true;
+    classes['le__modal--processing'] = this.isProcessing || false;
 
     return classes;
   }
@@ -288,7 +279,7 @@ export class DialogModal extends Modal {
 
     const templateActionButton = (config: DialogActionConfig) =>
       html`<button
-        class=${expandClasses(this.classesForAction(config))}
+        class=${classMap(this.classesForAction(config))}
         ?disabled=${config.isDisabledFunc()}
         @click=${config.onClick}
       >

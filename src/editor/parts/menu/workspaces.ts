@@ -1,8 +1,8 @@
-import {ApiError, LiveEditorApiComponent, WorkspaceData} from '../../api';
+import {ApiError, WorkspaceData} from '../../api';
 import {
   DeepObject,
   TemplateResult,
-  expandClasses,
+  classMap,
   html,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
@@ -25,18 +25,19 @@ export class WorkspacesPart extends MenuSectionPart {
     });
   }
 
-  classesForPart(): Array<string> {
+  classesForPart(): Record<string, boolean> {
     const classes = super.classesForPart();
-    classes.push('le__part__menu__workspaces');
+    classes.le__part__menu__workspaces = true;
     return classes;
   }
 
-  classesForWorkspace(workspace: WorkspaceData): Array<string> {
-    const classes = ['le__list__item', 'le__clickable'];
-    if (this.config.state.workspace?.name === workspace.name) {
-      classes.push('le__list__item--selected');
-    }
-    return classes;
+  classesForWorkspace(workspace: WorkspaceData): Record<string, boolean> {
+    return {
+      le__clickable: true,
+      le__list__item: true,
+      'le__list__item--selected':
+        this.config.state.workspace?.name === workspace.name,
+    };
   }
 
   protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
@@ -207,7 +208,7 @@ export class WorkspacesPart extends MenuSectionPart {
           this.config.state.workspaces || [],
           workspace => workspace.name,
           workspace => html`<div
-            class=${expandClasses(this.classesForWorkspace(workspace))}
+            class=${classMap(this.classesForWorkspace(workspace))}
             @click=${() => {
               this.config.state.loadWorkspace(workspace);
             }}

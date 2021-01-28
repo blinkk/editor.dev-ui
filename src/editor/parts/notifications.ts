@@ -1,11 +1,6 @@
 import {BasePart, Part} from '.';
 import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../ui/modal';
-import {
-  TemplateResult,
-  expandClasses,
-  html,
-  repeat,
-} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_NOTIFICATION} from '../events';
 import {LiveEditor} from '../editor';
 
@@ -141,32 +136,27 @@ export class NotificationsPart extends BasePart implements Part {
     this.addNotification(notification, NotificationLevel.Warning);
   }
 
-  classesForNotification(notification: InternalNotification): Array<string> {
-    const classes = ['ls__part__notifications__notification'];
-
-    if (notification.level === NotificationLevel.Error) {
-      classes.push('ls__part__notifications__notification--error');
-    }
-
-    if (notification.level === NotificationLevel.Warning) {
-      classes.push('ls__part__notifications__notification--warning');
-    }
-
-    return classes;
+  classesForNotification(
+    notification: InternalNotification
+  ): Record<string, boolean> {
+    return {
+      ls__part__notifications__notification: true,
+      'ls__part__notifications__notification--error':
+        notification.level === NotificationLevel.Error,
+      'ls__part__notifications__notification--warning':
+        notification.level === NotificationLevel.Warning,
+    };
   }
 
-  classesForPart(): Array<string> {
-    const classes = [
-      'le__part__notifications',
-      'le__clickable',
-      'le__tooltip--bottom-left',
-    ];
-
-    if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
-      classes.push('le__part__notifications--errors');
-    }
-
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__notifications: true,
+      le__clickable: true,
+      'le__part__notifications--errors': this.hasUnreadNotificationsAtLevel(
+        NotificationLevel.Error
+      ),
+      'le__tooltip--bottom-left': true,
+    };
   }
 
   protected getOrCreateModalNotifications(editor: LiveEditor): DialogModal {
@@ -266,7 +256,7 @@ export class NotificationsPart extends BasePart implements Part {
     };
 
     return html`<div
-      class=${expandClasses(this.classesForPart())}
+      class=${classMap(this.classesForPart())}
       data-tip="Notifications"
       @click=${handleOpenNotifications}
     >
@@ -319,7 +309,7 @@ export class NotificationsPart extends BasePart implements Part {
     }
 
     return html`<div
-      class=${expandClasses(this.classesForNotification(notification))}
+      class=${classMap(this.classesForNotification(notification))}
     >
       <div class="ls__part__notifications__notification__status">
         <span class="material-icons"

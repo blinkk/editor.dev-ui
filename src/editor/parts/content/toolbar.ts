@@ -1,11 +1,6 @@
 import {BasePart, Part} from '..';
 import {EditorUrlConfig, EditorUrlLevel} from '../../api';
-import {
-  TemplateResult,
-  expandClasses,
-  html,
-  repeat,
-} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -33,9 +28,10 @@ export class ContentToolbarPart extends BasePart implements Part {
     this.isExpanded = this.config.storage.getItemBoolean(STORAGE_EXPANDED_KEY);
   }
 
-  classesForPart(): Array<string> {
-    const classes = ['le__part__content__toolbar'];
-    return classes;
+  classesForPart(): Record<string, boolean> {
+    return {
+      le__part__content__toolbar: true,
+    };
   }
 
   getIconForUrl(url: EditorUrlConfig): string {
@@ -49,7 +45,7 @@ export class ContentToolbarPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForPart())}>
+    return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__toolbar__label">
         <strong>Page:</strong> ...guess label...
       </div>

@@ -1,7 +1,7 @@
 import {
   EditorConfig,
   TemplateResult,
-  expandClasses,
+  classMap,
   html,
   render,
 } from '@blinkk/selective-edit';
@@ -74,15 +74,11 @@ export class LiveEditor {
     };
   }
 
-  classesForEditor(): Array<string> {
-    const classes: Array<string> = ['le'];
-
-    // When menu is docked, change to three panes.
-    if (this.parts.menu.isDocked) {
-      classes.push('le--docked-menu');
-    }
-
-    return classes;
+  classesForEditor(): Record<string, boolean> {
+    return {
+      le: true,
+      'le--docked-menu': this.parts.menu.isDocked,
+    };
   }
 
   render() {
@@ -104,7 +100,7 @@ export class LiveEditor {
   }
 
   template(editor: LiveEditor): TemplateResult {
-    return html`<div class=${expandClasses(this.classesForEditor())}>
+    return html`<div class=${classMap(this.classesForEditor())}>
       ${this.parts.menu.template(editor)}
       <div class="le__structure__content">
         <div class="le__structure__content_header">

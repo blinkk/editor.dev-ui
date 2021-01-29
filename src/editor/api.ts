@@ -67,7 +67,7 @@ export interface DeviceData {
   /**
    * Width of the device view.
    */
-  width?: number;
+  width: number;
 }
 
 /**

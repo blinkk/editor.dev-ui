@@ -73,6 +73,13 @@ export class LiveEditor {
         storage: this.storage,
       }),
     };
+
+    // Automatically re-render after the window resizes.
+    window.addEventListener('resize', () => {
+      console.log('re-rendering from resize.');
+
+      this.render();
+    });
   }
 
   classesForEditor(): Record<string, boolean> {

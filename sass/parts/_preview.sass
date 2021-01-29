@@ -1,36 +1,8 @@
 .le__part__preview
   display: flex
   flex-flow: column
+  flex-grow: 1
   justify-content: stretch
 
-.le__part__preview__toolbar
-  flex-grow: 0
-
-.le__part__preview__container
-  align-items: center
-  background-color: $le_color_back
-  color: $le_color_on_back
-  display: flex
-  flex-flow: column
-  flex-grow: 1
-  justify-content: center
-
-.le__part__preview__frame
-  display: flex
-  flex-flow: column
-  flex-grow: 1
-
-  // TODO: The size should be set by JS.
-  max-height: 731px
-  width: 411px
-
-  .le__part__preview--device_mode &
-    box-shadow: $le_shadow_medium
-
-  iframe
-    background-color: $le_color_back
-    border: none
-    color: $le_color_on_back
-    flex-grow: 1
-    transform-origin: center left
-    z-index: 5
+@import './preview/frame'
+@import './preview/toolbar'

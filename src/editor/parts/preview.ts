@@ -3,9 +3,9 @@ import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {DeviceData} from '../api';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
+import {PreviewFramePart} from './preview/frame';
+import {PreviewToolbarPart} from './preview/toolbar';
 import {Storage} from '../../utility/storage';
-
-const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';
 
 export interface PreviewPartConfig {
   /**
@@ -18,48 +18,53 @@ export interface PreviewPartConfig {
   storage: Storage;
 }
 
+export interface PreviewParts {
+  frame: PreviewFramePart;
+  toolbar: PreviewToolbarPart;
+}
+
 export class PreviewPart extends BasePart implements Part {
   config: PreviewPartConfig;
   device?: DeviceData;
-  isDeviceMode?: boolean;
-  isExpanded?: boolean;
+  parts: PreviewParts;
 
   constructor(config: PreviewPartConfig) {
     super();
     this.config = config;
 
-    this.isDeviceMode = this.config.storage.getItemBoolean(
-      STORAGE_DEVICE_MODE_KEY,
-      true
-    );
+    this.parts = {
+      frame: new PreviewFramePart({
+        state: this.config.state,
+        storage: this.config.storage,
+      }),
+      toolbar: new PreviewToolbarPart({
+        state: this.config.state,
+        storage: this.config.storage,
+      }),
+    };
   }
 
   classesForPart(): Record<string, boolean> {
     return {
       le__part__preview: true,
-      'le__part__preview--device_mode': this.isDeviceMode || false,
+      'le__part__preview--device_mode':
+        (this.parts.toolbar.isDeviceMode || false) &&
+        Boolean(this.parts.toolbar.device),
     };
   }
 
-  loadDevices() {
-    this.config.state.getDevices();
+  get isExpanded(): boolean {
+    return this.parts.toolbar.isExpanded || false;
   }
 
   template(editor: LiveEditor): TemplateResult {
-    const devices = this.config.state.devices;
-
-    // Lazy load the devices.
-    if (!devices) {
-      this.loadDevices();
-    }
-
     return html`<div class=${classMap(this.classesForPart())}>
-      <div class="le__part__preview__toolbar"></div>
-      <div class="le__part__preview__container">
-        <div class="le__part__preview__frame">
-          <iframe src="preview.html"></iframe>
-        </div>
-      </div>
+      ${this.parts.toolbar.template(editor)}
+      ${this.parts.frame.template(
+        editor,
+        this.parts.toolbar.device,
+        this.parts.toolbar.isRotated
+      )}
     </div>`;
   }
 }

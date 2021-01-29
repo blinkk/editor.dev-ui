@@ -84,9 +84,9 @@ export class ContentToolbarPart extends BasePart implements Part {
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}
       @click=${() => {
         this.isExpanded = !this.isExpanded;
-        this.config.storage.setItem(
+        this.config.storage.setItemBoolean(
           STORAGE_EXPANDED_KEY,
-          this.isExpanded ? 'true' : 'false'
+          this.isExpanded
         );
         this.render();
       }}

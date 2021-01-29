@@ -65,6 +65,7 @@ let currentWorkspace: WorkspaceData = {
     },
     commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
     commitSummary: 'Example commit summary.',
+    timestamp: new Date().toISOString(),
   },
   name: 'main',
 };
@@ -80,6 +81,9 @@ const currentWorkspaces: Array<WorkspaceData> = [
       },
       commit: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
       commitSummary: 'Example commit summary.',
+      timestamp: new Date(
+        new Date().getTime() - 2 * 60 * 60 * 1000
+      ).toISOString(),
     },
     name: 'staging',
   },
@@ -92,6 +96,9 @@ const currentWorkspaces: Array<WorkspaceData> = [
       },
       commit: 'db29a258dacdd416bb24bb63c689d669df08d409',
       commitSummary: 'Example commit summary.',
+      timestamp: new Date(
+        new Date().getTime() - 6 * 60 * 60 * 1000
+      ).toISOString(),
     },
     name: 'redesign',
   },
@@ -171,6 +178,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           commit: base.branch.commit,
           commitSummary: base.branch.commitSummary,
           author: base.branch.author,
+          timestamp: new Date().toISOString(),
         },
         name: workspace,
       };
@@ -386,7 +394,7 @@ export class ExampleApi implements LiveEditorApiComponent {
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
     return new Promise<WorkspaceData>((resolve, reject) => {
       const methodName = 'loadWorkspace';
-      console.log(`API: ${methodName}`);
+      console.log(`API: ${methodName}`, workspace.name);
 
       if (this.errorController.shouldError(methodName)) {
         reject({

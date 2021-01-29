@@ -2,6 +2,12 @@ import {BasePart, Part} from '.';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+
+// TODO: update when this is part of typescript definiton.
+// TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(en); // TODO: Remove when default locale is working.
 
 export interface OverviewPartConfig {
   /**
@@ -12,10 +18,12 @@ export interface OverviewPartConfig {
 
 export class OverviewPart extends BasePart implements Part {
   config: OverviewPartConfig;
+  timeAgo: TimeAgo;
 
   constructor(config: OverviewPartConfig) {
     super();
     this.config = config;
+    this.timeAgo = new TimeAgo('en-US');
   }
 
   classesForPart(): Record<string, boolean> {
@@ -84,12 +92,16 @@ export class OverviewPart extends BasePart implements Part {
     }
 
     return html`<div class="le__part__overview__workspace">
-      <span>Workspace:</span>
+      <!-- <span>Workspace:</span> -->
       <strong>${workspace?.name || '...'}</strong> @
       <strong>${(workspace?.branch.commit || '...').slice(0, 5)}</strong>
       by
       <strong>${workspace?.branch.author.name || '...'}</strong>
-      (time ago)
+      (${workspace?.branch?.timestamp
+        ? this.timeAgo.format(
+            new Date(workspace?.branch?.timestamp || new Date())
+          )
+        : '...'})
     </div>`;
   }
 }

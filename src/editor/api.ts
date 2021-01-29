@@ -24,9 +24,9 @@ export interface RepoAuthor {
  */
 export interface RepoBranch {
   /**
-   * Full branch name.
+   * Author of the last commit.
    */
-  name: string;
+  author: RepoAuthor;
   /**
    * Commit hash of the last commit.
    */
@@ -36,9 +36,16 @@ export interface RepoBranch {
    */
   commitSummary: string;
   /**
-   * Author of the last commit.
+   * Full branch name.
    */
-  author: RepoAuthor;
+  name: string;
+  /**
+   * Timestamp of commit.
+   *
+   * Needs to be in a `Date.parse()` valid datetime format.
+   * For example: ISO 8601.
+   */
+  timestamp: string;
 }
 
 /**

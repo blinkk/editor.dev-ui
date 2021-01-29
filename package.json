@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@types/async": "^3.2.5",
+    "@types/javascript-time-ago": "^2.0.1",
     "@types/lodash.merge": "^4.6.6",
     "@types/marked": "^1.2.1",
     "@types/mime-types": "^2.1.0",
@@ -84,6 +85,7 @@
   },
   "dependencies": {
     "@blinkk/selective-edit": "^1.0.5",
+    "javascript-time-ago": "^2.3.4",
     "lodash.merge": "^4.6.2",
     "marked": "^1.2.6"
   }

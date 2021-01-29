@@ -95,7 +95,11 @@ export class PreviewToolbarPart extends BasePart implements Part {
                     le__part__preview__toolbar__device: true,
                     'le__part__preview__toolbar__device--selected':
                       this.device === device,
+                    'le__tooltip--top': true,
                   })}
+                  data-tip="${device.width}${device.height
+                    ? ` x ${device.height}`
+                    : ''}"
                   @click=${() => {
                     this.device = device;
                     this.config.storage.setItem(

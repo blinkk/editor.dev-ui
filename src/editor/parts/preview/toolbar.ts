@@ -189,19 +189,22 @@ export class PreviewToolbarPart extends BasePart implements Part {
   }
 
   templateIconDeviceRotate(editor: LiveEditor): TemplateResult {
-    if (!this.isDeviceMode || (this.device && !this.device.canRotate)) {
-      return html``;
-    }
-
+    const blockRotate = Boolean(
+      !this.isDeviceMode || (this.device && !this.device.canRotate)
+    );
     return html`<div
       class=${classMap({
         le__part__preview__toolbar__icon: true,
+        'le__part__preview__toolbar__icon--disabled': blockRotate,
         'le__part__preview__toolbar__icon--selected': this.isRotated || false,
         le__clickable: true,
         'le__tooltip--top-left': true,
       })}
       data-tip="Rotate device view"
       @click=${() => {
+        if (blockRotate) {
+          return;
+        }
         this.isRotated = !this.isRotated;
         this.config.storage.setItemBoolean(
           STORAGE_DEVICE_ROTATED_KEY,

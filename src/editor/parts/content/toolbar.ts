@@ -4,6 +4,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 
 const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';
 
@@ -47,7 +48,12 @@ export class ContentToolbarPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__toolbar__label">
-        <strong>${editor.config.labels?.file || 'File'}:</strong> ...guess...
+        <strong>${editor.config.labels?.file || 'File'}:</strong>
+        ${findPreviewValue(
+          this.config.state?.file?.data || {},
+          [],
+          this.config.state.file?.file.path || ''
+        )}
       </div>
       <div class="le__part__content__toolbar__icons">
         ${repeat(

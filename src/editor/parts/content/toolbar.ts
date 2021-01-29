@@ -42,6 +42,9 @@ export class ContentToolbarPart extends BasePart implements Part {
     if (url.level === EditorUrlLevel.PROTECTED) {
       return 'vpn_lock';
     }
+    if (url.level === EditorUrlLevel.SOURCE) {
+      return 'source';
+    }
     return 'lock';
   }
 

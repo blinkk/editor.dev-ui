@@ -80,10 +80,40 @@ export interface EditorFileConfig {
   fields: Array<FieldConfig>;
 }
 
+/**
+ * Editor url accessibility level for a resource.
+ */
 export enum EditorUrlLevel {
+  /**
+   * Private url, should not be shared to others and not public.
+   *
+   * For example, the editor preview url. It should not be shared
+   * widely due to the transitive nature of workspaces, but can
+   * still be used to viewed when needed.
+   */
   PRIVATE,
+  /**
+   * Protected url, a shared service that is used for sharing
+   * but still restricted in how it is accessed.
+   *
+   * For example, a staging server to preview changes before
+   * they are live.
+   */
   PROTECTED,
+  /**
+   * Public url, a publicly accessbile way to access the resource.
+   *
+   * For example, the live version of the site that users normally
+   * see.
+   */
   PUBLIC,
+  /**
+   * Source url, a remotely hosted version of the resource.
+   *
+   * For example, a url that shows the resource in a repository
+   * like github.
+   */
+  SOURCE,
 }
 
 /**

@@ -387,6 +387,11 @@ export class ExampleApi implements LiveEditorApiComponent {
             label: 'Live',
             level: EditorUrlLevel.PUBLIC,
           },
+          {
+            url: 'https://github.com/blinkkcode/live-edit/',
+            label: 'View in Github',
+            level: EditorUrlLevel.SOURCE,
+          },
         ],
       } as EditorFileData);
     });

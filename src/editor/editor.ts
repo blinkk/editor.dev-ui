@@ -76,8 +76,6 @@ export class LiveEditor {
 
     // Automatically re-render after the window resizes.
     window.addEventListener('resize', () => {
-      console.log('re-rendering from resize.');
-
       this.render();
     });
   }

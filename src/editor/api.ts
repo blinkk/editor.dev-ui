@@ -131,9 +131,13 @@ export interface EditorFileData {
    */
   editor: EditorFileConfig;
   /**
-   * URLs for previewing the file in different environments.
+   * URL for viewing the file in the preview iframe.
    *
    * If no url is provided the preview will be hidden.
+   */
+  url?: string;
+  /**
+   * URLs for viewing the file in different environments.
    */
   urls?: Array<EditorUrlConfig>;
 }

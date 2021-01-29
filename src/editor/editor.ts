@@ -123,7 +123,8 @@ export class LiveEditor {
       return this.parts.empty.template(editor);
     }
 
-    if (this.parts.content.isExpanded) {
+    // Not having a url also qualifies to not show the preview.
+    if (this.parts.content.isExpanded || !this.state.file.url) {
       return html`<div class="le__structure__content_only">
         ${this.parts.content.template(editor)}
       </div>`;

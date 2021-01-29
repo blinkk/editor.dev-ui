@@ -124,11 +124,16 @@ export class PreviewToolbarPart extends BasePart implements Part {
   }
 
   templateIconBreakout(editor: LiveEditor): TemplateResult {
+    if (!this.config.state.file?.url) {
+      return html``;
+    }
+
     return html`<div
       class="le__part__preview__toolbar__icon le__clickable le__tooltip--top-left"
       data-tip="Preview in new window"
       @click=${() => {
         // TODO: Open preview url in new window.
+        window.open(this.config.state.file?.url, '_blank');
       }}
     >
       <span class="material-icons">open_in_new</span>

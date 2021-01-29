@@ -370,6 +370,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             } as FieldConfig,
           ],
         },
+        url: 'preview.html',
         urls: [
           {
             url: '#private',

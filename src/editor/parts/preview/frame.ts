@@ -9,7 +9,7 @@ import {Storage} from '../../../utility/storage';
  * Size of buffer to place around the preview frame so it does not
  * bump directly against the edge of the container.
  */
-const BUFFER_SIZE = 30;
+const BUFFER_SIZE = 20;
 
 export interface PreviewFrameConfig {
   /**
@@ -150,7 +150,7 @@ export class PreviewFramePart extends BasePart implements Part {
         })}
       >
         <iframe
-          src="preview.html"
+          src=${this.config.state.file?.url || ''}
           style=${styleMap({
             'min-height': sizing.height ? `${sizing.height}px` : 'none',
             width: sizing.width ? `${sizing.width}px` : 'auto',

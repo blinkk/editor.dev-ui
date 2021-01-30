@@ -1,0 +1,35 @@
+.le__part__preview__container
+  align-items: stretch
+  background-color: $le_color_back
+  color: $le_color_on_back
+  display: flex
+  flex-flow: column
+  flex-grow: 1
+  justify-content: stretch
+
+  .le__part__preview--device_mode &
+    align-items: center
+    justify-content: center
+
+.le__part__preview__frame
+  display: flex
+  flex-flow: column
+  flex-grow: 1
+  overflow: hidden
+
+  .le__part__preview--device_mode &
+    box-shadow: $le_shadow_medium
+    flex-grow: 0
+    justify-content: center
+
+    &--unbounded
+      box-shadow: none
+
+  iframe
+    background-color: $le_color_back
+    border: none
+    color: $le_color_on_back
+    flex-grow: 1
+    transform-origin: center left
+    z-index: 5
+

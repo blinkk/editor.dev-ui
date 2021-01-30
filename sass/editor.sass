@@ -1,0 +1,77 @@
+@import 'config'
+
+.le
+  background: $le-color-back
+  display: grid
+  font-family: $le-font-family
+  font-size: $le-font-size
+  grid-template-columns: 100%
+  line-height: $le-line-height
+  overflow: hidden
+
+  &--docked-menu
+    column-gap: $le-space-xxsmall
+    grid-template-columns: minmax(300px, 15%) 1fr
+
+  *
+    border-box
+
+  p
+    line-height: $le-line-height-paragraph
+
+  pre
+    margin: 0
+
+  .material-icons
+    font-size: $le-font-size-icon
+    vertical-align: middle
+
+.le__structure__content
+  display: flex
+  flex-flow: column
+
+.le__structure__content_header
+  flex-grow: 0
+  flex-shrink: 1
+
+.le__structure__content_panes
+  column-gap: $le-space-xxsmall
+  display: grid
+  flex-grow: 1
+  grid-template-columns: minmax(435px, 40%) 1fr
+
+.le__structure__content_only,
+.le__structure__preview_only
+  display: flex
+  flex-flow: column
+  flex-grow: 1
+
+a,
+[aria-role="link"],
+.le__clickable
+  cursor: pointer
+
+  .material-icons
+    padding: $le-space-xsmall
+
+.material-icons[aria-role="link"],
+.material-icons.le__clickable
+  padding: $le-space-xsmall
+
+@import './ui/actions'
+@import './ui/button'
+@import './ui/error'
+@import './ui/list'
+@import './ui/loading'
+@import './ui/modal'
+@import './ui/tooltip'
+
+@import './parts/content'
+@import './parts/empty'
+@import './parts/menu'
+@import './parts/modals'
+@import './parts/notifications'
+@import './parts/overview'
+@import './parts/preview'
+
+@import './selective/selective'

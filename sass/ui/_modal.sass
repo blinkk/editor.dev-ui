@@ -1,0 +1,74 @@
+.le__modal
+  backdrop-filter: blur(4px)
+  background-color: $le-color-oclude
+  bottom: 0
+  left: 0
+  position: fixed
+  right: 0
+  top: 0
+  z-index: 1000
+
+  &--low_priority
+    z-index: 900
+
+  &--high_priority
+    z-index: 1100
+
+.le__modal__container
+  align-items: center
+  display: flex
+  flex-flow: column
+  height: 100vh
+  justify-content: center
+
+  .le__modal--docked &
+    justify-content: stretch
+
+  .le__modal--docked-left &
+    align-items: flex-start
+
+  .le__modal--docked-right &
+    align-items: flex-end
+
+.le__modal__content
+  background: $le-color-back
+
+  .le__modal--dialog &
+    box-shadow: $le-shadow-medium
+    display: flex
+    flex-flow: column
+    height: 50vh
+    min-width: 600px
+    min-height: 250px
+    width: 50vw
+
+  .le__modal--dialog.le__modal--large &
+    height: 70vh
+    width: 80vw
+
+  .le__modal--docked &
+    flex-grow: 1
+    min-width: 300px
+    width: 30%
+
+.le__modal__content__template
+  .le__modal--dialog &
+    flex-grow: 1
+    max-height: 70vh
+    max-width: 70vw
+    overflow: auto
+
+.le__modal__content__footer
+  align-items: center
+  display: flex
+  flex-flow: row
+  justify-content: space-between
+  padding: $le-space-medium
+
+.le__modal__content__header
+  border-bottom: $le-border-size-medium solid $le-color-border
+  font-weight: 700
+  padding: $le-space-medium
+
+.le__modal__actions__tertiary
+  flex-grow: 1

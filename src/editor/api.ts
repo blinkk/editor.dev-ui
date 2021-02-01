@@ -84,12 +84,12 @@ export interface ProjectData {
    */
   title: string;
   /**
-   * Publish details for the project.
+   * Publish configuration for the project.
    *
    * This controls if the UI allows for publishing and what information
    * to collect for providing to the `publish` method on the api.
    */
-  publish?: PublishConfig;
+  publish?: ProjectPublishConfig;
 }
 
 /**
@@ -141,6 +141,10 @@ export interface WorkspaceData {
    * Short name for the workspace used in labels and lists.
    */
   name: string;
+  /**
+   * Workspace specific publishing configuration.
+   */
+  publish?: WorkspacePublishConfig;
 }
 
 /**
@@ -292,7 +296,7 @@ export interface EditorFileConfig {
 /**
  * Configuration for how publishing works in the editor UI.
  */
-export interface PublishConfig {
+export interface ProjectPublishConfig {
   /**
    * Field information for collecting information for the publish process.
    *
@@ -312,23 +316,30 @@ export enum PublishStatus {
    * Some workspaces may not allow for publishing.
    * For example the `main` branch has no where to be published.
    */
-  NotAllowed,
+  NotAllowed = 'NOT_ALLOWED',
   /**
    * There are no active publish processes.
    */
-  NotStarted,
+  NotStarted = 'NOT_STARTED',
+  /**
+   * There are no changes to publish.
+   *
+   * For example, the main branch and the current branch are on the same
+   * commit and there is nothing to publish.
+   */
+  NoChanges = 'NO_CHANGES',
   /**
    * There is an active publish in process.
    */
-  Pending,
+  Pending = 'PENDING',
   /**
    * The publish process has completed.
    */
-  Complete,
+  Complete = 'COMPLETE',
   /**
    * There was a problem during the publish process.
    */
-  Failure,
+  Failure = 'FAILURE',
 }
 
 /**
@@ -426,4 +437,11 @@ export enum UrlLevel {
    * like github.
    */
   SOURCE,
+}
+
+/**
+ * Configuration for how publishing works with a workspace.
+ */
+export interface WorkspacePublishConfig {
+  status: PublishStatus;
 }

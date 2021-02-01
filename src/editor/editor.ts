@@ -188,6 +188,38 @@ export interface LiveEditorLabels {
    */
   menuWorkspaces?: string;
   /**
+   * Label for publishing when a publish has been completed.
+   */
+  publishComplete?: string;
+  /**
+   * Label for publishing when a publish has failed.
+   */
+  publishFailure?: string;
+  /**
+   * Submit button label for the publish modal window.
+   */
+  publishModalSubmit?: string;
+  /**
+   * Title for the publish modal window.
+   */
+  publishModalTitle?: string;
+  /**
+   * Label for publishing when there are not changes to publish.
+   */
+  publishNoChanges?: string;
+  /**
+   * Label for publishing when a publish is not allowed.
+   */
+  publishNotAllowed?: string;
+  /**
+   * Label for publishing when a publish has not been started.
+   */
+  publishNotStarted?: string;
+  /**
+   * Label for publishing when a publish is in progress.
+   */
+  publishPending?: string;
+  /**
    * Label for the workspace.
    */
   workspace?: string;

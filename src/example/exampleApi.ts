@@ -283,6 +283,21 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       simulateNetwork(resolve, {
         title: 'Example project',
+        publish: {
+          fields: [
+            {
+              type: 'text',
+              key: 'message',
+              label: 'Publish message',
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Message for publishing is required.',
+                },
+              ],
+            } as FieldConfig,
+          ],
+        },
       });
     });
   }

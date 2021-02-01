@@ -2,8 +2,7 @@ name: 'Push to master actions'
 
 on:
   push:
-    # TODO: Fix.
-    branches-ignore:
+    branches:
       - main
 
 jobs:

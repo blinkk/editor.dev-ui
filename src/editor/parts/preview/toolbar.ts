@@ -1,6 +1,6 @@
 import {BasePart, Part} from '..';
-import {DeviceData, EditorUrlConfig, EditorUrlLevel} from '../../api';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+import {DeviceData} from '../../api';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -44,16 +44,6 @@ export class PreviewToolbarPart extends BasePart implements Part {
     return {
       le__part__preview__toolbar: true,
     };
-  }
-
-  getIconForUrl(url: EditorUrlConfig): string {
-    if (url.level === EditorUrlLevel.PUBLIC) {
-      return 'public';
-    }
-    if (url.level === EditorUrlLevel.PROTECTED) {
-      return 'vpn_lock';
-    }
-    return 'lock';
   }
 
   loadDevices() {

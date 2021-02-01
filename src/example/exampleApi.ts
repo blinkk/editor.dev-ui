@@ -2,10 +2,12 @@ import {
   ApiError,
   DeviceData,
   EditorFileData,
-  EditorUrlLevel,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
+  PublishResult,
+  PublishStatus,
+  UrlLevel,
   UserData,
   WorkspaceData,
 } from '../editor/api';
@@ -375,22 +377,22 @@ export class ExampleApi implements LiveEditorApiComponent {
           {
             url: '#private',
             label: 'Live editor preview',
-            level: EditorUrlLevel.PRIVATE,
+            level: UrlLevel.PRIVATE,
           },
           {
             url: '#protected',
             label: 'Staging',
-            level: EditorUrlLevel.PROTECTED,
+            level: UrlLevel.PROTECTED,
           },
           {
             url: '#public',
             label: 'Live',
-            level: EditorUrlLevel.PUBLIC,
+            level: UrlLevel.PUBLIC,
           },
           {
             url: 'https://github.com/blinkkcode/live-edit/',
             label: 'View in Github',
-            level: EditorUrlLevel.SOURCE,
+            level: UrlLevel.SOURCE,
           },
         ],
       } as EditorFileData);
@@ -413,6 +415,29 @@ export class ExampleApi implements LiveEditorApiComponent {
       currentWorkspace = workspace;
 
       simulateNetwork(resolve, currentWorkspace);
+    });
+  }
+
+  async publish(
+    workspace: WorkspaceData,
+    data?: Record<string, any>
+  ): Promise<PublishResult> {
+    return new Promise<PublishResult>((resolve, reject) => {
+      const methodName = 'publish';
+      console.log(`API: ${methodName}`, workspace.name, data);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to publish.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {
+        status: PublishStatus.Pending,
+        workspace: currentWorkspace,
+      });
     });
   }
 }

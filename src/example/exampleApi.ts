@@ -5,6 +5,7 @@ import {
   FileData,
   LiveEditorApiComponent,
   ProjectData,
+  ProjectPublishConfig,
   PublishResult,
   PublishStatus,
   UrlLevel,
@@ -111,9 +112,11 @@ const currentWorkspaces: Array<WorkspaceData> = [
  */
 export class ExampleApi implements LiveEditorApiComponent {
   errorController: ErrorController;
+  workflow: WorkspaceWorkflow;
 
   constructor() {
     this.errorController = new ErrorController();
+    this.workflow = WorkspaceWorkflow.Success;
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
@@ -281,9 +284,15 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, {
-        title: 'Example project',
-        publish: {
+      let publish: ProjectPublishConfig | undefined = undefined;
+      if (
+        [
+          WorkspaceWorkflow.Success,
+          WorkspaceWorkflow.Pending,
+          WorkspaceWorkflow.Failure,
+        ].includes(this.workflow)
+      ) {
+        publish = {
           fields: [
             {
               type: 'text',
@@ -297,7 +306,14 @@ export class ExampleApi implements LiveEditorApiComponent {
               ],
             } as FieldConfig,
           ],
-        },
+        };
+      } else if (this.workflow !== WorkspaceWorkflow.NoPublish) {
+        publish = {};
+      }
+
+      simulateNetwork(resolve, {
+        title: 'Example project',
+        publish: publish,
       });
     });
   }
@@ -330,6 +346,36 @@ export class ExampleApi implements LiveEditorApiComponent {
           description: 'Api is set to always return an error.',
         } as ApiError);
         return;
+      }
+
+      if ([WorkspaceWorkflow.Pending].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.Pending,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.Pending;
+        }
+      }
+
+      if ([WorkspaceWorkflow.NoChanges].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.NoChanges,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.NoChanges;
+        }
+      }
+
+      if ([WorkspaceWorkflow.Failure].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.Failure,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.Failure;
+        }
       }
 
       simulateNetwork(resolve, currentWorkspace);
@@ -449,11 +495,22 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
+      let status: PublishStatus = PublishStatus.Complete;
+      if ([WorkspaceWorkflow.Failure].includes(this.workflow)) {
+        status = PublishStatus.Failure;
+      } else if ([WorkspaceWorkflow.Pending].includes(this.workflow)) {
+        status = PublishStatus.Pending;
+      }
+
       simulateNetwork(resolve, {
-        status: PublishStatus.Pending,
+        status: status,
         workspace: currentWorkspace,
       });
     });
+  }
+
+  _setWorkspaceWorkflow(workflow: WorkspaceWorkflow) {
+    this.workflow = workflow;
   }
 }
 
@@ -483,4 +540,13 @@ export class ErrorController {
       this.errorMethods.add(methodName);
     }
   }
+}
+
+export enum WorkspaceWorkflow {
+  Failure = 'failure',
+  NoChanges = 'noChanges',
+  NoPublish = 'noPublish',
+  Pending = 'pending',
+  Success = 'success',
+  SuccessNoFields = 'successNoFields',
 }

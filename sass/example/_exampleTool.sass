@@ -1,8 +1,13 @@
 .example_tool
   position: fixed
   bottom: $le-space-large
+  font-family: 'Rubik', sans-serif
   right: $le-space-large
   z-index: 10000
+
+  h3,
+  h4
+    margin: 0 0 $le-space-medium 0
 
 .example_tool__float_button
   align-items: center
@@ -20,15 +25,26 @@
   &--should-error
     color: $le-color-extreme
 
-.example_tool__api_response
-  position: fixed
+.example_tool__container
   background-color: $le-color-tertiary
   border-radius: $le-radius-medium
   bottom: $le-space-large
   box-shadow: $le-shadow-medium
   color: $le-color-on-tertiary
+  display: flex
+  flex-flow: row
+  padding: $le-space-large
+  position: fixed
   right: $le-space-large * 2 + $le-font-size-icon-large * 2
-  padding: $le-space-medium
+
+  > div
+    margin: 0 $le-space-medium;
+
+    &:first-child
+      margin-left: 0
+
+    &:last-child
+      margin-right: 0
 
 .example_tool__api_method
   align-items: center

@@ -213,7 +213,7 @@ export class OverviewPart extends BasePart implements Part {
     }
 
     // Check if the project does not allow publishing.
-    const hasProjectPublish = Boolean(project?.publish);
+    const hasProjectPublish = project?.publish !== undefined;
     if (!hasProjectPublish) {
       return html``;
     }
@@ -248,6 +248,7 @@ export class OverviewPart extends BasePart implements Part {
             PublishStatus.NotStarted,
             PublishStatus.Pending,
           ].includes(status),
+          'le__button--extreme': [PublishStatus.Failure].includes(status),
         })}
         @click=${(evt: Event) => {
           this.handlePublishClick(evt, editor);

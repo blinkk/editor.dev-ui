@@ -1,4 +1,4 @@
-name: 'Push to master actions'
+name: 'Push to main'
 
 on:
   push:

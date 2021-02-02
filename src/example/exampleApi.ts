@@ -502,15 +502,24 @@ export class ExampleApi implements LiveEditorApiComponent {
         status = PublishStatus.Pending;
       }
 
+      let responseWorkspace = currentWorkspace;
+
+      // If the workflow changes the workspace, use a different workspace than
+      // the current workspace in the response.
+      if (this.workflow === WorkspaceWorkflow.SuccessChangeWorkspace) {
+        for (const workspace of currentWorkspaces) {
+          if (currentWorkspace !== workspace) {
+            responseWorkspace = workspace;
+            break;
+          }
+        }
+      }
+
       simulateNetwork(resolve, {
         status: status,
-        workspace: currentWorkspace,
+        workspace: responseWorkspace,
       });
     });
-  }
-
-  _setWorkspaceWorkflow(workflow: WorkspaceWorkflow) {
-    this.workflow = workflow;
   }
 }
 
@@ -549,4 +558,5 @@ export enum WorkspaceWorkflow {
   Pending = 'pending',
   Success = 'success',
   SuccessNoFields = 'successNoFields',
+  SuccessChangeWorkspace = 'successChangeWorkspace',
 }

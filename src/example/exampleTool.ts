@@ -138,6 +138,10 @@ export class ExampleTool {
         label: 'No publish',
       },
       {
+        value: WorkspaceWorkflow.NoChanges,
+        label: 'No changes to publish',
+      },
+      {
         value: WorkspaceWorkflow.Success,
         label: 'Success',
       },
@@ -146,16 +150,16 @@ export class ExampleTool {
         label: 'Success (No fields)',
       },
       {
-        value: WorkspaceWorkflow.NoChanges,
-        label: 'No changes',
+        value: WorkspaceWorkflow.SuccessChangeWorkspace,
+        label: 'Success (Different workspace)',
       },
       {
         value: WorkspaceWorkflow.Pending,
-        label: 'Pending',
+        label: 'Pending after publish',
       },
       {
         value: WorkspaceWorkflow.Failure,
-        label: 'Failure',
+        label: 'Failure after publish',
       },
     ];
 

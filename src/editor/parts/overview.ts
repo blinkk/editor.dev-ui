@@ -10,9 +10,11 @@ import {DialogActionLevel, FormDialogModal} from '../ui/modal';
 import {EditorState} from '../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {LiveEditor} from '../editor';
+import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import merge from 'lodash.merge';
+import {EVENT_WORKSPACE_LOAD} from '../events';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
 
@@ -29,6 +31,7 @@ export interface OverviewPartConfig {
 
 export class OverviewPart extends BasePart implements Part {
   config: OverviewPartConfig;
+  isPendingPublish?: boolean;
   timeAgo: TimeAgo;
 
   constructor(config: OverviewPartConfig) {
@@ -67,6 +70,7 @@ export class OverviewPart extends BasePart implements Part {
         },
         isSubmit: true,
         onClick: () => {
+          this.isPendingPublish = true;
           modal.startProcessing();
 
           const value = modal.selective.value;
@@ -79,16 +83,18 @@ export class OverviewPart extends BasePart implements Part {
             workspace,
             value,
             (result: PublishResult) => {
-              this.showPublishResult(result);
+              this.showPublishResult(editor, result);
 
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
+              this.isPendingPublish = false;
               modal.stopProcessing(true);
             },
             (error: ApiError) => {
               // Log the error to the notifications.
               editor.parts.notifications.addError(error, true);
               modal.error = error;
+              this.isPendingPublish = false;
               modal.stopProcessing();
             }
           );
@@ -116,8 +122,12 @@ export class OverviewPart extends BasePart implements Part {
         return;
       }
 
+      this.isPendingPublish = true;
+      this.render();
+
       this.config.state.publish(workspace, {}, (result: PublishResult) => {
-        this.showPublishResult(result);
+        this.isPendingPublish = false;
+        this.showPublishResult(editor, result);
       });
       return;
     }
@@ -138,21 +148,37 @@ export class OverviewPart extends BasePart implements Part {
     this.config.state.getWorkspace();
   }
 
-  showPublishResult(result: PublishResult) {
+  showPublishResult(editor: LiveEditor, result: PublishResult) {
     console.log('publish result', result);
-    // TODO: Show the correct notification based on the result status.
-    // // Log the success to the notifications.
-    // editor.parts.notifications.showNotification({
-    //   message: `New '${workspace.name}' workspace successfully created.`,
-    //   actions: [
-    //     {
-    //       label: 'Visit workspace',
-    //       customEvent: EVENT_WORKSPACE_LOAD,
-    //       details: workspace,
-    //     },
-    //   ],
-    //   title: 'New workspace created',
-    // });
+
+    const actions: Array<NotificationAction> = [];
+    const currentWorkspace = this.config.state.workspace;
+    let message = '';
+
+    if ([PublishStatus.Complete].includes(result.status)) {
+      message = `Published '${currentWorkspace?.name}' workspace successfully.`;
+      if (
+        result.workspace?.name &&
+        currentWorkspace?.name !== result.workspace?.name
+      ) {
+        message = `${message} The current workspace is no longer available,
+          please switch to the '${result.workspace?.name}' workspace to continue
+          editing.`;
+        actions.push({
+          label: `Switch to ${result.workspace?.name} workspace`,
+          customEvent: EVENT_WORKSPACE_LOAD,
+          details: result.workspace,
+        });
+      }
+
+      editor.parts.notifications.showNotification({
+        actions: actions,
+        message: message,
+        title: 'Workspace published',
+      });
+    }
+
+    this.render();
   }
 
   template(editor: LiveEditor): TemplateResult {
@@ -227,10 +253,10 @@ export class OverviewPart extends BasePart implements Part {
     const status = workspace?.publish?.status || PublishStatus.NotStarted;
 
     let label = editor.config.labels?.publishNotStarted || 'Publish';
-    if (status === PublishStatus.NoChanges) {
-      label = editor.config.labels?.publishNoChanges || 'No changes';
-    } else if (status === PublishStatus.Pending) {
+    if (this.isPendingPublish || status === PublishStatus.Pending) {
       label = editor.config.labels?.publishNotStarted || 'Pending';
+    } else if (status === PublishStatus.NoChanges) {
+      label = editor.config.labels?.publishNoChanges || 'No changes';
     } else if (status === PublishStatus.Complete) {
       label = editor.config.labels?.publishComplete || 'Published';
     } else if (status === PublishStatus.Failure) {

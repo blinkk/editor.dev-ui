@@ -1,6 +1,6 @@
 import {BasePart, Part} from '..';
-import {EditorUrlConfig, EditorUrlLevel} from '../../api';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+import {UrlConfig, UrlLevel} from '../../api';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 import {Storage} from '../../../utility/storage';
@@ -35,14 +35,14 @@ export class ContentToolbarPart extends BasePart implements Part {
     };
   }
 
-  getIconForUrl(url: EditorUrlConfig): string {
-    if (url.level === EditorUrlLevel.PUBLIC) {
+  getIconForUrl(url: UrlConfig): string {
+    if (url.level === UrlLevel.PUBLIC) {
       return 'public';
     }
-    if (url.level === EditorUrlLevel.PROTECTED) {
+    if (url.level === UrlLevel.PROTECTED) {
       return 'vpn_lock';
     }
-    if (url.level === EditorUrlLevel.SOURCE) {
+    if (url.level === UrlLevel.SOURCE) {
       return 'source';
     }
     return 'lock';

@@ -5,6 +5,7 @@ import {
   FileData,
   LiveEditorApiComponent,
   ProjectData,
+  PublishResult,
   UserData,
   WorkspaceData,
   catchError,
@@ -309,6 +310,23 @@ export class EditorState extends ListenersMixin(Base) {
         this.workspace = data;
         if (callback) {
           callback(data);
+        }
+        this.render();
+      })
+      .catch(callbackError || catchError);
+  }
+
+  publish(
+    workspace: WorkspaceData,
+    data: Record<string, any>,
+    callback?: (result: PublishResult) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    this.api
+      .publish(workspace, data)
+      .then((result: PublishResult) => {
+        if (callback) {
+          callback(result);
         }
         this.render();
       })

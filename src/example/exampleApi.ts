@@ -2,10 +2,13 @@ import {
   ApiError,
   DeviceData,
   EditorFileData,
-  EditorUrlLevel,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
+  ProjectPublishConfig,
+  PublishResult,
+  PublishStatus,
+  UrlLevel,
   UserData,
   WorkspaceData,
 } from '../editor/api';
@@ -109,9 +112,11 @@ const currentWorkspaces: Array<WorkspaceData> = [
  */
 export class ExampleApi implements LiveEditorApiComponent {
   errorController: ErrorController;
+  workflow: WorkspaceWorkflow;
 
   constructor() {
     this.errorController = new ErrorController();
+    this.workflow = WorkspaceWorkflow.Success;
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
@@ -279,8 +284,36 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
+      let publish: ProjectPublishConfig | undefined = undefined;
+      if (
+        [
+          WorkspaceWorkflow.Success,
+          WorkspaceWorkflow.Pending,
+          WorkspaceWorkflow.Failure,
+        ].includes(this.workflow)
+      ) {
+        publish = {
+          fields: [
+            {
+              type: 'text',
+              key: 'message',
+              label: 'Publish message',
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Message for publishing is required.',
+                },
+              ],
+            } as FieldConfig,
+          ],
+        };
+      } else if (this.workflow !== WorkspaceWorkflow.NoPublish) {
+        publish = {};
+      }
+
       simulateNetwork(resolve, {
         title: 'Example project',
+        publish: publish,
       });
     });
   }
@@ -313,6 +346,36 @@ export class ExampleApi implements LiveEditorApiComponent {
           description: 'Api is set to always return an error.',
         } as ApiError);
         return;
+      }
+
+      if ([WorkspaceWorkflow.Pending].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.Pending,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.Pending;
+        }
+      }
+
+      if ([WorkspaceWorkflow.NoChanges].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.NoChanges,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.NoChanges;
+        }
+      }
+
+      if ([WorkspaceWorkflow.Failure].includes(this.workflow)) {
+        if (!currentWorkspace.publish) {
+          currentWorkspace.publish = {
+            status: PublishStatus.Failure,
+          };
+        } else {
+          currentWorkspace.publish.status = PublishStatus.Failure;
+        }
       }
 
       simulateNetwork(resolve, currentWorkspace);
@@ -375,22 +438,22 @@ export class ExampleApi implements LiveEditorApiComponent {
           {
             url: '#private',
             label: 'Live editor preview',
-            level: EditorUrlLevel.PRIVATE,
+            level: UrlLevel.PRIVATE,
           },
           {
             url: '#protected',
             label: 'Staging',
-            level: EditorUrlLevel.PROTECTED,
+            level: UrlLevel.PROTECTED,
           },
           {
             url: '#public',
             label: 'Live',
-            level: EditorUrlLevel.PUBLIC,
+            level: UrlLevel.PUBLIC,
           },
           {
             url: 'https://github.com/blinkkcode/live-edit/',
             label: 'View in Github',
-            level: EditorUrlLevel.SOURCE,
+            level: UrlLevel.SOURCE,
           },
         ],
       } as EditorFileData);
@@ -413,6 +476,49 @@ export class ExampleApi implements LiveEditorApiComponent {
       currentWorkspace = workspace;
 
       simulateNetwork(resolve, currentWorkspace);
+    });
+  }
+
+  async publish(
+    workspace: WorkspaceData,
+    data?: Record<string, any>
+  ): Promise<PublishResult> {
+    return new Promise<PublishResult>((resolve, reject) => {
+      const methodName = 'publish';
+      console.log(`API: ${methodName}`, workspace.name, data);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to publish.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      let status: PublishStatus = PublishStatus.Complete;
+      if ([WorkspaceWorkflow.Failure].includes(this.workflow)) {
+        status = PublishStatus.Failure;
+      } else if ([WorkspaceWorkflow.Pending].includes(this.workflow)) {
+        status = PublishStatus.Pending;
+      }
+
+      let responseWorkspace = currentWorkspace;
+
+      // If the workflow changes the workspace, use a different workspace than
+      // the current workspace in the response.
+      if (this.workflow === WorkspaceWorkflow.SuccessChangeWorkspace) {
+        for (const workspace of currentWorkspaces) {
+          if (currentWorkspace !== workspace) {
+            responseWorkspace = workspace;
+            break;
+          }
+        }
+      }
+
+      simulateNetwork(resolve, {
+        status: status,
+        workspace: responseWorkspace,
+      });
     });
   }
 }
@@ -443,4 +549,14 @@ export class ErrorController {
       this.errorMethods.add(methodName);
     }
   }
+}
+
+export enum WorkspaceWorkflow {
+  Failure = 'failure',
+  NoChanges = 'noChanges',
+  NoPublish = 'noPublish',
+  Pending = 'pending',
+  Success = 'success',
+  SuccessNoFields = 'successNoFields',
+  SuccessChangeWorkspace = 'successChangeWorkspace',
 }

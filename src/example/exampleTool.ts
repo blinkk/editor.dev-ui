@@ -1,3 +1,4 @@
+import {ExampleApi, WorkspaceWorkflow} from './exampleApi';
 import {
   TemplateResult,
   findParentByClassname,
@@ -5,16 +6,17 @@ import {
   render,
   repeat,
 } from '@blinkk/selective-edit';
-import {ExampleApi} from './exampleApi';
 import {Storage} from '../utility/storage';
 
-const STORAGE_EXAMPLE_ERROR_METHODS = 'example.api.error.methods';
+const STORAGE_ERROR_METHODS = 'example.api.error.methods';
+const STORAGE_WORKSPACE_WORKFLOW = 'example.workspace.workflow';
 
 export class ExampleTool {
   api: ExampleApi;
   container: HTMLElement;
   isExpanded?: boolean;
   storage: Storage;
+  workflow: WorkspaceWorkflow;
 
   constructor(api: ExampleApi, storage: Storage, container: HTMLElement) {
     this.api = api;
@@ -22,12 +24,17 @@ export class ExampleTool {
     this.container = container;
 
     // Load any existing error methods.
-    const errorMethods = this.storage.getItemArray(
-      STORAGE_EXAMPLE_ERROR_METHODS
-    );
+    const errorMethods = this.storage.getItemArray(STORAGE_ERROR_METHODS);
     for (const errorMethod of errorMethods) {
       this.api.errorController.makeError(errorMethod);
     }
+
+    // Load any workflow.
+    const workflowValue =
+      this.storage.getItem(STORAGE_WORKSPACE_WORKFLOW) ||
+      WorkspaceWorkflow.Success;
+    this.workflow = workflowValue as WorkspaceWorkflow;
+    this.api.workflow = this.workflow;
 
     // Auto close when clicking out of expanded list.
     document.addEventListener('click', (evt: Event) => {
@@ -37,7 +44,7 @@ export class ExampleTool {
 
       const exampleContent = findParentByClassname(
         evt.target as HTMLElement,
-        'example_tool__api_response'
+        'example_tool__container'
       );
 
       // Do not close when clicking on the modal content.
@@ -62,14 +69,14 @@ export class ExampleTool {
 
   storeErrorMethods() {
     this.storage.setItemArray(
-      STORAGE_EXAMPLE_ERROR_METHODS,
+      STORAGE_ERROR_METHODS,
       Array.from(this.api.errorController.errorMethods) as Array<string>
     );
   }
 
   template(tool: ExampleTool): TemplateResult {
     return html`${this.templateFloatButton(tool)}
-    ${this.templateApiResponse(tool)}`;
+    ${this.templateStructure(tool)}`;
   }
 
   templateApiResponse(tool: ExampleTool): TemplateResult {
@@ -80,6 +87,7 @@ export class ExampleTool {
     const apiMethods = getMethodsOfClass(this.api);
 
     return html`<div class="example_tool__api_response">
+      <h3>API Responses</h3>
       ${repeat(
         apiMethods,
         methodName => methodName,
@@ -116,6 +124,86 @@ export class ExampleTool {
       <span class="material-icons">bug_report</span>
     </div>`;
   }
+
+  templateSettings(tool: ExampleTool): TemplateResult {
+    if (!this.isExpanded) {
+      return html``;
+    }
+
+    let publishWorkflow = this.storage.getItem(STORAGE_WORKSPACE_WORKFLOW);
+
+    const publishWorklowOptions = [
+      {
+        value: WorkspaceWorkflow.NoPublish,
+        label: 'No publish',
+      },
+      {
+        value: WorkspaceWorkflow.NoChanges,
+        label: 'No changes to publish',
+      },
+      {
+        value: WorkspaceWorkflow.Success,
+        label: 'Success',
+      },
+      {
+        value: WorkspaceWorkflow.SuccessNoFields,
+        label: 'Success (No fields)',
+      },
+      {
+        value: WorkspaceWorkflow.SuccessChangeWorkspace,
+        label: 'Success (Different workspace)',
+      },
+      {
+        value: WorkspaceWorkflow.Pending,
+        label: 'Pending after publish',
+      },
+      {
+        value: WorkspaceWorkflow.Failure,
+        label: 'Failure after publish',
+      },
+    ];
+
+    return html`<div class="example_tool__settings">
+      <h3>Settings</h3>
+
+      <h4>Publish Workflow</h4>
+
+      ${repeat(
+        publishWorklowOptions,
+        option => option.value,
+        (option: Record<string, any>) => {
+          const handlePublishClick = () => {
+            publishWorkflow = option.value;
+            this.storage.setItem(STORAGE_WORKSPACE_WORKFLOW, option.value);
+            window.location.reload();
+          };
+
+          return html`<div class="example_tool__setting">
+            <label>
+              <input
+                type="radio"
+                name="publishWorkflow"
+                value="normal"
+                ?checked=${publishWorkflow === option.value}
+                @click=${handlePublishClick}
+              />
+              ${option.label}
+            </label>
+          </div>`;
+        }
+      )}
+    </div>`;
+  }
+
+  templateStructure(tool: ExampleTool): TemplateResult {
+    if (!this.isExpanded) {
+      return html``;
+    }
+
+    return html`<div class="example_tool__container">
+      ${this.templateApiResponse(tool)} ${this.templateSettings(tool)}
+    </div>`;
+  }
 }
 
 function getMethodsOfClass(obj: any): Array<string> {
@@ -123,7 +211,11 @@ function getMethodsOfClass(obj: any): Array<string> {
   obj = Reflect.getPrototypeOf(obj);
   const keys = Reflect.ownKeys(obj);
   keys.forEach(k => {
-    if (k !== 'constructor' && typeof obj[k] === 'function') {
+    if (
+      k !== 'constructor' &&
+      typeof obj[k] === 'function' &&
+      !k.toString().startsWith('_')
+    ) {
       methods.add(k);
     }
   });

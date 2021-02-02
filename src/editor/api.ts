@@ -6,49 +6,6 @@ import {
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 
 /**
- * Repository author information.
- */
-export interface RepoAuthor {
-  /**
-   * Name of the author.
-   */
-  name: string;
-  /**
-   * Email address of the author.
-   */
-  email: string;
-}
-
-/**
- * Repository branch information.
- */
-export interface RepoBranch {
-  /**
-   * Author of the last commit.
-   */
-  author: RepoAuthor;
-  /**
-   * Commit hash of the last commit.
-   */
-  commit: string;
-  /**
-   * Summary of the last commit.
-   */
-  commitSummary: string;
-  /**
-   * Full branch name.
-   */
-  name: string;
-  /**
-   * Timestamp of commit.
-   *
-   * Needs to be in a `Date.parse()` valid datetime format.
-   * For example: ISO 8601.
-   */
-  timestamp: string;
-}
-
-/**
  * Device information used for previews.
  */
 export interface DeviceData {
@@ -68,70 +25,6 @@ export interface DeviceData {
    * Width of the device view.
    */
   width: number;
-}
-
-/**
- * Configuration for rendering the file editor.
- */
-export interface EditorFileConfig {
-  /**
-   * Field configurations for the editor.
-   */
-  fields: Array<FieldConfig>;
-}
-
-/**
- * Editor url accessibility level for a resource.
- */
-export enum EditorUrlLevel {
-  /**
-   * Private url, should not be shared to others and not public.
-   *
-   * For example, the editor preview url. It should not be shared
-   * widely due to the transitive nature of workspaces, but can
-   * still be used to viewed when needed.
-   */
-  PRIVATE,
-  /**
-   * Protected url, a shared service that is used for sharing
-   * but still restricted in how it is accessed.
-   *
-   * For example, a staging server to preview changes before
-   * they are live.
-   */
-  PROTECTED,
-  /**
-   * Public url, a publicly accessbile way to access the resource.
-   *
-   * For example, the live version of the site that users normally
-   * see.
-   */
-  PUBLIC,
-  /**
-   * Source url, a remotely hosted version of the resource.
-   *
-   * For example, a url that shows the resource in a repository
-   * like github.
-   */
-  SOURCE,
-}
-
-/**
- * Configuration for url the file editor.
- */
-export interface EditorUrlConfig {
-  /**
-   * Label for the url.
-   */
-  label: string;
-  /**
-   * Access level for the url
-   */
-  level: EditorUrlLevel;
-  /**
-   * URL for viewing the file.
-   */
-  url: string;
 }
 
 /**
@@ -169,7 +62,7 @@ export interface EditorFileData {
   /**
    * URLs for viewing the file in different environments.
    */
-  urls?: Array<EditorUrlConfig>;
+  urls?: Array<UrlConfig>;
 }
 
 /**
@@ -190,6 +83,32 @@ export interface ProjectData {
    * Project title
    */
   title: string;
+  /**
+   * Publish configuration for the project.
+   *
+   * This controls if the UI allows for publishing and what information
+   * to collect for providing to the `publish` method on the api.
+   */
+  publish?: ProjectPublishConfig;
+}
+
+/**
+ * Result from starting the publish process.
+ */
+export interface PublishResult {
+  /**
+   * Status of the publish process.
+   */
+  status: PublishStatus;
+  /**
+   * Updated workspace data.
+   *
+   * When a publish process is complete the workflow for the publish
+   * process can either keep the same workspace open, or remove it.
+   * In the case that the workspace is removed, the api can direct the
+   * editor to load a different workspace instead.
+   */
+  workspace?: WorkspaceData;
 }
 
 /**
@@ -222,6 +141,10 @@ export interface WorkspaceData {
    * Short name for the workspace used in labels and lists.
    */
   name: string;
+  /**
+   * Workspace specific publishing configuration.
+   */
+  publish?: WorkspacePublishConfig;
 }
 
 /**
@@ -332,6 +255,18 @@ export interface LiveEditorApiComponent {
    * (ex: workspaces may be domain based.)
    */
   loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData>;
+
+  /**
+   * Start the publish process.
+   *
+   * Begins the publish process. Some publish processes may take time and cannot
+   * be completed right away. This api begins the process of publishing and
+   * gives a status response on the new publish.
+   */
+  publish(
+    workspace: WorkspaceData,
+    data?: Record<string, any>
+  ): Promise<PublishResult>;
 }
 
 /**
@@ -342,4 +277,171 @@ export interface LiveEditorApiComponent {
 export function catchError(error: ApiError) {
   error.level = NotificationLevel.Error;
   announceNotification(error);
+}
+
+/**
+ * Auxillary interfaces used in the api data.
+ */
+
+/**
+ * Configuration for rendering the file editor.
+ */
+export interface EditorFileConfig {
+  /**
+   * Field configurations for the editor.
+   */
+  fields: Array<FieldConfig>;
+}
+
+/**
+ * Configuration for how publishing works in the editor UI.
+ */
+export interface ProjectPublishConfig {
+  /**
+   * Field information for collecting information for the publish process.
+   *
+   * If there are field configurations provided the UI will prompt the user
+   * for the information and pass it on to the `publish` api call.
+   */
+  fields?: Array<FieldConfig>;
+}
+
+/**
+ * Status for the publish process.
+ */
+export enum PublishStatus {
+  /**
+   * There are no publish processes allowed.
+   *
+   * Some workspaces may not allow for publishing.
+   * For example the `main` branch has no where to be published.
+   */
+  NotAllowed = 'NOT_ALLOWED',
+  /**
+   * There are no active publish processes.
+   */
+  NotStarted = 'NOT_STARTED',
+  /**
+   * There are no changes to publish.
+   *
+   * For example, the main branch and the current branch are on the same
+   * commit and there is nothing to publish.
+   */
+  NoChanges = 'NO_CHANGES',
+  /**
+   * There is an active publish in process.
+   */
+  Pending = 'PENDING',
+  /**
+   * The publish process has completed.
+   */
+  Complete = 'COMPLETE',
+  /**
+   * There was a problem during the publish process.
+   */
+  Failure = 'FAILURE',
+}
+
+/**
+ * Repository author information.
+ */
+export interface RepoAuthor {
+  /**
+   * Name of the author.
+   */
+  name: string;
+  /**
+   * Email address of the author.
+   */
+  email: string;
+}
+
+/**
+ * Repository branch information.
+ */
+export interface RepoBranch {
+  /**
+   * Author of the last commit.
+   */
+  author: RepoAuthor;
+  /**
+   * Commit hash of the last commit.
+   */
+  commit: string;
+  /**
+   * Summary of the last commit.
+   */
+  commitSummary: string;
+  /**
+   * Full branch name.
+   */
+  name: string;
+  /**
+   * Timestamp of commit.
+   *
+   * Needs to be in a `Date.parse()` valid datetime format.
+   * For example: ISO 8601.
+   */
+  timestamp: string;
+}
+
+/**
+ * Configuration for url the file editor.
+ */
+export interface UrlConfig {
+  /**
+   * Label for the url.
+   */
+  label: string;
+  /**
+   * Access level for the url
+   */
+  level: UrlLevel;
+  /**
+   * URL for viewing the file.
+   */
+  url: string;
+}
+
+/**
+ * Editor url accessibility level for a resource.
+ */
+export enum UrlLevel {
+  /**
+   * Private url, should not be shared to others and not public.
+   *
+   * For example, the editor preview url. It should not be shared
+   * widely due to the transitive nature of workspaces, but can
+   * still be used to viewed when needed.
+   */
+  PRIVATE,
+  /**
+   * Protected url, a shared service that is used for sharing
+   * but still restricted in how it is accessed.
+   *
+   * For example, a staging server to preview changes before
+   * they are live.
+   */
+  PROTECTED,
+  /**
+   * Public url, a publicly accessbile way to access the resource.
+   *
+   * For example, the live version of the site that users normally
+   * see.
+   */
+  PUBLIC,
+  /**
+   * Source url, a remotely hosted version of the resource.
+   *
+   * For example, a url that shows the resource in a repository
+   * like github.
+   */
+  SOURCE,
+}
+
+/**
+ * Configuration for how publishing works with a workspace.
+ */
+export interface WorkspacePublishConfig {
+  status: PublishStatus;
 }

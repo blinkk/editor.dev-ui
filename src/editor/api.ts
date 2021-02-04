@@ -73,6 +73,25 @@ export interface FileData {
    * Complete path for the file.
    */
   path: string;
+  /**
+   * URL for serving the file.
+   *
+   * Used for showing previews of different files.
+   * For example, image or video previews.
+   *
+   * For performance reasons, file data does not need to include url
+   * information as it may require more time to properly retrieve the
+   * url for a file which can slow down file list retrieval.
+   *
+   * `undefined` url is used to denote that the url was not retrieved.
+   * `null` url is used to denote that there is no url for the file.
+   *
+   * The editor will attempt to use the `getFileUrl()` api method when
+   * the url is `undefined` and the url is needed. If the value is `null`
+   * the editor assumes that there is no url for the file and does not
+   * make a request to the `getFileUrl()` method.
+   */
+  url?: string | null;
 }
 
 /**
@@ -218,6 +237,13 @@ export interface LiveEditorApiComponent {
    * Retrieve the files that can be edited in the editor.
    */
   getFiles(): Promise<Array<FileData>>;
+
+  /**
+   * Retrieve the url to preview the file.
+   *
+   * When retrieving a list of files it is often slow
+   */
+  getFileUrl(file: FileData): Promise<FileData>;
 
   /**
    * Retrieve information about the project.

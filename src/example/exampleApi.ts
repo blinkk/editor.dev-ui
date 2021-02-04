@@ -271,6 +271,27 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
+  async getFileUrl(file: FileData): Promise<FileData> {
+    return new Promise<FileData>((resolve, reject) => {
+      const methodName = 'getFileUrl';
+      console.log(`API: ${methodName}`, file.path);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the file url.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Use some logic to determine what url to return.
+      simulateNetwork(resolve, {
+        path: file.path,
+        url: 'image-landscape.png',
+      } as FileData);
+    });
+  }
+
   async getProject(): Promise<ProjectData> {
     return new Promise<ProjectData>((resolve, reject) => {
       const methodName = 'getProject';

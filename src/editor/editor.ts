@@ -1,5 +1,6 @@
 import {
   EditorConfig,
+  GlobalConfig,
   TemplateResult,
   classMap,
   html,
@@ -17,10 +18,45 @@ import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
 import {Storage} from '../utility/storage';
 
-export interface LiveEditorConfig {
+/**
+ * Global configuration used by the selective editor fields.
+ *
+ * Allows the fields to access the api.
+ */
+export interface LiveEditorGlobalConfig extends GlobalConfig {
   api: LiveEditorApiComponent;
+}
+
+/**
+ * Custom selective editor config.
+ *
+ * Customized to use the live editor global config interface.
+ */
+export interface LiveEditorSelectiveEditorConfig extends EditorConfig {
+  global?: LiveEditorGlobalConfig;
+}
+
+/**
+ * Configuration for the live editor.
+ */
+export interface LiveEditorConfig {
+  /**
+   * Api for working with the live editor project.
+   */
+  api: LiveEditorApiComponent;
+  /**
+   * Custom UI labels for the editor UI.
+   */
   labels?: LiveEditorLabels;
-  selectiveConfig: EditorConfig;
+  /**
+   * Base configuration for the selective editor.
+   */
+  selectiveConfig: LiveEditorSelectiveEditorConfig;
+  /**
+   * Is the editor being used in a testing environment?
+   *
+   * For example: selenium or webdriver.
+   */
   isTest?: boolean;
 }
 

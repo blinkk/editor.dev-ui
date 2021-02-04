@@ -20,9 +20,10 @@ import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
 const container = document.querySelector('.container');
+const exampleApi = new ExampleApi();
 const exampleEditor = new LiveEditor(
   {
-    api: new ExampleApi(),
+    api: exampleApi,
     selectiveConfig: {
       fieldTypes: {
         group: (GroupField as unknown) as FieldConstructor,
@@ -38,6 +39,9 @@ const exampleEditor = new LiveEditor(
         pattern: (PatternRule as unknown) as RuleConstructor,
         range: (RangeRule as unknown) as RuleConstructor,
         require: (RequireRule as unknown) as RuleConstructor,
+      },
+      global: {
+        api: exampleApi,
       },
     },
   },

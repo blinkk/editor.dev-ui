@@ -542,6 +542,26 @@ export class ExampleApi implements LiveEditorApiComponent {
       });
     });
   }
+
+  async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
+    return new Promise<FileData>((resolve, reject) => {
+      const methodName = 'uploadFile';
+      console.log(`API: ${methodName}`, file, meta);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to upload file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {
+        path: '/some/path/something.png',
+        url: 'image-portrait.png',
+      } as FileData);
+    });
+  }
 }
 
 export class ErrorController {

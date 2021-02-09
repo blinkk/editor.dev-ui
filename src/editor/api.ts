@@ -293,6 +293,14 @@ export interface LiveEditorApiComponent {
     workspace: WorkspaceData,
     data?: Record<string, any>
   ): Promise<PublishResult>;
+
+  /**
+   * Upload a file.
+   *
+   * Uses a File object to provide a blob file that should be uploaded
+   * or saved appropriately. Often for media like images or videos.
+   */
+  uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
 }
 
 /**

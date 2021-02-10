@@ -15,6 +15,7 @@ import {
 import {EVENT_RENDER} from '../editor/events';
 import {ExampleApi} from './exampleApi';
 import {ExampleTool} from './exampleTool';
+import {ImageField} from '../editor/field/image';
 import {LiveEditor} from '../editor/editor';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
@@ -27,6 +28,7 @@ const exampleEditor = new LiveEditor(
     selectiveConfig: {
       fieldTypes: {
         group: (GroupField as unknown) as FieldConstructor,
+        image: (ImageField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
         select: (SelectField as unknown) as FieldConstructor,
         text: (TextField as unknown) as FieldConstructor,

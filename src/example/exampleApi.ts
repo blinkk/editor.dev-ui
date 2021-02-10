@@ -452,6 +452,11 @@ export class ExampleApi implements LiveEditorApiComponent {
                 },
               ],
             } as FieldConfig,
+            {
+              type: 'image',
+              key: 'image',
+              label: 'Image',
+            } as FieldConfig,
           ],
         },
         url: 'preview.html',

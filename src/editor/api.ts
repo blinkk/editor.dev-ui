@@ -8,8 +8,9 @@ import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 /**
  * Interface for the live editor api.
  *
- * **Note:** Caching needs to be done by the api. The editor does not cache
- * the responses and will call the api method whenever it needs the data.
+ * This defines how the editor works with the underlying data. The api
+ * is responsible for all file or network operations needed to make the
+ * editor function.
  */
 export interface LiveEditorApiComponent {
   /**

@@ -13,6 +13,16 @@ import {
 import {FileData} from '../api';
 import {LiveEditorGlobalConfig} from '../editor';
 
+export const VALID_IMAGE_MIME_TYPES = [
+  'image/avif',
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'image/svg+xml',
+  'image/webp',
+];
+export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
+
 export interface ImageFieldConfig extends FieldConfig {
   /**
    * Placeholder for the text input.
@@ -39,13 +49,15 @@ export class ImageField
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
+    this.droppableUi.validTypes = [
+      ...VALID_IMAGE_MIME_TYPES,
+      ...VALID_VIDEO_MIME_TYPES,
+    ];
     this.droppableUi.listeners.add('files', this.handleFiles.bind(this));
   }
 
   handleFiles(files: Array<File>) {
-    // TODO: Check the file type against the valid types for the field.
-
-    // Uploads only the first valid file.
+    // Uploads only the first file.
     this.globalConfig.api.uploadFile(files[0]).then((file: FileData) => {
       console.log('Uploaded file', file);
 

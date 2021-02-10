@@ -6,6 +6,121 @@ import {
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 
 /**
+ * Interface for the live editor api.
+ *
+ * **Note:** Caching needs to be done by the api. The editor does not cache
+ * the responses and will call the api method whenever it needs the data.
+ */
+export interface LiveEditorApiComponent {
+  /**
+   * Copy a file.
+   *
+   * @param path Full path for the original file.
+   * @param path Full path for the new file.
+   */
+  copyFile(originalPath: string, path: string): Promise<FileData>;
+
+  /**
+   * Create a new file from scratch.
+   *
+   * @param path Full path for the new file.
+   */
+  createFile(path: string): Promise<FileData>;
+
+  /**
+   * Create a new workspace based off an existing workspace.
+   *
+   * @param base Workspace to base new workspace from.
+   * @param workspace New workspace name.
+   */
+  createWorkspace(
+    base: WorkspaceData,
+    workspace: string
+  ): Promise<WorkspaceData>;
+
+  /**
+   * Delete an existing file.
+   *
+   * @param path Full path for the file being deleted.
+   */
+  deleteFile(file: FileData): Promise<null>;
+
+  /**
+   * Retrieve the devices used for previews.
+   */
+  getDevices(): Promise<Array<DeviceData>>;
+
+  /**
+   * Retrieve the files that can be edited in the editor.
+   */
+  getFiles(): Promise<Array<FileData>>;
+
+  /**
+   * Retrieve the url to preview the file.
+   *
+   * When retrieving a list of files it is often slow
+   */
+  getFileUrl(file: FileData): Promise<FileData>;
+
+  /**
+   * Retrieve information about the project.
+   */
+  getProject(): Promise<ProjectData>;
+
+  /**
+   * Retrieve the users that have access to the editor.
+   */
+  getUsers(): Promise<Array<UserData>>;
+
+  /**
+   * Retrieve information about the active workspace.
+   */
+  getWorkspace(): Promise<WorkspaceData>;
+
+  /**
+   * Retrieve information about available workspaces.
+   */
+  getWorkspaces(): Promise<Array<WorkspaceData>>;
+
+  /**
+   * Load the file.
+   *
+   * This is a complete loading of the file information and
+   * configuration for use in rendering the editor for the
+   * file.
+   */
+  loadFile(file: FileData): Promise<EditorFileData>;
+
+  /**
+   * Load the workspace.
+   *
+   * This may redirect to a different URL.
+   * (ex: workspaces may be domain based.)
+   */
+  loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData>;
+
+  /**
+   * Start the publish process.
+   *
+   * Begins the publish process. Some publish processes may take time and cannot
+   * be completed right away. This api begins the process of publishing and
+   * gives a status response on the new publish.
+   */
+  publish(
+    workspace: WorkspaceData,
+    data?: Record<string, any>
+  ): Promise<PublishResult>;
+
+  /**
+   * Upload a file.
+   *
+   * Uses a File object to provide a blob file that should be uploaded
+   * or saved appropriately. Often for media like images or videos.
+   */
+  uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
+}
+
+/**
  * Device information used for previews.
  */
 export interface DeviceData {
@@ -186,121 +301,6 @@ export interface ApiError extends EditorNotification {
    * or debugging of the error.
    */
   details?: any;
-}
-
-/**
- * Interface for the live editor api.
- *
- * **Note:** Caching needs to be done by the api. The editor does not cache
- * the responses and will call the api method whenever it needs the data.
- */
-export interface LiveEditorApiComponent {
-  /**
-   * Copy a file.
-   *
-   * @param path Full path for the original file.
-   * @param path Full path for the new file.
-   */
-  copyFile(originalPath: string, path: string): Promise<FileData>;
-
-  /**
-   * Create a new file from scratch.
-   *
-   * @param path Full path for the new file.
-   */
-  createFile(path: string): Promise<FileData>;
-
-  /**
-   * Create a new workspace based off an existing workspace.
-   *
-   * @param base Workspace to base new workspace from.
-   * @param workspace New workspace name.
-   */
-  createWorkspace(
-    base: WorkspaceData,
-    workspace: string
-  ): Promise<WorkspaceData>;
-
-  /**
-   * Delete an existing file.
-   *
-   * @param path Full path for the file being deleted.
-   */
-  deleteFile(file: FileData): Promise<null>;
-
-  /**
-   * Retrieve the devices used for previews.
-   */
-  getDevices(): Promise<Array<DeviceData>>;
-
-  /**
-   * Retrieve the files that can be edited in the editor.
-   */
-  getFiles(): Promise<Array<FileData>>;
-
-  /**
-   * Retrieve the url to preview the file.
-   *
-   * When retrieving a list of files it is often slow
-   */
-  getFileUrl(file: FileData): Promise<FileData>;
-
-  /**
-   * Retrieve information about the project.
-   */
-  getProject(): Promise<ProjectData>;
-
-  /**
-   * Retrieve the users that have access to the editor.
-   */
-  getUsers(): Promise<Array<UserData>>;
-
-  /**
-   * Retrieve information about the active workspace.
-   */
-  getWorkspace(): Promise<WorkspaceData>;
-
-  /**
-   * Retrieve information about available workspaces.
-   */
-  getWorkspaces(): Promise<Array<WorkspaceData>>;
-
-  /**
-   * Load the file.
-   *
-   * This is a complete loading of the file information and
-   * configuration for use in rendering the editor for the
-   * file.
-   */
-  loadFile(file: FileData): Promise<EditorFileData>;
-
-  /**
-   * Load the workspace.
-   *
-   * This may redirect to a different URL.
-   * (ex: workspaces may be domain based.)
-   */
-  loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData>;
-
-  /**
-   * Start the publish process.
-   *
-   * Begins the publish process. Some publish processes may take time and cannot
-   * be completed right away. This api begins the process of publishing and
-   * gives a status response on the new publish.
-   */
-  publish(
-    workspace: WorkspaceData,
-    data?: Record<string, any>
-  ): Promise<PublishResult>;
-
-  /**
-   * Upload a file.
-   *
-   * Uses a File object to provide a blob file that should be uploaded
-   * or saved appropriately. Often for media like images or videos.
-   */
-  uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
 }
 
 /**

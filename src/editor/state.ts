@@ -6,6 +6,7 @@ import {
   LiveEditorApiComponent,
   ProjectData,
   PublishResult,
+  SiteData,
   UserData,
   WorkspaceData,
   catchError,
@@ -47,6 +48,10 @@ export class EditorState extends ListenersMixin(Base) {
    * multiple times.
    */
   protected promises: Record<string, Promise<any>>;
+  /**
+   * Site configuration for the editor.
+   */
+  site?: SiteData;
   /**
    * Users in the project that have access to the editor.
    */
@@ -203,6 +208,29 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(callbackError || catchError);
     return this.project;
+  }
+
+  getSite(
+    callback?: (site: SiteData) => void,
+    callbackError?: (error: ApiError) => void
+  ): SiteData | undefined {
+    const promiseKey = 'getSite';
+    if (this.promises[promiseKey]) {
+      return;
+    }
+    this.promises[promiseKey] = this.api
+      .getSite()
+      .then(data => {
+        this.site = data;
+        delete this.promises[promiseKey];
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        this.render();
+      })
+      .catch(callbackError || catchError);
+    return this.site;
   }
 
   getUsers(

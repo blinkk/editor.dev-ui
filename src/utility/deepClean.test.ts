@@ -1,6 +1,65 @@
 import {DeepClean} from './deepClean';
 import test from 'ava';
 
+test('remove empty arrays', t => {
+  const cleaner = new DeepClean({
+    removeEmptyArrays: true,
+  });
+
+  // Main level empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: [],
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  // Deep empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+        bar: [],
+      },
+    }),
+    {
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+      },
+    }
+  );
+
+  // Array with empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: ['baz', []],
+    }),
+    {
+      foo: 'bar',
+      test: ['baz'],
+    }
+  );
+
+  // Nested empty arrays.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: [[]],
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  t.deepEqual(cleaner.clean(['bar', []]), ['bar']);
+});
+
 test('remove empty objects', t => {
   const cleaner = new DeepClean({
     removeEmptyObjects: true,
@@ -62,16 +121,27 @@ test('remove empty objects', t => {
   t.deepEqual(cleaner.clean(['bar', {}]), ['bar']);
 });
 
-test('remove empty arrays', t => {
+test('remove empty strings', t => {
   const cleaner = new DeepClean({
-    removeEmptyArrays: true,
+    removeEmptyStrings: true,
   });
 
   // Main level empty object.
   t.deepEqual(
     cleaner.clean({
       foo: 'bar',
-      test: [],
+      test: '',
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  // Whitespace only.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: '  ',
     }),
     {
       foo: 'bar',
@@ -84,7 +154,7 @@ test('remove empty arrays', t => {
       foo: 'bar',
       test: {
         floo: 'baz',
-        bar: [],
+        bar: '',
       },
     }),
     {
@@ -99,7 +169,7 @@ test('remove empty arrays', t => {
   t.deepEqual(
     cleaner.clean({
       foo: 'bar',
-      test: ['baz', []],
+      test: ['baz', ''],
     }),
     {
       foo: 'bar',
@@ -107,16 +177,5 @@ test('remove empty arrays', t => {
     }
   );
 
-  // Nested empty arrays.
-  t.deepEqual(
-    cleaner.clean({
-      foo: 'bar',
-      test: [[]],
-    }),
-    {
-      foo: 'bar',
-    }
-  );
-
-  t.deepEqual(cleaner.clean(['bar', []]), ['bar']);
+  t.deepEqual(cleaner.clean(['bar', '']), ['bar']);
 });

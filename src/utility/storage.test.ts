@@ -1,6 +1,11 @@
 import {Storage} from './storage';
 import test from 'ava';
 
+test('clear no-op in tests', t => {
+  const storage = new Storage(true);
+  t.is(storage.clear(), undefined);
+});
+
 test('getItem null in tests', t => {
   const storage = new Storage(true);
   t.is(storage.getItem('test'), null);

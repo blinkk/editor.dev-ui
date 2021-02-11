@@ -12,7 +12,7 @@ import {
 } from '@blinkk/selective-edit';
 import {FileData} from '../api';
 import {LiveEditorGlobalConfig} from '../editor';
-import {fractReduce} from '../../utility/math';
+import {reduceFraction} from '../../utility/math';
 import merge from 'lodash.merge';
 
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
@@ -234,7 +234,7 @@ export class ImageField
       >
     </div>`);
 
-    const ratio = fractReduce(this.meta?.width || 1, this.meta?.height || 1);
+    const ratio = reduceFraction(this.meta?.width || 1, this.meta?.height || 1);
     metaInfo.push(html`<div class="selective__media__meta__ratio">
       <span class="selective__media__meta__label">Ratio:</span>
       <span class="selective__media__meta__value">${ratio[0]}:${ratio[1]}</span>

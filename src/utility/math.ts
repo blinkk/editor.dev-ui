@@ -17,7 +17,7 @@ export function greatestCommonDenominator(
  * @param numerator Fraction numerator.
  * @param denominator Fraction denominator.
  */
-export function fractReduce(
+export function reduceFraction(
   numerator: number,
   denominator: number
 ): Array<number> {

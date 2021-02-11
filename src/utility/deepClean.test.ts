@@ -17,7 +17,7 @@ test('remove empty objects', t => {
     }
   );
 
-  // Nested empty object.
+  // Deep empty object.
   t.deepEqual(
     cleaner.clean({
       foo: 'bar',
@@ -34,7 +34,19 @@ test('remove empty objects', t => {
     }
   );
 
-  // Nested empty objects in sequence.
+  // Array with empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: ['baz', {}],
+    }),
+    {
+      foo: 'bar',
+      test: ['baz'],
+    }
+  );
+
+  // Nested empty objects in depth.
   t.deepEqual(
     cleaner.clean({
       foo: 'bar',
@@ -48,4 +60,63 @@ test('remove empty objects', t => {
   );
 
   t.deepEqual(cleaner.clean(['bar', {}]), ['bar']);
+});
+
+test('remove empty arrays', t => {
+  const cleaner = new DeepClean({
+    removeEmptyArrays: true,
+  });
+
+  // Main level empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: [],
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  // Deep empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+        bar: [],
+      },
+    }),
+    {
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+      },
+    }
+  );
+
+  // Array with empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: ['baz', []],
+    }),
+    {
+      foo: 'bar',
+      test: ['baz'],
+    }
+  );
+
+  // Nested empty arrays.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: [[]],
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  t.deepEqual(cleaner.clean(['bar', []]), ['bar']);
 });

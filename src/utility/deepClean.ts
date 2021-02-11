@@ -1,6 +1,7 @@
 import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 
 export interface DeepCleanConfig {
+  removeEmptyArrays?: boolean;
   removeEmptyObjects?: boolean;
 }
 
@@ -34,10 +35,14 @@ export class DeepClean {
         if (this.config.removeEmptyObjects && !Object.keys(value).length) {
           continue;
         }
-        newValue.push(value);
-      } else {
-        newValue.push(value);
+      } else if (DataType.isArray(value)) {
+        value = this.cleanArray(value as Array<any>);
+
+        if (this.config.removeEmptyArrays && !value.length) {
+          continue;
+        }
       }
+      newValue.push(value);
     }
 
     return newValue;
@@ -57,10 +62,14 @@ export class DeepClean {
         if (this.config.removeEmptyObjects && !Object.keys(value).length) {
           continue;
         }
-        newValue[key] = value;
-      } else {
-        newValue[key] = value;
+      } else if (DataType.isArray(value)) {
+        value = this.cleanArray(value as Array<any>);
+
+        if (this.config.removeEmptyArrays && !value.length) {
+          continue;
+        }
       }
+      newValue[key] = value;
     }
 
     return newValue;

@@ -13,19 +13,24 @@ import {
   VariantField,
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER} from '../editor/events';
+import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
 import {ExampleTool} from './exampleTool';
+import {ImageField} from '../editor/field/image';
 import {LiveEditor} from '../editor/editor';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
 const container = document.querySelector('.container');
+const exampleApi = new ExampleApi();
+const exampleState = new EditorState(exampleApi);
 const exampleEditor = new LiveEditor(
   {
-    api: new ExampleApi(),
+    api: exampleApi,
     selectiveConfig: {
       fieldTypes: {
         group: (GroupField as unknown) as FieldConstructor,
+        image: (ImageField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
         select: (SelectField as unknown) as FieldConstructor,
         text: (TextField as unknown) as FieldConstructor,
@@ -39,7 +44,12 @@ const exampleEditor = new LiveEditor(
         range: (RangeRule as unknown) as RuleConstructor,
         require: (RequireRule as unknown) as RuleConstructor,
       },
+      global: {
+        api: exampleApi,
+        state: exampleState,
+      },
     },
+    state: exampleState,
   },
   container as HTMLElement
 );

@@ -271,6 +271,27 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
+  async getFileUrl(file: FileData): Promise<FileData> {
+    return new Promise<FileData>((resolve, reject) => {
+      const methodName = 'getFileUrl';
+      console.log(`API: ${methodName}`, file.path);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the file url.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Use some logic to determine what url to return.
+      simulateNetwork(resolve, {
+        path: file.path,
+        url: 'image-landscape.png',
+      } as FileData);
+    });
+  }
+
   async getProject(): Promise<ProjectData> {
     return new Promise<ProjectData>((resolve, reject) => {
       const methodName = 'getProject';
@@ -431,6 +452,11 @@ export class ExampleApi implements LiveEditorApiComponent {
                 },
               ],
             } as FieldConfig,
+            {
+              type: 'image',
+              key: 'image',
+              label: 'Image',
+            } as FieldConfig,
           ],
         },
         url: 'preview.html',
@@ -519,6 +545,26 @@ export class ExampleApi implements LiveEditorApiComponent {
         status: status,
         workspace: responseWorkspace,
       });
+    });
+  }
+
+  async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
+    return new Promise<FileData>((resolve, reject) => {
+      const methodName = 'uploadFile';
+      console.log(`API: ${methodName}`, file, meta);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to upload file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {
+        path: '/some/path/something.png',
+        url: 'image-portrait.png',
+      } as FileData);
     });
   }
 }

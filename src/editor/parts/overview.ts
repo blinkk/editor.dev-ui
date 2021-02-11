@@ -177,7 +177,6 @@ export class OverviewPart extends BasePart implements Part {
         title: 'Workspace published',
       });
     }
-
     this.render();
   }
 

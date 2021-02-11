@@ -13,6 +13,7 @@ import {
   VariantField,
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER} from '../editor/events';
+import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
 import {ExampleTool} from './exampleTool';
 import {ImageField} from '../editor/field/image';
@@ -22,6 +23,7 @@ import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dis
 
 const container = document.querySelector('.container');
 const exampleApi = new ExampleApi();
+const exampleState = new EditorState(exampleApi);
 const exampleEditor = new LiveEditor(
   {
     api: exampleApi,
@@ -44,8 +46,10 @@ const exampleEditor = new LiveEditor(
       },
       global: {
         api: exampleApi,
+        state: exampleState,
       },
     },
+    state: exampleState,
   },
   container as HTMLElement
 );

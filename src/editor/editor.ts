@@ -1,6 +1,7 @@
 import {
   EditorConfig,
   GlobalConfig,
+  SelectiveEditor,
   TemplateResult,
   classMap,
   html,
@@ -25,6 +26,7 @@ import {Storage} from '../utility/storage';
  */
 export interface LiveEditorGlobalConfig extends GlobalConfig {
   api: LiveEditorApiComponent;
+  state: EditorState;
 }
 
 /**
@@ -52,6 +54,10 @@ export interface LiveEditorConfig {
    * Base configuration for the selective editor.
    */
   selectiveConfig: LiveEditorSelectiveEditorConfig;
+  /**
+   * Editor state.
+   */
+  state: EditorState;
   /**
    * Is the editor being used in a testing environment?
    *
@@ -85,7 +91,7 @@ export class LiveEditor {
     this.isRendering = false;
     this.isPendingRender = false;
     this.storage = new Storage(Boolean(this.config.isTest));
-    this.state = new EditorState(this.config.api);
+    this.state = this.config.state;
     this.parts = {
       content: new ContentPart({
         selectiveConfig: this.config.selectiveConfig,

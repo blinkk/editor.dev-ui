@@ -12,6 +12,7 @@ import {
 } from '@blinkk/selective-edit';
 import {FileData} from '../api';
 import {LiveEditorGlobalConfig} from '../editor';
+import {fractReduce} from '../../utility/math';
 import merge from 'lodash.merge';
 
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
@@ -93,6 +94,12 @@ export class ImageField
         url: file.url,
       });
 
+      // Updating the current value does not change the input value.
+      const inputField = document.querySelector(`#${this.uid}`);
+      if (inputField) {
+        (inputField as HTMLInputElement).value = file.url as string;
+      }
+
       this.render();
     });
   }
@@ -164,16 +171,18 @@ export class ImageField
 
   templatePreview(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     return html`<div class="selective__media__preview">
-      ${this.templatePreviewMedia(editor, data, this.previewUrl)}
+      ${this.templatePreviewMedia(editor, data)}
       ${this.templatePreviewMeta(editor, data)}
     </div>`;
   }
 
   templatePreviewMedia(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
-    data: DeepObject,
-    url?: string
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject
   ): TemplateResult {
+    const url = this.previewUrl;
     if (!url) {
       return html``;
     }
@@ -233,28 +242,4 @@ export class ImageField
 
     return metaInfo;
   }
-}
-
-/**
- * Find the greatest common denominator between two numbers.
- * @param numerator Fraction numerator.
- * @param denominator Fraction denominator.
- */
-function greatestCommonDenominator(
-  numerator: number,
-  denominator: number
-): number {
-  return denominator
-    ? greatestCommonDenominator(denominator, numerator % denominator)
-    : numerator;
-}
-
-/**
- * Reduce a fraction by finding the Greatest Common Divisor and dividing by it.
- * @param numerator Fraction numerator.
- * @param denominator Fraction denominator.
- */
-function fractReduce(numerator: number, denominator: number): Array<number> {
-  const fracGcd = greatestCommonDenominator(numerator, denominator);
-  return [numerator / fracGcd, denominator / fracGcd];
 }

@@ -19,4 +19,4 @@ jobs:
     - name: Run tests
       run: |
         yarn install --dev
-        yarn test
+        yarn run test-ci

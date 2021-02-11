@@ -8,6 +8,7 @@ import {
   ProjectPublishConfig,
   PublishResult,
   PublishStatus,
+  SiteData,
   UrlLevel,
   UserData,
   WorkspaceData,
@@ -44,6 +45,10 @@ const currentFileset: Array<FileData> = [
   },
   {
     path: '/content/strings/about.yaml',
+  },
+  {
+    path: '/static/img/portrait.png',
+    url: 'image-portrait.png',
   },
 ];
 
@@ -339,6 +344,23 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
+  async getSite(): Promise<SiteData> {
+    return new Promise<SiteData>((resolve, reject) => {
+      const methodName = 'getSite';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the site.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {});
+    });
+  }
+
   async getUsers(): Promise<Array<UserData>> {
     return new Promise<Array<UserData>>((resolve, reject) => {
       const methodName = 'getUsers';
@@ -562,7 +584,7 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, {
-        path: '/some/path/something.png',
+        path: '/static/img/portrait.png',
         url: 'image-portrait.png',
       } as FileData);
     });

@@ -1,6 +1,10 @@
 import {ApiError, EditorFileData, FileData} from '../../api';
 import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {
+  IncludeExcludeFilter,
+  IncludeExcludeFilterConfig,
+} from '../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
@@ -10,6 +14,10 @@ import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
 
+const DEFAULT_SITE_FILTER: IncludeExcludeFilterConfig = {
+  includes: [/\.(yaml|yml|html|md)$/],
+  excludes: [/\/[_.]/],
+};
 const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
@@ -207,6 +215,13 @@ export class SitePart extends MenuSectionPart {
       });
     }
 
+    if (!this.config.state.site) {
+      this.config.state.getSite();
+      return templateLoading(editor, {
+        pad: true,
+      });
+    }
+
     if (!this.fileStructure) {
       const eventHandlers: DirectoryEventHandlers = {
         fileCopy: (evt: Event, file: FileData) => {
@@ -325,8 +340,16 @@ export class SitePart extends MenuSectionPart {
         render: this.render.bind(this),
       };
 
+      // Determine what file filtering to use for the file list.
+      let filterConfig = DEFAULT_SITE_FILTER;
+      if (this.config.state.site.files?.filter) {
+        filterConfig = this.config.state.site.files.filter;
+      }
+      const filesFilter = new IncludeExcludeFilter(filterConfig);
+
+      // Create the directory structure using the filtered files.
       this.fileStructure = new DirectoryStructure(
-        this.config.state.files,
+        this.config.state.files.filter(file => filesFilter.matches(file.path)),
         eventHandlers,
         this.config.storage
       );

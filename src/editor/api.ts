@@ -4,6 +4,7 @@ import {
   announceNotification,
 } from './parts/notifications';
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
+import {IncludeExcludeFilterConfig} from '../utility/filter';
 
 /**
  * Interface for the live editor api.
@@ -67,6 +68,11 @@ export interface LiveEditorApiComponent {
    * Retrieve information about the project.
    */
   getProject(): Promise<ProjectData>;
+
+  /**
+   * Retrieve information about the site.
+   */
+  getSite(): Promise<SiteData>;
 
   /**
    * Retrieve the users that have access to the editor.
@@ -247,6 +253,16 @@ export interface PublishResult {
 }
 
 /**
+ * Site information.
+ */
+export interface SiteData {
+  /**
+   * Site files configuration.
+   */
+  files?: SiteFilesConfig;
+}
+
+/**
  * User information.
  */
 export interface UserData {
@@ -339,6 +355,20 @@ export interface ProjectPublishConfig {
    * for the information and pass it on to the `publish` api call.
    */
   fields?: Array<FieldConfig>;
+}
+
+/**
+ * Configuration for how site files are displayed.
+ */
+export interface SiteFilesConfig {
+  /**
+   * Filter settings for how the site files are filtered.
+   *
+   * By default the site files filters:
+   *  - Only `.yaml`, `.md`, and `.html` files.
+   *  - Ignores files and directories starting with `_` and `.`.
+   */
+  filter?: IncludeExcludeFilterConfig;
 }
 
 /**

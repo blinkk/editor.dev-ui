@@ -35,11 +35,13 @@
     "clean": "gts clean",
     "compile": "tsc && npx gulp compile && webpack --config webpack.prod.js",
     "copy": "mkdir -p dist/src/static; cp src/static/* dist/src/static",
+    "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",
     "fix": "node ./node_modules/eslint/bin/eslint --fix src/**/*.ts",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
-    "test": "ava"
+    "test": "nyc ava",
+    "test-ci": "nyc --reporter=lcov ava && codecov"
   },
   "ava": {
     "extensions": [
@@ -63,6 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.14.0",
     "ava": "^3.14.0",
+    "codecov": "^3.8.1",
     "concurrently": "^5.3.0",
     "eslint": "^7.18.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -73,6 +76,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
     "nodemon": "^2.0.4",
+    "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",

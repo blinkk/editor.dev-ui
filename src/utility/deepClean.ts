@@ -18,13 +18,10 @@ export class DeepClean {
   }
 
   clean(value: CleanableType): CleanableType {
-    if (DataType.isObject(value)) {
-      return this.cleanRecord(value as Record<string, any>);
-    } else if (DataType.isArray(value)) {
+    if (DataType.isArray(value)) {
       return this.cleanArray(value as Array<any>);
     }
-
-    return value;
+    return this.cleanRecord(value as Record<string, any>);
   }
 
   protected cleanArray(originalValue: Array<any>): Array<any> {

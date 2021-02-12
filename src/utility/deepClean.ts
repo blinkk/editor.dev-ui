@@ -4,6 +4,8 @@ export interface DeepCleanConfig {
   removeEmptyArrays?: boolean;
   removeEmptyObjects?: boolean;
   removeEmptyStrings?: boolean;
+  removeNulls?: boolean;
+  removeUndefineds?: boolean;
 }
 
 type CleanableType = Record<string, any> | Array<any>;
@@ -46,6 +48,10 @@ export class DeepClean {
         if (this.config.removeEmptyStrings && !value.trim().length) {
           continue;
         }
+      } else if (DataType.isNull(value) && this.config.removeNulls) {
+        continue;
+      } else if (DataType.isUndefined(value) && this.config.removeUndefineds) {
+        continue;
       }
       newValue.push(value);
     }
@@ -77,6 +83,10 @@ export class DeepClean {
         if (this.config.removeEmptyStrings && !value.trim().length) {
           continue;
         }
+      } else if (DataType.isNull(value) && this.config.removeNulls) {
+        continue;
+      } else if (DataType.isUndefined(value) && this.config.removeUndefineds) {
+        continue;
       }
       newValue[key] = value;
     }

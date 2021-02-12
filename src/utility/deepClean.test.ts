@@ -179,3 +179,99 @@ test('remove empty strings', t => {
 
   t.deepEqual(cleaner.clean(['bar', '']), ['bar']);
 });
+
+test('remove nulls', t => {
+  const cleaner = new DeepClean({
+    removeNulls: true,
+  });
+
+  // Main level empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: null,
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  // Deep empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+        bar: null,
+      },
+    }),
+    {
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+      },
+    }
+  );
+
+  // Array with empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: ['baz', null],
+    }),
+    {
+      foo: 'bar',
+      test: ['baz'],
+    }
+  );
+
+  t.deepEqual(cleaner.clean(['bar', null]), ['bar']);
+});
+
+test('remove undefineds', t => {
+  const cleaner = new DeepClean({
+    removeUndefineds: true,
+  });
+
+  // Main level empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: undefined,
+    }),
+    {
+      foo: 'bar',
+    }
+  );
+
+  // Deep empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+        bar: undefined,
+      },
+    }),
+    {
+      foo: 'bar',
+      test: {
+        floo: 'baz',
+      },
+    }
+  );
+
+  // Array with empty object.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: ['baz', undefined],
+    }),
+    {
+      foo: 'bar',
+      test: ['baz'],
+    }
+  );
+
+  t.deepEqual(cleaner.clean(['bar', undefined]), ['bar']);
+});

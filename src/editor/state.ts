@@ -164,6 +164,31 @@ export class EditorState extends ListenersMixin(Base) {
     return this.devices;
   }
 
+  getFile(
+    file: FileData,
+    callback?: (file: EditorFileData) => void,
+    callbackError?: (error: ApiError) => void
+  ): EditorFileData | undefined {
+    const promiseKey = 'getFile';
+    if (this.promises[promiseKey]) {
+      return;
+    }
+    this.promises[promiseKey] = this.api
+      .getFile(file)
+      .then(data => {
+        this.file = data;
+        delete this.promises[promiseKey];
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
+        this.render();
+      })
+      .catch(callbackError || catchError);
+    return this.file;
+  }
+
   getFiles(
     callback?: (files: Array<FileData>) => void,
     callbackError?: (error: ApiError) => void
@@ -300,31 +325,6 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(callbackError || catchError);
     return this.workspaces;
-  }
-
-  loadFile(
-    file: FileData,
-    callback?: (file: EditorFileData) => void,
-    callbackError?: (error: ApiError) => void
-  ): EditorFileData | undefined {
-    const promiseKey = 'loadFile';
-    if (this.promises[promiseKey]) {
-      return;
-    }
-    this.promises[promiseKey] = this.api
-      .loadFile(file)
-      .then(data => {
-        this.file = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
-        document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
-        this.render();
-      })
-      .catch(callbackError || catchError);
-    return this.file;
   }
 
   loadWorkspace(

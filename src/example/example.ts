@@ -54,7 +54,7 @@ const exampleEditor = new LiveEditor(
   container as HTMLElement
 );
 
-exampleEditor.state.loadFile({
+exampleEditor.state.getFile({
   path: '/content/pages/index.yaml',
 });
 

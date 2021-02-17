@@ -194,6 +194,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           commit: {
             author: base.branch.commit.author,
             hash: base.branch.commit.hash,
+            message: base.branch.commit.message,
             summary: base.branch.commit.summary,
             timestamp: new Date().toISOString(),
           },
@@ -264,6 +265,119 @@ export class ExampleApi implements LiveEditorApiComponent {
           width: 2200,
         } as DeviceData,
       ]);
+    });
+  }
+
+  async getFile(file: FileData): Promise<EditorFileData> {
+    return new Promise<EditorFileData>((resolve, reject) => {
+      const methodName = 'loadFile';
+      console.log(`API: ${methodName}`, file);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to load the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Make the fields for each file dynamic for the example.
+      simulateNetwork(resolve, {
+        data: {
+          title: 'Testing',
+        },
+        file: file,
+        editor: {
+          fields: [
+            {
+              type: 'text',
+              key: 'title',
+              label: 'Title',
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Title is required.',
+                },
+              ],
+            } as FieldConfig,
+            {
+              type: 'image',
+              key: 'image',
+              label: 'Image',
+            } as FieldConfig,
+          ],
+        },
+        history: [
+          {
+            author: {
+              name: 'Example User',
+              email: 'example@example.com',
+            },
+            hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
+            summary: 'Example commit summary.',
+            timestamp: new Date(
+              new Date().getTime() - 1 * 60 * 60 * 1000
+            ).toISOString(),
+          },
+          {
+            author: {
+              name: 'Example User',
+              email: 'example@example.com',
+            },
+            hash: 'f36d7c0d556e30421a7a8f22038234a9174f0e04',
+            summary: 'Example commit summary.',
+            timestamp: new Date(
+              new Date().getTime() - 2 * 60 * 60 * 1000
+            ).toISOString(),
+          },
+          {
+            author: {
+              name: 'Example User',
+              email: 'example@example.com',
+            },
+            hash: '6dda2682901bf4f2f03f936267169454120f1806',
+            summary:
+              'Example commit summary. With a long summary. Like really too long for a summary. Probably should use a shorter summary.',
+            timestamp: new Date(
+              new Date().getTime() - 4 * 60 * 60 * 1000
+            ).toISOString(),
+          },
+          {
+            author: {
+              name: 'Example User',
+              email: 'example@example.com',
+            },
+            hash: '465e3720c050f045d9500bd9bc7c7920f192db78',
+            summary: 'Example commit summary.',
+            timestamp: new Date(
+              new Date().getTime() - 14 * 60 * 60 * 1000
+            ).toISOString(),
+          },
+        ],
+        url: 'preview.html',
+        urls: [
+          {
+            url: '#private',
+            label: 'Live editor preview',
+            level: UrlLevel.PRIVATE,
+          },
+          {
+            url: '#protected',
+            label: 'Staging',
+            level: UrlLevel.PROTECTED,
+          },
+          {
+            url: '#public',
+            label: 'Live',
+            level: UrlLevel.PUBLIC,
+          },
+          {
+            url: 'https://github.com/blinkkcode/live-edit/',
+            label: 'View in Github',
+            level: UrlLevel.SOURCE,
+          },
+        ],
+      } as EditorFileData);
     });
   }
 
@@ -447,72 +561,6 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, [...currentWorkspaces]);
-    });
-  }
-
-  async loadFile(file: FileData): Promise<EditorFileData> {
-    return new Promise<EditorFileData>((resolve, reject) => {
-      const methodName = 'loadFile';
-      console.log(`API: ${methodName}`, file);
-
-      if (this.errorController.shouldError(methodName)) {
-        reject({
-          message: 'Failed to load the file.',
-          description: 'Api is set to always return an error.',
-        } as ApiError);
-        return;
-      }
-
-      // TODO: Make the fields for each file dynamic for the example.
-      simulateNetwork(resolve, {
-        data: {
-          title: 'Testing',
-        },
-        file: file,
-        editor: {
-          fields: [
-            {
-              type: 'text',
-              key: 'title',
-              label: 'Title',
-              validation: [
-                {
-                  type: 'require',
-                  message: 'Title is required.',
-                },
-              ],
-            } as FieldConfig,
-            {
-              type: 'image',
-              key: 'image',
-              label: 'Image',
-            } as FieldConfig,
-          ],
-        },
-        url: 'preview.html',
-        urls: [
-          {
-            url: '#private',
-            label: 'Live editor preview',
-            level: UrlLevel.PRIVATE,
-          },
-          {
-            url: '#protected',
-            label: 'Staging',
-            level: UrlLevel.PROTECTED,
-          },
-          {
-            url: '#public',
-            label: 'Live',
-            level: UrlLevel.PUBLIC,
-          },
-          {
-            url: 'https://github.com/blinkkcode/live-edit/',
-            label: 'View in Github',
-            level: UrlLevel.SOURCE,
-          },
-        ],
-      } as EditorFileData);
     });
   }
 

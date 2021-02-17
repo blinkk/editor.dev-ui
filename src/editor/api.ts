@@ -53,6 +53,15 @@ export interface LiveEditorApiComponent {
   getDevices(): Promise<Array<DeviceData>>;
 
   /**
+   * Retrieve the file information.
+   *
+   * This is a complete loading of the file information and
+   * configuration for use in rendering the editor for the
+   * file.
+   */
+  getFile(file: FileData): Promise<EditorFileData>;
+
+  /**
    * Retrieve the files that can be edited in the editor.
    */
   getFiles(): Promise<Array<FileData>>;
@@ -88,15 +97,6 @@ export interface LiveEditorApiComponent {
    * Retrieve information about available workspaces.
    */
   getWorkspaces(): Promise<Array<WorkspaceData>>;
-
-  /**
-   * Load the file.
-   *
-   * This is a complete loading of the file information and
-   * configuration for use in rendering the editor for the
-   * file.
-   */
-  loadFile(file: FileData): Promise<EditorFileData>;
 
   /**
    * Load the workspace.
@@ -452,9 +452,9 @@ export interface RepoCommit {
    */
   hash: string;
   /**
-   * Commit full description.
+   * Full commit message.
    */
-  description?: string;
+  message?: string;
   /**
    * Summary of the commit.
    */

@@ -53,6 +53,15 @@ export interface LiveEditorApiComponent {
   getDevices(): Promise<Array<DeviceData>>;
 
   /**
+   * Retrieve the file information.
+   *
+   * This is a complete loading of the file information and
+   * configuration for use in rendering the editor for the
+   * file.
+   */
+  getFile(file: FileData): Promise<EditorFileData>;
+
+  /**
    * Retrieve the files that can be edited in the editor.
    */
   getFiles(): Promise<Array<FileData>>;
@@ -88,15 +97,6 @@ export interface LiveEditorApiComponent {
    * Retrieve information about available workspaces.
    */
   getWorkspaces(): Promise<Array<WorkspaceData>>;
-
-  /**
-   * Load the file.
-   *
-   * This is a complete loading of the file information and
-   * configuration for use in rendering the editor for the
-   * file.
-   */
-  loadFile(file: FileData): Promise<EditorFileData>;
 
   /**
    * Load the workspace.
@@ -168,13 +168,17 @@ export interface EditorFileData {
    */
   data?: any;
   /**
+   * Editor configuration for the file.
+   */
+  editor: EditorFileConfig;
+  /**
    * File information.
    */
   file: FileData;
   /**
-   * Editor configuration for the file.
+   * File repository history.
    */
-  editor: EditorFileConfig;
+  history?: Array<RepoCommit>;
   /**
    * URL for viewing the file in the preview iframe.
    *
@@ -426,21 +430,35 @@ export interface RepoAuthor {
  */
 export interface RepoBranch {
   /**
+   * Commit most recent commit.
+   */
+  commit: RepoCommit;
+  /**
+   * Full branch name.
+   */
+  name: string;
+}
+
+/**
+ * Repository commit information.
+ */
+export interface RepoCommit {
+  /**
    * Author of the last commit.
    */
   author: RepoAuthor;
   /**
    * Commit hash of the last commit.
    */
-  commit: string;
+  hash: string;
   /**
-   * Summary of the last commit.
+   * Full commit message.
    */
-  commitSummary: string;
+  message?: string;
   /**
-   * Full branch name.
+   * Summary of the commit.
    */
-  name: string;
+  summary: string;
   /**
    * Timestamp of commit.
    *

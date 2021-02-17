@@ -7,6 +7,7 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../ui/modal';
+import {EVENT_WORKSPACE_LOAD} from '../events';
 import {EditorState} from '../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {LiveEditor} from '../editor';
@@ -14,7 +15,6 @@ import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import merge from 'lodash.merge';
-import {EVENT_WORKSPACE_LOAD} from '../events';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
 
@@ -311,12 +311,12 @@ export class OverviewPart extends BasePart implements Part {
     return html`<div class="le__part__overview__workspace">
       <!-- <span>Workspace:</span> -->
       <strong>${workspace?.name || '...'}</strong> @
-      <strong>${(workspace?.branch.commit || '...').slice(0, 5)}</strong>
+      <strong>${(workspace?.branch.commit.hash || '...').slice(0, 5)}</strong>
       by
-      <strong>${workspace?.branch.author.name || '...'}</strong>
-      (${workspace?.branch?.timestamp
+      <strong>${workspace?.branch.commit.author.name || '...'}</strong>
+      (${workspace?.branch?.commit.timestamp
         ? this.timeAgo.format(
-            new Date(workspace?.branch?.timestamp || new Date())
+            new Date(workspace?.branch?.commit.timestamp || new Date())
           )
         : '...'})
     </div>`;

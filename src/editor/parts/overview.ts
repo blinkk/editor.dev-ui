@@ -311,12 +311,12 @@ export class OverviewPart extends BasePart implements Part {
     return html`<div class="le__part__overview__workspace">
       <!-- <span>Workspace:</span> -->
       <strong>${workspace?.name || '...'}</strong> @
-      <strong>${(workspace?.branch.commit || '...').slice(0, 5)}</strong>
+      <strong>${(workspace?.branch.commit.hash || '...').slice(0, 5)}</strong>
       by
-      <strong>${workspace?.branch.author.name || '...'}</strong>
-      (${workspace?.branch?.timestamp
+      <strong>${workspace?.branch.commit.author.name || '...'}</strong>
+      (${workspace?.branch?.commit.timestamp
         ? this.timeAgo.format(
-            new Date(workspace?.branch?.timestamp || new Date())
+            new Date(workspace?.branch?.commit.timestamp || new Date())
           )
         : '...'})
     </div>`;

@@ -67,13 +67,15 @@ const currentUsers: Array<UserData> = [
 let currentWorkspace: WorkspaceData = {
   branch: {
     name: 'main',
-    author: {
-      name: 'Example User',
-      email: 'example@example.com',
+    commit: {
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      hash: '951c206e5f10ba99d13259293b349e321e4a6a9e',
+      summary: 'Example commit summary.',
+      timestamp: new Date().toISOString(),
     },
-    commit: '951c206e5f10ba99d13259293b349e321e4a6a9e',
-    commitSummary: 'Example commit summary.',
-    timestamp: new Date().toISOString(),
   },
   name: 'main',
 };
@@ -83,30 +85,34 @@ const currentWorkspaces: Array<WorkspaceData> = [
   {
     branch: {
       name: 'staging',
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
+      commit: {
+        author: {
+          name: 'Example User',
+          email: 'example@example.com',
+        },
+        hash: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
+        summary: 'Example commit summary.',
+        timestamp: new Date(
+          new Date().getTime() - 2 * 60 * 60 * 1000
+        ).toISOString(),
       },
-      commit: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
-      commitSummary: 'Example commit summary.',
-      timestamp: new Date(
-        new Date().getTime() - 2 * 60 * 60 * 1000
-      ).toISOString(),
     },
     name: 'staging',
   },
   {
     branch: {
       name: 'workspace/redesign',
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
+      commit: {
+        author: {
+          name: 'Example User',
+          email: 'example@example.com',
+        },
+        hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
+        summary: 'Example commit summary.',
+        timestamp: new Date(
+          new Date().getTime() - 6 * 60 * 60 * 1000
+        ).toISOString(),
       },
-      commit: 'db29a258dacdd416bb24bb63c689d669df08d409',
-      commitSummary: 'Example commit summary.',
-      timestamp: new Date(
-        new Date().getTime() - 6 * 60 * 60 * 1000
-      ).toISOString(),
     },
     name: 'redesign',
   },
@@ -185,10 +191,12 @@ export class ExampleApi implements LiveEditorApiComponent {
       const newWorkspace: WorkspaceData = {
         branch: {
           name: `workspace/${workspace}`,
-          commit: base.branch.commit,
-          commitSummary: base.branch.commitSummary,
-          author: base.branch.author,
-          timestamp: new Date().toISOString(),
+          commit: {
+            author: base.branch.commit.author,
+            hash: base.branch.commit.hash,
+            summary: base.branch.commit.summary,
+            timestamp: new Date().toISOString(),
+          },
         },
         name: workspace,
       };

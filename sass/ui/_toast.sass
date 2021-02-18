@@ -1,0 +1,61 @@
+.le__part__toasts
+  align-items: center
+  bottom: 0
+  display: flex
+  flex-flow: column
+  left: 0
+  position: fixed
+  right: 0
+  z-index: 2000
+
+.le__toast
+  align-items: center
+  animation: toast-slide-down $le-speed-normal ease-in forwards;
+  background: $le-color-secondary
+  border-radius: $le-radius-medium
+  color: $le-color-on-secondary
+  display: flex
+  flex-flow: row
+  margin-bottom: $le-space-medium
+  max-width: 1000px
+  min-width: 400px
+  width: 40vw
+
+  &--removed
+    animation: toast-remove $le-speed-normal*2 ease forwards;
+
+.le__toast__message
+  flex-grow: 1
+  margin: $le-space-medium
+
+.le__toast__action
+  padding: $le-space-medium $le-space-small
+
+  &:hover
+    background: $le-color-secondary-light
+    color: $le-color-on-secondary-light
+
+.le__toast__close
+  padding: $le-space-small $le-space-medium
+
+@keyframes toast-slide-down
+  0%
+    opacity: 0
+    transform: translateY(-$le-space-medium) scale(.95)
+  100%
+    opacity: 1
+    transform: translateY(0) scale(1)
+
+@keyframes toast-remove
+  0%
+    opacity: 1
+    transform: scale(1)
+  50%
+    height: $le-space-medium * 2 + $le-font-size
+    opacity: 0
+    transform: translateY($le-space-medium)
+  100%
+    height: 0
+    margin-bottom: 0
+    opacity: 0
+    transform: translateY($le-space-medium)

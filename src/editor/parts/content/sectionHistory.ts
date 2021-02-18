@@ -2,11 +2,6 @@ import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {LiveEditor} from '../../editor';
 import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
-
-// TODO: update when this is part of typescript definiton.
-// TimeAgo.addDefaultLocale(en);
-TimeAgo.addLocale(en); // TODO: Remove when default locale is working.
 
 export class HistoryPart extends ContentSectionPart {
   timeAgo: TimeAgo;

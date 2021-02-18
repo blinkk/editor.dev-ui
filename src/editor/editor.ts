@@ -1,7 +1,6 @@
 import {
   EditorConfig,
   GlobalConfig,
-  SelectiveEditor,
   TemplateResult,
   classMap,
   html,
@@ -18,6 +17,12 @@ import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
 import {Storage} from '../utility/storage';
+import TimeAgo from 'javascript-time-ago';
+import {ToastsPart} from './parts/toasts';
+import en from 'javascript-time-ago/locale/en';
+
+// Set the default locale for the time ago globally.
+TimeAgo.addDefaultLocale(en);
 
 /**
  * Global configuration used by the selective editor fields.
@@ -74,6 +79,7 @@ export interface LiveEditorParts {
   notifications: NotificationsPart;
   overview: OverviewPart;
   preview: PreviewPart;
+  toasts: ToastsPart;
 }
 
 export class LiveEditor {
@@ -114,6 +120,7 @@ export class LiveEditor {
         state: this.state,
         storage: this.storage,
       }),
+      toasts: new ToastsPart(),
     };
 
     // Automatically re-render after the window resizes.
@@ -157,6 +164,7 @@ export class LiveEditor {
         ${this.templateContentStructure(editor)}
       </div>
       ${this.parts.modals.template(editor)}
+      ${this.parts.toasts.template(editor)}
     </div>`;
   }
 

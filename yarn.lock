@@ -183,10 +183,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.10.tgz#788b290a24a5cc8fb429403d14f1dc7fad7f3572"
-  integrity sha512-94jpt3smT9Q48fXeNV5hJkwDgIiGzw8pb67iFFcl8J4fB3sHZ0w4TCc2GR+9T+jWjtDCaHQmPC4WGLM8xqvmuw==
+"@blinkk/selective-edit@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.11.tgz#0027bbd3c037274c8c2d133abf77381af2ac7b94"
+  integrity sha512-DL3M8Kvp/VPwiwIL0bMzqCIwgmd/zRgGwnBOmUySCdG1fcQTIRzFI+fA2cVqwCNVynqtc+kFP1VvE7s7AnJCgg==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"
@@ -7786,10 +7786,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.22.0:
-  version "5.22.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.22.0.tgz#8505158bc52dcbbdb01ac94796a8aed61badf11a"
-  integrity sha512-xqlb6r9RUXda/d9iA6P7YRTP1ChWeP50TEESKMMNIg0u8/Rb66zN9YJJO7oYgJTRyFyYi43NVC5feG45FSO1vQ==
+webpack@^5.23.0:
+  version "5.23.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.23.0.tgz#9ed57e9a54b267b3549899271ad780cddc6ee316"
+  integrity sha512-RC6dwDuRxiU75F8XC4H08NtzUrMfufw5LDnO8dTtaKU2+fszEdySCgZhNwSBBn516iNaJbQI7T7OPHIgCwcJmg==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.46"

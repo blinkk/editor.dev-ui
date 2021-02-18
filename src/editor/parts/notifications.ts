@@ -1,8 +1,13 @@
 import {BasePart, Part} from '.';
 import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../ui/modal';
+import {
+  EVENT_NOTIFICATION_ADD,
+  EVENT_NOTIFICATION_READ,
+  EVENT_NOTIFICATION_SHOW,
+} from '../events';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
-import {EVENT_NOTIFICATION} from '../events';
 import {LiveEditor} from '../editor';
+import {showToast} from './toasts';
 
 const MODAL_KEY_NOTIFICATION = 'notification';
 const MODAL_KEY_NOTIFICATIONS = 'notifications';
@@ -107,18 +112,28 @@ interface InternalNotification extends EditorNotification {
  * This also allows reuse of modals across parts of the editor.
  */
 export class NotificationsPart extends BasePart implements Part {
-  protected notifications: Array<InternalNotification>;
+  protected notifications: Set<InternalNotification>;
   protected hasNewError: boolean;
   protected currentNotification?: InternalNotification;
 
   constructor() {
     super();
-    this.notifications = [];
+    this.notifications = new Set();
     this.hasNewError = false;
 
-    document.addEventListener(EVENT_NOTIFICATION, (evt: Event) => {
+    document.addEventListener(EVENT_NOTIFICATION_ADD, (evt: Event) => {
       this.addInfo((evt as CustomEvent).detail);
       this.render();
+    });
+
+    document.addEventListener(EVENT_NOTIFICATION_READ, (evt: Event) => {
+      const notification = (evt as CustomEvent).detail as EditorNotification;
+      this.readNotification(notification);
+    });
+
+    document.addEventListener(EVENT_NOTIFICATION_SHOW, (evt: Event) => {
+      const notification = (evt as CustomEvent).detail as EditorNotification;
+      this.showNotification(notification);
     });
   }
 
@@ -139,12 +154,16 @@ export class NotificationsPart extends BasePart implements Part {
     defaultLevel = NotificationLevel.Info,
     isDisplayed = false
   ) {
-    this.notifications.push(
+    this.notifications.add(
       this.scrubNewNotification(notification, defaultLevel)
     );
 
     if (notification.level === NotificationLevel.Error && !isDisplayed) {
       this.hasNewError = true;
+    } else {
+      showToast({
+        notification: notification,
+      });
     }
   }
 
@@ -257,6 +276,19 @@ export class NotificationsPart extends BasePart implements Part {
     }
   }
 
+  readNotification(
+    notification: EditorNotification,
+    defaultLevel = NotificationLevel.Info
+  ) {
+    // Only scrub the notification if it has not been added before.
+    if (!this.notifications.has(notification)) {
+      notification = this.scrubNewNotification(notification, defaultLevel);
+      this.notifications.add(notification);
+    }
+    (notification as InternalNotification).isRead = true;
+    this.render();
+  }
+
   protected scrubNewNotification(
     notification: EditorNotification,
     defaultLevel: NotificationLevel
@@ -278,7 +310,7 @@ export class NotificationsPart extends BasePart implements Part {
       notification,
       defaultLevel
     );
-    this.notifications.push(notification);
+    this.notifications.add(notification);
     this.currentNotification = newNotification;
   }
 
@@ -510,7 +542,7 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   templateNotifications(editor: LiveEditor): TemplateResult {
-    if (!this.notifications.length) {
+    if (!this.notifications.size) {
       return html`<div class="le__part__notifications__modal">
         <div class="le__list">
           <div class="le__list__item le__list__item--pad">
@@ -526,14 +558,15 @@ export class NotificationsPart extends BasePart implements Part {
     }
 
     // Sort notifications by the timestamp in latest first.
-    this.notifications.sort(
+    const notifications = Array.from(this.notifications);
+    notifications.sort(
       (a, b) => (b.addedOn?.getTime() || 0) - (a.addedOn?.getTime() || 0)
     );
 
     return html`<div class="le__part__notifications__modal">
       <div class="ls__part__notifications__notifications">
         ${repeat(
-          this.notifications,
+          notifications,
           notification => notification.addedOn?.getUTCDate(),
           (notification: InternalNotification) =>
             this.templateNotification(editor, notification)
@@ -545,6 +578,18 @@ export class NotificationsPart extends BasePart implements Part {
 
 export function announceNotification(notification: EditorNotification) {
   document.dispatchEvent(
-    new CustomEvent(EVENT_NOTIFICATION, {detail: notification})
+    new CustomEvent(EVENT_NOTIFICATION_ADD, {detail: notification})
+  );
+}
+
+export function readNotification(notification: EditorNotification) {
+  document.dispatchEvent(
+    new CustomEvent(EVENT_NOTIFICATION_READ, {detail: notification})
+  );
+}
+
+export function showNotification(notification: EditorNotification) {
+  document.dispatchEvent(
+    new CustomEvent(EVENT_NOTIFICATION_SHOW, {detail: notification})
   );
 }

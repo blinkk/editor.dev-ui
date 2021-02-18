@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@types/async": "^3.2.5",
-    "@types/javascript-time-ago": "^2.0.1",
+    "@types/javascript-time-ago": "^2.0.2",
     "@types/lodash.merge": "^4.6.6",
     "@types/marked": "^1.2.1",
     "@types/mime-types": "^2.1.0",

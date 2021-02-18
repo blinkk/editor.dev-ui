@@ -13,14 +13,9 @@ import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {LiveEditor} from '../editor';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
 import merge from 'lodash.merge';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
-
-// TODO: update when this is part of typescript definiton.
-// TimeAgo.addDefaultLocale(en);
-TimeAgo.addLocale(en); // TODO: Remove when default locale is working.
 
 export interface OverviewPartConfig {
   /**

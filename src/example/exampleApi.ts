@@ -301,6 +301,12 @@ export class ExampleApi implements LiveEditorApiComponent {
               ],
             } as FieldConfig,
             {
+              type: 'textarea',
+              key: 'description',
+              label: 'Description',
+              help: 'Description for the content.',
+            } as FieldConfig,
+            {
               type: 'image',
               key: 'image',
               label: 'Image',

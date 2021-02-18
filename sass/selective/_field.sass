@@ -26,11 +26,13 @@
     margin-right: $le-space-small
 
 .selective__field__input
-  input[type=text]
+  input[type=text],
+  textarea
     background: $le-color-tertiary
     color: $le-color-on-tertiary
     border: none
     box-shadow: 0 $le-border-size-medium 0 0 $le-color-secondary
+    font-family: $le-font-family-text
     margin-bottom: $le-space-small
     padding: $le-space-medium
     width: 100%
@@ -39,10 +41,14 @@
       outline: none
       box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-secondary-dark
 
+    &:disabled
+      opacity: .5
+
   &--error
     color: $le-color-extreme
 
-    input[type=text]
+    input[type=text],
+    textarea
       color: inherit
       box-shadow: 0 $le-border-size-large 0 0 $le-color-extreme
 
@@ -52,7 +58,8 @@
   &--warning
     color: $le-color-warning
 
-    input[type=text]
+    input[type=text],
+    textarea
       color: inherit
       box-shadow: 0 $le-border-size-large 0 0 $le-color-warning
 
@@ -62,7 +69,8 @@
   &--info
     color: $le-color-info
 
-    input[type=text]
+    input[type=text],
+    textarea
       color: inherit
       box-shadow: 0 $le-border-size-large 0 0 $le-color-info
 

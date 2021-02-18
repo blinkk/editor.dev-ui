@@ -389,8 +389,9 @@ export class SitePart extends MenuSectionPart {
 
   templateFileDelete(editor: LiveEditor): TemplateResult {
     const modal = this.getOrCreateModalDelete(editor);
-    return html`Do you want to delete the
-      <code>${modal.data.get('path')}</code> file?`;
+    return html`<div class="le__modal__content__template__padded">
+      Do you want to delete the <code>${modal.data.get('path')}</code> file?
+    </div>`;
   }
 
   templateFileNew(editor: LiveEditor): TemplateResult {

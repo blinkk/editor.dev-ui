@@ -12,8 +12,8 @@ import {
 } from '@blinkk/selective-edit';
 import {FileData} from '../api';
 import {LiveEditorGlobalConfig} from '../editor';
-import {reduceFraction} from '../../utility/math';
 import merge from 'lodash.merge';
+import {reduceFraction} from '../../utility/math';
 
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
   avif: 'image/avif',

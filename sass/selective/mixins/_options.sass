@@ -1,0 +1,34 @@
+.selective__options
+  display: grid
+  grid-template-columns: 1fr
+  column-gap: $le-space-small
+  row-gap: $le-space-small
+
+  &--few
+    grid-template-columns: 1fr 1fr
+
+  &--many
+    grid-template-columns: 1fr 1fr 1fr
+
+.selective__options__option
+  align-items: center
+  cursor: pointer
+  display: flex
+  flex-flow: row
+
+  .material-icons
+    margin-right: $le-space-small
+
+.selective__swatch
+  background-repeat: no-repeat
+  border: 1px solid transparent
+  border-radius: $le-radius-small
+  margin-right: $le-space-small
+  height: $le-space-medium
+  width: $le-space-medium
+
+  .selective__options--swatches &
+    margin-right: 0
+
+  .selective__options__option--low_contrast &
+    border-color: $le-color-border-dark

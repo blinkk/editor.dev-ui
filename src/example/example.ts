@@ -1,25 +1,32 @@
 import {
+  CheckboxField,
+  CheckboxMultiField,
+  ColorField,
+  DateField,
+  DatetimeField,
   FieldConstructor,
   GroupField,
   LengthRule,
   ListField,
   MatchRule,
+  NumberField,
   PatternRule,
+  RadioField,
   RangeRule,
   RequireRule,
-  SelectField,
   TextField,
   TextareaField,
+  TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
 import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
-import {ExampleAsideField} from './field/exampleAside';
+import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
-import {ImageField} from '../editor/field/image';
 import {LiveEditor} from '../editor/editor';
+import {MediaField} from '../editor/field/media';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
@@ -32,13 +39,20 @@ const exampleEditor = new LiveEditor(
     selectiveConfig: {
       fieldTypes: {
         aside: (AsideField as unknown) as FieldConstructor,
-        exampleAside: (ExampleAsideField as unknown) as FieldConstructor,
+        checkbox: (CheckboxField as unknown) as FieldConstructor,
+        checkboxMulti: (CheckboxMultiField as unknown) as FieldConstructor,
+        color: (ColorField as unknown) as FieldConstructor,
+        date: (DateField as unknown) as FieldConstructor,
+        datetime: (DatetimeField as unknown) as FieldConstructor,
+        exampleField: (ExampleFieldField as unknown) as FieldConstructor,
         group: (GroupField as unknown) as FieldConstructor,
-        image: (ImageField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
-        select: (SelectField as unknown) as FieldConstructor,
+        media: (MediaField as unknown) as FieldConstructor,
+        number: (NumberField as unknown) as FieldConstructor,
+        radio: (RadioField as unknown) as FieldConstructor,
         text: (TextField as unknown) as FieldConstructor,
         textarea: (TextareaField as unknown) as FieldConstructor,
+        time: (TimeField as unknown) as FieldConstructor,
         variant: (VariantField as unknown) as FieldConstructor,
       },
       ruleTypes: {
@@ -58,9 +72,12 @@ const exampleEditor = new LiveEditor(
   container as HTMLElement
 );
 
-exampleEditor.state.getFile({
-  path: '/content/pages/index.yaml',
-});
+const url = new URL(window.location.toString());
+if (url.searchParams.get('path')) {
+  exampleEditor.state.getFile({
+    path: url.searchParams.get('path') || '',
+  });
+}
 
 // Bind to the custom event to re-render the editor.
 document.addEventListener(EVENT_RENDER, () => {

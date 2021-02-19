@@ -195,9 +195,9 @@ export class ContentFooterPart extends BasePart implements Part {
             this.config.contentSettings.toggleHighlightDirty();
             this.render();
           }}
-          aria-label="Highlight dirty fields"
+          aria-label="Highlight changed fields"
           aria-role="link"
-          data-tip="Highlight dirty fields"
+          data-tip="Highlight changed fields"
         >
           <span class="material-icons">change_history</span>
         </div>

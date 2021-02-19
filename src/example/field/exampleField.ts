@@ -8,16 +8,23 @@ import {
   TemplateResult,
   Types,
   html,
+  repeat,
   unsafeHTML,
 } from '@blinkk/selective-edit';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
 
+export interface ExampleFieldUrl {
+  label: string;
+  url: string;
+}
+
 export interface ExampleFieldConfig extends FieldConfig {
-  docUrl?: string;
+  docUrls?: Array<ExampleFieldUrl>;
   field: FieldConfig;
 }
 
 export class ExampleFieldField extends Field {
+  config: ExampleFieldConfig;
   field?: FieldComponent | null;
   isExpanded?: boolean;
 
@@ -82,9 +89,14 @@ export class ExampleFieldField extends Field {
           formatCodeSample(yaml.dump(this.config.field))
         )}</code></pre>
       </div>
-      ${this.config.docUrl
+      ${this.config.docUrls
         ? html`<div class="selective__example_field__doc_url">
-            <a href=${this.config.docUrl} target="_blank">View docs</a>
+            ${repeat(
+              this.config.docUrls,
+              docUrl => docUrl.label,
+              docUrl =>
+                html`<a href=${docUrl.url} target="_blank">${docUrl.label}</a>`
+            )}
           </div>`
         : ''}`;
   }

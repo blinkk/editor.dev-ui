@@ -157,8 +157,13 @@ const fullFiles: Record<string, EditorFileData> = {
         {
           type: 'exampleField',
           key: 'example.text',
-          docUrl:
-            'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_text.textfieldconfig.html',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_text.textfieldconfig.html',
+            },
+          ],
           field: {
             type: 'text',
             key: 'title',
@@ -175,8 +180,13 @@ const fullFiles: Record<string, EditorFileData> = {
         {
           type: 'exampleField',
           key: 'example.textarea',
-          docUrl:
-            'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_textarea.textareafieldconfig.html',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_textarea.textareafieldconfig.html',
+            },
+          ],
           field: {
             type: 'textarea',
             key: 'description',

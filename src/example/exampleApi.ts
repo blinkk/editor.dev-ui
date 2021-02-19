@@ -30,6 +30,100 @@ function simulateNetwork(callback: Function, response: any) {
   }, Math.random() * (MAX_RESPONSE_MS - MIN_RESPONSE_MS) + MIN_RESPONSE_MS);
 }
 
+const DEFAULT_EDITOR_FILE: EditorFileData = {
+  data: {
+    title: 'Testing',
+  },
+  file: {
+    path: '/content/pages/index.yaml',
+  },
+  editor: {
+    fields: [
+      {
+        type: 'text',
+        key: 'title',
+        label: 'Title',
+        validation: [
+          {
+            type: 'require',
+            message: 'Title is required.',
+          },
+        ],
+      } as FieldConfig,
+    ],
+  },
+  history: [
+    {
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
+      summary: 'Example commit summary.',
+      timestamp: new Date(
+        new Date().getTime() - 1 * 60 * 60 * 1000
+      ).toISOString(),
+    },
+    {
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      hash: 'f36d7c0d556e30421a7a8f22038234a9174f0e04',
+      summary: 'Example commit summary.',
+      timestamp: new Date(
+        new Date().getTime() - 2 * 60 * 60 * 1000
+      ).toISOString(),
+    },
+    {
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      hash: '6dda2682901bf4f2f03f936267169454120f1806',
+      summary:
+        'Example commit summary. With a long summary. Like really too long for a summary. Probably should use a shorter summary.',
+      timestamp: new Date(
+        new Date().getTime() - 4 * 60 * 60 * 1000
+      ).toISOString(),
+    },
+    {
+      author: {
+        name: 'Example User',
+        email: 'example@example.com',
+      },
+      hash: '465e3720c050f045d9500bd9bc7c7920f192db78',
+      summary: 'Example commit summary.',
+      timestamp: new Date(
+        new Date().getTime() - 14 * 60 * 60 * 1000
+      ).toISOString(),
+    },
+  ],
+  url: 'preview.html',
+  urls: [
+    {
+      url: '#private',
+      label: 'Live editor preview',
+      level: UrlLevel.PRIVATE,
+    },
+    {
+      url: '#protected',
+      label: 'Staging',
+      level: UrlLevel.PROTECTED,
+    },
+    {
+      url: '#public',
+      label: 'Live',
+      level: UrlLevel.PUBLIC,
+    },
+    {
+      url: 'https://github.com/blinkkcode/live-edit/',
+      label: 'View in Github',
+      level: UrlLevel.SOURCE,
+    },
+  ],
+};
+
 const currentFileset: Array<FileData> = [
   {
     path: '/content/pages/index.yaml',
@@ -47,10 +141,60 @@ const currentFileset: Array<FileData> = [
     path: '/content/strings/about.yaml',
   },
   {
+    path: '/example/basic.yaml',
+  },
+  {
     path: '/static/img/portrait.png',
     url: 'image-portrait.png',
   },
 ];
+
+const fullFiles: Record<string, EditorFileData> = {
+  '/example/basic.yaml': {
+    editor: {
+      fields: [
+        {
+          type: 'text',
+          key: 'title',
+          label: 'Title',
+          validation: [
+            {
+              type: 'require',
+              message: 'Title is required.',
+            },
+          ],
+        } as FieldConfig,
+        {
+          type: 'exampleAside',
+          key: 'help.text',
+          source: formatCodeSample(`
+            type: text
+            key: title
+            label: Title
+            validation:
+            - type: require
+              message: Title is required.`),
+        } as FieldConfig,
+        {
+          type: 'textarea',
+          key: 'description',
+          label: 'Description',
+        } as FieldConfig,
+        {
+          type: 'exampleAside',
+          key: 'help.textarea',
+          source: formatCodeSample(`
+            type: textarea
+            key: description
+            label: Description`),
+        } as FieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/basic.yaml',
+    },
+  },
+};
 
 const currentUsers: Array<UserData> = [
   {
@@ -281,109 +425,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      // TODO: Make the fields for each file dynamic for the example.
-      simulateNetwork(resolve, {
-        data: {
-          title: 'Testing',
-        },
-        file: file,
-        editor: {
-          fields: [
-            {
-              type: 'text',
-              key: 'title',
-              label: 'Title',
-              validation: [
-                {
-                  type: 'require',
-                  message: 'Title is required.',
-                },
-              ],
-            } as FieldConfig,
-            {
-              type: 'textarea',
-              key: 'description',
-              label: 'Description',
-              help: 'Description for the content.',
-            } as FieldConfig,
-            {
-              type: 'image',
-              key: 'image',
-              label: 'Image',
-            } as FieldConfig,
-          ],
-        },
-        history: [
-          {
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
-            summary: 'Example commit summary.',
-            timestamp: new Date(
-              new Date().getTime() - 1 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            hash: 'f36d7c0d556e30421a7a8f22038234a9174f0e04',
-            summary: 'Example commit summary.',
-            timestamp: new Date(
-              new Date().getTime() - 2 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            hash: '6dda2682901bf4f2f03f936267169454120f1806',
-            summary:
-              'Example commit summary. With a long summary. Like really too long for a summary. Probably should use a shorter summary.',
-            timestamp: new Date(
-              new Date().getTime() - 4 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-          {
-            author: {
-              name: 'Example User',
-              email: 'example@example.com',
-            },
-            hash: '465e3720c050f045d9500bd9bc7c7920f192db78',
-            summary: 'Example commit summary.',
-            timestamp: new Date(
-              new Date().getTime() - 14 * 60 * 60 * 1000
-            ).toISOString(),
-          },
-        ],
-        url: 'preview.html',
-        urls: [
-          {
-            url: '#private',
-            label: 'Live editor preview',
-            level: UrlLevel.PRIVATE,
-          },
-          {
-            url: '#protected',
-            label: 'Staging',
-            level: UrlLevel.PROTECTED,
-          },
-          {
-            url: '#public',
-            label: 'Live',
-            level: UrlLevel.PUBLIC,
-          },
-          {
-            url: 'https://github.com/blinkkcode/live-edit/',
-            label: 'View in Github',
-            level: UrlLevel.SOURCE,
-          },
-        ],
-      } as EditorFileData);
+      simulateNetwork(resolve, fullFiles[file.path] || DEFAULT_EDITOR_FILE);
     });
   }
 
@@ -689,4 +731,23 @@ export enum WorkspaceWorkflow {
   Success = 'success',
   SuccessNoFields = 'successNoFields',
   SuccessChangeWorkspace = 'successChangeWorkspace',
+}
+
+function formatCodeSample(code: string, type = 'yaml'): string {
+  const cleanLines: Array<string> = [];
+  let indentLength = -1;
+  for (const line of code.split('\n')) {
+    if (!line.trim()) {
+      continue;
+    }
+
+    if (indentLength < 0) {
+      indentLength = line.length - line.trim().length;
+    }
+
+    // Remove the same indent length off all lines based on first line.
+    cleanLines.push(line.slice(indentLength));
+  }
+
+  return `\`\`\`${type || ''}\n${cleanLines.join('\n')}\n\`\`\``;
 }

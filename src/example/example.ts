@@ -16,7 +16,7 @@ import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
-import {ExampleAsideField} from './field/exampleAside';
+import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
 import {ImageField} from '../editor/field/image';
 import {LiveEditor} from '../editor/editor';
@@ -32,7 +32,7 @@ const exampleEditor = new LiveEditor(
     selectiveConfig: {
       fieldTypes: {
         aside: (AsideField as unknown) as FieldConstructor,
-        exampleAside: (ExampleAsideField as unknown) as FieldConstructor,
+        exampleField: (ExampleFieldField as unknown) as FieldConstructor,
         group: (GroupField as unknown) as FieldConstructor,
         image: (ImageField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,

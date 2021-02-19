@@ -153,40 +153,31 @@ const fullFiles: Record<string, EditorFileData> = {
   '/example/basic.yaml': {
     editor: {
       fields: [
+        // Text example.
         {
-          type: 'text',
-          key: 'title',
-          label: 'Title',
-          validation: [
-            {
-              type: 'require',
-              message: 'Title is required.',
-            },
-          ],
+          type: 'exampleField',
+          key: 'example.text',
+          field: {
+            type: 'text',
+            key: 'title',
+            label: 'Title',
+            validation: [
+              {
+                type: 'require',
+                message: 'Title is required.',
+              },
+            ],
+          } as FieldConfig,
         } as FieldConfig,
+        // Textarea example.
         {
-          type: 'exampleAside',
-          key: 'help.text',
-          source: formatCodeSample(`
-            type: text
-            key: title
-            label: Title
-            validation:
-            - type: require
-              message: Title is required.`),
-        } as FieldConfig,
-        {
-          type: 'textarea',
-          key: 'description',
-          label: 'Description',
-        } as FieldConfig,
-        {
-          type: 'exampleAside',
-          key: 'help.textarea',
-          source: formatCodeSample(`
-            type: textarea
-            key: description
-            label: Description`),
+          type: 'exampleField',
+          key: 'example.textarea',
+          field: {
+            type: 'textarea',
+            key: 'description',
+            label: 'Description',
+          } as FieldConfig,
         } as FieldConfig,
       ],
     },

@@ -431,6 +431,10 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
+      const url = new URL(window.location.toString());
+      url.searchParams.set('path', file.path);
+      window.history.pushState({}, '', url.toString());
+
       simulateNetwork(resolve, fullFiles[file.path] || DEFAULT_EDITOR_FILE);
     });
   }

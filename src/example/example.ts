@@ -58,9 +58,12 @@ const exampleEditor = new LiveEditor(
   container as HTMLElement
 );
 
-exampleEditor.state.getFile({
-  path: '/content/pages/index.yaml',
-});
+const url = new URL(window.location.toString());
+if (url.searchParams.get('path')) {
+  exampleEditor.state.getFile({
+    path: url.searchParams.get('path') || '',
+  });
+}
 
 // Bind to the custom event to re-render the editor.
 document.addEventListener(EVENT_RENDER, () => {

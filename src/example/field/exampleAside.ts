@@ -5,6 +5,7 @@ import {
   TemplateResult,
   Types,
   html,
+  styleMap,
   unsafeHTML,
 } from '@blinkk/selective-edit';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
@@ -41,13 +42,15 @@ export class ExampleAsideField extends AsideField {
   templateStructure(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     if (!this.isExpanded) {
       return html`<div
-        class="le__clickable"
+        class="le__clickable selective__example_aside__expand"
         @click=${this.handleExpandClick.bind(this)}
       >
         Show config...
       </div>`;
     }
 
-    return html`${unsafeHTML(marked(this.config.source))}`;
+    return html`<div class="selective__example_aside__code">
+      ${unsafeHTML(marked(this.config.source))}
+    </div>`;
   }
 }

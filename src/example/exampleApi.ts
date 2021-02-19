@@ -193,6 +193,7 @@ const fullFiles: Record<string, EditorFileData> = {
     file: {
       path: '/example/basic.yaml',
     },
+    url: 'preview.html',
   },
 };
 

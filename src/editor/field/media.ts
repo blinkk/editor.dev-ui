@@ -37,32 +37,32 @@ export const VALID_IMAGE_MIME_TYPES = [
 ];
 export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
 
-export interface ImageFieldConfig extends FieldConfig {
+export interface MediaFieldConfig extends FieldConfig {
   /**
    * Placeholder for the text input.
    */
   placeholder?: string;
 }
 
-export interface ImageFieldComponent extends FieldComponent {
+export interface MediaFieldComponent extends FieldComponent {
   handleFiles(files: Array<File>): void;
 }
 
-export interface ImageMeta {
+export interface MediaMeta {
   height: number;
   width: number;
 }
 
-export class ImageField
+export class MediaField
   extends DroppableMixin(Field)
-  implements ImageFieldComponent {
-  config: ImageFieldConfig;
+  implements MediaFieldComponent {
+  config: MediaFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
-  meta?: ImageMeta;
+  meta?: MediaMeta;
 
   constructor(
     types: Types,
-    config: ImageFieldConfig,
+    config: MediaFieldConfig,
     globalConfig: LiveEditorGlobalConfig,
     fieldType = 'image'
   ) {
@@ -118,7 +118,7 @@ export class ImageField
     this.render();
   }
 
-  handlePreviewImageLoad(evt: Event) {
+  handlePreviewMediaLoad(evt: Event) {
     const target = evt.target as HTMLImageElement;
     this.meta = {
       height: target.naturalHeight,
@@ -207,7 +207,7 @@ export class ImageField
 
     return html`<img
       data-serving-path=${url}
-      @load=${this.handlePreviewImageLoad.bind(this)}
+      @load=${this.handlePreviewMediaLoad.bind(this)}
       src="${url}"
     />`;
   }

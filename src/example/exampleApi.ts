@@ -141,7 +141,13 @@ const currentFileset: Array<FileData> = [
     path: '/content/strings/about.yaml',
   },
   {
+    path: '/example/media.yaml',
+  },
+  {
     path: '/example/standard.yaml',
+  },
+  {
+    path: '/example/utility.yaml',
   },
   {
     path: '/static/img/portrait.png',
@@ -150,6 +156,32 @@ const currentFileset: Array<FileData> = [
 ];
 
 const fullFiles: Record<string, EditorFileData> = {
+  '/example/media.yaml': {
+    editor: {
+      fields: [
+        // Media example.
+        {
+          type: 'exampleField',
+          key: 'example.media',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'media',
+            key: 'media',
+          } as FieldConfig,
+        } as FieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/utility.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/standard.yaml': {
     editor: {
       fields: [
@@ -176,6 +208,7 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as FieldConfig,
         } as FieldConfig,
+
         // Textarea example.
         {
           type: 'exampleField',
@@ -193,10 +226,232 @@ const fullFiles: Record<string, EditorFileData> = {
             label: 'Description',
           } as FieldConfig,
         } as FieldConfig,
+
+        // Checkbox example.
+        {
+          type: 'exampleField',
+          key: 'example.checkbox',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkbox.checkboxfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'checkbox',
+            key: 'isVisible',
+            label: 'Is visible?',
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Checkbox multi example.
+        {
+          type: 'exampleField',
+          key: 'example.checkboxMulti',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkboxmulti.checkboxmultifieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'checkboxMulti',
+            key: 'options',
+            label: 'View options',
+            options: [
+              {
+                label: 'Option 1',
+                value: 'option-1',
+              },
+              {
+                label: 'Option 2',
+                value: 'option-2',
+              },
+              {
+                label: 'Option 3',
+                value: 'option-3',
+              },
+            ],
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Radio example.
+        {
+          type: 'exampleField',
+          key: 'example.radio',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_radio.radiofieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'radio',
+            key: 'skyColor',
+            label: 'Current sky color',
+            options: [
+              {
+                label: 'Cloudy sky',
+                value: 'cloudy',
+                color: '#dde5f2',
+              },
+              {
+                label: 'Blue sky',
+                value: 'blue',
+                color: '#006beb',
+              },
+              {
+                label: 'Night sky',
+                value: 'night',
+                color: '#131862',
+              },
+              {
+                label: 'Stormy sky',
+                value: 'stormy',
+                gradient: {
+                  colors: ['#57728f', '#2e5073', '#24405c'],
+                  isSmooth: true,
+                },
+              },
+              {
+                label: 'Sunset sky',
+                value: 'sunset',
+                gradient: {
+                  colors: ['#e85566', '#f47b5a', '#f9ac5e'],
+                  orientation: 'slope',
+                },
+              },
+            ],
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Number example.
+        {
+          type: 'exampleField',
+          key: 'example.number',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_number.numberfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'number',
+            key: 'napsInADay',
+            label: 'Naps in a day',
+            help: 'How many naps should there be in a day?',
+            max: 100,
+            min: '0',
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Color example.
+        {
+          type: 'exampleField',
+          key: 'example.color',
+          docUrls: [
+            {
+              label: 'Module',
+              url:
+                'https://blinkkcode.github.io/selective-edit/modules/selective_field_color.html',
+            },
+          ],
+          field: {
+            type: 'color',
+            key: 'favoriteColor',
+            label: 'What is your favorite color?',
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Date example.
+        {
+          type: 'exampleField',
+          key: 'example.date',
+          docUrls: [
+            {
+              label: 'Module',
+              url:
+                'https://blinkkcode.github.io/selective-edit/modules/selective_field_date.html',
+            },
+          ],
+          field: {
+            type: 'date',
+            key: 'birthdate',
+            label: 'Birth date',
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Datetime example.
+        {
+          type: 'exampleField',
+          key: 'example.datetime',
+          docUrls: [
+            {
+              label: 'Module',
+              url:
+                'https://blinkkcode.github.io/selective-edit/modules/selective_field_datetime.html',
+            },
+          ],
+          field: {
+            type: 'datetime',
+            key: 'naptime',
+            label: 'Next nap time',
+          } as FieldConfig,
+        } as FieldConfig,
+
+        // Time example.
+        {
+          type: 'exampleField',
+          key: 'example.time',
+          docUrls: [
+            {
+              label: 'Module',
+              url:
+                'https://blinkkcode.github.io/selective-edit/modules/selective_field_time.html',
+            },
+          ],
+          field: {
+            type: 'time',
+            key: 'wakeuptime',
+            label: 'Time to wake up',
+          } as FieldConfig,
+        } as FieldConfig,
       ],
     },
     file: {
       path: '/example/standard.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/utility.yaml': {
+    editor: {
+      fields: [
+        // Aside example.
+        {
+          type: 'exampleField',
+          key: 'example.aside',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'aside',
+            key: '',
+            source:
+              'Use **markdown** to provide more information to the user.\n\nIt does not save as part of the data, purely informational.',
+          } as FieldConfig,
+        } as FieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/utility.yaml',
     },
     url: 'preview.html',
   },

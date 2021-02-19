@@ -13,6 +13,7 @@ import {
 import {LiveEditorGlobalConfig} from '../../editor/editor';
 
 export interface ExampleFieldConfig extends FieldConfig {
+  docUrl?: string;
   field: FieldConfig;
 }
 
@@ -71,7 +72,7 @@ export class ExampleFieldField extends Field {
           class="le__clickable selective__example_field__expand"
           @click=${this.handleExpandClick.bind(this)}
         >
-          Show config...
+          Show config…
         </div>`;
     }
 
@@ -80,7 +81,12 @@ export class ExampleFieldField extends Field {
         <pre><code>${unsafeHTML(
           formatCodeSample(yaml.dump(this.config.field))
         )}</code></pre>
-      </div>`;
+      </div>
+      ${this.config.docUrl
+        ? html`<div class="selective__example_field__doc_url">
+            <a href=${this.config.docUrl} target="_blank">View docs</a>
+          </div>`
+        : ''}`;
   }
 }
 

@@ -141,7 +141,7 @@ const currentFileset: Array<FileData> = [
     path: '/content/strings/about.yaml',
   },
   {
-    path: '/example/basic.yaml',
+    path: '/example/standard.yaml',
   },
   {
     path: '/static/img/portrait.png',
@@ -150,13 +150,15 @@ const currentFileset: Array<FileData> = [
 ];
 
 const fullFiles: Record<string, EditorFileData> = {
-  '/example/basic.yaml': {
+  '/example/standard.yaml': {
     editor: {
       fields: [
         // Text example.
         {
           type: 'exampleField',
           key: 'example.text',
+          docUrl:
+            'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_text.textfieldconfig.html',
           field: {
             type: 'text',
             key: 'title',
@@ -173,6 +175,8 @@ const fullFiles: Record<string, EditorFileData> = {
         {
           type: 'exampleField',
           key: 'example.textarea',
+          docUrl:
+            'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_textarea.textareafieldconfig.html',
           field: {
             type: 'textarea',
             key: 'description',
@@ -182,7 +186,7 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/basic.yaml',
+      path: '/example/standard.yaml',
     },
     url: 'preview.html',
   },
@@ -723,23 +727,4 @@ export enum WorkspaceWorkflow {
   Success = 'success',
   SuccessNoFields = 'successNoFields',
   SuccessChangeWorkspace = 'successChangeWorkspace',
-}
-
-function formatCodeSample(code: string, type = 'yaml'): string {
-  const cleanLines: Array<string> = [];
-  let indentLength = -1;
-  for (const line of code.split('\n')) {
-    if (!line.trim()) {
-      continue;
-    }
-
-    if (indentLength < 0) {
-      indentLength = line.length - line.trim().length;
-    }
-
-    // Remove the same indent length off all lines based on first line.
-    cleanLines.push(line.slice(indentLength));
-  }
-
-  return `\`\`\`${type || ''}\n${cleanLines.join('\n')}\n\`\`\``;
 }

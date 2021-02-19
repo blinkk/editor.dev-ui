@@ -176,9 +176,17 @@ const fullFiles: Record<string, EditorFileData> = {
               message: Title is required.`),
         } as FieldConfig,
         {
-          type: 'image',
-          key: 'image',
-          label: 'Image',
+          type: 'textarea',
+          key: 'description',
+          label: 'Description',
+        } as FieldConfig,
+        {
+          type: 'exampleAside',
+          key: 'help.textarea',
+          source: formatCodeSample(`
+            type: textarea
+            key: description
+            label: Description`),
         } as FieldConfig,
       ],
     },

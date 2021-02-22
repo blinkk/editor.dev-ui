@@ -149,6 +149,9 @@ const currentFileset: Array<FileData> = [
     path: '/example/standard.yaml',
   },
   {
+    path: '/example/structure.yaml',
+  },
+  {
     path: '/example/utility.yaml',
   },
   {
@@ -426,6 +429,45 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     file: {
       path: '/example/standard.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/structure.yaml': {
+    data: {
+      group: {
+        title: 'testing',
+      },
+    },
+    editor: {
+      fields: [
+        // Group example.
+        {
+          type: 'exampleField',
+          key: 'example.group',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_group.groupfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'group',
+            key: 'group',
+            label: 'Group',
+            fields: [
+              {
+                type: 'text',
+                key: 'title',
+                label: 'Title',
+              } as FieldConfig,
+            ],
+          } as FieldConfig,
+        } as FieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/structure.yaml',
     },
     url: 'preview.html',
   },

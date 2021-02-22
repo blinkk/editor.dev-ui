@@ -1,0 +1,20 @@
+.selective__field__type__group
+  > .selective__field__header
+    +clickable
+    align-items: center
+    color: $le-color-secondary-light
+    display: flex
+    flex-flow: row
+    margin-bottom: $le-space-small
+    text-transform: uppercase
+
+    .selective__field__label
+      margin-bottom: 0
+
+      label
+        +clickable
+
+  &--expanded
+    > .selective__field__input__structure
+      border-left: $le-border-size-medium solid $le-color-secondary
+      padding: $le-space-medium 0 $le-space-medium $le-space-medium

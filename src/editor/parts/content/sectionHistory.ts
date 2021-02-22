@@ -29,7 +29,14 @@ export class HistoryPart extends ContentSectionPart {
 
   templateChanges(editor: LiveEditor): TemplateResult {
     if (!editor.state.file?.history) {
-      return html``;
+      return html`<div class="le__part__content__history__title">
+          Change history
+        </div>
+        <div class="le__list">
+          <div class="le__list__item le__list__item--pad_small">
+            <div class="le__list__item__label">Change history unavailable.</div>
+          </div>
+        </div>`;
     }
 
     return html`<div class="le__part__content__history__title">

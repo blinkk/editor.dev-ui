@@ -4,9 +4,16 @@
   flex-grow: 1
 
 .le__part__content__sections
+  display: flex
+  flex-flow: column
   flex-grow: 1
   height: 0  // Fix for the fields section not overflowing correctly.
   overflow: auto
+
+.le__part__content__section
+  display: flex
+  flex-flow: column
+  flex-grow: 1
 
 @import './content/footer'
 @import './content/header'

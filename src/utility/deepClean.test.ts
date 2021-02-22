@@ -275,3 +275,48 @@ test('remove undefineds', t => {
 
   t.deepEqual(cleaner.clean(['bar', undefined]), ['bar']);
 });
+
+test('remove by key', t => {
+  const cleaner = new DeepClean({
+    removeKeys: ['foo'],
+  });
+
+  // Main level key.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: undefined,
+    }),
+    {
+      test: undefined,
+    }
+  );
+
+  // Deep key.
+  t.deepEqual(
+    cleaner.clean({
+      foo: 'bar',
+      test: {
+        foo: 'baz',
+      },
+    }),
+    {
+      test: {},
+    }
+  );
+
+  // Array with key.
+  t.deepEqual(
+    cleaner.clean([
+      {
+        foo: 'bar',
+        test: ['baz'],
+      },
+    ]),
+    [
+      {
+        test: ['baz'],
+      },
+    ]
+  );
+});

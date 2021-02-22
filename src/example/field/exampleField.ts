@@ -11,6 +11,7 @@ import {
   repeat,
   unsafeHTML,
 } from '@blinkk/selective-edit';
+import {DeepClean} from '../../utility/deepClean';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
 
 export interface ExampleFieldUrl {
@@ -24,6 +25,7 @@ export interface ExampleFieldConfig extends FieldConfig {
 }
 
 export class ExampleFieldField extends Field {
+  cleaner: DeepClean;
   config: ExampleFieldConfig;
   field?: FieldComponent | null;
   isExpanded?: boolean;
@@ -36,6 +38,9 @@ export class ExampleFieldField extends Field {
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
+    this.cleaner = new DeepClean({
+      removeKeys: ['isGuessed', 'parentKey'],
+    });
   }
 
   handleExpandClick(evt: Event) {
@@ -86,7 +91,7 @@ export class ExampleFieldField extends Field {
     return html`${this.field?.template(editor, data) || ''}
       <div class="selective__example_field__code">
         <pre><code>${unsafeHTML(
-          formatCodeSample(yaml.dump(this.config.field))
+          formatCodeSample(yaml.dump(this.cleaner.clean(this.config.field)))
         )}</code></pre>
       </div>
       ${this.config.docUrls

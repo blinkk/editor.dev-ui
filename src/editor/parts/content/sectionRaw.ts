@@ -6,7 +6,7 @@ import {LiveEditor} from '../../editor';
 const RAW_FIELDS: Array<FieldConfig> = [
   {
     type: 'textarea',
-    key: 'data',
+    key: 'dataRaw',
     label: 'Data',
   },
   {
@@ -35,7 +35,7 @@ export class RawPart extends ContentSectionPart {
   }
 
   loadEditorConfig() {
-    this.data = new DeepObject(this.config.state.file?.data || {});
+    this.data = new DeepObject(this.config.state.file || {});
     this.selective.resetFields();
     for (const fieldConfig of RAW_FIELDS) {
       this.selective.fields.addField(fieldConfig);

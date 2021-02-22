@@ -31,9 +31,11 @@ function simulateNetwork(callback: Function, response: any) {
 }
 
 const DEFAULT_EDITOR_FILE: EditorFileData = {
+  content: 'Example content.',
   data: {
     title: 'Testing',
   },
+  dataRaw: 'title: Testing',
   file: {
     path: '/content/pages/index.yaml',
   },
@@ -936,6 +938,28 @@ export class ExampleApi implements LiveEditorApiComponent {
         status: status,
         workspace: responseWorkspace,
       });
+    });
+  }
+
+  async saveFile(file: EditorFileData): Promise<EditorFileData> {
+    return new Promise<EditorFileData>((resolve, reject) => {
+      const methodName = 'saveFile';
+      console.log(`API: ${methodName}`, file);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to save the file.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      fullFiles[file.file.path] = file;
+
+      simulateNetwork(
+        resolve,
+        fullFiles[file.file.path] || DEFAULT_EDITOR_FILE
+      );
     });
   }
 

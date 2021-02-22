@@ -42,6 +42,13 @@ export const EVENT_RENDER = 'live.render';
 export const EVENT_RENDER_COMPLETE = 'live.render.complete';
 
 /**
+ * Custom event to save the current data.
+ *
+ * This is triggered when the user uses cmd+s.
+ */
+export const EVENT_SAVE = 'live.save';
+
+/**
  * Custom event name for opening a toast.
  *
  * Expects a {@link ToastConfig} as the event details.

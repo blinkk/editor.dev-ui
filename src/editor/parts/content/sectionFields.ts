@@ -1,7 +1,9 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
-import {EVENT_FILE_LOAD_COMPLETE} from '../../events';
+import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
+import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
+import merge from 'lodash.merge';
 
 export class FieldsPart extends ContentSectionPart {
   data: DeepObject;
@@ -14,6 +16,31 @@ export class FieldsPart extends ContentSectionPart {
 
     document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
       this.loadEditorConfig();
+    });
+
+    document.addEventListener(EVENT_SAVE, (evt: Event) => {
+      // If the section is not visible, then disregard the event.
+      if (this.isVisible) {
+        this.handleAction(evt);
+      }
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  handleAction(evt: Event) {
+    if (this.selective.isClean || !this.selective.isValid) {
+      return;
+    }
+
+    const value = merge({}, this.config.state.file || {}, {
+      data: this.selective.value,
+    });
+
+    this.isProcessing = true;
+    this.render();
+    this.config.state.saveFile(value as EditorFileData, () => {
+      this.isProcessing = false;
+      this.render();
     });
   }
 

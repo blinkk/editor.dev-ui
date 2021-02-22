@@ -119,6 +119,13 @@ export interface LiveEditorApiComponent {
   ): Promise<PublishResult>;
 
   /**
+   * Save the updated file data.
+   *
+   * @param file File data to be saved.
+   */
+  saveFile(file: EditorFileData): Promise<EditorFileData>;
+
+  /**
    * Upload a file.
    *
    * Uses a File object to provide a blob file that should be uploaded
@@ -167,6 +174,14 @@ export interface EditorFileData {
    * of a yaml file.
    */
   data?: any;
+  /**
+   * Raw file data.
+   *
+   * For example, the frontmatter for a markdown file or the contents
+   * of a yaml file. This is the unprocessed data string that can be edited
+   * in the 'Raw' content form.
+   */
+  dataRaw?: string;
   /**
    * Editor configuration for the file.
    */

@@ -1,3 +1,4 @@
+import {EVENT_RENDER_COMPLETE, EVENT_SAVE} from './events';
 import {
   EditorConfig,
   GlobalConfig,
@@ -7,7 +8,6 @@ import {
   render,
 } from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
-import {EVENT_RENDER_COMPLETE} from './events';
 import {EditorState} from './state';
 import {EmptyPart} from './parts/empty';
 import {LiveEditorApiComponent} from './api';
@@ -126,6 +126,18 @@ export class LiveEditor {
     // Automatically re-render after the window resizes.
     window.addEventListener('resize', () => {
       this.render();
+    });
+
+    // Handle the global key bindings.
+    container.addEventListener('keydown', (evt: KeyboardEvent) => {
+      if (evt.ctrlKey || evt.metaKey) {
+        switch (evt.key) {
+          case 's':
+            evt.preventDefault();
+            document.dispatchEvent(new CustomEvent(EVENT_SAVE));
+            break;
+        }
+      }
     });
   }
 

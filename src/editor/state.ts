@@ -367,4 +367,28 @@ export class EditorState extends ListenersMixin(Base) {
   render() {
     document.dispatchEvent(new CustomEvent(EVENT_RENDER));
   }
+
+  saveFile(
+    file: EditorFileData,
+    callback?: (file: EditorFileData) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    const promiseKey = 'saveFile';
+    if (this.promises[promiseKey]) {
+      return;
+    }
+    this.promises[promiseKey] = this.api
+      .saveFile(file)
+      .then(data => {
+        this.file = data;
+        delete this.promises[promiseKey];
+        if (callback) {
+          callback(data);
+        }
+        this.triggerListener(promiseKey);
+        document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
+        this.render();
+      })
+      .catch(callbackError || catchError);
+  }
 }

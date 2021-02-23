@@ -1,4 +1,4 @@
-.le__button
+=button
   background: transparent
   border: none
   border-radius: $le-radius-small
@@ -26,3 +26,26 @@
   &--extreme
     background-color: $le-color-back-error
     color: $le-color-on-back-error
+
+=button-outline
+  border: $le-border-size-medium solid $le-color-secondary
+
+=button-toggle
+  margin-left: 0
+  margin-right: 0
+  border-radius: 0
+  border-right: none
+
+=button-toggle-first
+  border-bottom-left-radius: $le-radius-small
+  margin-left: $le-space-medium
+  border-top-left-radius: $le-radius-small
+
+=button-toggle-last
+  border-bottom-right-radius: $le-radius-small
+  border-right: $le-border-size-medium solid $le-color-secondary
+  border-top-right-radius: $le-radius-small
+  margin-right: $le-space-medium
+
+.le__button
+  +button

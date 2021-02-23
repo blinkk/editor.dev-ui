@@ -25,6 +25,7 @@ import {
   TextAreaFieldConfig,
   TextFieldConfig,
   TimeFieldConfig,
+  VariantFieldConfig,
 } from '@blinkk/selective-edit';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
@@ -480,6 +481,57 @@ const fullFiles: Record<string, EditorFileData> = {
               } as TextFieldConfig,
             ],
           } as GroupFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Variant example.
+        {
+          type: 'exampleField',
+          key: 'example.variant',
+          cleanerKeys: ['isExpanded'],
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantfieldconfig.html',
+            },
+            {
+              label: 'Option interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantoptionconfig.html',
+            },
+          ],
+          field: {
+            type: 'variant',
+            key: 'variant',
+            label: 'Variant',
+            variants: {
+              hero: {
+                label: 'Hero',
+                fields: [
+                  {
+                    type: 'text',
+                    key: 'title',
+                    label: 'Hero Title',
+                  } as TextFieldConfig,
+                ],
+              },
+              heroWithImage: {
+                label: 'Hero with Image',
+                fields: [
+                  {
+                    type: 'text',
+                    key: 'title',
+                    label: 'Hero Title',
+                  } as TextFieldConfig,
+                  {
+                    type: 'media',
+                    key: 'media',
+                    label: 'Hero image',
+                  } as MediaFieldConfig,
+                ],
+              },
+            },
+          } as VariantFieldConfig,
         } as ExampleFieldConfig,
       ],
     },

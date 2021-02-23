@@ -1,0 +1,28 @@
+.selective__field__type__variant
+  > .selective__field__input__structure
+    > .selective__fields,
+    > .selective__field
+      border-left: $le-border-size-medium solid $le-color-secondary
+      padding: $le-space-medium 0 $le-space-medium $le-space-medium
+      margin: $le-space-medium 0
+
+.selective__variant__variants
+  align-items: center
+  display: flex
+  flex-flow: row
+
+.selective__variant__variant
+  +button
+  +button-outline
+  +button-toggle
+
+  &:first-of-type
+    +button-toggle-first
+
+  &:last-of-type
+    +button-toggle-last
+
+  &--selected
+    background: $le-color-secondary
+    box-shadow: 0px 0px 0px $le-border-size-large $le-color-secondary;
+    color: $le-color-on-secondary

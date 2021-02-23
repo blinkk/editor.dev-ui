@@ -13,7 +13,23 @@ import {
   UserData,
   WorkspaceData,
 } from '../editor/api';
-import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
+import {
+  CheckboxFieldConfig,
+  CheckboxMultiFieldConfig,
+  ColorFieldConfig,
+  DateFieldConfig,
+  DatetimeFieldConfig,
+  GroupFieldConfig,
+  NumberFieldConfig,
+  RadioFieldConfig,
+  TextAreaFieldConfig,
+  TextFieldConfig,
+  TimeFieldConfig,
+  VariantFieldConfig,
+} from '@blinkk/selective-edit';
+import {AsideFieldConfig} from '../editor/field/aside';
+import {ExampleFieldConfig} from './field/exampleField';
+import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
@@ -51,7 +67,7 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
             message: 'Title is required.',
           },
         ],
-      } as FieldConfig,
+      } as TextFieldConfig,
     ],
   },
   history: [
@@ -149,6 +165,9 @@ const currentFileset: Array<FileData> = [
     path: '/example/standard.yaml',
   },
   {
+    path: '/example/structure.yaml',
+  },
+  {
     path: '/example/utility.yaml',
   },
   {
@@ -175,8 +194,8 @@ const fullFiles: Record<string, EditorFileData> = {
           field: {
             type: 'media',
             key: 'media',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as MediaFieldConfig,
+        } as ExampleFieldConfig,
       ],
     },
     file: {
@@ -208,8 +227,8 @@ const fullFiles: Record<string, EditorFileData> = {
                 message: 'Title is required.',
               },
             ],
-          } as FieldConfig,
-        } as FieldConfig,
+          } as TextFieldConfig,
+        } as ExampleFieldConfig,
 
         // Textarea example.
         {
@@ -226,8 +245,8 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'textarea',
             key: 'description',
             label: 'Description',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as TextAreaFieldConfig,
+        } as ExampleFieldConfig,
 
         // Checkbox example.
         {
@@ -244,8 +263,8 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'checkbox',
             key: 'isVisible',
             label: 'Is visible?',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as CheckboxFieldConfig,
+        } as ExampleFieldConfig,
 
         // Checkbox multi example.
         {
@@ -276,8 +295,8 @@ const fullFiles: Record<string, EditorFileData> = {
                 value: 'option-3',
               },
             ],
-          } as FieldConfig,
-        } as FieldConfig,
+          } as CheckboxMultiFieldConfig,
+        } as ExampleFieldConfig,
 
         // Radio example.
         {
@@ -327,8 +346,8 @@ const fullFiles: Record<string, EditorFileData> = {
                 },
               },
             ],
-          } as FieldConfig,
-        } as FieldConfig,
+          } as RadioFieldConfig,
+        } as ExampleFieldConfig,
 
         // Number example.
         {
@@ -347,9 +366,9 @@ const fullFiles: Record<string, EditorFileData> = {
             label: 'Naps in a day',
             help: 'How many naps should there be in a day?',
             max: 100,
-            min: '0',
-          } as FieldConfig,
-        } as FieldConfig,
+            min: 0,
+          } as NumberFieldConfig,
+        } as ExampleFieldConfig,
 
         // Color example.
         {
@@ -366,8 +385,8 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'color',
             key: 'favoriteColor',
             label: 'What is your favorite color?',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as ColorFieldConfig,
+        } as ExampleFieldConfig,
 
         // Date example.
         {
@@ -384,8 +403,8 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'date',
             key: 'birthdate',
             label: 'Birth date',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as DateFieldConfig,
+        } as ExampleFieldConfig,
 
         // Datetime example.
         {
@@ -402,8 +421,8 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'datetime',
             key: 'naptime',
             label: 'Next nap time',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as DatetimeFieldConfig,
+        } as ExampleFieldConfig,
 
         // Time example.
         {
@@ -420,12 +439,104 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'time',
             key: 'wakeuptime',
             label: 'Time to wake up',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as TimeFieldConfig,
+        } as ExampleFieldConfig,
       ],
     },
     file: {
       path: '/example/standard.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/structure.yaml': {
+    data: {
+      group: {
+        title: 'testing',
+      },
+    },
+    editor: {
+      fields: [
+        // Group example.
+        {
+          type: 'exampleField',
+          key: 'example.group',
+          cleanerKeys: ['isExpanded'],
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_group.groupfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'group',
+            key: 'group',
+            label: 'Group',
+            previewFields: ['title'],
+            fields: [
+              {
+                type: 'text',
+                key: 'title',
+                label: 'Title',
+              } as TextFieldConfig,
+            ],
+          } as GroupFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Variant example.
+        {
+          type: 'exampleField',
+          key: 'example.variant',
+          cleanerKeys: ['isExpanded'],
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantfieldconfig.html',
+            },
+            {
+              label: 'Option interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantoptionconfig.html',
+            },
+          ],
+          field: {
+            type: 'variant',
+            key: 'variant',
+            label: 'Variant',
+            variants: {
+              hero: {
+                label: 'Hero',
+                fields: [
+                  {
+                    type: 'text',
+                    key: 'title',
+                    label: 'Hero Title',
+                  } as TextFieldConfig,
+                ],
+              },
+              heroWithImage: {
+                label: 'Hero with Image',
+                fields: [
+                  {
+                    type: 'text',
+                    key: 'title',
+                    label: 'Hero Title',
+                  } as TextFieldConfig,
+                  {
+                    type: 'media',
+                    key: 'media',
+                    label: 'Hero image',
+                  } as MediaFieldConfig,
+                ],
+              },
+            },
+          } as VariantFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/structure.yaml',
     },
     url: 'preview.html',
   },
@@ -448,8 +559,8 @@ const fullFiles: Record<string, EditorFileData> = {
             key: '',
             source:
               'Use **markdown** to provide more information to the user.\n\nIt does not save as part of the data, purely informational.',
-          } as FieldConfig,
-        } as FieldConfig,
+          } as AsideFieldConfig,
+        } as ExampleFieldConfig,
       ],
     },
     file: {
@@ -767,7 +878,7 @@ export class ExampleApi implements LiveEditorApiComponent {
                   message: 'Message for publishing is required.',
                 },
               ],
-            } as FieldConfig,
+            } as TextFieldConfig,
           ],
         };
       } else if (this.workflow !== WorkspaceWorkflow.NoPublish) {

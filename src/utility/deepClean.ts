@@ -4,6 +4,7 @@ export interface DeepCleanConfig {
   removeEmptyArrays?: boolean;
   removeEmptyObjects?: boolean;
   removeEmptyStrings?: boolean;
+  removeKeys?: Array<string>;
   removeNulls?: boolean;
   removeUndefineds?: boolean;
 }
@@ -60,9 +61,14 @@ export class DeepClean {
     originalValue: Record<string, any>
   ): Record<string, any> {
     const newValue: Record<string, any> = {};
+    const removeKeys = this.config.removeKeys || [];
 
     // eslint-disable-next-line prefer-const
     for (let [key, value] of Object.entries(originalValue)) {
+      if (removeKeys.includes(key)) {
+        continue;
+      }
+
       if (DataType.isObject(value)) {
         // Clean in depth before testing for cleaning.
         value = this.cleanRecord(value);

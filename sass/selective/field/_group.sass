@@ -1,0 +1,29 @@
+.selective__field__type__group
+  > .selective__field__header
+    +clickable
+    align-items: center
+    color: $le-color-secondary-light
+    display: flex
+    flex-flow: row
+    margin-bottom: $le-space-small
+    text-transform: uppercase
+
+    .selective__field__label
+      margin-bottom: 0
+
+      label
+        +clickable
+
+  > .selective__field__input__structure
+    > .selective__field__preview
+      border-left: $le-border-size-medium solid $le-color-secondary-light
+      color: $le-color-secondary-light
+      font-size: $le-font-size-small
+      padding: $le-space-small 0 $le-space-small $le-space-medium
+
+  &--expanded
+    > .selective__field__input__structure
+      > .selective__fields,
+      > .selective__field
+        border-left: $le-border-size-medium solid $le-color-secondary
+        padding: $le-space-medium 0 $le-space-medium $le-space-medium

@@ -14,7 +14,16 @@
       label
         +clickable
 
+  > .selective__field__input__structure
+    > .selective__field__preview
+      border-left: $le-border-size-medium solid $le-color-secondary-light
+      color: $le-color-secondary-light
+      font-size: $le-font-size-small
+      padding: $le-space-small 0 $le-space-small $le-space-medium
+
   &--expanded
     > .selective__field__input__structure
-      border-left: $le-border-size-medium solid $le-color-secondary
-      padding: $le-space-medium 0 $le-space-medium $le-space-medium
+      > .selective__fields,
+      > .selective__field
+        border-left: $le-border-size-medium solid $le-color-secondary
+        padding: $le-space-medium 0 $le-space-medium $le-space-medium

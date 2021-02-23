@@ -20,6 +20,7 @@ export interface ExampleFieldUrl {
 }
 
 export interface ExampleFieldConfig extends FieldConfig {
+  cleanerKeys?: Array<string>;
   docUrls?: Array<ExampleFieldUrl>;
   field: FieldConfig;
 }
@@ -39,7 +40,10 @@ export class ExampleFieldField extends Field {
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.cleaner = new DeepClean({
-      removeKeys: ['isGuessed', 'parentKey'],
+      removeKeys: (this.config.cleanerKeys || []).concat([
+        'isGuessed',
+        'parentKey',
+      ]),
     });
   }
 

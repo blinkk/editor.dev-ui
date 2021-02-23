@@ -444,6 +444,7 @@ const fullFiles: Record<string, EditorFileData> = {
         {
           type: 'exampleField',
           key: 'example.group',
+          cleanerKeys: ['isExpanded'],
           docUrls: [
             {
               label: 'Config interface',
@@ -455,6 +456,7 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'group',
             key: 'group',
             label: 'Group',
+            previewFields: ['title'],
             fields: [
               {
                 type: 'text',

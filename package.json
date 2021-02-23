@@ -89,7 +89,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^1.0.14",
+    "@blinkk/selective-edit": "^1.0.15",
     "javascript-time-ago": "^2.3.4",
     "js-yaml": "^4.0.0",
     "lodash.merge": "^4.6.2",

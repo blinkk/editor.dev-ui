@@ -190,6 +190,11 @@ const fullFiles: Record<string, EditorFileData> = {
               url:
                 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
             },
+            {
+              label: 'Generic config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
           ],
           field: {
             type: 'media',
@@ -221,6 +226,11 @@ const fullFiles: Record<string, EditorFileData> = {
               label: 'Config interface',
               url:
                 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
             },
           ],
           field: {

@@ -189,6 +189,7 @@ export class MediaField
   }
 
   templateFileUpload(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: DeepObject
@@ -200,6 +201,9 @@ export class MediaField
     return html`<div class="selective__media__upload">
       <input
         type="file"
+        accept=${[...VALID_IMAGE_MIME_TYPES, ...VALID_VIDEO_MIME_TYPES].join(
+          ','
+        )}
         id="media-file-${this.uid}"
         @input=${this.handleFileUpload.bind(this)}
       />

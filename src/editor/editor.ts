@@ -227,6 +227,10 @@ export interface LiveEditorLabels {
    */
   contentSaveProcessing?: string;
   /**
+   * Label for media field extra fields.
+   */
+  fieldMediaExtra?: string;
+  /**
    * Label for media field sub fields.
    */
   fieldMediaFields?: string;

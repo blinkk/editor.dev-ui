@@ -64,6 +64,7 @@ const exampleEditor = new LiveEditor(
       },
       global: {
         api: exampleApi,
+        labels: {},
         state: exampleState,
       },
     },

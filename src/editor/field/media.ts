@@ -77,6 +77,11 @@ export class MediaField
       ...VALID_VIDEO_MIME_TYPES,
     ];
     this.droppableUi.listeners.add('files', this.handleFiles.bind(this));
+
+    this.zoneToKey = {
+      path: 'path',
+      label: 'label',
+    };
   }
 
   /**
@@ -101,6 +106,20 @@ export class MediaField
     // TODO: Use api to get the preview url for the file path.
 
     return undefined;
+  }
+
+  /**
+   * Handle when the accessibility label changes value.
+   *
+   * @param evt Input event from changing value.
+   */
+  handleA11yLabel(evt: Event) {
+    const target = evt.target as HTMLInputElement;
+    this.currentValue = merge({}, this.currentValue || {}, {
+      _meta: this.meta,
+      label: target.value,
+    });
+    this.render();
   }
 
   handleFiles(files: Array<File>) {
@@ -188,6 +207,27 @@ export class MediaField
     this.render();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateAltLabel(editor: SelectiveEditor, data: DeepObject): TemplateResult {
+    return html`<div class="selective__media__a11y_label">
+      <div class="selective__media__section__label">
+        ${this.globalConfig.labels.fieldMediaLabel ||
+        'Media accessibility label'}
+      </div>
+
+      <div class=${classMap(this.classesForInput('label'))}>
+        <input
+          type="text"
+          id="media-a11y-label-${this.uid}"
+          @input=${this.handleA11yLabel.bind(this)}
+          value=${this.currentValue?.label || ''}
+        />
+      </div>
+
+      ${this.templateErrors(editor, data, 'label')}
+    </div>`;
+  }
+
   templateFileUpload(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
@@ -244,7 +284,10 @@ export class MediaField
         @dragover=${this.droppableUi.handleDragOver.bind(this.droppableUi)}
         @drop=${this.droppableUi.handleDrop.bind(this.droppableUi)}
       >
-        <div class=${classMap(this.classesForInput())}>
+        <div class="selective__media__section__label">
+          ${this.globalConfig.labels.fieldMediaPath || 'Media path'}
+        </div>
+        <div class=${classMap(this.classesForInput('path'))}>
           <input
             type="text"
             id="media-${this.uid}"
@@ -259,8 +302,9 @@ export class MediaField
         </div>
         ${this.templateFileUpload(editor, data)}
         ${this.templatePreview(editor, data)}
-      </div>
-      ${this.templateErrors(editor, data)}`;
+        ${this.templateErrors(editor, data, 'path')}
+        ${this.templateAltLabel(editor, data)}
+      </div>`;
   }
 
   templatePreview(editor: SelectiveEditor, data: DeepObject): TemplateResult {
@@ -271,7 +315,9 @@ export class MediaField
 
     return html`<div class="selective__media__preview">
       <div class="selective__media__preview_media">
-        <div class="selective__media__preview_media__label">Media preview</div>
+        <div class="selective__media__section__label">
+          ${this.globalConfig.labels.fieldMediaPreview || 'Media preview'}
+        </div>
         ${this.templatePreviewMedia(editor, data)}
       </div>
       <div class="selective__media__meta">

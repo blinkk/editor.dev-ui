@@ -195,6 +195,20 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'media',
             key: 'media',
             label: 'Media',
+            validation: {
+              path: [
+                {
+                  type: 'require',
+                  message: 'Path is required.',
+                },
+              ],
+              label: [
+                {
+                  type: 'require',
+                  message: 'Label is required.',
+                },
+              ],
+            },
           } as MediaFieldConfig,
         } as ExampleFieldConfig,
       ],

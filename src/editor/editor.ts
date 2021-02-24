@@ -31,6 +31,7 @@ TimeAgo.addDefaultLocale(en);
  */
 export interface LiveEditorGlobalConfig extends GlobalConfig {
   api: LiveEditorApiComponent;
+  labels: LiveEditorLabels;
   state: EditorState;
 }
 
@@ -225,6 +226,22 @@ export interface LiveEditorLabels {
    * Label for content save action processing.
    */
   contentSaveProcessing?: string;
+  /**
+   * Label for media field sub fields.
+   */
+  fieldMediaFields?: string;
+  /**
+   * Label for media field label.
+   */
+  fieldMediaLabel?: string;
+  /**
+   * Label for media field path.
+   */
+  fieldMediaPath?: string;
+  /**
+   * Label for media field preview.
+   */
+  fieldMediaPreview?: string;
   /**
    * Label for the file.
    */

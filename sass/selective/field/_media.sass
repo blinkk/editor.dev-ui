@@ -16,11 +16,12 @@
       max-width: 100%
       margin: $le-space-small 0
 
-  .selective__media__preview_media__label
-    color: $le-color-secondary-light
-    font-size: $le-font-size-small
-    text-transform: uppercase
-    margin: $le-space-medium 0 $le-space-small 0
+  .selective__media__section__label
+    +field-section-heading
+
+  .selective__media__a11y_label
+    input
+      +field-input
 
   .selective__media__meta
     color: $le-color-secondary-light

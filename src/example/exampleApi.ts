@@ -190,11 +190,73 @@ const fullFiles: Record<string, EditorFileData> = {
               url:
                 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
             },
+            {
+              label: 'Generic config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
           ],
           field: {
             type: 'media',
             key: 'media',
             label: 'Media',
+            validation: {
+              path: [
+                {
+                  type: 'require',
+                  message: 'Path is required.',
+                },
+              ],
+              label: [
+                {
+                  type: 'require',
+                  message: 'Label is required.',
+                },
+              ],
+            },
+          } as MediaFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Media w/extra example.
+        {
+          type: 'exampleField',
+          key: 'example.media.extra',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'media',
+            key: 'media',
+            label: 'Media w/extra fields',
+            fields: [
+              {
+                type: 'text',
+                key: 'title',
+                label: 'Title',
+              },
+              {
+                type: 'textarea',
+                key: 'description',
+                label: 'Description',
+              },
+            ],
+            validation: {
+              path: [
+                {
+                  type: 'require',
+                  message: 'Path is required.',
+                },
+              ],
+            },
           } as MediaFieldConfig,
         } as ExampleFieldConfig,
       ],

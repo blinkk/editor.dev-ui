@@ -3,10 +3,13 @@
     > .selective__droppable__target
       position: relative
 
-      > .selective__field__input
-        align-items: center
-        display: flex
-        flex-flow: row
+  .selective__media__path__input
+    align-items: center
+    display: flex
+    flex-flow: row
+
+    .selective__field__input
+      flex-grow: 1
 
   .selective__media__preview
     img,
@@ -16,11 +19,8 @@
       max-width: 100%
       margin: $le-space-small 0
 
-  .selective__media__preview_media__label
-    color: $le-color-secondary-light
-    font-size: $le-font-size-small
-    text-transform: uppercase
-    margin: $le-space-medium 0 $le-space-small 0
+  .selective__media__section__label
+    +field-section-heading
 
   .selective__media__meta
     color: $le-color-secondary-light
@@ -72,3 +72,16 @@
     // Pointer events cause issues with triggering extra drag events from children nodes.
     *
       pointer-events: none
+
+  > .selective__field__input__structure
+    > .selective__field__type__group
+      > .selective__field__header
+        .selective__field__label
+          +field-section-heading
+          font-weight: 400
+          margin: 0
+
+        .selective__field__actions
+          .selective__action
+            .material-icons
+              padding: $le-space-xsmall $le-space-small

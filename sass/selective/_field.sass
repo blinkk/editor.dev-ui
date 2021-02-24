@@ -7,6 +7,10 @@
   &:last-child
     margin-bottom: 0
 
+  &--invalid
+    > .selective__field__header
+      color: $le-color-extreme
+
 .selective__field__help
   color: $le-color-secondary-light
   font-size: $le-font-size-small
@@ -35,6 +39,9 @@
 
     .material-icons
       padding: $le-space-small $le-space-medium
+
+      .selective__field__header &
+        padding: $le-space-small
 
 =field-input
   background: $le-color-tertiary
@@ -73,6 +80,12 @@
 
   &:focus
     box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-warning
+
+=field-section-heading
+  color: $le-color-secondary-light
+  font-size: $le-font-size-small
+  text-transform: uppercase
+  margin: $le-space-medium 0 $le-space-small 0
 
 .selective__field__input
   input[type=text],

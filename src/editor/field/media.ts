@@ -4,6 +4,9 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
+  FieldsComponent,
+  GroupField,
+  GroupFieldConfig,
   SelectiveEditor,
   TemplateResult,
   Types,
@@ -16,6 +19,7 @@ import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
 
+export const DEFAULT_EXTRA_KEY = 'extra';
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
   avif: 'image/avif',
   gif: 'image/gif',
@@ -40,9 +44,49 @@ export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
 
 export interface MediaFieldConfig extends FieldConfig {
   /**
-   * Placeholder for the text input.
+   * Key to use for the data for the 'extra' fields.
+   *
+   * For example, if the `extraKey` is `foo` then the data
+   * would look similar to:
+   *
+   * ```yaml
+   * path: /path/to/file.png
+   * foo:
+   *   title: testing
+   * ```
+   */
+  extraKey?: string;
+  /**
+   * Label to use for the 'extra' fields.
+   */
+  extraLabel?: string;
+  /**
+   * Fields to be grouped.
+   */
+  fields?: Array<FieldConfig>;
+  /**
+   * Are the extra fields expanded to show the fields?
+   *
+   * Set to `true` to expand the extra fields by default.
+   */
+  isExpanded?: boolean;
+  /**
+   * Placeholder for the path input.
    */
   placeholder?: string;
+  /**
+   * Placeholder for the label input.
+   */
+  placeholderLabel?: string;
+  /**
+   * Preview field keys.
+   *
+   * When showing a preview of the group, use these field keys to determine
+   * the value to show for the preview.
+   *
+   * If no fields are no preview will be shown for the group when collapsed.
+   */
+  previewFields?: Array<string>;
 }
 
 export interface MediaFieldComponent extends FieldComponent {
@@ -58,6 +102,7 @@ export class MediaField
   extends DroppableMixin(Field)
   implements MediaFieldComponent {
   config: MediaFieldConfig;
+  group?: GroupField;
   globalConfig: LiveEditorGlobalConfig;
   isProcessing?: boolean;
   meta?: MediaMeta;
@@ -77,30 +122,46 @@ export class MediaField
       ...VALID_VIDEO_MIME_TYPES,
     ];
     this.droppableUi.listeners.add('files', this.handleFiles.bind(this));
+
+    this.zoneToKey = {
+      path: 'path',
+      label: 'label',
+    };
+  }
+
+  protected ensureGroup() {
+    if (!this.group && this.config.fields) {
+      this.group = this.types.fields.newFromKey(
+        'group',
+        this.types,
+        {
+          type: 'group',
+          key: this.config.extraKey || DEFAULT_EXTRA_KEY,
+          fields: this.config.fields,
+          label:
+            this.config.extraLabel ||
+            this.globalConfig.labels.fieldMediaExtra ||
+            'Extra',
+          isExpanded: this.config.isExpanded,
+          previewFields: this.config.previewFields,
+        } as GroupFieldConfig,
+        this.globalConfig
+      ) as GroupField;
+    }
   }
 
   /**
-   * Retrieve the url for previewing the field.
+   * Handle when the accessibility label changes value.
+   *
+   * @param evt Input event from changing value.
    */
-  get previewUrl(): string | undefined {
-    const value = this.currentValue || {};
-    if (value && value.url) {
-      return value.url;
-    }
-
-    if (value && value.path) {
-      if (
-        value.path.startsWith('http:') ||
-        value.path.startsWith('https:') ||
-        value.path.startsWith('//')
-      ) {
-        return value.path;
-      }
-    }
-
-    // TODO: Use api to get the preview url for the file path.
-
-    return undefined;
+  handleA11yLabel(evt: Event) {
+    const target = evt.target as HTMLInputElement;
+    this.currentValue = merge({}, this.currentValue || {}, {
+      _meta: this.meta,
+      label: target.value,
+    });
+    this.render();
   }
 
   handleFiles(files: Array<File>) {
@@ -188,7 +249,67 @@ export class MediaField
     this.render();
   }
 
+  get isClean(): boolean {
+    if (!this.group) {
+      return super.isClean;
+    }
+    return super.isClean && this.group.isClean;
+  }
+
+  get isValid(): boolean {
+    if (!this.group) {
+      return super.isValid;
+    }
+    return super.isValid && this.group.isValid;
+  }
+
+  /**
+   * Retrieve the url for previewing the field.
+   */
+  get previewUrl(): string | undefined {
+    const value = this.currentValue || {};
+    if (value && value.url) {
+      return value.url;
+    }
+
+    if (value && value.path) {
+      if (
+        value.path.startsWith('http:') ||
+        value.path.startsWith('https:') ||
+        value.path.startsWith('//')
+      ) {
+        return value.path;
+      }
+    }
+
+    // TODO: Use api to get the preview url for the file path.
+
+    return undefined;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateAltLabel(editor: SelectiveEditor, data: DeepObject): TemplateResult {
+    return html`<div class="selective__media__a11y_label">
+      <div class="selective__media__section__label">
+        ${this.globalConfig.labels.fieldMediaLabel ||
+        'Media accessibility label'}
+      </div>
+
+      <div class=${classMap(this.classesForInput('label'))}>
+        <input
+          type="text"
+          id="media-a11y-label-${this.uid}"
+          @input=${this.handleA11yLabel.bind(this)}
+          value=${this.currentValue?.label || ''}
+        />
+      </div>
+
+      ${this.templateErrors(editor, data, 'label')}
+    </div>`;
+  }
+
   templateFileUpload(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: DeepObject
@@ -200,6 +321,9 @@ export class MediaField
     return html`<div class="selective__media__upload">
       <input
         type="file"
+        accept=${[...VALID_IMAGE_MIME_TYPES, ...VALID_VIDEO_MIME_TYPES].join(
+          ','
+        )}
         id="media-file-${this.uid}"
         @input=${this.handleFileUpload.bind(this)}
       />
@@ -209,6 +333,8 @@ export class MediaField
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     const value = this.currentValue || {};
     const actions = [];
+
+    this.ensureGroup();
 
     actions.push(html`<div
       class="selective__action"
@@ -240,14 +366,19 @@ export class MediaField
         @dragover=${this.droppableUi.handleDragOver.bind(this.droppableUi)}
         @drop=${this.droppableUi.handleDrop.bind(this.droppableUi)}
       >
-        <div class=${classMap(this.classesForInput())}>
-          <input
-            type="text"
-            id="media-${this.uid}"
-            placeholder=${this.config.placeholder || ''}
-            @input=${this.handleInput.bind(this)}
-            value=${value.url || ''}
-          />
+        <div class="selective__media__section__label">
+          ${this.globalConfig.labels.fieldMediaPath || 'Media path'}
+        </div>
+        <div class="selective__media__path__input">
+          <div class=${classMap(this.classesForInput('path'))}>
+            <input
+              type="text"
+              id="media-${this.uid}"
+              placeholder=${this.config.placeholder || ''}
+              @input=${this.handleInput.bind(this)}
+              value=${value.url || ''}
+            />
+          </div>
           ${this.isProcessing
             ? html`${templateLoading(editor, {padHorizontal: true})}`
             : ''}
@@ -255,8 +386,10 @@ export class MediaField
         </div>
         ${this.templateFileUpload(editor, data)}
         ${this.templatePreview(editor, data)}
+        ${this.templateErrors(editor, data, 'path')}
       </div>
-      ${this.templateErrors(editor, data)}`;
+      ${this.templateAltLabel(editor, data)}
+      ${this.group?.template(editor, data) || ''}`;
   }
 
   templatePreview(editor: SelectiveEditor, data: DeepObject): TemplateResult {
@@ -267,7 +400,9 @@ export class MediaField
 
     return html`<div class="selective__media__preview">
       <div class="selective__media__preview_media">
-        <div class="selective__media__preview_media__label">Media preview</div>
+        <div class="selective__media__section__label">
+          ${this.globalConfig.labels.fieldMediaPreview || 'Media preview'}
+        </div>
         ${this.templatePreviewMedia(editor, data)}
       </div>
       <div class="selective__media__meta">

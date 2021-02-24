@@ -54,6 +54,14 @@ export class ExampleFieldField extends Field {
     this.render();
   }
 
+  get isClean() {
+    return this.field?.isClean || true;
+  }
+
+  get isValid() {
+    return this.field?.isValid || true;
+  }
+
   /**
    * No original value update for the example.
    *
@@ -108,6 +116,10 @@ export class ExampleFieldField extends Field {
             )}
           </div>`
         : ''}`;
+  }
+
+  get value() {
+    return this.field?.value;
   }
 }
 

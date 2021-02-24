@@ -194,6 +194,7 @@ const fullFiles: Record<string, EditorFileData> = {
           field: {
             type: 'media',
             key: 'media',
+            label: 'Media',
           } as MediaFieldConfig,
         } as ExampleFieldConfig,
       ],

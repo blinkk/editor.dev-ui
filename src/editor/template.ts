@@ -1,4 +1,9 @@
-import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {
+  SelectiveEditor,
+  TemplateResult,
+  classMap,
+  html,
+} from '@blinkk/selective-edit';
 import {LiveEditor} from './editor';
 
 export interface LiveTemplate {
@@ -12,7 +17,7 @@ export interface TemplateOptions {
 }
 
 export function templateLoading(
-  editor: LiveEditor,
+  editor: LiveEditor | SelectiveEditor,
   options?: TemplateOptions
 ): TemplateResult {
   const classes = {

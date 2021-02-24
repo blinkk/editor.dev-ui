@@ -1,0 +1,74 @@
+.selective__field__type__image
+  > .selective__field__input__structure
+    > .selective__droppable__target
+      position: relative
+
+      > .selective__field__input
+        align-items: center
+        display: flex
+        flex-flow: row
+
+  .selective__media__preview
+    img,
+    video
+      height: 15vh
+      max-height: 150px
+      max-width: 100%
+      margin: $le-space-small 0
+
+  .selective__media__preview_media__label
+    color: $le-color-secondary-light
+    font-size: $le-font-size-small
+    text-transform: uppercase
+    margin: $le-space-medium 0 $le-space-small 0
+
+  .selective__media__meta
+    color: $le-color-secondary-light
+    display: flex
+    flex-flow: row
+    font-size: $le-font-size-small
+
+  .selective__media__meta__item
+    margin-right: $le-space-medium
+
+    &:last-child
+      margin-right: 0
+
+  .selective__media__meta__label
+    font-weight: 700
+
+  .selective__media__upload
+    align-items: center
+    display: flex
+    flex-flow: row
+
+    input
+      +field-input
+
+  .selective__droppable--hover
+    background: $le-color-primary-light
+    color: $le-color-on-primary-light
+
+    &::before
+      background: $le-color-primary-dark
+      box-shadow: $le-shadow-small
+      content: ''
+      height: 100%
+      left: 0
+      position: absolute
+      top: 0
+      width: 100%
+
+    &::after
+      color: $le-color-on-primary-dark
+      content: 'Drop new media…'
+      font-size: $le-font-size-large
+      font-weight: 700
+      left: 50%
+      position: absolute
+      top: 50%
+      transform: translate(-50%, -50%);
+
+    // Pointer events cause issues with triggering extra drag events from children nodes.
+    *
+      pointer-events: none

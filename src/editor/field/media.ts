@@ -45,6 +45,15 @@ export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
 export interface MediaFieldConfig extends FieldConfig {
   /**
    * Key to use for the data for the 'extra' fields.
+   *
+   * For example, if the `extraKey` is `foo` then the data
+   * would look similar to:
+   *
+   * ```yaml
+   * path: /path/to/file.png
+   * foo:
+   *   title: testing
+   * ```
    */
   extraKey?: string;
   /**

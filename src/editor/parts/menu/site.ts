@@ -1,5 +1,10 @@
 import {ApiError, EditorFileData, FileData} from '../../api';
-import {DeepObject, TemplateResult, html} from '@blinkk/selective-edit';
+import {
+  DeepObject,
+  TemplateResult,
+  classMap,
+  html,
+} from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {
   IncludeExcludeFilter,
@@ -567,9 +572,6 @@ class DirectoryStructure {
       return html``;
     }
 
-    // TODO: Add selected if matches the current document.
-    // le__list__item--selected
-
     return html`<div class="le__list">
       <div
         class="le__list__item le__list__item--primary le__clickable"
@@ -586,7 +588,12 @@ class DirectoryStructure {
         this.files,
         (file: FileData) => file.path,
         (file: FileData) => html`<div
-          class="le__list__item le__clickable"
+          class=${classMap({
+            le__clickable: true,
+            le__list__item: true,
+            'le__list__item--selected':
+              editor.state.file?.file.path === file.path,
+          })}
           @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file)}
         >
           <div class="le__list__item__icon">

@@ -484,4 +484,15 @@ export class MediaField
 
     return metaInfo;
   }
+
+  /**
+   * Get the value for the field, optionally including the extra values.
+   */
+  get value() {
+    const extraValue: Record<string, any> = {};
+    if (this.group) {
+      extraValue[this.config.extraKey || DEFAULT_EXTRA_KEY] = this.group.value;
+    }
+    return merge({}, this.currentValue || {}, extraValue);
+  }
 }

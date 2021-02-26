@@ -220,7 +220,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Media w/extra example.
         {
           type: 'exampleField',
-          key: 'example.media.extra',
+          key: 'example.media_extra',
           docUrls: [
             {
               label: 'Config interface',

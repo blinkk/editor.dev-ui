@@ -183,7 +183,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Media example.
         {
           type: 'exampleField',
-          key: 'example.media',
+          key: 'media',
           docUrls: [
             {
               label: 'Config interface',
@@ -220,7 +220,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Media w/extra example.
         {
           type: 'exampleField',
-          key: 'example.media_extra',
+          key: 'media_extra',
           docUrls: [
             {
               label: 'Config interface',
@@ -272,7 +272,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Text example.
         {
           type: 'exampleField',
-          key: 'example.text',
+          key: 'text',
           docUrls: [
             {
               label: 'Config interface',
@@ -296,7 +296,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Textarea example.
         {
           type: 'exampleField',
-          key: 'example.textarea',
+          key: 'textarea',
           docUrls: [
             {
               label: 'Config interface',
@@ -314,7 +314,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Checkbox example.
         {
           type: 'exampleField',
-          key: 'example.checkbox',
+          key: 'checkbox',
           docUrls: [
             {
               label: 'Config interface',
@@ -332,7 +332,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Checkbox multi example.
         {
           type: 'exampleField',
-          key: 'example.checkboxMulti',
+          key: 'checkboxMulti',
           docUrls: [
             {
               label: 'Config interface',
@@ -364,7 +364,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Radio example.
         {
           type: 'exampleField',
-          key: 'example.radio',
+          key: 'radio',
           docUrls: [
             {
               label: 'Config interface',
@@ -415,7 +415,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Number example.
         {
           type: 'exampleField',
-          key: 'example.number',
+          key: 'number',
           docUrls: [
             {
               label: 'Config interface',
@@ -436,7 +436,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Color example.
         {
           type: 'exampleField',
-          key: 'example.color',
+          key: 'color',
           docUrls: [
             {
               label: 'Module',
@@ -454,7 +454,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Date example.
         {
           type: 'exampleField',
-          key: 'example.date',
+          key: 'date',
           docUrls: [
             {
               label: 'Module',
@@ -472,7 +472,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Datetime example.
         {
           type: 'exampleField',
-          key: 'example.datetime',
+          key: 'datetime',
           docUrls: [
             {
               label: 'Module',
@@ -490,7 +490,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Time example.
         {
           type: 'exampleField',
-          key: 'example.time',
+          key: 'time',
           docUrls: [
             {
               label: 'Module',
@@ -522,7 +522,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Group example.
         {
           type: 'exampleField',
-          key: 'example.group',
+          key: 'group',
           cleanerKeys: ['isExpanded'],
           docUrls: [
             {
@@ -549,7 +549,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Variant example.
         {
           type: 'exampleField',
-          key: 'example.variant',
+          key: 'variant',
           cleanerKeys: ['isExpanded'],
           docUrls: [
             {
@@ -609,7 +609,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Aside example.
         {
           type: 'exampleField',
-          key: 'example.aside',
+          key: 'aside',
           docUrls: [
             {
               label: 'Config interface',

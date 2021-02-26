@@ -38,12 +38,8 @@
     font-weight: 700
 
   .selective__media__upload
-    align-items: center
-    display: flex
-    flex-flow: row
-
-    input
-      +field-input
+    // Do not need to display the field to be able to 'click'.
+    display: none
 
   .selective__droppable--hover
     background: $le-color-primary-light
@@ -51,6 +47,7 @@
 
     &::before
       background: $le-color-primary-dark
+      background: linear-gradient(45deg, $le-color-primary-dark 0%, $le-color-primary 50%, $le-color-primary-light 100%);
       box-shadow: $le-shadow-small
       content: ''
       height: 100%
@@ -84,4 +81,4 @@
         .selective__field__actions
           .selective__action
             .material-icons
-              padding: $le-space-xsmall $le-space-small
+              padding: $le-space-xsmall $le-space-small $le-space-xsmall 0

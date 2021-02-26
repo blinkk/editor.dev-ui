@@ -4,7 +4,6 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
-  FieldsComponent,
   GroupField,
   GroupFieldConfig,
   SelectiveEditor,

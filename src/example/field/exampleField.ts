@@ -55,11 +55,11 @@ export class ExampleFieldField extends Field {
   }
 
   get isClean() {
-    return this.field?.isClean || true;
+    return this.field?.isClean === undefined ? true : this.field?.isClean;
   }
 
   get isValid() {
-    return this.field?.isValid || true;
+    return this.field?.isValid === undefined ? true : this.field?.isValid;
   }
 
   /**

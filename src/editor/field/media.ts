@@ -290,8 +290,10 @@ export class MediaField
   templateAltLabel(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     return html`<div class="selective__media__a11y_label">
       <div class="selective__media__section__label">
-        ${this.globalConfig.labels.fieldMediaLabel ||
-        'Media accessibility label'}
+        <label for="media-a11y-label-${this.uid}">
+          ${this.globalConfig.labels.fieldMediaLabel ||
+          'Media accessibility label'}
+        </label>
       </div>
 
       <div class=${classMap(this.classesForInput('label'))}>
@@ -366,7 +368,9 @@ export class MediaField
         @drop=${this.droppableUi.handleDrop.bind(this.droppableUi)}
       >
         <div class="selective__media__section__label">
-          ${this.globalConfig.labels.fieldMediaPath || 'Media path'}
+          <label for="media-${this.uid}"
+            >${this.globalConfig.labels.fieldMediaPath || 'Media path'}</label
+          >
         </div>
         <div class="selective__media__path__input">
           <div class=${classMap(this.classesForInput('path'))}>

@@ -1,3 +1,43 @@
+=button-primary
+  background-color: $le-color-primary
+  border-color: $le-color-on-primary
+  color: $le-color-on-primary
+
+=button-primary-invert
+  background-color: $le-color-on-primary
+  border-color: $le-color-primary
+  color: $le-color-primary
+
+=button-secondary
+  background-color: $le-color-secondary
+  border-color: $le-color-on-secondary
+  color: $le-color-on-secondary
+
+=button-secondary-invert
+  background-color: $le-color-on-secondary
+  border-color: $le-color-secondary
+  color: $le-color-secondary
+
+=button-tertiary
+  background-color: $le-color-tertiary
+  border-color: $le-color-on-tertiary
+  color: $le-color-on-tertiary
+
+=button-tertiary-invert
+  background-color: $le-color-on-tertiary
+  border-color: $le-color-tertiary
+  color: $le-color-tertiary
+
+=button-extreme
+  background-color: $le-color-back-error
+  border-color: $le-color-on-back-error
+  color: $le-color-on-back-error
+
+=button-extreme-invert
+  background-color: $le-color-on-back-error
+  border-color: $le-color-back-error
+  color: $le-color-back-error
+
 =button
   background: transparent
   border: none
@@ -10,22 +50,32 @@
     opacity: $le-opacity-disabled
 
   &--primary
-    background-color: $le-color-primary
-    color: $le-color-on-primary
+    +button-primary
+
+    // Invert the button styling.
+    &.le__button--on-primary
+      +button-primary-invert
 
   &--secondary
-    background-color: $le-color-secondary
-    color: $le-color-on-secondary
+    +button-secondary
 
-    // The button is a secondary button on a secondary background.
     // Invert the button styling.
     &.le__button--on-secondary
-      background-color: $le-color-on-secondary
-      color: $le-color-secondary
+      +button-secondary-invert
+
+  &--tertiary
+    +button-tertiary
+
+    // Invert the button styling.
+    &.le__button--on-tertiary
+      +button-tertiary-invert
 
   &--extreme
-    background-color: $le-color-back-error
-    color: $le-color-on-back-error
+    +button-extreme
+
+    // Invert the button styling.
+    &.le__button--on-extreme
+      +button-extreme-invert
 
 =button-outline
   border: $le-border-size-medium solid $le-color-secondary

@@ -38,6 +38,7 @@
     transform: translateY(-50%)
     z-index: 510
 
+  &.selective__tooltip--wrap,
   &.le__tooltip--wrap
     &:before
       max-width: $le-space-xxxlarge
@@ -45,8 +46,11 @@
       white-space: normal
       width: 10vw
 
+  &.selective__tooltip--bottom,
   &.le__tooltip--bottom,
+  &.selective__tooltip--bottom-left,
   &.le__tooltip--bottom-left,
+  &.selective__tooltip--bottom-right,
   &.le__tooltip--bottom-right
     &:before
       // Reset
@@ -71,14 +75,17 @@
       margin-top: -$le-space-small
       transform: translateX(-50%)
 
+  &.selective__tooltip--bottom-left,
   &.le__tooltip--bottom-left
     &:before
       transform: translateX(calc(-100% + #{$le-space-medium}))
 
+  &.selective__tooltip--bottom-right,
   &.le__tooltip--bottom-right
     &:before
       transform: translateX(-$le-space-medium)
 
+  &.selective__tooltip--left,
   &.le__tooltip--left
     &:before
       // Reset
@@ -97,8 +104,11 @@
       margin-right: -$le-space-small
       right: 100%
 
+  &.selective__tooltip--top,
   &.le__tooltip--top,
+  &.selective__tooltip--top-left,
   &.le__tooltip--top-left,
+  &.selective__tooltip--top-right,
   &.le__tooltip--top-right
     &:before
       // Reset
@@ -123,10 +133,12 @@
       margin-bottom: -$le-space-small
       transform: translateX(-50%)
 
+  &.selective__tooltip--top-left,
   &.le__tooltip--top-left
     &:before
       transform: translateX(calc(-100% + #{$le-space-medium}))
 
+  &.selective__tooltip--top-right,
   &.le__tooltip--top-right
     &:before
       transform: translateX(-$le-space-medium)

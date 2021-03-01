@@ -89,6 +89,44 @@
   text-transform: uppercase
   margin: $le-space-medium 0 $le-space-small 0
 
+=field-action-icon
+  background-position: left $le-space-small - $le-border-size-medium top $le-space-small - $le-border-size-medium
+  background-repeat: no-repeat
+  background-size: $le-font-size-icon
+  padding-left: $le-font-size-icon + $le-space-medium
+
+  .selective__field__header &
+    background-position: left $le-space-xsmall top $le-space-xsmall
+    padding-left: $le-font-size-icon + $le-space-small
+
+=field-action-add
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+
+=field-action-add-primary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+
+=field-action-add-secondary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+
+=field-action-add-secondary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+
+=field-action-remove
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+
+=field-action-remove-primary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+
+=field-action-remove-secondary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+
+=field-action-remove-secondary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+
+.selective__action
+  &--add
+    +field-action-add
+
 .selective__field__input
   input[type=text],
   input[type=date],

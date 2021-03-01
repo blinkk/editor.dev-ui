@@ -1,0 +1,45 @@
+.selective__field__type__list
+  > .selective__field__footer
+    margin-top: $le-space-small
+
+    button
+      +button
+      +button-outline
+      +button-primary-invert
+
+    .selective__action--add
+      +field-action-icon
+      +field-action-add-primary
+
+.selective__list__item
+  align-items: center
+  display: flex
+  flex-flow: row
+
+  > .selective__field__actions
+    .selective__list__item__drag
+      cursor: grab
+
+    .selective__field__action
+      +clickable
+
+    .material-icons
+      padding: $le-space-small
+
+    &--pre
+      .material-icons
+        padding-left: 0
+
+  > .selective__field
+    flex-grow: 1
+    margin: $le-space-small 0
+
+  &.selective__sortable--hover
+    *
+      pointer-events: none
+
+    &.selective__sortable--above
+      box-shadow: 0 -1 * $le-border-size-xlarge 0 0 $le-color-secondary-dark
+
+    &.selective__sortable--below
+      box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-secondary-dark

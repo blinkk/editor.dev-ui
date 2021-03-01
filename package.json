@@ -68,7 +68,7 @@
     "ava": "^3.14.0",
     "codecov": "^3.8.1",
     "concurrently": "^6.0.0",
-    "eslint": "^7.20.0",
+    "eslint": "^7.21.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-sort-class-members": "^1.9.0",
     "gts": "^3.1.0",
@@ -93,6 +93,6 @@
     "javascript-time-ago": "^2.3.4",
     "js-yaml": "^4.0.0",
     "lodash.merge": "^4.6.2",
-    "marked": "^2.0.0"
+    "marked": "^2.0.1"
   }
 }

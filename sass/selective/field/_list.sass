@@ -1,4 +1,13 @@
 .selective__field__type__list
+  > .selective__field__header
+    align-items: center
+    display: flex
+    flex-flow: row-reverse
+
+    .selective__field__label
+      flex-grow: 1
+      margin: 0
+
   > .selective__field__footer
     margin-top: $le-space-small
 
@@ -26,13 +35,52 @@
     .material-icons
       padding: $le-space-small
 
-    &--pre
-      .material-icons
-        padding-left: 0
-
   > .selective__field
     flex-grow: 1
     margin: $le-space-small 0
+
+  > .selective__list__item__preview
+    flex-grow: 1
+    padding: $le-space-small 0
+
+  &:not(.selective__list__item--simple)
+    border: $le-border-size-medium solid $le-color-border
+    border-radius: $le-radius-small
+    margin-bottom: $le-space-small
+
+    &:last-child
+      margin-bottom: 0
+
+  &--simple
+    > .selective__field__actions
+      &--pre
+          .material-icons
+            padding-left: 0
+
+  &--empty
+    padding: $le-space-medium 0
+
+  &--collapsed
+    > .selective__list__item__preview
+      +clickable
+      padding: $le-space-medium 0
+
+  &--expanded
+    align-items: stretch
+    flex-flow: column
+
+    > .selective__list__fields__header
+      +clickable
+      background: $le-color-tertiary
+      color: $le-color-on-tertiary
+      font-weight: 700
+      padding: $le-space-medium
+
+    > .selective__list__fields
+      padding: $le-space-medium
+
+  &--no-drag
+    padding-left: $le-space-medium
 
   &.selective__sortable--hover
     *

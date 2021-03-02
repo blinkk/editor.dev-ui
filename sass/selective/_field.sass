@@ -46,6 +46,14 @@
       .selective__field__header &
         padding: $le-space-small
 
+.selective__action
+  &[disabled]
+    cursor: default
+    opacity: $le-opacity-disabled
+
+  &--delete
+    color: $le-color-extreme
+
 =field-input
   background: $le-color-tertiary
   color: $le-color-on-tertiary

@@ -185,6 +185,13 @@ const fullFiles: Record<string, EditorFileData> = {
   '/example/list.yaml': {
     data: {
       listSimple: ['values', 'in', 'a', 'list'],
+      listSimpleMedia: [
+        {
+          url:
+            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          label: 'Google logo',
+        },
+      ],
     },
     editor: {
       fields: [
@@ -217,6 +224,33 @@ const fullFiles: Record<string, EditorFileData> = {
                 },
                 max: {value: 5},
               } as LengthRuleConfig,
+            ],
+          } as ListFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Simple with complex list example.
+        // Only one field, but with a non-simple field.
+        // Should show as a normal list instead of a 'simple' list.
+        {
+          type: 'exampleField',
+          key: 'listSimpleMedia',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'list',
+            key: 'listSimpleMedia',
+            label: 'List (Simple w/complex field)',
+            addLabel: 'Add media',
+            fields: [
+              {
+                type: 'media',
+                key: '',
+              },
             ],
           } as ListFieldConfig,
         } as ExampleFieldConfig,

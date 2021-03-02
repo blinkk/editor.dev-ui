@@ -14,6 +14,8 @@ import {
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
@@ -90,6 +92,12 @@ export interface MediaFieldConfig extends FieldConfig {
 
 export interface MediaFieldComponent extends FieldComponent {
   handleFiles(files: Array<File>): void;
+  templatePreviewMedia: Template;
+  templatePreviewValue(
+    editor: SelectiveEditor,
+    data: DeepObject,
+    index?: number
+  ): TemplateResult;
 }
 
 export interface MediaMeta {
@@ -421,6 +429,25 @@ export class MediaField
     </div>`;
   }
 
+  /**
+   * Template for how to render a preview.
+   *
+   * @param editor Selective editor used to render the template.
+   * @param data Data provided to render the template.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templatePreviewValue(
+    editor: SelectiveEditor,
+    data: DeepObject,
+    index?: number
+  ): TemplateResult {
+    return html`${findPreviewValue(
+      this.value,
+      [],
+      `{ Media ${index !== undefined ? index + 1 : ''} }`
+    )}`;
+  }
+
   templatePreviewMedia(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
@@ -429,7 +456,7 @@ export class MediaField
   ): TemplateResult {
     const url = this.previewUrl;
     if (!url) {
-      return html``;
+      return html`<span class="material-icons">broken_image</span>`;
     }
 
     for (const fileExt of Object.keys(EXT_TO_MIME_TYPE)) {

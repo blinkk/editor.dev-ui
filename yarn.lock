@@ -204,10 +204,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.22.tgz#db6c2b8e74e19f0ad60aa74446834ec52eef1548"
-  integrity sha512-HIloHZp93V8rs4kYX9CglG15w76VlHAe2HD0tXDPSKmJNmLQ0GXyT62OZL5FfnPjAzEzXqg/PXYkUuEEhDQGXQ==
+"@blinkk/selective-edit@^1.0.23":
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.23.tgz#f02c992308323b498e0b3c8a211e7355afac38e5"
+  integrity sha512-/aAr6yrtOWxZ01cdKBH5V0eJZqHZgDofC1W8DsvdS99hYL8W40Ee3aXMlBhlfhk/j96fKxgnWfXzZwpmLktbDQ==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"
@@ -2281,9 +2281,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.649:
-  version "1.3.677"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.677.tgz#b5d586b0d1976c97cc7e95262677ac5944199513"
-  integrity sha512-Tcmk+oKQgpjcM+KYanlkd76ZtpzalkpUULnlJDP6vjHtR7UU564IM9Qv5DxqHZNBQjzXm6mkn7Y8bw2OoE3FmQ==
+  version "1.3.678"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.678.tgz#c7c6960463167126b7ed076fade14cac6223bfff"
+  integrity sha512-E5ha1pE9+aWWrT2fUD5wdPBWUnYtKnEnloewbtVyrkAs79HvodOiNO4rMR94+hKbxgMFQG4fnPQACOc1cfMfBg==
 
 emittery@^0.8.0:
   version "0.8.1"

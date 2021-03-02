@@ -6,7 +6,7 @@
 
     .selective__field__label
       flex-grow: 1
-      margin: 0
+      margin: $le-space-small 0
 
   > .selective__field__footer
     margin-top: $le-space-small
@@ -43,7 +43,7 @@
     flex-grow: 1
     padding: $le-space-small 0
 
-  &:not(.selective__list__item--simple)
+  &:not(.selective__list__item--simple):not(.selective__list__item--empty)
     border: $le-border-size-medium solid $le-color-border
     border-radius: $le-radius-small
     margin-bottom: $le-space-small

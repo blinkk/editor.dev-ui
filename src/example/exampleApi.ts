@@ -254,6 +254,41 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as ListFieldConfig,
         } as ExampleFieldConfig,
+
+        // Multi-field list example.
+        {
+          type: 'exampleField',
+          key: 'listMulti',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'list',
+            key: 'listMulti',
+            label: 'List (Multiple fields)',
+            fields: [
+              {
+                type: 'text',
+                key: 'title',
+                label: 'Title',
+              },
+              {
+                type: 'text',
+                key: 'subtitle',
+                label: 'Sub title',
+              },
+              {
+                type: 'media',
+                key: 'media',
+                label: 'Image',
+              },
+            ],
+          } as ListFieldConfig,
+        } as ExampleFieldConfig,
       ],
     },
     file: {

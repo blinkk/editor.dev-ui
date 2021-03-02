@@ -204,10 +204,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^1.0.21":
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.21.tgz#6c2e33d573bc16904f9b329a6359355a47b318f7"
-  integrity sha512-RhbQgyB+1EYL+7E6VPye2WN8xXYqgL2nrzZZJ18F/VN4wYB5XkRdfKzRcsi+N4fUNHRTJ6oEQ+caUA4/h432MQ==
+"@blinkk/selective-edit@^1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.22.tgz#db6c2b8e74e19f0ad60aa74446834ec52eef1548"
+  integrity sha512-HIloHZp93V8rs4kYX9CglG15w76VlHAe2HD0tXDPSKmJNmLQ0GXyT62OZL5FfnPjAzEzXqg/PXYkUuEEhDQGXQ==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"

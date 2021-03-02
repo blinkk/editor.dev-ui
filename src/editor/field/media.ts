@@ -111,7 +111,7 @@ export class MediaField
     types: Types,
     config: MediaFieldConfig,
     globalConfig: LiveEditorGlobalConfig,
-    fieldType = 'image'
+    fieldType = 'media'
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
@@ -255,6 +255,11 @@ export class MediaField
     return super.isClean && this.group.isClean;
   }
 
+  get isSimple(): boolean {
+    // Media field has multiple inputs and is considered complex.
+    return false;
+  }
+
   get isValid(): boolean {
     if (!this.group) {
       return super.isValid;
@@ -367,25 +372,27 @@ export class MediaField
         @dragover=${this.droppableUi.handleDragOver.bind(this.droppableUi)}
         @drop=${this.droppableUi.handleDrop.bind(this.droppableUi)}
       >
-        <div class="selective__media__section__label">
-          <label for="media-${this.uid}"
-            >${this.globalConfig.labels.fieldMediaPath || 'Media path'}</label
-          >
-        </div>
-        <div class="selective__media__path__input">
-          <div class=${classMap(this.classesForInput('path'))}>
-            <input
-              type="text"
-              id="media-${this.uid}"
-              placeholder=${this.config.placeholder || ''}
-              @input=${this.handleInput.bind(this)}
-              value=${value.url || ''}
-            />
+        <div class="selective__media__path">
+          <div class="selective__media__section__label">
+            <label for="media-${this.uid}"
+              >${this.globalConfig.labels.fieldMediaPath || 'Media path'}</label
+            >
           </div>
-          ${this.isProcessing
-            ? html`${templateLoading(editor, {padHorizontal: true})}`
-            : ''}
-          <div class="selective__field__actions">${actions}</div>
+          <div class="selective__media__path__input">
+            <div class=${classMap(this.classesForInput('path'))}>
+              <input
+                type="text"
+                id="media-${this.uid}"
+                placeholder=${this.config.placeholder || ''}
+                @input=${this.handleInput.bind(this)}
+                value=${value.url || ''}
+              />
+            </div>
+            ${this.isProcessing
+              ? html`${templateLoading(editor, {padHorizontal: true})}`
+              : ''}
+            <div class="selective__field__actions">${actions}</div>
+          </div>
         </div>
         ${this.templateFileUpload(editor, data)}
         ${this.templatePreview(editor, data)}
@@ -483,5 +490,16 @@ export class MediaField
     </div>`);
 
     return metaInfo;
+  }
+
+  /**
+   * Get the value for the field, optionally including the extra values.
+   */
+  get value() {
+    const extraValue: Record<string, any> = {};
+    if (this.group) {
+      extraValue[this.config.extraKey || DEFAULT_EXTRA_KEY] = this.group.value;
+    }
+    return merge({}, this.currentValue || {}, extraValue);
   }
 }

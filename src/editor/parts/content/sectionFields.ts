@@ -32,9 +32,10 @@ export class FieldsPart extends ContentSectionPart {
       return;
     }
 
-    const value = merge({}, this.config.state.file || {}, {
-      data: this.selective.value,
-    });
+    const value: Record<string, any> = merge({}, this.config.state.file || {});
+    // Do not 'merge' the data as it will get merged with the original data
+    // instead of overwritten.
+    value.data = this.selective.value;
 
     this.isProcessing = true;
     this.render();

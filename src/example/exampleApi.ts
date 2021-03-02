@@ -20,6 +20,8 @@ import {
   DateFieldConfig,
   DatetimeFieldConfig,
   GroupFieldConfig,
+  LengthRuleConfig,
+  ListFieldConfig,
   NumberFieldConfig,
   RadioFieldConfig,
   TextAreaFieldConfig,
@@ -159,6 +161,9 @@ const currentFileset: Array<FileData> = [
     path: '/content/strings/about.yaml',
   },
   {
+    path: '/example/list.yaml',
+  },
+  {
     path: '/example/media.yaml',
   },
   {
@@ -177,13 +182,127 @@ const currentFileset: Array<FileData> = [
 ];
 
 const fullFiles: Record<string, EditorFileData> = {
+  '/example/list.yaml': {
+    data: {
+      listSimple: ['values', 'in', 'a', 'list'],
+      listSimpleMedia: [
+        {
+          url:
+            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          label: 'Google logo',
+        },
+      ],
+    },
+    editor: {
+      fields: [
+        // Simple list example.
+        {
+          type: 'exampleField',
+          key: 'listSimple',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'list',
+            key: 'listSimple',
+            label: 'List (Simple)',
+            fields: [
+              {
+                type: 'text',
+                key: '',
+              },
+            ],
+            validation: [
+              {
+                type: 'length',
+                min: {
+                  value: 1,
+                },
+                max: {value: 5},
+              } as LengthRuleConfig,
+            ],
+          } as ListFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Simple with complex list example.
+        // Only one field, but with a non-simple field.
+        // Should show as a normal list instead of a 'simple' list.
+        {
+          type: 'exampleField',
+          key: 'listSimpleMedia',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'list',
+            key: 'listSimpleMedia',
+            label: 'List (Simple w/complex field)',
+            addLabel: 'Add media',
+            fields: [
+              {
+                type: 'media',
+                key: '',
+              },
+            ],
+          } as ListFieldConfig,
+        } as ExampleFieldConfig,
+
+        // Multi-field list example.
+        {
+          type: 'exampleField',
+          key: 'listMulti',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'list',
+            key: 'listMulti',
+            label: 'List (Multiple fields)',
+            fields: [
+              {
+                type: 'text',
+                key: 'title',
+                label: 'Title',
+              },
+              {
+                type: 'text',
+                key: 'subtitle',
+                label: 'Sub title',
+              },
+              {
+                type: 'media',
+                key: 'media',
+                label: 'Image',
+              },
+            ],
+          } as ListFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/list.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/media.yaml': {
     editor: {
       fields: [
         // Media example.
         {
           type: 'exampleField',
-          key: 'example.media',
+          key: 'media',
           docUrls: [
             {
               label: 'Config interface',
@@ -220,7 +339,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Media w/extra example.
         {
           type: 'exampleField',
-          key: 'example.media.extra',
+          key: 'mediaExtra',
           docUrls: [
             {
               label: 'Config interface',
@@ -235,7 +354,7 @@ const fullFiles: Record<string, EditorFileData> = {
           ],
           field: {
             type: 'media',
-            key: 'media',
+            key: 'mediaExtra',
             label: 'Media w/extra fields',
             fields: [
               {
@@ -262,7 +381,7 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/utility.yaml',
+      path: '/example/media.yaml',
     },
     url: 'preview.html',
   },
@@ -272,7 +391,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Text example.
         {
           type: 'exampleField',
-          key: 'example.text',
+          key: 'text',
           docUrls: [
             {
               label: 'Config interface',
@@ -282,7 +401,7 @@ const fullFiles: Record<string, EditorFileData> = {
           ],
           field: {
             type: 'text',
-            key: 'title',
+            key: 'text',
             label: 'Title',
             validation: [
               {
@@ -296,7 +415,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Textarea example.
         {
           type: 'exampleField',
-          key: 'example.textarea',
+          key: 'textarea',
           docUrls: [
             {
               label: 'Config interface',
@@ -314,7 +433,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Checkbox example.
         {
           type: 'exampleField',
-          key: 'example.checkbox',
+          key: 'isVisible',
           docUrls: [
             {
               label: 'Config interface',
@@ -332,7 +451,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Checkbox multi example.
         {
           type: 'exampleField',
-          key: 'example.checkboxMulti',
+          key: 'options',
           docUrls: [
             {
               label: 'Config interface',
@@ -364,7 +483,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Radio example.
         {
           type: 'exampleField',
-          key: 'example.radio',
+          key: 'skyColor',
           docUrls: [
             {
               label: 'Config interface',
@@ -415,7 +534,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Number example.
         {
           type: 'exampleField',
-          key: 'example.number',
+          key: 'napsInADay',
           docUrls: [
             {
               label: 'Config interface',
@@ -436,7 +555,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Color example.
         {
           type: 'exampleField',
-          key: 'example.color',
+          key: 'favoriteColor',
           docUrls: [
             {
               label: 'Module',
@@ -454,7 +573,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Date example.
         {
           type: 'exampleField',
-          key: 'example.date',
+          key: 'birthdate',
           docUrls: [
             {
               label: 'Module',
@@ -472,7 +591,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Datetime example.
         {
           type: 'exampleField',
-          key: 'example.datetime',
+          key: 'naptime',
           docUrls: [
             {
               label: 'Module',
@@ -490,7 +609,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Time example.
         {
           type: 'exampleField',
-          key: 'example.time',
+          key: 'wakeuptime',
           docUrls: [
             {
               label: 'Module',
@@ -522,7 +641,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Group example.
         {
           type: 'exampleField',
-          key: 'example.group',
+          key: 'group',
           cleanerKeys: ['isExpanded'],
           docUrls: [
             {
@@ -549,7 +668,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Variant example.
         {
           type: 'exampleField',
-          key: 'example.variant',
+          key: 'variant',
           cleanerKeys: ['isExpanded'],
           docUrls: [
             {
@@ -609,7 +728,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Aside example.
         {
           type: 'exampleField',
-          key: 'example.aside',
+          key: 'aside',
           docUrls: [
             {
               label: 'Config interface',

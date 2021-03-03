@@ -1,6 +1,7 @@
 import {
   Base,
   DeepObject,
+  DroppableMixin,
   Field,
   FieldComponent,
   FieldConfig,
@@ -15,7 +16,12 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {MediaFieldComponent, MediaFieldConfig} from './media';
+import {
+  MediaFieldComponent,
+  MediaFieldConfig,
+  VALID_IMAGE_MIME_TYPES,
+  VALID_VIDEO_MIME_TYPES,
+} from './media';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
 import {LiveEditorGlobalConfig} from '../editor';
 
@@ -88,7 +94,7 @@ export interface MediaListItemConstructor {
 }
 
 export class MediaListField
-  extends SortableMixin(Field)
+  extends DroppableMixin(SortableMixin(Field))
   implements MediaListFieldComponent {
   config: MediaListFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
@@ -109,6 +115,11 @@ export class MediaListField
     this.usingAutoFields = false;
     this.MediaListItemCls = MediaListFieldItem;
     this.sortableUi.listeners.add('sort', this.handleSort.bind(this));
+    this.droppableUi.validTypes = this.config.fieldConfig?.accepted || [
+      ...VALID_IMAGE_MIME_TYPES,
+      ...VALID_VIDEO_MIME_TYPES,
+    ];
+    this.droppableUi.listeners.add('files', this.handleFiles.bind(this));
   }
 
   get allowAdd(): boolean {
@@ -175,7 +186,7 @@ export class MediaListField
       this.globalConfig
     ) as MediaFieldComponent;
     newField.updateOriginal(editor, new DeepObject());
-    const newItem = new MediaListFieldItem(this, newField);
+    const newItem = new this.MediaListItemCls(this, newField);
     items.push(newItem);
     this.expandItem(newItem);
   }
@@ -211,6 +222,24 @@ export class MediaListField
       {once: true}
     );
 
+    this.render();
+  }
+
+  handleFiles(files: Array<File>) {
+    // Create a new item for each file uploaded.
+    const items = this.items || [];
+    for (const file of files) {
+      const fieldConfig = this.config.fieldConfig || DEFAULT_FIELD_CONFIG;
+      const newField = this.types.fields.newFromKey(
+        fieldConfig.type,
+        this.types,
+        fieldConfig,
+        this.globalConfig
+      ) as MediaFieldComponent;
+      const newItem = new this.MediaListItemCls(this, newField);
+      items.push(newItem);
+      newField.handleFiles([file]);
+    }
     this.render();
   }
 
@@ -325,10 +354,14 @@ export class MediaListField
     }
 
     return html`<div
-      class="selective__media_list__add"
+      class="selective__media_list__add selective__droppable__target"
       @click=${(evt: Event) => {
         this.handleAddItem(evt, editor, data);
       }}
+      @dragenter=${this.droppableUi.handleDragEnter.bind(this.droppableUi)}
+      @dragleave=${this.droppableUi.handleDragLeave.bind(this.droppableUi)}
+      @dragover=${this.droppableUi.handleDragOver.bind(this.droppableUi)}
+      @drop=${this.droppableUi.handleDrop.bind(this.droppableUi)}
     >
       <div class="selective__media_list__add__icon">
         <span class="material-icons">image</span>
@@ -435,12 +468,14 @@ class MediaListFieldItem
 
     const canDrag = this.listField.length > 1;
     const sortable = this.listField.sortableUi;
+    const droppable = this.mediaField.droppableUi;
     const postActions = [];
 
     postActions.push(this.templateRemove(editor, data, index));
 
     return html` <div
       class=${classMap({
+        selective__droppable__target: true,
         selective__media_list__item: true,
         'selective__media_list__item--collapsed': true,
         'selective__media_list__item--no-drag': this.listField.length <= 1,
@@ -448,11 +483,23 @@ class MediaListFieldItem
       })}
       draggable=${canDrag ? 'true' : 'false'}
       data-index=${index}
-      @dragenter=${sortable.handleDragEnter.bind(sortable)}
-      @dragleave=${sortable.handleDragLeave.bind(sortable)}
-      @dragover=${sortable.handleDragOver.bind(sortable)}
+      @dragenter=${(evt: DragEvent) => {
+        sortable.handleDragEnter(evt);
+        droppable.handleDragEnter(evt);
+      }}
+      @dragleave=${(evt: DragEvent) => {
+        sortable.handleDragLeave(evt);
+        droppable.handleDragLeave(evt);
+      }}
+      @dragover=${(evt: DragEvent) => {
+        sortable.handleDragOver(evt);
+        droppable.handleDragOver(evt);
+      }}
       @dragstart=${sortable.handleDragStart.bind(sortable)}
-      @drop=${sortable.handleDrop.bind(sortable)}
+      @drop=${(evt: DragEvent) => {
+        sortable.handleDrop(evt);
+        droppable.handleDrop(evt);
+      }}
     >
       <div
         class="selective__media_list__item__preview"

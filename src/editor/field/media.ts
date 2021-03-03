@@ -1,6 +1,7 @@
 import {
   DeepObject,
   DroppableMixin,
+  DroppableUiComponent,
   Field,
   FieldComponent,
   FieldConfig,
@@ -44,6 +45,14 @@ export const VALID_IMAGE_MIME_TYPES = [
 export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
 
 export interface MediaFieldConfig extends FieldConfig {
+  /**
+   * Valid mime or file types that the field accepts.
+   *
+   * Defaults to {@link VALID_IMAGE_MIME_TYPES} and {@link VALID_VIDEO_MIME_TYPES}.
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#unique_file_type_specifiers
+   */
+  accepted?: Array<string>;
   /**
    * Key to use for the data for the 'extra' fields.
    *
@@ -91,7 +100,10 @@ export interface MediaFieldConfig extends FieldConfig {
 }
 
 export interface MediaFieldComponent extends FieldComponent {
+  config: MediaFieldConfig;
+  droppableUi: DroppableUiComponent;
   handleFiles(files: Array<File>): void;
+  isProcessing?: boolean;
   templatePreviewMedia: Template;
   templatePreviewValue(
     editor: SelectiveEditor,
@@ -124,7 +136,7 @@ export class MediaField
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.droppableUi.validTypes = [
+    this.droppableUi.validTypes = this.config.accepted || [
       ...VALID_IMAGE_MIME_TYPES,
       ...VALID_VIDEO_MIME_TYPES,
     ];

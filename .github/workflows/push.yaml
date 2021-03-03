@@ -7,16 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Cache node modules
-      uses: actions/cache@v2
-      env:
-        cache-name: test
-      with:
-        path: |
-          **/node_modules
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+    - uses: bahmutov/npm-install@v1
     - name: Run tests
-      run: |
-        yarn install --dev
-        yarn run test-ci
+      run: yarn run test-ci

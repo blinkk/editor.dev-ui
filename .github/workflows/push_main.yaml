@@ -10,21 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Cache node modules
-      uses: actions/cache@v2
-      env:
-        cache-name: pages
-      with:
-        path: |
-          **/node_modules
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+    - uses: bahmutov/npm-install@v1
     - name: Build docs
-      run: |
-        yarn install --dev
-
-        # Build the docs into docs/
-        yarn run docs
+      run: yarn run docs
     - name: Add example
       run: |
         mkdir -p docs/example

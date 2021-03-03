@@ -190,6 +190,10 @@ export class MediaListField
 
     // Lock the fields to prevent array issues when the original value
     // is updated next render.
+    const downstreamItems = items.slice(index);
+    for (const item of downstreamItems) {
+      item.mediaField.lock();
+    }
     this.lock();
 
     // Unlock fields after saving is complete to let the values be updated
@@ -198,6 +202,9 @@ export class MediaListField
     document.addEventListener(
       EVENT_UNLOCK,
       () => {
+        for (const item of downstreamItems) {
+          item.mediaField.unlock();
+        }
         this.unlock();
         this.render();
       },
@@ -224,12 +231,24 @@ export class MediaListField
       if (i < minIndex || i > maxIndex) {
         // Leave in the same order.
         newListItems[i] = oldListItems[i];
+
+        // Lock the fields to prevent the values from being updated at the same
+        // time as the original value.
+        newListItems[i].mediaField.lock();
       } else if (i === endIndex) {
         // This element is being moved to, place the moved value here.
         newListItems[i] = oldListItems[startIndex];
+
+        // Lock the fields to prevent the values from being updated at the same
+        // time as the original value.
+        newListItems[i].mediaField.lock();
       } else {
         // Shift the old index using the modifier to determine direction.
         newListItems[i] = oldListItems[i + modifier];
+
+        // Lock the fields to prevent the values from being updated at the same
+        // time as the original value.
+        newListItems[i].mediaField.lock();
       }
     }
 
@@ -241,6 +260,9 @@ export class MediaListField
     document.addEventListener(
       EVENT_UNLOCK,
       () => {
+        for (const item of newListItems) {
+          item.mediaField.unlock();
+        }
         this.unlock();
         this.render();
       },

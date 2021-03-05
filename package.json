@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "license": "MIT",
   "homepage": "https://blinkkcode.github.com/live-edit",
-  "description": "Structured text editor with live previews.",
+  "description": "Structured content editor with live previews.",
   "keywords": [
     "structured",
     "document",
@@ -20,9 +20,6 @@
     "type": "git",
     "url": "git://github.com/blinkkcode/live-edit.git"
   },
-  "directories": {
-    "example": "example"
-  },
   "engines": {
     "node": ">=14"
   },
@@ -34,12 +31,12 @@
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc && npx gulp compile && webpack --config webpack.prod.js",
-    "copy": "mkdir -p dist/src/static; cp src/static/* dist/src/static",
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",
     "fix": "node ./node_modules/eslint/bin/eslint --fix src/**/*.ts",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
+    "server": "concurrently \"webpack serve --config webpack.server.js\" \"npx gulp watch\"",
     "test": "nyc ava",
     "test-ci": "nyc --reporter=lcov ava && codecov"
   },
@@ -76,7 +73,6 @@
     "gulp-autoprefixer": "^7.0.1",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
-    "nodemon": "^2.0.4",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "ts-loader": "^8.0.17",

@@ -10,6 +10,7 @@ build:
 build-prod:
 	gcloud builds submit \
 		--project=$(project) \
+		--tag gcr.io/${project}/live-edit:${GITHUB_REF} \
   	--tag gcr.io/${project}/live-edit:latest
 
 deploy:
@@ -30,5 +31,4 @@ deploy-prod:
 		--labels source=latest \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/live-edit:${GITHUB_REF} \
 		--image gcr.io/${project}/live-edit:latest

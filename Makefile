@@ -1,6 +1,7 @@
 project := grow-prod
 service := live-edit
 region := us-central1
+tag := latest
 
 build:
 	gcloud builds submit \
@@ -35,4 +36,4 @@ deploy-prod:
 		--labels source=latest \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/live-edit:latest
+		--image gcr.io/${project}/live-edit:${tag}

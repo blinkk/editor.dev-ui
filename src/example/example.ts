@@ -27,6 +27,7 @@ import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
 import {LiveEditor} from '../editor/editor';
 import {MediaField} from '../editor/field/media';
+import {MediaListField} from '../editor/field/mediaList';
 import {RuleConstructor} from '@blinkk/selective-edit';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
@@ -48,6 +49,7 @@ const exampleEditor = new LiveEditor(
         group: (GroupField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
         media: (MediaField as unknown) as FieldConstructor,
+        mediaList: (MediaListField as unknown) as FieldConstructor,
         number: (NumberField as unknown) as FieldConstructor,
         radio: (RadioField as unknown) as FieldConstructor,
         text: (TextField as unknown) as FieldConstructor,

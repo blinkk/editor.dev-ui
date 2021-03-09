@@ -1,6 +1,7 @@
 import {
   DeepObject,
   DroppableMixin,
+  DroppableUiComponent,
   Field,
   FieldComponent,
   FieldConfig,
@@ -14,6 +15,8 @@ import {
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
@@ -42,6 +45,14 @@ export const VALID_IMAGE_MIME_TYPES = [
 export const VALID_VIDEO_MIME_TYPES = ['image/mp4', 'image/mov', 'image/webm'];
 
 export interface MediaFieldConfig extends FieldConfig {
+  /**
+   * Valid mime or file types that the field accepts.
+   *
+   * Defaults to {@link VALID_IMAGE_MIME_TYPES} and {@link VALID_VIDEO_MIME_TYPES}.
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#unique_file_type_specifiers
+   */
+  accepted?: Array<string>;
   /**
    * Key to use for the data for the 'extra' fields.
    *
@@ -89,7 +100,16 @@ export interface MediaFieldConfig extends FieldConfig {
 }
 
 export interface MediaFieldComponent extends FieldComponent {
+  config: MediaFieldConfig;
+  droppableUi: DroppableUiComponent;
   handleFiles(files: Array<File>): void;
+  isProcessing?: boolean;
+  templatePreviewMedia: Template;
+  templatePreviewValue(
+    editor: SelectiveEditor,
+    data: DeepObject,
+    index?: number
+  ): TemplateResult;
 }
 
 export interface MediaMeta {
@@ -116,7 +136,7 @@ export class MediaField
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.droppableUi.validTypes = [
+    this.droppableUi.validTypes = this.config.accepted || [
       ...VALID_IMAGE_MIME_TYPES,
       ...VALID_VIDEO_MIME_TYPES,
     ];
@@ -421,6 +441,25 @@ export class MediaField
     </div>`;
   }
 
+  /**
+   * Template for how to render a preview.
+   *
+   * @param editor Selective editor used to render the template.
+   * @param data Data provided to render the template.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templatePreviewValue(
+    editor: SelectiveEditor,
+    data: DeepObject,
+    index?: number
+  ): TemplateResult {
+    return html`${findPreviewValue(
+      this.value,
+      [],
+      `{ Media ${index !== undefined ? index + 1 : ''} }`
+    )}`;
+  }
+
   templatePreviewMedia(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
@@ -429,7 +468,7 @@ export class MediaField
   ): TemplateResult {
     const url = this.previewUrl;
     if (!url) {
-      return html``;
+      return html`<span class="material-icons">broken_image</span>`;
     }
 
     for (const fileExt of Object.keys(EXT_TO_MIME_TYPE)) {

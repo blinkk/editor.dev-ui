@@ -167,6 +167,9 @@ const currentFileset: Array<FileData> = [
     path: '/example/media.yaml',
   },
   {
+    path: '/example/mediaList.yaml',
+  },
+  {
     path: '/example/standard.yaml',
   },
   {
@@ -382,6 +385,47 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     file: {
       path: '/example/media.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/mediaList.yaml': {
+    data: {
+      mediaList: [
+        {
+          url:
+            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          label: 'Google logo',
+        },
+      ],
+    },
+    editor: {
+      fields: [
+        // Media example.
+        {
+          type: 'exampleField',
+          key: 'mediaList',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url:
+                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'mediaList',
+            key: 'mediaList',
+            label: 'Media list',
+          } as MediaFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/mediaList.yaml',
     },
     url: 'preview.html',
   },

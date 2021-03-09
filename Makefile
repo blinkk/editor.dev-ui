@@ -10,8 +10,12 @@ build:
 build-prod:
 	gcloud builds submit \
 		--project=$(project) \
-		--tag gcr.io/${project}/live-edit:$(subst refs/tags/,,$(GITHUB_REF)) \
 		--tag gcr.io/${project}/live-edit:latest
+
+  # Tagged version. Cannot do two tags in one build... :(
+	gcloud builds submit \
+		--project=$(project) \
+		--tag gcr.io/${project}/live-edit:$(subst refs/tags/,,$(GITHUB_REF))
 
 deploy:
 	$(MAKE) build

@@ -30,4 +30,5 @@ deploy-prod:
 		--labels source=latest \
 		--region ${region} \
 		--allow-unauthenticated \
+		--image gcr.io/${project}/live-edit:${GITHUB_REF} \
 		--image gcr.io/${project}/live-edit:latest

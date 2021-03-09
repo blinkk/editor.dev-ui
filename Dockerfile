@@ -27,6 +27,7 @@ COPY ./sass ./sass
 COPY ./src ./src
 
 # Copy the static files.
+# Use `public` directory to keep from serving source files.
 COPY ./static/server/* ./public/
 
 # Compile the production js/css files.

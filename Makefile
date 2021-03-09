@@ -10,7 +10,7 @@ build:
 build-prod:
 	gcloud builds submit \
 		--project=$(project) \
-		--tag gcr.io/${project}/live-edit:${GITHUB_REF/refs\/tags\//} \
+		--tag gcr.io/${project}/live-edit:$(subst refs/tags/,,$(GITHUB_REF)) \
 		--tag gcr.io/${project}/live-edit:latest
 
 deploy:

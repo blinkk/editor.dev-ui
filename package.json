@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "license": "MIT",
   "homepage": "https://blinkkcode.github.com/live-edit",
-  "description": "Structured text editor with live previews.",
+  "description": "Structured content editor with live previews.",
   "keywords": [
     "structured",
     "document",
@@ -20,9 +20,6 @@
     "type": "git",
     "url": "git://github.com/blinkkcode/live-edit.git"
   },
-  "directories": {
-    "example": "example"
-  },
   "engines": {
     "node": ">=14"
   },
@@ -34,11 +31,11 @@
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc && npx gulp compile && webpack --config webpack.prod.js",
-    "copy": "mkdir -p dist/src/static; cp src/static/* dist/src/static",
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",
     "fix": "node ./node_modules/eslint/bin/eslint --fix src/**/*.ts",
+    "hosted": "concurrently \"webpack --config webpack.server.js\" \"tsc --watch\" \"npx gulp watch\" \"nodemon dist/src/server/server.js\"",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
     "test": "nyc ava",
     "test-ci": "nyc --reporter=lcov ava && codecov"
@@ -71,25 +68,27 @@
     "eslint": "^7.21.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-sort-class-members": "^1.9.0",
+    "express": "^4.17.1",
     "gts": "^3.1.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.7",
+    "nunjucks": "^3.2.3",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "ts-loader": "^8.0.17",
     "ts-node": "^9.1.1",
-    "typedoc": "^0.20.28",
-    "typescript": "^4.2.2",
-    "webpack": "^5.24.2",
+    "typedoc": "^0.20.29",
+    "typescript": "^4.2.3",
+    "webpack": "^5.24.3",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^1.0.22",
+    "@blinkk/selective-edit": "^1.0.23",
     "javascript-time-ago": "^2.3.4",
     "js-yaml": "^4.0.0",
     "lodash.merge": "^4.6.2",

@@ -15,6 +15,7 @@ build-prod:
 
   # Tagged version. Cannot do two tags in one build... :(
 	gcloud builds submit \
+	  --async \
 		--project=$(project) \
 		--tag gcr.io/${project}/live-edit:$(subst refs/tags/,,$(GITHUB_REF))
 

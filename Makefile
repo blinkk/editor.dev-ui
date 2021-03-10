@@ -13,7 +13,7 @@ build-prod:
 		--project=$(project) \
 		--tag gcr.io/${project}/live-edit:latest
 
-  # Tagged version. Cannot do two tags in one build... :(
+  # Tagged version. Cannot do two --tag in one build... :(
 	gcloud builds submit \
 	  --async \
 		--project=$(project) \

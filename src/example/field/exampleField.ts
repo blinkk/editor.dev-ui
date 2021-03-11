@@ -103,7 +103,13 @@ export class ExampleFieldField extends Field {
     return html`${this.field?.template(editor, data) || ''}
       <div class="selective__example_field__code">
         <pre><code>${unsafeHTML(
-          formatCodeSample(yaml.dump(this.cleaner.clean(this.config.field)))
+          formatCodeSample(
+            yaml.dump(
+              replaceSpecialized(
+                this.cleaner.clean(this.config.field) as FieldConfig
+              )
+            )
+          )
         )}</code></pre>
       </div>
       ${this.config.docUrls
@@ -140,4 +146,43 @@ function formatCodeSample(code: string): string {
   }
 
   return cleanLines.join('\n');
+}
+
+/**
+ * The example page loads all the specialized fields at once.
+ *
+ * For the example page the field configs for the specialized fields
+ * are prefixed. But when the fields are used in a specialized project,
+ * the field type is not prefixed.
+ *
+ * Since we want the code snippet to be copyable for projects, we need
+ * to clean up the type shown for the code snippet to make it easy for
+ * developers to copy to their projects as a starting point.
+ *
+ * @param fieldConfig Field config with example field configuration.
+ * @returns Updated field config with correct type.
+ */
+function replaceSpecialized(fieldConfig: FieldConfig): FieldConfig {
+  let isModified = false;
+
+  // Amagaki fields.
+  if (fieldConfig.type.startsWith('amagaki')) {
+    fieldConfig.type = fieldConfig.type.replace(/^amagaki/, '');
+    isModified = true;
+  }
+
+  // Grow fields.
+  if (fieldConfig.type.startsWith('grow')) {
+    fieldConfig.type = fieldConfig.type.replace(/^grow/, '');
+    isModified = true;
+  }
+
+  // If modified, lowercase the first letter of the type.
+  if (isModified && fieldConfig.type.length) {
+    fieldConfig.type = `${fieldConfig.type[0].toLowerCase()}${fieldConfig.type.slice(
+      1
+    )}`;
+  }
+
+  return fieldConfig;
 }

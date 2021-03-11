@@ -32,6 +32,7 @@ import {
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
 import {MediaFieldConfig} from '../editor/field/media';
+import {GrowDocumentConfig} from '../specialized/grow/field/document';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
@@ -143,46 +144,6 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
     },
   ],
 };
-
-const currentFileset: Array<FileData> = [
-  {
-    path: '/content/pages/index.yaml',
-  },
-  {
-    path: '/content/pages/about.yaml',
-  },
-  {
-    path: '/content/pages/sub/page.yaml',
-  },
-  {
-    path: '/content/pages/sub/another.yaml',
-  },
-  {
-    path: '/content/strings/about.yaml',
-  },
-  {
-    path: '/example/list.yaml',
-  },
-  {
-    path: '/example/media.yaml',
-  },
-  {
-    path: '/example/mediaList.yaml',
-  },
-  {
-    path: '/example/standard.yaml',
-  },
-  {
-    path: '/example/structure.yaml',
-  },
-  {
-    path: '/example/utility.yaml',
-  },
-  {
-    path: '/static/img/portrait.png',
-    url: 'image-portrait.png',
-  },
-];
 
 const fullFiles: Record<string, EditorFileData> = {
   '/example/list.yaml': {
@@ -794,7 +755,55 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/grow/constructor.yaml': {
+    editor: {
+      fields: [
+        // Grow constructor example.
+        {
+          type: 'exampleField',
+          key: 'constructor',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'growDocument',
+            key: 'doc',
+            label: 'Grow document',
+            validation: [
+              {
+                type: 'require',
+                message: 'Document is required.',
+              },
+            ],
+          } as GrowDocumentConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/constructor.yaml',
+    },
+    url: 'preview.html',
+  },
 };
+
+const currentFileset: Array<FileData> = [
+  {
+    path: '/content/pages/index.yaml',
+  },
+  {
+    path: '/static/img/portrait.png',
+    url: 'image-portrait.png',
+  },
+];
+
+// Pull in the fullFiles automatically.
+for (const key of Object.keys(fullFiles)) {
+  currentFileset.push(fullFiles[key].file);
+}
 
 const currentUsers: Array<UserData> = [
   {

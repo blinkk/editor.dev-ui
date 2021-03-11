@@ -10,14 +10,9 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/validation';
-import {IncludeExcludeFilterConfig} from '../../../utility/filter';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 
 export interface GrowConstructorConfig extends FieldConfig {
-  /**
-   * Filter to apply for the file list.
-   */
-  filter?: IncludeExcludeFilterConfig;
   /**
    * Placeholder for the text input.
    */

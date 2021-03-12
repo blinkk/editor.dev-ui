@@ -55,7 +55,7 @@ export class WorkspacesPart extends MenuSectionPart {
         {
           fields: [
             {
-              type: 'select',
+              type: 'radio',
               key: 'base',
               label: 'Parent workspace',
               help: 'Workspace to start the new workspace from.',

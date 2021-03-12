@@ -86,7 +86,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   createFile(
@@ -103,7 +103,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   createWorkspace(
@@ -121,7 +121,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the workspaces.
         this.getWorkspaces();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   deleteFile(
@@ -138,7 +138,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   getDevices(
@@ -160,7 +160,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.devices;
   }
 
@@ -185,7 +185,7 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.file;
   }
 
@@ -208,7 +208,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.files;
   }
 
@@ -231,7 +231,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.project;
   }
 
@@ -254,7 +254,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.site;
   }
 
@@ -277,7 +277,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.users;
   }
 
@@ -300,7 +300,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.workspace;
   }
 
@@ -323,7 +323,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.workspaces;
   }
 
@@ -341,7 +341,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   publish(
@@ -358,7 +358,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   /**
@@ -389,6 +389,6 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 }

@@ -345,20 +345,25 @@ export interface ApiError extends EditorNotification {
  *
  * @param error Error from api.
  */
-export function catchError(error: ApiError | bent.StatusError) {
+export function catchError(
+  error: ApiError | bent.StatusError,
+  callback?: (error: ApiError) => void
+) {
+  const handler = callback || announceNotification;
+
   // Check for bent status error for failed api call.
   if ((error as bent.StatusError).json) {
     (error as bent.StatusError).json().then(value => {
       const apiError = value as ApiError;
       apiError.level = NotificationLevel.Error;
-      announceNotification(apiError);
+      handler(apiError);
     });
     return;
   }
 
   error = error as ApiError;
   error.level = NotificationLevel.Error;
-  announceNotification(error);
+  handler(error);
 }
 
 /**

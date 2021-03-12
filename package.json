@@ -14,7 +14,6 @@
   "bugs": {
     "url": "https://github.com/blinkkcode/live-edit/issues"
   },
-  "main": "dist/src/index.ts",
   "types": "dist/src/index.d.ts",
   "repository": {
     "type": "git",
@@ -34,7 +33,7 @@
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",
-    "fix": "node ./node_modules/eslint/bin/eslint --fix src/**/*.ts",
+    "fix": "npx eslint --fix src/**/*.ts",
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"tsc --watch\" \"npx gulp watch\" \"nodemon dist/src/server/server.js\"",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
     "test": "nyc ava",

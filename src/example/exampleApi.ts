@@ -31,8 +31,8 @@ import {
 } from '@blinkk/selective-edit';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
-import {MediaFieldConfig} from '../editor/field/media';
 import {GrowDocumentConfig} from '../specialized/grow/field/document';
+import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;

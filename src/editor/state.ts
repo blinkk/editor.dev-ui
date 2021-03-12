@@ -152,10 +152,15 @@ export class EditorState extends ListenersMixin(Base) {
     this.promises[promiseKey] = this.api
       .getDevices()
       .then(data => {
-        this.devices = data;
+        if (!data.length) {
+          this.devices = DEFAULT_DEVICES;
+        } else {
+          this.devices = data;
+        }
+
         delete this.promises[promiseKey];
         if (callback) {
-          callback(data);
+          callback(this.devices);
         }
         this.triggerListener(promiseKey);
         this.render();
@@ -392,3 +397,22 @@ export class EditorState extends ListenersMixin(Base) {
       .catch(error => catchError(error, callbackError));
   }
 }
+
+export const DEFAULT_DEVICES = [
+  {
+    label: 'Mobile',
+    width: 411,
+    height: 731,
+    canRotate: true,
+  } as DeviceData,
+  {
+    label: 'Tablet',
+    width: 1024,
+    height: 768,
+    canRotate: true,
+  } as DeviceData,
+  {
+    label: 'Desktop',
+    width: 1440,
+  } as DeviceData,
+];

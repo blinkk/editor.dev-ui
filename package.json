@@ -34,7 +34,7 @@
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",
     "fix": "npx eslint --fix src/**/*.ts",
-    "hosted": "concurrently \"webpack --config webpack.server.js\" \"tsc --watch\" \"npx gulp watch\" \"nodemon dist/src/server/server.js\"",
+    "hosted": "concurrently \"webpack --config webpack.server.js\" \"tsc --watch\" \"npx gulp watch\" \"nodemon ./src/server/server.ts\"",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
     "test": "nyc ava",
     "test-ci": "nyc --reporter=lcov ava && codecov"
@@ -52,6 +52,8 @@
   },
   "devDependencies": {
     "@types/async": "^3.2.5",
+    "@types/bent": "^7.3.2",
+    "@types/express": "^4.17.11",
     "@types/javascript-time-ago": "^2.0.2",
     "@types/js-yaml": "^4.0.0",
     "@types/lodash.merge": "^4.6.6",
@@ -77,7 +79,7 @@
     "nunjucks": "^3.2.3",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
-    "ts-loader": "^8.0.17",
+    "ts-loader": "^8.0.18",
     "ts-node": "^9.1.1",
     "typedoc": "^0.20.30",
     "typescript": "^4.2.3",
@@ -88,6 +90,7 @@
   },
   "dependencies": {
     "@blinkk/selective-edit": "^1.0.23",
+    "bent": "^7.3.12",
     "javascript-time-ago": "^2.3.4",
     "js-yaml": "^4.0.0",
     "lodash.merge": "^4.6.2",

@@ -5,6 +5,7 @@ import {
 } from './parts/notifications';
 import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
+import bent from 'bent';
 
 /**
  * Interface for the live editor api.
@@ -344,7 +345,18 @@ export interface ApiError extends EditorNotification {
  *
  * @param error Error from api.
  */
-export function catchError(error: ApiError) {
+export function catchError(error: ApiError | bent.StatusError) {
+  // Check for bent status error for failed api call.
+  if ((error as bent.StatusError).json) {
+    (error as bent.StatusError).json().then(value => {
+      const apiError = value as ApiError;
+      apiError.level = NotificationLevel.Error;
+      announceNotification(apiError);
+    });
+    return;
+  }
+
+  error = error as ApiError;
   error.level = NotificationLevel.Error;
   announceNotification(error);
 }

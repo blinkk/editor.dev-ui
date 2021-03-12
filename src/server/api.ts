@@ -10,8 +10,10 @@ import {
   UrlLevel,
   UserData,
   WorkspaceData,
-} from '../../editor/api';
+} from '../editor/api';
 import {TextFieldConfig} from '@blinkk/selective-edit';
+import bent from 'bent';
+const getJSON = bent('json');
 
 const DEFAULT_EDITOR_FILE: EditorFileData = {
   content: 'Example content.',
@@ -188,7 +190,11 @@ const currentWorkspaces: Array<WorkspaceData> = [
 /**
  * Example api that returns data through a 'simulated' network.
  */
-export class GrowApi implements LiveEditorApiComponent {
+export class ServerApi implements LiveEditorApiComponent {
+  get baseUrl() {
+    return '/';
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
       const newFile: FileData = {
@@ -299,12 +305,7 @@ export class GrowApi implements LiveEditorApiComponent {
   }
 
   async getProject(): Promise<ProjectData> {
-    return new Promise<ProjectData>((resolve, reject) => {
-      resolve({
-        title: 'Example project',
-        publish: {},
-      } as ProjectData);
-    });
+    return getJSON(`${this.baseUrl}project`) as Promise<ProjectData>;
   }
 
   async getSite(): Promise<SiteData> {
@@ -365,5 +366,39 @@ export class GrowApi implements LiveEditorApiComponent {
         url: 'image-portrait.png',
       } as FileData);
     });
+  }
+}
+
+export class LocalServerApi extends ServerApi {
+  port: number;
+
+  constructor(port: number) {
+    super();
+    this.port = port;
+  }
+
+  get baseUrl() {
+    return `http://localhost:${this.port}/`;
+  }
+}
+
+export class ServiceServerApi extends ServerApi {
+  isUnstable: boolean;
+  organization: string;
+  project: string;
+  service: string;
+
+  constructor(service: string, organization: string, project: string) {
+    super();
+    this.service = service;
+    this.organization = organization;
+    this.project = project;
+    this.isUnstable = true;
+  }
+
+  get baseUrl() {
+    const domain = `https://api.${this.isUnstable ? 'beta.' : ''}editor.dev`;
+    const path = `/${this.service}/${this.organization}/${this.project}/`;
+    return `${domain}${path}`;
   }
 }

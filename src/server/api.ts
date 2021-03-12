@@ -14,10 +14,7 @@ import {
 import {TextFieldConfig} from '@blinkk/selective-edit';
 import bent from 'bent';
 
-const deleteJSON = bent('json', 'DELETE');
-const getJSON = bent('json');
 const postJSON = bent('json', 'POST');
-const putJSON = bent('json', 'PUT');
 
 const DEFAULT_EDITOR_FILE: EditorFileData = {
   content: 'Example content.',
@@ -200,14 +197,14 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
-    return postJSON(this.resolveUrl('/file/copy'), {
+    return postJSON(this.resolveUrl('/file.copy'), {
       originalPath: originalPath,
       path: path,
     }) as Promise<FileData>;
   }
 
   async createFile(path: string): Promise<FileData> {
-    return putJSON(this.resolveUrl('/file'), {
+    return postJSON(this.resolveUrl('/file.create'), {
       path: path,
     }) as Promise<FileData>;
   }
@@ -216,20 +213,22 @@ export class ServerApi implements LiveEditorApiComponent {
     base: WorkspaceData,
     workspace: string
   ): Promise<WorkspaceData> {
-    return putJSON(this.resolveUrl('/workspace'), {
+    return postJSON(this.resolveUrl('/workspace.create'), {
       base: base,
       workspace: workspace,
     }) as Promise<WorkspaceData>;
   }
 
   async deleteFile(file: FileData): Promise<null> {
-    return deleteJSON(this.resolveUrl('/file'), {
+    return postJSON(this.resolveUrl('/file.delete'), {
       file: file,
     }) as Promise<null>;
   }
 
   async getDevices(): Promise<Array<DeviceData>> {
-    return getJSON(this.resolveUrl('/devices')) as Promise<Array<DeviceData>>;
+    return postJSON(this.resolveUrl('/devices.get')) as Promise<
+      Array<DeviceData>
+    >;
   }
 
   async getFile(file: FileData): Promise<EditorFileData> {
@@ -259,7 +258,7 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getProject(): Promise<ProjectData> {
-    return getJSON(this.resolveUrl('/project')) as Promise<ProjectData>;
+    return postJSON(this.resolveUrl('/project.get')) as Promise<ProjectData>;
   }
 
   async getSite(): Promise<SiteData> {

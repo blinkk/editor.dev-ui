@@ -136,6 +136,15 @@ export interface LiveEditorApiComponent {
 }
 
 /**
+ * Interface for the structure of the editor settings file.
+ *
+ * Settings in a project's `editor.yaml` should follow this interface.
+ */
+export interface EditorFileSettings {
+  devices?: Array<DeviceData>;
+}
+
+/**
  * Device information used for previews.
  */
 export interface DeviceData {

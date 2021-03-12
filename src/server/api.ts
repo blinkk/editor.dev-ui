@@ -229,30 +229,7 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getDevices(): Promise<Array<DeviceData>> {
-    return new Promise<Array<DeviceData>>((resolve, reject) => {
-      resolve([
-        {
-          label: 'Mobile',
-          width: 411,
-          height: 731,
-          canRotate: true,
-        } as DeviceData,
-        {
-          label: 'Tablet',
-          width: 1024,
-          height: 768,
-          canRotate: true,
-        } as DeviceData,
-        {
-          label: 'Desktop',
-          width: 1440,
-        } as DeviceData,
-        {
-          label: 'Desktop (Large)',
-          width: 2200,
-        } as DeviceData,
-      ]);
-    });
+    return getJSON(this.resolveUrl('/devices')) as Promise<Array<DeviceData>>;
   }
 
   async getFile(file: FileData): Promise<EditorFileData> {

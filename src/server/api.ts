@@ -13,7 +13,11 @@ import {
 } from '../editor/api';
 import {TextFieldConfig} from '@blinkk/selective-edit';
 import bent from 'bent';
+
+const deleteJSON = bent('json', 'DELETE');
 const getJSON = bent('json');
+const postJSON = bent('json', 'POST');
+const putJSON = bent('json', 'PUT');
 
 const DEFAULT_EDITOR_FILE: EditorFileData = {
   content: 'Example content.',
@@ -86,7 +90,7 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
       ).toISOString(),
     },
   ],
-  url: 'preview.html',
+  url: '/preview.html',
   urls: [
     {
       url: '#private',
@@ -196,23 +200,16 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
-    return new Promise<FileData>((resolve, reject) => {
-      const newFile: FileData = {
-        path: path,
-      };
-      currentFileset.push(newFile);
-      resolve(newFile);
-    });
+    return postJSON(this.resolveUrl('/file/copy'), {
+      originalPath: originalPath,
+      path: path,
+    }) as Promise<FileData>;
   }
 
   async createFile(path: string): Promise<FileData> {
-    return new Promise<FileData>((resolve, reject) => {
-      const newFile: FileData = {
-        path: path,
-      };
-      currentFileset.push(newFile);
-      resolve(newFile);
-    });
+    return putJSON(this.resolveUrl('/file'), {
+      path: path,
+    }) as Promise<FileData>;
   }
 
   async createWorkspace(
@@ -239,16 +236,9 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async deleteFile(file: FileData): Promise<null> {
-    return new Promise<null>((resolve, reject) => {
-      for (let i = 0; i < currentFileset.length; i++) {
-        if (currentFileset[i].path === file.path) {
-          currentFileset.splice(i, 1);
-          break;
-        }
-      }
-
-      resolve(null);
-    });
+    return deleteJSON(this.resolveUrl('/file'), {
+      file: file,
+    }) as Promise<null>;
   }
 
   async getDevices(): Promise<Array<DeviceData>> {
@@ -305,7 +295,7 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getProject(): Promise<ProjectData> {
-    return getJSON(`${this.baseUrl}project`) as Promise<ProjectData>;
+    return getJSON(this.resolveUrl('/project')) as Promise<ProjectData>;
   }
 
   async getSite(): Promise<SiteData> {
@@ -353,6 +343,12 @@ export class ServerApi implements LiveEditorApiComponent {
     });
   }
 
+  resolveUrl(path: string) {
+    // Strip off the preceding /.
+    path = path.replace(/\/*/, '');
+    return `${this.baseUrl}${path}`;
+  }
+
   async saveFile(file: EditorFileData): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {
       resolve(DEFAULT_EDITOR_FILE);
@@ -369,6 +365,11 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 }
 
+/**
+ * Connects to a locally running version of the api.
+ *
+ * This is used when a user is running `npx @blinkk/editor-server` locally.
+ */
 export class LocalServerApi extends ServerApi {
   port: number;
 
@@ -382,23 +383,45 @@ export class LocalServerApi extends ServerApi {
   }
 }
 
+/**
+ * Connects to the corresponding api server and maps to the right service
+ * api for the request urls.
+ */
 export class ServiceServerApi extends ServerApi {
+  branch: string;
   isUnstable: boolean;
   organization: string;
   project: string;
   service: string;
 
-  constructor(service: string, organization: string, project: string) {
+  constructor(
+    service: string,
+    organization: string,
+    project: string,
+    branch?: string
+  ) {
     super();
     this.service = service;
     this.organization = organization;
     this.project = project;
+    this.branch = branch || 'main';
     this.isUnstable = true;
   }
 
   get baseUrl() {
     const domain = `https://api.${this.isUnstable ? 'beta.' : ''}editor.dev`;
-    const path = `/${this.service}/${this.organization}/${this.project}/`;
+    const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
+    return `${domain}${path}`;
+  }
+}
+
+/**
+ * Used for developing the service api locally when in development mode.
+ */
+export class DevServiceServerApi extends ServiceServerApi {
+  get baseUrl() {
+    const domain = 'http://localhost:9090';
+    const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
     return `${domain}${path}`;
   }
 }

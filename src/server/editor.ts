@@ -20,13 +20,13 @@ import {
   TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
+import {DevServiceServerApi, LocalServerApi, ServiceServerApi} from './api';
 import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {LiveEditor} from '../editor/editor';
 import {LiveEditorApiComponent} from '../editor/api';
-import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
@@ -39,6 +39,23 @@ const isLocal = localPort > 0;
 let api: LiveEditorApiComponent | null = null;
 if (isLocal) {
   api = new LocalServerApi(localPort);
+} else {
+  const service = container.dataset.service;
+  const organization = container.dataset.organization;
+  const project = container.dataset.project;
+  const branch = container.dataset.branch;
+
+  if (!service || !organization || !project || !branch) {
+    throw new Error(
+      'Missing service, organization, project, or branch information.'
+    );
+  }
+
+  if (container.dataset.mode === 'dev') {
+    api = new DevServiceServerApi(service, organization, project, branch);
+  } else {
+    api = new ServiceServerApi(service, organization, project, branch);
+  }
 }
 
 if (!api) {
@@ -90,6 +107,13 @@ const editor = new LiveEditor(
   },
   container as HTMLElement
 );
+
+// Check for url path to load.
+if (container.dataset.file) {
+  editor.state.getFile({
+    path: container.dataset.file || '',
+  });
+}
 
 // TODO: Determine which fields to load based on api call.
 // TODO: Reload the fields with an updated config. ex: grow fields.

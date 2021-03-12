@@ -22,9 +22,23 @@ if (MODE === 'dev') {
   app.use(express.static('public'));
 }
 
-app.get('/local/:port/', (req, res) => {
+// Use local server connector.
+app.get('/local/:port/*', (req, res) => {
   res.render('index.njk', {
     port: req.params.port,
+    file: req.params['0'],
+  });
+});
+
+// Use github connector.
+app.get('/gh/:organization/:project/:branch/*', (req, res) => {
+  res.render('index.njk', {
+    service: 'gh',
+    organization: req.params.organization,
+    project: req.params.project,
+    branch: req.params.branch,
+    file: req.params['0'],
+    mode: MODE,
   });
 });
 

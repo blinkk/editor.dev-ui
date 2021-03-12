@@ -25,6 +25,7 @@ COPY ./gulpfile.js ./
 COPY ./tsconfig.json ./
 COPY ./sass ./sass
 COPY ./src ./src
+COPY ./views ./views
 
 # Copy the static files.
 # Use `public` directory to keep from serving source files.

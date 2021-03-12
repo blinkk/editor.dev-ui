@@ -7,7 +7,7 @@ const MODE = process.env.MODE || 'dev';
 // App
 const app = express();
 
-nunjucks.configure('static/server', {
+nunjucks.configure('views', {
   noCache: MODE === 'dev',
   autoescape: true,
   express: app,

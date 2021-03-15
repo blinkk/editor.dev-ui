@@ -5,110 +5,11 @@ import {
   LiveEditorApiComponent,
   ProjectData,
   PublishResult,
-  PublishStatus,
-  UrlLevel,
   WorkspaceData,
 } from '../editor/api';
-import {TextFieldConfig} from '@blinkk/selective-edit';
 import bent from 'bent';
 
 const postJSON = bent('json', 'POST');
-
-const DEFAULT_EDITOR_FILE: EditorFileData = {
-  content: 'Example content.',
-  data: {
-    title: 'Testing',
-  },
-  dataRaw: 'title: Testing',
-  file: {
-    path: '/content/pages/index.yaml',
-  },
-  editor: {
-    fields: [
-      {
-        type: 'text',
-        key: 'title',
-        label: 'Title',
-        validation: [
-          {
-            type: 'require',
-            message: 'Title is required.',
-          },
-        ],
-      } as TextFieldConfig,
-    ],
-  },
-  history: [
-    {
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
-      summary: 'Example commit summary.',
-      timestamp: new Date(
-        new Date().getTime() - 1 * 60 * 60 * 1000
-      ).toISOString(),
-    },
-    {
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      hash: 'f36d7c0d556e30421a7a8f22038234a9174f0e04',
-      summary: 'Example commit summary.',
-      timestamp: new Date(
-        new Date().getTime() - 2 * 60 * 60 * 1000
-      ).toISOString(),
-    },
-    {
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      hash: '6dda2682901bf4f2f03f936267169454120f1806',
-      summary:
-        'Example commit summary. With a long summary. Like really too long for a summary. Probably should use a shorter summary.',
-      timestamp: new Date(
-        new Date().getTime() - 4 * 60 * 60 * 1000
-      ).toISOString(),
-    },
-    {
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      hash: '465e3720c050f045d9500bd9bc7c7920f192db78',
-      summary: 'Example commit summary.',
-      timestamp: new Date(
-        new Date().getTime() - 14 * 60 * 60 * 1000
-      ).toISOString(),
-    },
-  ],
-  url: '/preview.html',
-  urls: [
-    {
-      url: '#private',
-      label: 'Live editor preview',
-      level: UrlLevel.Private,
-    },
-    {
-      url: '#protected',
-      label: 'Staging',
-      level: UrlLevel.Protected,
-    },
-    {
-      url: '#public',
-      label: 'Live',
-      level: UrlLevel.Public,
-    },
-    {
-      url: 'https://github.com/blinkkcode/live-edit/',
-      label: 'View in Github',
-      level: UrlLevel.Source,
-    },
-  ],
-};
 
 /**
  * Example api that returns data through a 'simulated' network.

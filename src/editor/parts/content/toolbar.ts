@@ -36,13 +36,13 @@ export class ContentToolbarPart extends BasePart implements Part {
   }
 
   getIconForUrl(url: UrlConfig): string {
-    if (url.level === UrlLevel.PUBLIC) {
+    if (url.level === UrlLevel.Public) {
       return 'public';
     }
-    if (url.level === UrlLevel.PROTECTED) {
+    if (url.level === UrlLevel.Protected) {
       return 'vpn_lock';
     }
-    if (url.level === UrlLevel.SOURCE) {
+    if (url.level === UrlLevel.Source) {
       return 'source';
     }
     return 'lock';
@@ -79,6 +79,7 @@ export class ContentToolbarPart extends BasePart implements Part {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateExpanded(editor: LiveEditor): TemplateResult {
     // TODO: If there is nothing to preview, do not need an expand button.
 

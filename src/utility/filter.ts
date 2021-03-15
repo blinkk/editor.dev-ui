@@ -1,11 +1,16 @@
 import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 
+export interface FilterComponent {
+  filter(values: Array<string>): Array<string>;
+  matches(value: string): boolean;
+}
+
 export interface IncludeExcludeFilterConfig {
   includes?: Array<string | RegExp>;
   excludes?: Array<string | RegExp>;
 }
 
-export class IncludeExcludeFilter {
+export class IncludeExcludeFilter implements FilterComponent {
   config: IncludeExcludeFilterConfig;
 
   constructor(config: IncludeExcludeFilterConfig) {

@@ -3,7 +3,7 @@ import {
   NotificationLevel,
   announceNotification,
 } from './parts/notifications';
-import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
+import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
 
@@ -531,9 +531,9 @@ export interface UrlConfig {
    */
   label: string;
   /**
-   * Access level for the url
+   * Access level for the url.
    */
-  level: UrlLevel;
+  level: UrlLevel | string;
   /**
    * URL for viewing the file.
    */
@@ -551,7 +551,7 @@ export enum UrlLevel {
    * widely due to the transitive nature of workspaces, but can
    * still be used to viewed when needed.
    */
-  PRIVATE,
+  Private = 'private',
   /**
    * Protected url, a shared service that is used for sharing
    * but still restricted in how it is accessed.
@@ -559,21 +559,21 @@ export enum UrlLevel {
    * For example, a staging server to preview changes before
    * they are live.
    */
-  PROTECTED,
+  Protected = 'protected',
   /**
    * Public url, a publicly accessbile way to access the resource.
    *
    * For example, the live version of the site that users normally
    * see.
    */
-  PUBLIC,
+  Public = 'public',
   /**
    * Source url, a remotely hosted version of the resource.
    *
    * For example, a url that shows the resource in a repository
    * like github.
    */
-  SOURCE,
+  Source = 'source',
 }
 
 /**

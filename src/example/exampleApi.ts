@@ -123,22 +123,22 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
     {
       url: '#private',
       label: 'Live editor preview',
-      level: UrlLevel.PRIVATE,
+      level: UrlLevel.Private,
     },
     {
       url: '#protected',
       label: 'Staging',
-      level: UrlLevel.PROTECTED,
+      level: UrlLevel.Protected,
     },
     {
       url: '#public',
       label: 'Live',
-      level: UrlLevel.PUBLIC,
+      level: UrlLevel.Public,
     },
     {
       url: 'https://github.com/blinkkcode/live-edit/',
       label: 'View in Github',
-      level: UrlLevel.SOURCE,
+      level: UrlLevel.Source,
     },
   ],
 };

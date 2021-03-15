@@ -3,8 +3,9 @@ import {
   NotificationLevel,
   announceNotification,
 } from './parts/notifications';
-import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
+import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
+import bent from 'bent';
 
 /**
  * Interface for the live editor api.
@@ -79,16 +80,6 @@ export interface LiveEditorApiComponent {
   getProject(): Promise<ProjectData>;
 
   /**
-   * Retrieve information about the site.
-   */
-  getSite(): Promise<SiteData>;
-
-  /**
-   * Retrieve the users that have access to the editor.
-   */
-  getUsers(): Promise<Array<UserData>>;
-
-  /**
    * Retrieve information about the active workspace.
    */
   getWorkspace(): Promise<WorkspaceData>;
@@ -132,6 +123,30 @@ export interface LiveEditorApiComponent {
    * or saved appropriately. Often for media like images or videos.
    */
   uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
+}
+
+/**
+ * Interface for the structure of the editor settings file.
+ *
+ * Settings in a project's `editor.yaml` should follow this interface.
+ */
+export interface EditorFileSettings {
+  /**
+   * Title of the site to display in the editor.
+   */
+  title?: string;
+  /**
+   * Devices to use in the editor preview.
+   */
+  devices?: Array<DeviceData>;
+  /**
+   * Configuration for the site display in the editor.
+   */
+  site?: SiteData;
+  /**
+   * Users or groups approved access to the editor.
+   */
+  users?: Array<UserData>;
 }
 
 /**
@@ -250,6 +265,14 @@ export interface ProjectData {
    * to collect for providing to the `publish` method on the api.
    */
   publish?: ProjectPublishConfig;
+  /**
+   * Configuration for the site display.
+   */
+  site?: SiteData;
+  /**
+   * Users or groups approved access to the editor.
+   */
+  users?: Array<UserData>;
 }
 
 /**
@@ -259,7 +282,7 @@ export interface PublishResult {
   /**
    * Status of the publish process.
    */
-  status: PublishStatus;
+  status: PublishStatus | string;
   /**
    * Updated workspace data.
    *
@@ -344,9 +367,25 @@ export interface ApiError extends EditorNotification {
  *
  * @param error Error from api.
  */
-export function catchError(error: ApiError) {
+export function catchError(
+  error: ApiError | bent.StatusError,
+  callback?: (error: ApiError) => void
+) {
+  const handler = callback || announceNotification;
+
+  // Check for bent status error for failed api call.
+  if ((error as bent.StatusError).json) {
+    (error as bent.StatusError).json().then(value => {
+      const apiError = value as ApiError;
+      apiError.level = NotificationLevel.Error;
+      handler(apiError);
+    });
+    return;
+  }
+
+  error = error as ApiError;
   error.level = NotificationLevel.Error;
-  announceNotification(error);
+  handler(error);
 }
 
 /**
@@ -492,9 +531,9 @@ export interface UrlConfig {
    */
   label: string;
   /**
-   * Access level for the url
+   * Access level for the url.
    */
-  level: UrlLevel;
+  level: UrlLevel | string;
   /**
    * URL for viewing the file.
    */
@@ -512,7 +551,7 @@ export enum UrlLevel {
    * widely due to the transitive nature of workspaces, but can
    * still be used to viewed when needed.
    */
-  PRIVATE,
+  Private = 'private',
   /**
    * Protected url, a shared service that is used for sharing
    * but still restricted in how it is accessed.
@@ -520,26 +559,26 @@ export enum UrlLevel {
    * For example, a staging server to preview changes before
    * they are live.
    */
-  PROTECTED,
+  Protected = 'protected',
   /**
    * Public url, a publicly accessbile way to access the resource.
    *
    * For example, the live version of the site that users normally
    * see.
    */
-  PUBLIC,
+  Public = 'public',
   /**
    * Source url, a remotely hosted version of the resource.
    *
    * For example, a url that shows the resource in a repository
    * like github.
    */
-  SOURCE,
+  Source = 'source',
 }
 
 /**
  * Configuration for how publishing works with a workspace.
  */
 export interface WorkspacePublishConfig {
-  status: PublishStatus;
+  status: PublishStatus | string;
 }

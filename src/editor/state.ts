@@ -86,7 +86,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   createFile(
@@ -103,7 +103,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   createWorkspace(
@@ -121,7 +121,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the workspaces.
         this.getWorkspaces();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   deleteFile(
@@ -138,7 +138,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   getDevices(
@@ -152,15 +152,20 @@ export class EditorState extends ListenersMixin(Base) {
     this.promises[promiseKey] = this.api
       .getDevices()
       .then(data => {
-        this.devices = data;
+        if (!data.length) {
+          this.devices = DEFAULT_DEVICES;
+        } else {
+          this.devices = data;
+        }
+
         delete this.promises[promiseKey];
         if (callback) {
-          callback(data);
+          callback(this.devices);
         }
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.devices;
   }
 
@@ -185,7 +190,7 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.file;
   }
 
@@ -208,7 +213,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.files;
   }
 
@@ -231,54 +236,8 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.project;
-  }
-
-  getSite(
-    callback?: (site: SiteData) => void,
-    callbackError?: (error: ApiError) => void
-  ): SiteData | undefined {
-    const promiseKey = 'getSite';
-    if (this.promises[promiseKey]) {
-      return;
-    }
-    this.promises[promiseKey] = this.api
-      .getSite()
-      .then(data => {
-        this.site = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
-        this.render();
-      })
-      .catch(callbackError || catchError);
-    return this.site;
-  }
-
-  getUsers(
-    callback?: (files: Array<UserData>) => void,
-    callbackError?: (error: ApiError) => void
-  ): Array<UserData> | undefined {
-    const promiseKey = 'getUsers';
-    if (this.promises[promiseKey]) {
-      return;
-    }
-    this.promises[promiseKey] = this.api
-      .getUsers()
-      .then(data => {
-        this.users = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
-        this.render();
-      })
-      .catch(callbackError || catchError);
-    return this.users;
   }
 
   getWorkspace(
@@ -300,7 +259,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.workspace;
   }
 
@@ -308,7 +267,7 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (workspaces: Array<WorkspaceData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
-    const promiseKey = 'getUsers';
+    const promiseKey = 'getWorkspaces';
     if (this.promises[promiseKey]) {
       return;
     }
@@ -323,7 +282,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.triggerListener(promiseKey);
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
     return this.workspaces;
   }
 
@@ -341,7 +300,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   publish(
@@ -358,7 +317,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 
   /**
@@ -389,6 +348,25 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
-      .catch(callbackError || catchError);
+      .catch(error => catchError(error, callbackError));
   }
 }
+
+export const DEFAULT_DEVICES = [
+  {
+    label: 'Phone',
+    width: 411,
+    height: 731,
+    canRotate: true,
+  } as DeviceData,
+  {
+    label: 'Tablet',
+    width: 1024,
+    height: 768,
+    canRotate: true,
+  } as DeviceData,
+  {
+    label: 'Desktop',
+    width: 1440,
+  } as DeviceData,
+];

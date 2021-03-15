@@ -282,7 +282,7 @@ export interface PublishResult {
   /**
    * Status of the publish process.
    */
-  status: PublishStatus;
+  status: PublishStatus | string;
   /**
    * Updated workspace data.
    *
@@ -580,5 +580,5 @@ export enum UrlLevel {
  * Configuration for how publishing works with a workspace.
  */
 export interface WorkspacePublishConfig {
-  status: PublishStatus;
+  status: PublishStatus | string;
 }

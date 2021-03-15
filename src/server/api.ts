@@ -7,7 +7,6 @@ import {
   PublishResult,
   PublishStatus,
   UrlLevel,
-  UserData,
   WorkspaceData,
 } from '../editor/api';
 import {TextFieldConfig} from '@blinkk/selective-edit';
@@ -111,82 +110,6 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
   ],
 };
 
-const currentFileset: Array<FileData> = [
-  {
-    path: '/content/pages/index.yaml',
-  },
-  {
-    path: '/static/img/portrait.png',
-    url: 'image-portrait.png',
-  },
-];
-
-const currentUsers: Array<UserData> = [
-  {
-    name: 'Example User',
-    email: 'example@example.com',
-  },
-  {
-    name: 'Domain users',
-    email: '@domain.com',
-    isGroup: true,
-  },
-];
-
-let currentWorkspace: WorkspaceData = {
-  branch: {
-    name: 'main',
-    commit: {
-      author: {
-        name: 'Example User',
-        email: 'example@example.com',
-      },
-      hash: '951c206e5f10ba99d13259293b349e321e4a6a9e',
-      summary: 'Example commit summary.',
-      timestamp: new Date().toISOString(),
-    },
-  },
-  name: 'main',
-};
-
-const currentWorkspaces: Array<WorkspaceData> = [
-  currentWorkspace,
-  {
-    branch: {
-      name: 'staging',
-      commit: {
-        author: {
-          name: 'Example User',
-          email: 'example@example.com',
-        },
-        hash: '26506fd82b7d5d6aab6b3a92c7ef641c7073b249',
-        summary: 'Example commit summary.',
-        timestamp: new Date(
-          new Date().getTime() - 2 * 60 * 60 * 1000
-        ).toISOString(),
-      },
-    },
-    name: 'staging',
-  },
-  {
-    branch: {
-      name: 'workspace/redesign',
-      commit: {
-        author: {
-          name: 'Example User',
-          email: 'example@example.com',
-        },
-        hash: 'db29a258dacdd416bb24bb63c689d669df08d409',
-        summary: 'Example commit summary.',
-        timestamp: new Date(
-          new Date().getTime() - 6 * 60 * 60 * 1000
-        ).toISOString(),
-      },
-    },
-    name: 'redesign',
-  },
-];
-
 /**
  * Example api that returns data through a 'simulated' network.
  */
@@ -231,9 +154,9 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getFile(file: FileData): Promise<EditorFileData> {
-    return new Promise<EditorFileData>((resolve, reject) => {
-      resolve(DEFAULT_EDITOR_FILE);
-    });
+    return postJSON(this.resolveUrl('/file.get'), {
+      file: file,
+    }) as Promise<EditorFileData>;
   }
 
   async getFiles(): Promise<Array<FileData>> {
@@ -241,8 +164,8 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getFileUrl(file: FileData): Promise<FileData> {
+    // TODO: Use preview server to determine urls for files.
     return new Promise<FileData>((resolve, reject) => {
-      // TODO: Use some logic to determine what url to return.
       resolve({
         path: file.path,
         url: 'image-landscape.png',
@@ -255,36 +178,30 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getWorkspace(): Promise<WorkspaceData> {
-    return new Promise<WorkspaceData>((resolve, reject) => {
-      resolve(currentWorkspace);
-    });
+    return postJSON(
+      this.resolveUrl('/workspace.get')
+    ) as Promise<WorkspaceData>;
   }
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
-    return new Promise<Array<WorkspaceData>>((resolve, reject) => {
-      resolve([...currentWorkspaces]);
-    });
+    return postJSON(this.resolveUrl('/workspaces.get')) as Promise<
+      Array<WorkspaceData>
+    >;
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
-    return new Promise<WorkspaceData>((resolve, reject) => {
-      currentWorkspace = workspace;
-      resolve(currentWorkspace);
-    });
+    // TODO: Handle the redirection of the URL when loading a workspace.
+    return Promise.resolve(workspace);
   }
 
   async publish(
     workspace: WorkspaceData,
     data?: Record<string, any>
   ): Promise<PublishResult> {
-    return new Promise<PublishResult>((resolve, reject) => {
-      const status: PublishStatus = PublishStatus.Complete;
-
-      resolve({
-        status: status,
-        workspace: currentWorkspace,
-      });
-    });
+    return postJSON(this.resolveUrl('/publish.start'), {
+      workspace: workspace,
+      data: data,
+    }) as Promise<PublishResult>;
   }
 
   resolveUrl(path: string) {
@@ -294,18 +211,16 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async saveFile(file: EditorFileData): Promise<EditorFileData> {
-    return new Promise<EditorFileData>((resolve, reject) => {
-      resolve(DEFAULT_EDITOR_FILE);
-    });
+    return postJSON(this.resolveUrl('/file.save'), {
+      file: file,
+    }) as Promise<EditorFileData>;
   }
 
   async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
-    return new Promise<FileData>((resolve, reject) => {
-      resolve({
-        path: '/static/img/portrait.png',
-        url: 'image-portrait.png',
-      } as FileData);
-    });
+    return postJSON(this.resolveUrl('/file.upload'), {
+      file: file,
+      meta: meta,
+    }) as Promise<FileData>;
   }
 }
 

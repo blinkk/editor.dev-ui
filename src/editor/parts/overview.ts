@@ -150,7 +150,7 @@ export class OverviewPart extends BasePart implements Part {
     const currentWorkspace = this.config.state.workspace;
     let message = '';
 
-    if ([PublishStatus.Complete].includes(result.status)) {
+    if ([PublishStatus.Complete].includes(result.status as PublishStatus)) {
       message = `Published '${currentWorkspace?.name}' workspace successfully.`;
       if (
         result.workspace?.name &&
@@ -238,13 +238,14 @@ export class OverviewPart extends BasePart implements Part {
       return html``;
     }
 
+    // Get the current status from the workspace.
+    const status =
+      (workspace?.publish?.status as PublishStatus) || PublishStatus.NotStarted;
+
     // Check if the workspace does not allow publishing.
-    if (workspace?.publish?.status === PublishStatus.NotAllowed) {
+    if (status === PublishStatus.NotAllowed) {
       return html``;
     }
-
-    // Get the current status from the workspace.
-    const status = workspace?.publish?.status || PublishStatus.NotStarted;
 
     let label = editor.config.labels?.publishNotStarted || 'Publish';
     if (this.isPendingPublish || status === PublishStatus.Pending) {

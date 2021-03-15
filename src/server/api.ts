@@ -6,7 +6,6 @@ import {
   ProjectData,
   PublishResult,
   PublishStatus,
-  SiteData,
   UrlLevel,
   UserData,
   WorkspaceData,
@@ -233,18 +232,12 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async getFile(file: FileData): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {
-      const url = new URL(window.location.toString());
-      url.searchParams.set('path', file.path);
-      window.history.pushState({}, '', url.toString());
-
       resolve(DEFAULT_EDITOR_FILE);
     });
   }
 
   async getFiles(): Promise<Array<FileData>> {
-    return new Promise<Array<FileData>>((resolve, reject) => {
-      resolve([...currentFileset]);
-    });
+    return postJSON(this.resolveUrl('/files.get')) as Promise<Array<FileData>>;
   }
 
   async getFileUrl(file: FileData): Promise<FileData> {
@@ -259,18 +252,6 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async getProject(): Promise<ProjectData> {
     return postJSON(this.resolveUrl('/project.get')) as Promise<ProjectData>;
-  }
-
-  async getSite(): Promise<SiteData> {
-    return new Promise<SiteData>((resolve, reject) => {
-      resolve({});
-    });
-  }
-
-  async getUsers(): Promise<Array<UserData>> {
-    return new Promise<Array<UserData>>((resolve, reject) => {
-      resolve([...currentUsers]);
-    });
   }
 
   async getWorkspace(): Promise<WorkspaceData> {

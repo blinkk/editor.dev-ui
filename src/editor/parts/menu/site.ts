@@ -212,16 +212,25 @@ export class SitePart extends MenuSectionPart {
     });
   }
 
+  loadProject() {
+    this.config.state.getProject();
+  }
+
   templateContent(editor: LiveEditor): TemplateResult {
-    if (!this.config.state.files) {
-      this.loadFiles();
-      return templateLoading(editor, {
-        pad: true,
-      });
+    const project = this.config.state.project;
+    const files = this.config.state.files;
+
+    // Lazy load the project.
+    if (!project) {
+      this.loadProject();
     }
 
-    if (!this.config.state.site) {
-      this.config.state.getSite();
+    // Lazy load the files.
+    if (!files) {
+      this.loadFiles();
+    }
+
+    if (!project || !files) {
       return templateLoading(editor, {
         pad: true,
       });
@@ -347,14 +356,14 @@ export class SitePart extends MenuSectionPart {
 
       // Determine what file filtering to use for the file list.
       let filterConfig = DEFAULT_SITE_FILTER;
-      if (this.config.state.site.files?.filter) {
-        filterConfig = this.config.state.site.files.filter;
+      if (project.site?.files?.filter) {
+        filterConfig = project.site.files.filter;
       }
       const filesFilter = new IncludeExcludeFilter(filterConfig);
 
       // Create the directory structure using the filtered files.
       this.fileStructure = new DirectoryStructure(
-        this.config.state.files.filter(file => filesFilter.matches(file.path)),
+        files.filter(file => filesFilter.matches(file.path)),
         eventHandlers,
         this.config.storage
       );

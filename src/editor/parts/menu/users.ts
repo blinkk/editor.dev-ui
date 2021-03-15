@@ -1,7 +1,7 @@
+import {ProjectData, UserData} from '../../api';
 import {TemplateResult, html} from '@blinkk/selective-edit';
 import {LiveEditor} from '../../..';
 import {MenuSectionPart} from './index';
-import {UserData} from '../../api';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
 
@@ -14,20 +14,31 @@ export class UsersPart extends MenuSectionPart {
     return classes;
   }
 
-  loadUsers() {
-    this.users = this.config.state.getUsers((users: Array<UserData>) => {
-      this.users = users;
+  loadProject() {
+    this.users = this.config.state.getProject((project: ProjectData) => {
+      // Default to array so it does not try to keep reloading the project data.
+      this.users = project.users || [];
       this.render();
-    });
+    })?.users;
   }
 
   templateContent(editor: LiveEditor): TemplateResult {
     // Lazy load the users information.
-    if (!this.users) {
-      this.loadUsers();
+    if (this.users === undefined) {
+      this.loadProject();
       return templateLoading(editor, {
         pad: true,
       });
+    }
+
+    if (!this.users.length) {
+      return html`<div class="le__part__menu__section__content">
+        <div class="le__list">
+          <div class="le__list__item">
+            <div class="le__list__item__label">No users configured.</div>
+          </div>
+        </div>
+      </div>`;
     }
 
     return html`<div class="le__part__menu__section__content">

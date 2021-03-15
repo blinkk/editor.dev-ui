@@ -8,9 +8,7 @@ import {
   ProjectPublishConfig,
   PublishResult,
   PublishStatus,
-  SiteData,
   UrlLevel,
-  UserData,
   WorkspaceData,
 } from '../editor/api';
 import {
@@ -805,18 +803,6 @@ for (const key of Object.keys(fullFiles)) {
   currentFileset.push(fullFiles[key].file);
 }
 
-const currentUsers: Array<UserData> = [
-  {
-    name: 'Example User',
-    email: 'example@example.com',
-  },
-  {
-    name: 'Domain users',
-    email: '@domain.com',
-    isGroup: true,
-  },
-];
-
 let currentWorkspace: WorkspaceData = {
   branch: {
     name: 'main',
@@ -1123,41 +1109,18 @@ export class ExampleApi implements LiveEditorApiComponent {
       simulateNetwork(resolve, {
         title: 'Example project',
         publish: publish,
+        users: [
+          {
+            name: 'Example User',
+            email: 'example@example.com',
+          },
+          {
+            name: 'Domain users',
+            email: '@domain.com',
+            isGroup: true,
+          },
+        ],
       });
-    });
-  }
-
-  async getSite(): Promise<SiteData> {
-    return new Promise<SiteData>((resolve, reject) => {
-      const methodName = 'getSite';
-      console.log(`API: ${methodName}`);
-
-      if (this.errorController.shouldError(methodName)) {
-        reject({
-          message: 'Failed to get the site.',
-          description: 'Api is set to always return an error.',
-        } as ApiError);
-        return;
-      }
-
-      simulateNetwork(resolve, {});
-    });
-  }
-
-  async getUsers(): Promise<Array<UserData>> {
-    return new Promise<Array<UserData>>((resolve, reject) => {
-      const methodName = 'getUsers';
-      console.log(`API: ${methodName}`);
-
-      if (this.errorController.shouldError(methodName)) {
-        reject({
-          message: 'Failed to get the users.',
-          description: 'Api is set to always return an error.',
-        } as ApiError);
-        return;
-      }
-
-      simulateNetwork(resolve, [...currentUsers]);
     });
   }
 

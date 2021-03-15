@@ -80,16 +80,6 @@ export interface LiveEditorApiComponent {
   getProject(): Promise<ProjectData>;
 
   /**
-   * Retrieve information about the site.
-   */
-  getSite(): Promise<SiteData>;
-
-  /**
-   * Retrieve the users that have access to the editor.
-   */
-  getUsers(): Promise<Array<UserData>>;
-
-  /**
    * Retrieve information about the active workspace.
    */
   getWorkspace(): Promise<WorkspaceData>;
@@ -141,7 +131,22 @@ export interface LiveEditorApiComponent {
  * Settings in a project's `editor.yaml` should follow this interface.
  */
 export interface EditorFileSettings {
+  /**
+   * Title of the site to display in the editor.
+   */
+  title?: string;
+  /**
+   * Devices to use in the editor preview.
+   */
   devices?: Array<DeviceData>;
+  /**
+   * Configuration for the site display in the editor.
+   */
+  site?: SiteData;
+  /**
+   * Users or groups approved access to the editor.
+   */
+  users?: Array<UserData>;
 }
 
 /**
@@ -260,6 +265,14 @@ export interface ProjectData {
    * to collect for providing to the `publish` method on the api.
    */
   publish?: ProjectPublishConfig;
+  /**
+   * Configuration for the site display.
+   */
+  site?: SiteData;
+  /**
+   * Users or groups approved access to the editor.
+   */
+  users?: Array<UserData>;
 }
 
 /**

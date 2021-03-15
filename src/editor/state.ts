@@ -240,52 +240,6 @@ export class EditorState extends ListenersMixin(Base) {
     return this.project;
   }
 
-  getSite(
-    callback?: (site: SiteData) => void,
-    callbackError?: (error: ApiError) => void
-  ): SiteData | undefined {
-    const promiseKey = 'getSite';
-    if (this.promises[promiseKey]) {
-      return;
-    }
-    this.promises[promiseKey] = this.api
-      .getSite()
-      .then(data => {
-        this.site = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
-        this.render();
-      })
-      .catch(error => catchError(error, callbackError));
-    return this.site;
-  }
-
-  getUsers(
-    callback?: (files: Array<UserData>) => void,
-    callbackError?: (error: ApiError) => void
-  ): Array<UserData> | undefined {
-    const promiseKey = 'getUsers';
-    if (this.promises[promiseKey]) {
-      return;
-    }
-    this.promises[promiseKey] = this.api
-      .getUsers()
-      .then(data => {
-        this.users = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
-        this.render();
-      })
-      .catch(error => catchError(error, callbackError));
-    return this.users;
-  }
-
   getWorkspace(
     callback?: (project: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
@@ -313,7 +267,7 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (workspaces: Array<WorkspaceData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
-    const promiseKey = 'getUsers';
+    const promiseKey = 'getWorkspaces';
     if (this.promises[promiseKey]) {
       return;
     }
@@ -400,7 +354,7 @@ export class EditorState extends ListenersMixin(Base) {
 
 export const DEFAULT_DEVICES = [
   {
-    label: 'Mobile',
+    label: 'Phone',
     width: 411,
     height: 731,
     canRotate: true,

@@ -6,6 +6,7 @@ import {
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
+import {FeatureManagerSettings} from '../utility/featureManager';
 
 /**
  * Interface for the live editor api.
@@ -140,6 +141,18 @@ export interface EditorFileSettings {
    */
   devices?: Array<DeviceData>;
   /**
+   * Editor experiment flags and settings.
+   *
+   * Used to control editor.dev experiments for the project.
+   */
+  experiments?: Record<string, boolean | FeatureManagerSettings>;
+  /**
+   * Editor feature flags and settings.
+   *
+   * Used to control editor.dev features for the project.
+   */
+  features?: Record<string, boolean | FeatureManagerSettings>;
+  /**
    * Configuration for the site display in the editor.
    */
   site?: SiteData;
@@ -258,6 +271,22 @@ export interface ProjectData {
    * Project title
    */
   title: string;
+  /**
+   * Editor experiment flags and settings.
+   *
+   * Experiments can be defined in the `editor.yaml` file for the project.
+   * The API can override experiment flags if the API does not support
+   * specific experiments of the editor.
+   */
+  experiments?: Record<string, boolean | FeatureManagerSettings>;
+  /**
+   * Editor feature flags and settings.
+   *
+   * Features can be defined in the `editor.yaml` file for the project.
+   * The API can override feature flags if the API does not support
+   * specific features of the editor.
+   */
+  features?: Record<string, boolean | FeatureManagerSettings>;
   /**
    * Publish configuration for the project.
    *

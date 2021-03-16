@@ -36,7 +36,7 @@ RUN yarn run compile
 
 # Copy JS/CSS files.
 RUN cp ./dist/css/server/editor.min.css ./public/ \
-  && cp ./dist/src/server/editor.min.js* ./public/
+  && cp ./dist/src/server/editor.* ./public/
 
 EXPOSE 8080
 

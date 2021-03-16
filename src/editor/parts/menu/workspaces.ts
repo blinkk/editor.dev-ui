@@ -12,6 +12,7 @@ import {LiveEditor} from '../../editor';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
+import {FeatureFlags} from '../../features';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
@@ -189,24 +190,9 @@ export class WorkspacesPart extends MenuSectionPart {
       });
     }
 
-    const handleNewClick = () => {
-      const modal = this.getOrCreateModalNew(editor);
-      modal.show();
-    };
-
     return html`<div class="le__part__menu__section__content">
       <div class="le__list le__list--constrained le__list--indent">
-        <div
-          class="le__list__item le__list__item--primary le__clickable"
-          @click=${handleNewClick}
-        >
-          <div class="le__list__item__icon">
-            <span class="material-icons">add_circle</span>
-          </div>
-          <div class="le__list__item__label">
-            ${editor.config.labels?.workspaceNew || 'Add workspace'}
-          </div>
-        </div>
+        ${this.templateCreateWorkspace(editor)}
         ${repeat(
           this.config.state.workspaces || [],
           workspace => workspace.name,
@@ -222,6 +208,29 @@ export class WorkspacesPart extends MenuSectionPart {
             <div class="le__list__item__label">${workspace.name}</div>
           </div>`
         )}
+      </div>
+    </div>`;
+  }
+
+  templateCreateWorkspace(editor: LiveEditor): TemplateResult {
+    if (this.config.state.features.isOff(FeatureFlags.WorkspaceCreate)) {
+      return html``;
+    }
+
+    const handleNewClick = () => {
+      const modal = this.getOrCreateModalNew(editor);
+      modal.show();
+    };
+
+    return html`<div
+      class="le__list__item le__list__item--primary le__clickable"
+      @click=${handleNewClick}
+    >
+      <div class="le__list__item__icon">
+        <span class="material-icons">add_circle</span>
+      </div>
+      <div class="le__list__item__label">
+        ${editor.config.labels?.workspaceNew || 'Add workspace'}
       </div>
     </div>`;
   }

@@ -14,6 +14,7 @@ import {
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {ListenersMixin} from '../mixin/listeners';
+import {FeatureManager} from '../utility/featureManager';
 
 /**
  * Track the references to the editor state.
@@ -31,6 +32,14 @@ export class EditorState extends ListenersMixin(Base) {
    * Array of devices supported for previews.
    */
   devices?: Array<DeviceData>;
+  /**
+   * Editor experiments mangager.
+   */
+  experiments: FeatureManager;
+  /**
+   * Editor feature mangager.
+   */
+  features: FeatureManager;
   /**
    * Files in the project that can be edited by the editor.
    */
@@ -69,6 +78,16 @@ export class EditorState extends ListenersMixin(Base) {
     super();
     this.api = api;
     this.promises = {};
+
+    // Features are on by default.
+    this.features = new FeatureManager({
+      defaultStatus: true,
+    });
+
+    // Experiments are off by default.
+    this.experiments = new FeatureManager({
+      defaultStatus: false,
+    });
   }
 
   copyFile(
@@ -230,6 +249,21 @@ export class EditorState extends ListenersMixin(Base) {
       .then(data => {
         this.project = data;
         delete this.promises[promiseKey];
+
+        // Pull in the feature flags and settings.
+        if (this.project.features) {
+          for (const key of Object.keys(this.project.features)) {
+            this.features.set(key, this.project.features[key]);
+          }
+        }
+
+        // Pull in the experiment flags and settings.
+        if (this.project.experiments) {
+          for (const key of Object.keys(this.project.experiments)) {
+            this.experiments.set(key, this.project.experiments[key]);
+          }
+        }
+
         if (callback) {
           callback(data);
         }

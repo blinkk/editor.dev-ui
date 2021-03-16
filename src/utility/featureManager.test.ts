@@ -110,3 +110,50 @@ test('feature settings off', t => {
   // Can retrieve settings.
   t.is(features.settings('random'), settings);
 });
+
+test('feature set values with settings', t => {
+  const features = new FeatureManager({
+    defaultStatus: false,
+  });
+  const settings = {
+    foo: 'bar',
+  };
+
+  t.is(features.isOn('random'), false);
+
+  // Set settings when setting feature.
+  t.is(features.set('random', settings), settings);
+
+  t.is(features.isOn('random'), true);
+
+  // Can retrieve settings.
+  t.is(features.settings('random'), settings);
+});
+
+test('feature set values with boolean, default off', t => {
+  const features = new FeatureManager({
+    defaultStatus: false,
+  });
+
+  t.is(features.isOn('foo'), false);
+  t.is(features.set('foo', false), false);
+  t.is(features.isOn('foo'), false);
+
+  t.is(features.isOn('bar'), false);
+  t.is(features.set('bar', true), true);
+  t.is(features.isOn('bar'), true);
+});
+
+test('feature set values with boolean, default on', t => {
+  const features = new FeatureManager({
+    defaultStatus: true,
+  });
+
+  t.is(features.isOn('foo'), true);
+  t.is(features.set('foo', false), false);
+  t.is(features.isOn('foo'), false);
+
+  t.is(features.isOn('bar'), true);
+  t.is(features.set('bar', true), true);
+  t.is(features.isOn('bar'), true);
+});

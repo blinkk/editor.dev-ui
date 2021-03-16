@@ -77,6 +77,18 @@ export class FeatureManager {
     return this.features[featureKey];
   }
 
+  set(
+    featureKey: string,
+    value: boolean | FeatureManagerSettings
+  ): FeatureManagerSettings | boolean {
+    this.features[featureKey] = Boolean(value);
+    if (DataType.isObject(value)) {
+      this.internalSettings[featureKey] = value as FeatureManagerSettings;
+      return this.internalSettings[featureKey];
+    }
+    return this.features[featureKey];
+  }
+
   settings(featureKey: string): FeatureManagerSettings | undefined {
     if (featureKey in this.internalSettings) {
       return this.internalSettings[featureKey];

@@ -11,10 +11,10 @@ import {
   IncludeExcludeFilterConfig,
 } from '../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
-import {Storage} from '../../../utility/storage';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
@@ -438,12 +438,12 @@ class DirectoryStructure {
   eventHandlers: DirectoryEventHandlers;
   files: Array<FileData>;
   isExpanded?: boolean;
-  storage: Storage;
+  storage: DataStorage;
 
   constructor(
     rootFiles: Array<FileData>,
     eventHandlers: DirectoryEventHandlers,
-    storage: Storage,
+    storage: DataStorage,
     root = '/'
   ) {
     this.rootFiles = rootFiles;

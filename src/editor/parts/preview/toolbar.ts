@@ -1,9 +1,9 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+import {DataStorage} from '../../../utility/dataStorage';
 import {DeviceData} from '../../api';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 
 const STORAGE_DEVICE_KEY = 'live.preview.device';
 const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';
@@ -18,7 +18,7 @@ export interface PreviewToolbarConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class PreviewToolbarPart extends BasePart implements Part {

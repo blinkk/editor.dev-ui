@@ -8,6 +8,7 @@ import {
   render,
 } from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
+import {DataStorage} from '../utility/dataStorage';
 import {EditorState} from './state';
 import {EmptyPart} from './parts/empty';
 import {LiveEditorApiComponent} from './api';
@@ -16,7 +17,6 @@ import {ModalsPart} from './parts/modals';
 import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
-import {Storage} from '../utility/storage';
 import TimeAgo from 'javascript-time-ago';
 import {ToastsPart} from './parts/toasts';
 import en from 'javascript-time-ago/locale/en';
@@ -90,14 +90,14 @@ export class LiveEditor {
   isRendering: boolean;
   parts: LiveEditorParts;
   state: EditorState;
-  storage: Storage;
+  storage: DataStorage;
 
   constructor(config: LiveEditorConfig, container: HTMLElement) {
     this.config = config;
     this.container = container;
     this.isRendering = false;
     this.isPendingRender = false;
-    this.storage = new Storage(Boolean(this.config.isTest));
+    this.storage = new DataStorage(Boolean(this.config.isTest));
     this.state = this.config.state;
     this.parts = {
       content: new ContentPart({

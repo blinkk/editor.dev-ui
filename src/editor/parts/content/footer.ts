@@ -1,12 +1,12 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {ContentSettings} from '../content';
+import {DataStorage} from '../../../utility/dataStorage';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 
 export interface ContentFooterConfig {
   contentSettings: ContentSettings;
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class ContentFooterPart extends BasePart implements Part {

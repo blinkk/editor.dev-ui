@@ -6,9 +6,9 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
@@ -28,7 +28,7 @@ export interface ContentSectionPartConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class ContentSectionPart extends BasePart implements Part {

@@ -1,7 +1,7 @@
-export class Storage {
+export class DataStorage {
   isTesting: boolean;
 
-  constructor(isTesting: boolean) {
+  constructor(isTesting = false) {
     this.isTesting = isTesting;
   }
 
@@ -9,14 +9,18 @@ export class Storage {
     if (this.isTesting) {
       return;
     }
-    return localStorage.clear();
+    return this.storageObj.clear();
+  }
+
+  get storageObj(): Storage {
+    return localStorage;
   }
 
   getItem(key: string): string | null {
     if (this.isTesting) {
       return null;
     }
-    return localStorage.getItem(key);
+    return this.storageObj.getItem(key);
   }
 
   getItemArray(key: string): Array<any> {
@@ -56,34 +60,40 @@ export class Storage {
     if (this.isTesting) {
       return;
     }
-    return localStorage.removeItem(key);
+    return this.storageObj.removeItem(key);
   }
 
   setItem(key: string, value: string) {
     if (this.isTesting) {
       return;
     }
-    return localStorage.setItem(key, value);
+    return this.storageObj.setItem(key, value);
   }
 
   setItemArray(key: string, value: Array<any>) {
     if (this.isTesting) {
       return;
     }
-    return localStorage.setItem(key, JSON.stringify(value));
+    return this.storageObj.setItem(key, JSON.stringify(value));
   }
 
   setItemBoolean(key: string, value: boolean) {
     if (this.isTesting) {
       return;
     }
-    return localStorage.setItem(key, value ? 'true' : 'false');
+    return this.storageObj.setItem(key, value ? 'true' : 'false');
   }
 
   setItemRecord(key: string, value: Record<string, any>) {
     if (this.isTesting) {
       return;
     }
-    return localStorage.setItem(key, JSON.stringify(value));
+    return this.storageObj.setItem(key, JSON.stringify(value));
+  }
+}
+
+export class SessionDataStorage extends DataStorage {
+  get storageObj(): Storage {
+    return sessionStorage;
   }
 }

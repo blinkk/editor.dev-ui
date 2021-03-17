@@ -1,9 +1,9 @@
 import {BasePart, Part} from '..';
 import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 import {templateLoading} from '../../template';
 
 export interface ContentHeaderConfig {
@@ -12,7 +12,7 @@ export interface ContentHeaderConfig {
    * State class for working with editor state.
    */
   state: EditorState;
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class ContentHeaderPart extends BasePart implements Part {

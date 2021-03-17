@@ -1,9 +1,9 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html, styleMap} from '@blinkk/selective-edit';
+import {DataStorage} from '../../../utility/dataStorage';
 import {DeviceData} from '../../api';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 
 /**
  * Size of buffer to place around the preview frame so it does not
@@ -19,7 +19,7 @@ export interface PreviewFrameConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 interface ContainerSize {

@@ -1,11 +1,11 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {DataStorage} from '../../utility/dataStorage';
 import {EVENT_FILE_LOAD_COMPLETE} from '../events';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {SitePart} from './menu/site';
-import {Storage} from '../../utility/storage';
 import {UsersPart} from './menu/users';
 import {WorkspacesPart} from './menu/workspaces';
 
@@ -17,7 +17,7 @@ export interface MenuPartConfig {
    * State class for working with editor state.
    */
   state: EditorState;
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export interface MenuParts {

@@ -30,8 +30,37 @@ import {LiveEditorApiComponent} from '../editor/api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
+import {SessionDataStorage} from '../utility/dataStorage';
+import {generateUUID} from '@blinkk/selective-edit/dist/src/utility/uuid';
 
 const container = document.querySelector('.container') as HTMLElement;
+
+// TESTING GITHUB AUTH FLOW!
+const sessionStorage = new SessionDataStorage();
+let githubState = sessionStorage.getItem('github.state');
+if (!githubState) {
+  githubState = generateUUID();
+  sessionStorage.setItem('github.state', githubState);
+}
+console.log('github state', githubState);
+
+const githubCode = sessionStorage.getItem('github.code');
+
+if (!githubCode) {
+  // Save the current url to redirect back to after auth.
+  sessionStorage.setItem('redirectUrl', window.location.href);
+
+  const loginUrl = new URL('/login/oauth/authorize', 'https://github.com');
+  const loginParams = new URLSearchParams();
+  loginParams.set('client_id', 'Iv1.e422a5bfa1197db1');
+  loginParams.set('redirect_uri', 'http://localhost:8080/gh/callback/');
+  loginParams.set('state', githubState);
+  loginUrl.search = loginParams.toString();
+  console.log('login url', loginUrl.toString());
+
+  window.location.href = loginUrl.toString();
+}
+// END TESTING
 
 const localPort = parseInt(container.dataset.port || '');
 const isLocal = localPort > 0;

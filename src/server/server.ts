@@ -42,6 +42,13 @@ app.get('/gh/:organization/:project/:branch/*', (req, res) => {
   });
 });
 
+app.all('/gh/callback', (req, res) => {
+  res.render('gh/callback.njk', {
+    service: 'gh',
+    mode: MODE,
+  });
+});
+
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Running on http://localhost:${PORT}`);
 });

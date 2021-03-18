@@ -79,6 +79,7 @@ export class ExampleTool {
     ${this.templateStructure(tool)}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateApiResponse(tool: ExampleTool): TemplateResult {
     if (!this.isExpanded) {
       return html``;

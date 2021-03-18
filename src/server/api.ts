@@ -7,9 +7,11 @@ import {
   PublishResult,
   WorkspaceData,
 } from '../editor/api';
+import {SessionDataStorage} from '../utility/dataStorage';
 import bent from 'bent';
 
 const postJSON = bent('json', 'POST');
+const sessionStorage = new SessionDataStorage();
 
 /**
  * Example api that returns data through a 'simulated' network.
@@ -19,45 +21,68 @@ export class ServerApi implements LiveEditorApiComponent {
     return '/';
   }
 
+  expandParams(params: Record<string, any>): Record<string, any> {
+    // TODO: this should be specific to the service.
+    params['githubState'] = sessionStorage.getItem('github.state');
+    params['githubCode'] = sessionStorage.getItem('github.code');
+    return params;
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
-    return postJSON(this.resolveUrl('/file.copy'), {
-      originalPath: originalPath,
-      path: path,
-    }) as Promise<FileData>;
+    return postJSON(
+      this.resolveUrl('/file.copy'),
+      this.expandParams({
+        originalPath: originalPath,
+        path: path,
+      })
+    ) as Promise<FileData>;
   }
 
   async createFile(path: string): Promise<FileData> {
-    return postJSON(this.resolveUrl('/file.create'), {
-      path: path,
-    }) as Promise<FileData>;
+    return postJSON(
+      this.resolveUrl('/file.create'),
+      this.expandParams({
+        path: path,
+      })
+    ) as Promise<FileData>;
   }
 
   async createWorkspace(
     base: WorkspaceData,
     workspace: string
   ): Promise<WorkspaceData> {
-    return postJSON(this.resolveUrl('/workspace.create'), {
-      base: base,
-      workspace: workspace,
-    }) as Promise<WorkspaceData>;
+    return postJSON(
+      this.resolveUrl('/workspace.create'),
+      this.expandParams({
+        base: base,
+        workspace: workspace,
+      })
+    ) as Promise<WorkspaceData>;
   }
 
   async deleteFile(file: FileData): Promise<null> {
-    return postJSON(this.resolveUrl('/file.delete'), {
-      file: file,
-    }) as Promise<null>;
+    return postJSON(
+      this.resolveUrl('/file.delete'),
+      this.expandParams({
+        file: file,
+      })
+    ) as Promise<null>;
   }
 
   async getDevices(): Promise<Array<DeviceData>> {
-    return postJSON(this.resolveUrl('/devices.get')) as Promise<
-      Array<DeviceData>
-    >;
+    return postJSON(
+      this.resolveUrl('/devices.get'),
+      this.expandParams({})
+    ) as Promise<Array<DeviceData>>;
   }
 
   async getFile(file: FileData): Promise<EditorFileData> {
-    return postJSON(this.resolveUrl('/file.get'), {
-      file: file,
-    }) as Promise<EditorFileData>;
+    return postJSON(
+      this.resolveUrl('/file.get'),
+      this.expandParams({
+        file: file,
+      })
+    ) as Promise<EditorFileData>;
   }
 
   async getFiles(): Promise<Array<FileData>> {
@@ -75,19 +100,24 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getProject(): Promise<ProjectData> {
-    return postJSON(this.resolveUrl('/project.get')) as Promise<ProjectData>;
+    return postJSON(
+      this.resolveUrl('/project.get'),
+      this.expandParams({})
+    ) as Promise<ProjectData>;
   }
 
   async getWorkspace(): Promise<WorkspaceData> {
     return postJSON(
-      this.resolveUrl('/workspace.get')
+      this.resolveUrl('/workspace.get'),
+      this.expandParams({})
     ) as Promise<WorkspaceData>;
   }
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
-    return postJSON(this.resolveUrl('/workspaces.get')) as Promise<
-      Array<WorkspaceData>
-    >;
+    return postJSON(
+      this.resolveUrl('/workspaces.get'),
+      this.expandParams({})
+    ) as Promise<Array<WorkspaceData>>;
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
@@ -99,10 +129,13 @@ export class ServerApi implements LiveEditorApiComponent {
     workspace: WorkspaceData,
     data?: Record<string, any>
   ): Promise<PublishResult> {
-    return postJSON(this.resolveUrl('/publish.start'), {
-      workspace: workspace,
-      data: data,
-    }) as Promise<PublishResult>;
+    return postJSON(
+      this.resolveUrl('/publish.start'),
+      this.expandParams({
+        workspace: workspace,
+        data: data,
+      })
+    ) as Promise<PublishResult>;
   }
 
   resolveUrl(path: string) {
@@ -112,16 +145,22 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async saveFile(file: EditorFileData): Promise<EditorFileData> {
-    return postJSON(this.resolveUrl('/file.save'), {
-      file: file,
-    }) as Promise<EditorFileData>;
+    return postJSON(
+      this.resolveUrl('/file.save'),
+      this.expandParams({
+        file: file,
+      })
+    ) as Promise<EditorFileData>;
   }
 
   async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
-    return postJSON(this.resolveUrl('/file.upload'), {
-      file: file,
-      meta: meta,
-    }) as Promise<FileData>;
+    return postJSON(
+      this.resolveUrl('/file.upload'),
+      this.expandParams({
+        file: file,
+        meta: meta,
+      })
+    ) as Promise<FileData>;
   }
 }
 

@@ -34,9 +34,10 @@ COPY ./static/server/* ./public/
 # Compile the production js/css files.
 RUN yarn run compile
 
-# Copy JS/CSS files.
+# Copy public files.
 RUN cp ./dist/css/server/editor.min.css ./public/ \
-  && cp ./dist/src/server/editor.* ./public/
+  && cp ./dist/src/server/editor.* ./public/ \
+  && cp ./dist/src/server/gh ./public/gh
 
 EXPOSE 8080
 

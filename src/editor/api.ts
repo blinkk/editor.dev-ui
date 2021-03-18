@@ -529,7 +529,7 @@ export interface RepoCommit {
   /**
    * Author of the last commit.
    */
-  author: RepoAuthor;
+  author?: RepoAuthor;
   /**
    * Commit hash of the last commit.
    */
@@ -541,14 +541,18 @@ export interface RepoCommit {
   /**
    * Summary of the commit.
    */
-  summary: string;
+  summary?: string;
   /**
    * Timestamp of commit.
    *
    * Needs to be in a `Date.parse()` valid datetime format.
    * For example: ISO 8601.
    */
-  timestamp: string;
+  timestamp?: string;
+  /**
+   * Url to view the commit.
+   */
+  url?: string;
 }
 
 /**

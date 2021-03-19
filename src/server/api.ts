@@ -86,17 +86,18 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async getFiles(): Promise<Array<FileData>> {
-    return postJSON(this.resolveUrl('/files.get')) as Promise<Array<FileData>>;
+    return postJSON(
+      this.resolveUrl('/files.get'),
+      this.expandParams({})
+    ) as Promise<Array<FileData>>;
   }
 
   async getFileUrl(file: FileData): Promise<FileData> {
     // TODO: Use preview server to determine urls for files.
-    return new Promise<FileData>((resolve, reject) => {
-      resolve({
-        path: file.path,
-        url: 'image-landscape.png',
-      } as FileData);
-    });
+    return Promise.resolve({
+      path: file.path,
+      url: 'image-landscape.png',
+    } as FileData);
   }
 
   async getProject(): Promise<ProjectData> {

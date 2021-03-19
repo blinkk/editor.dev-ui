@@ -226,14 +226,24 @@ export class SitePart extends MenuSectionPart {
     }
 
     // Lazy load the files.
-    if (!files) {
+    if (files === undefined) {
       this.loadFiles();
     }
 
-    if (!project || !files) {
+    if (!project || files === undefined) {
       return templateLoading(editor, {
         pad: true,
       });
+    }
+
+    if (files.length === 0) {
+      return html`<div class="le__part__menu__section__content">
+        <div class="le__list">
+          <div class="le__list__item">
+            <div class="le__list__item__label">No files found.</div>
+          </div>
+        </div>
+      </div>`;
     }
 
     if (!this.fileStructure) {

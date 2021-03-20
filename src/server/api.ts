@@ -16,7 +16,7 @@ const postJSON = bent('json', 'POST');
  */
 export class ServerApi implements LiveEditorApiComponent {
   get baseUrl() {
-    return '/';
+    return `https://api.${window.location.hostname}/`;
   }
 
   /**

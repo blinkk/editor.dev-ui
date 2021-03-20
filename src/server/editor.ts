@@ -20,7 +20,6 @@ import {
   TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
-import {LocalServerApi, ServiceServerApi} from './api';
 import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
@@ -28,6 +27,7 @@ import {ExampleFieldField} from '../example/field/exampleField';
 import {GithubApi} from './gh/githubApi';
 import {LiveEditor} from '../editor/editor';
 import {LiveEditorApiComponent} from '../editor/api';
+import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
@@ -54,15 +54,6 @@ if (isLocal) {
 
   if (service === 'gh') {
     api = new GithubApi(
-      service,
-      organization,
-      project,
-      branch,
-      isUnstable,
-      isDev
-    );
-  } else {
-    api = new ServiceServerApi(
       service,
       organization,
       project,

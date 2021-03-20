@@ -7,11 +7,9 @@ import {
   PublishResult,
   WorkspaceData,
 } from '../editor/api';
-import {SessionDataStorage} from '../utility/dataStorage';
 import bent from 'bent';
 
 const postJSON = bent('json', 'POST');
-const sessionStorage = new SessionDataStorage();
 
 /**
  * Example api that returns data through a 'simulated' network.

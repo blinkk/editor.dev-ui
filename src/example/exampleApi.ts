@@ -869,6 +869,10 @@ export class ExampleApi implements LiveEditorApiComponent {
     this.workflow = WorkspaceWorkflow.Success;
   }
 
+  checkAuth(): boolean {
+    return true;
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
       const methodName = 'copyFile';

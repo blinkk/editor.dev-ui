@@ -21,10 +21,23 @@ export class ServerApi implements LiveEditorApiComponent {
     return '/';
   }
 
+  /**
+   * Verify that the authentication for services that require auth.
+   *
+   * @returns True if the auth check out.
+   */
+  checkAuth(): boolean {
+    return true;
+  }
+
+  /**
+   * Specific services may need to add additional params to all of
+   * the api request (such as authentication params.)
+   *
+   * @param params Params being sent to the api.
+   * @returns Updated params to send to the api.
+   */
   expandParams(params: Record<string, any>): Record<string, any> {
-    // TODO: this should be specific to the service.
-    params['githubState'] = sessionStorage.getItem('github.state');
-    params['githubCode'] = sessionStorage.getItem('github.code');
     return params;
   }
 
@@ -189,6 +202,7 @@ export class LocalServerApi extends ServerApi {
  */
 export class ServiceServerApi extends ServerApi {
   branch: string;
+  isDev: boolean;
   isUnstable: boolean;
   organization: string;
   project: string;
@@ -198,29 +212,26 @@ export class ServiceServerApi extends ServerApi {
     service: string,
     organization: string,
     project: string,
-    branch?: string
+    branch?: string,
+    isUnstable?: boolean,
+    isDev?: boolean
   ) {
     super();
     this.service = service;
     this.organization = organization;
     this.project = project;
     this.branch = branch || 'main';
-    this.isUnstable = true;
+    this.isUnstable = isUnstable || false;
+    this.isDev = isDev || false;
   }
 
   get baseUrl() {
-    const domain = `https://api.${this.isUnstable ? 'beta.' : ''}editor.dev`;
-    const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
-    return `${domain}${path}`;
-  }
-}
-
-/**
- * Used for developing the service api locally when in development mode.
- */
-export class DevServiceServerApi extends ServiceServerApi {
-  get baseUrl() {
-    const domain = 'http://localhost:9090';
+    let domain = 'https://api.editor.dev';
+    if (this.isDev) {
+      domain = 'http://localhost:9090';
+    } else if (this.isUnstable) {
+      domain = 'https://api.beta.editor.dev';
+    }
     const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
     return `${domain}${path}`;
   }

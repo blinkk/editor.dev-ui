@@ -18,6 +18,6 @@ const callbackState = callbackUrl.searchParams.get('state');
 if (githubState === callbackState) {
   const callbackCode = callbackUrl.searchParams.get('code');
   sessionStorage.setItem('github.code', callbackCode as string);
-  console.log('saved code!', callbackCode);
-  window.location.href = redirectUrl;
 }
+
+window.location.href = redirectUrl;

@@ -3,10 +3,10 @@ import {
   NotificationLevel,
   announceNotification,
 } from './parts/notifications';
+import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
-import {FeatureManagerSettings} from '../utility/featureManager';
 
 /**
  * Interface for the live editor api.
@@ -16,6 +16,13 @@ import {FeatureManagerSettings} from '../utility/featureManager';
  * editor function.
  */
 export interface LiveEditorApiComponent {
+  /**
+   * Verify that the authentication for services that require auth.
+   *
+   * @returns True if the auth checks out.
+   */
+  checkAuth(): boolean;
+
   /**
    * Copy a file.
    *

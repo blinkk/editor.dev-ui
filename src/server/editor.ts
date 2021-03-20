@@ -20,51 +20,21 @@ import {
   TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
-import {DevServiceServerApi, LocalServerApi, ServiceServerApi} from './api';
+import {LocalServerApi, ServiceServerApi} from './api';
 import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
+import {GithubApi} from './gh/githubApi';
 import {LiveEditor} from '../editor/editor';
 import {LiveEditorApiComponent} from '../editor/api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
-import {SessionDataStorage} from '../utility/dataStorage';
-import {generateUUID} from '@blinkk/selective-edit/dist/src/utility/uuid';
 
 const container = document.querySelector('.container') as HTMLElement;
-
-// TESTING GITHUB AUTH FLOW!
-const sessionStorage = new SessionDataStorage();
-let githubState = sessionStorage.getItem('github.state');
-if (!githubState) {
-  githubState = generateUUID();
-  sessionStorage.setItem('github.state', githubState);
-}
-console.log('github state', githubState);
-
-const githubCode = sessionStorage.getItem('github.code');
-
-if (!githubCode) {
-  // Save the current url to redirect back to after auth.
-  sessionStorage.setItem('redirectUrl', window.location.href);
-
-  const loginUrl = new URL('/login/oauth/authorize', 'https://github.com');
-  const loginParams = new URLSearchParams();
-  loginParams.set('client_id', 'Iv1.e422a5bfa1197db1');
-  loginParams.set('redirect_uri', 'http://localhost:8080/gh/callback/');
-  loginParams.set('state', githubState);
-  loginUrl.search = loginParams.toString();
-  console.log('login url', loginUrl.toString());
-
-  window.location.href = loginUrl.toString();
-}
-// END TESTING
-
 const localPort = parseInt(container.dataset.port || '');
 const isLocal = localPort > 0;
-
 let api: LiveEditorApiComponent | null = null;
 if (isLocal) {
   api = new LocalServerApi(localPort);
@@ -73,6 +43,8 @@ if (isLocal) {
   const organization = container.dataset.organization;
   const project = container.dataset.project;
   const branch = container.dataset.branch;
+  const isUnstable = window.location.hostname.includes('beta');
+  const isDev = container.dataset.mode === 'dev';
 
   if (!service || !organization || !project || !branch) {
     throw new Error(
@@ -80,15 +52,35 @@ if (isLocal) {
     );
   }
 
-  if (container.dataset.mode === 'dev') {
-    api = new DevServiceServerApi(service, organization, project, branch);
+  if (service === 'gh') {
+    api = new GithubApi(
+      service,
+      organization,
+      project,
+      branch,
+      isUnstable,
+      isDev
+    );
   } else {
-    api = new ServiceServerApi(service, organization, project, branch);
+    api = new ServiceServerApi(
+      service,
+      organization,
+      project,
+      branch,
+      isUnstable,
+      isDev
+    );
   }
 }
 
 if (!api) {
   throw new Error('Unable to determine api to load.');
+}
+
+// Stop the normal editor processing if the check auth fails.
+// The api should have set a location redirect, so just stop JS.
+if (!api.checkAuth()) {
+  throw new Error('Unable to verify authentication.');
 }
 
 const state = new EditorState(api);

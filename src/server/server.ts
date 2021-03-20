@@ -43,9 +43,10 @@ app.get('/gh/:organization/:project/:branch/*', (req, res) => {
 });
 
 app.all('/gh/callback', (req, res) => {
-  res.render('gh/callback.njk', {
+  res.render('callback.njk', {
     service: 'gh',
     mode: MODE,
+    message: 'Processing GitHub login. Please wait.',
   });
 });
 

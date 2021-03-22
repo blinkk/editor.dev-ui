@@ -54,7 +54,7 @@ export interface LiveEditorApiComponent {
    *
    * @param path Full path for the file being deleted.
    */
-  deleteFile(file: FileData): Promise<null>;
+  deleteFile(file: FileData): Promise<EmptyData>;
 
   /**
    * Retrieve the devices used for previews.
@@ -240,6 +240,12 @@ export interface EditorFileData {
    */
   urls?: Array<UrlConfig>;
 }
+
+/**
+ * Empty response from the api.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface EmptyData {}
 
 /**
  * File information.

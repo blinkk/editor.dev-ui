@@ -630,7 +630,7 @@ class DirectoryStructure {
               <span class="material-icons">file_copy</span>
             </div>
             <div
-              class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top"
+              class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top-left"
               @click=${(evt: Event) => this.eventHandlers.fileDelete(evt, file)}
               data-tip="Delete file"
             >

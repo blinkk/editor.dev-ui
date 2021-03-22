@@ -2,6 +2,7 @@ import {
   ApiError,
   DeviceData,
   EditorFileData,
+  EmptyData,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -949,8 +950,8 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  async deleteFile(file: FileData): Promise<null> {
-    return new Promise<null>((resolve, reject) => {
+  async deleteFile(file: FileData): Promise<EmptyData> {
+    return new Promise<EmptyData>((resolve, reject) => {
       const methodName = 'deleteFile';
       console.log(`API: ${methodName}`, file.path);
 
@@ -969,7 +970,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(resolve, null);
+      simulateNetwork(resolve, {});
     });
   }
 

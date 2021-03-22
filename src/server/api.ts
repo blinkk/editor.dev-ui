@@ -1,6 +1,7 @@
 import {
   DeviceData,
   EditorFileData,
+  EmptyData,
   FileData,
   LiveEditorApiComponent,
   ProjectData,
@@ -71,13 +72,13 @@ export class ServerApi implements LiveEditorApiComponent {
     ) as Promise<WorkspaceData>;
   }
 
-  async deleteFile(file: FileData): Promise<null> {
+  async deleteFile(file: FileData): Promise<EmptyData> {
     return postJSON(
       this.resolveUrl('/file.delete'),
       this.expandParams({
         file: file,
       })
-    ) as Promise<null>;
+    ) as Promise<EmptyData>;
   }
 
   async getDevices(): Promise<Array<DeviceData>> {

@@ -249,6 +249,10 @@ export class OverviewPart extends BasePart implements Part {
       this.loadWorkspace();
     }
 
+    if (!workspace || !project) {
+      return html``;
+    }
+
     // Check if the project does not allow publishing.
     const hasProjectPublish = project?.publish !== undefined;
     if (!hasProjectPublish) {

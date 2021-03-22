@@ -45,6 +45,10 @@ export class DataStorage {
     return JSON.parse(value) as Record<string, any>;
   }
 
+  key(index: number): string | null {
+    return this.storageObj.key(index);
+  }
+
   removeItem(key: string) {
     return this.storageObj.removeItem(key);
   }

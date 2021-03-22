@@ -31,6 +31,23 @@ test('DataStorage getItemRecord empty', t => {
   t.deepEqual(storage.getItemRecord('test'), {});
 });
 
+test('DataStorage key', t => {
+  const storage = new DataStorage();
+  t.is(storage.getItem('test'), null);
+  storage.setItem('test', 'foo');
+  t.is(storage.getItem('test'), 'foo');
+  t.is(storage.key(0), 'foo');
+});
+
+test('DataStorage removeItem', t => {
+  const storage = new DataStorage();
+  t.is(storage.getItem('test'), null);
+  storage.setItem('test', 'foo');
+  t.is(storage.getItem('test'), 'foo');
+  storage.removeItem('test');
+  t.is(storage.getItem('test'), null);
+});
+
 test('DataStorage setItem', t => {
   const storage = new DataStorage();
   t.is(storage.getItem('test'), null);
@@ -45,11 +62,18 @@ test('DataStorage setItemArray', t => {
   t.deepEqual(storage.getItemArray('test'), ['foo']);
 });
 
-test('DataStorage setItemBoolean', t => {
+test('DataStorage setItemBoolean true', t => {
   const storage = new DataStorage();
   t.is(storage.getItemBoolean('test'), false);
   storage.setItemBoolean('test', true);
   t.is(storage.getItemBoolean('test'), true);
+});
+
+test('DataStorage setItemBoolean false', t => {
+  const storage = new DataStorage();
+  t.is(storage.getItemBoolean('test'), false);
+  storage.setItemBoolean('test', false);
+  t.is(storage.getItemBoolean('test'), false);
 });
 
 test('DataStorage setItemRecord', t => {

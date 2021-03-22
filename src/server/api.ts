@@ -134,7 +134,6 @@ export class ServerApi implements LiveEditorApiComponent {
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
-    // TODO: Handle the redirection of the URL when loading a workspace.
     return Promise.resolve(workspace);
   }
 
@@ -233,5 +232,16 @@ export class ServiceServerApi extends ServerApi {
     }
     const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
     return `${domain}${path}`;
+  }
+
+  async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
+    // Update the url to use the new branch.
+    this.branch = workspace.name;
+    window.history.pushState(
+      {},
+      '',
+      `/${this.service}/${this.organization}/${this.project}/${this.branch}/`
+    );
+    return Promise.resolve(workspace);
   }
 }

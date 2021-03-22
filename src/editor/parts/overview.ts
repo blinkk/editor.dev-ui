@@ -325,10 +325,28 @@ export class OverviewPart extends BasePart implements Part {
       this.loadWorkspace();
     }
 
+    const workspaceCommitHash = (workspace?.branch.commit.hash || '...').slice(
+      0,
+      5
+    );
+    const workspaceName = workspace?.name || '...';
+
     return html`<div class="le__part__overview__workspace">
-      <!-- <span>Workspace:</span> -->
-      <strong>${workspace?.name || '...'}</strong> @
-      <strong>${(workspace?.branch.commit.hash || '...').slice(0, 5)}</strong>
+      <strong
+        >${workspace?.branch.url
+          ? html`<a href="${workspace?.branch.url}" target="_blank"
+              >${workspaceName}</a
+            >`
+          : workspaceName}</strong
+      >
+      @
+      <strong>
+        ${workspace?.branch.commit.url
+          ? html`<a href="${workspace?.branch.commit.url}" target="_blank"
+              >${workspaceCommitHash}</a
+            >`
+          : workspaceCommitHash}
+      </strong>
       by
       <strong>${workspace?.branch.commit.author?.name || '...'}</strong>
       (${workspace?.branch?.commit.timestamp

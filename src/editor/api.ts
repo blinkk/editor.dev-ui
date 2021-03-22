@@ -537,6 +537,10 @@ export interface RepoBranch {
    * Full branch name.
    */
   name: string;
+  /**
+   * Url for viewing the branch in an external system.
+   */
+  url?: string;
 }
 
 /**
@@ -567,7 +571,7 @@ export interface RepoCommit {
    */
   timestamp?: string;
   /**
-   * Url to view the commit.
+   * Url to view the commit externally.
    */
   url?: string;
 }
@@ -585,7 +589,7 @@ export interface UrlConfig {
    */
   level: UrlLevel | string;
   /**
-   * URL for viewing the file.
+   * URL for viewing.
    */
   url: string;
 }

@@ -103,19 +103,36 @@ export class OverviewPart extends BasePart implements Part {
 
   handlePublishClick(evt: Event, editor: LiveEditor) {
     const project = this.config.state.project;
+    const workspace = this.config.state.workspace;
 
+    // Lazy load the project.
     if (!project) {
+      this.loadProject();
+    }
+
+    // Lazy load the workspace.
+    if (!workspace) {
+      this.loadWorkspace();
+    }
+
+    if (!workspace || !project) {
+      return;
+    }
+
+    // Check if the workspace is already in progress.
+    if (workspace.publish?.status === PublishStatus.Pending) {
+      // Open the url when there is a pending publish.
+      if (workspace.publish.urls?.length) {
+        const urlData = workspace.publish.urls[0];
+        window.open(urlData.url, '_blank');
+      }
+
       return;
     }
 
     if (!(project.publish?.fields || []).length) {
       // No fields defined for publishing.
       // Call the api for publishing without collecting data.
-
-      const workspace = this.config.state.workspace;
-      if (!workspace) {
-        return;
-      }
 
       this.isPendingPublish = true;
       this.render();
@@ -232,6 +249,10 @@ export class OverviewPart extends BasePart implements Part {
       this.loadWorkspace();
     }
 
+    if (!workspace || !project) {
+      return html``;
+    }
+
     // Check if the project does not allow publishing.
     const hasProjectPublish = project?.publish !== undefined;
     if (!hasProjectPublish) {
@@ -304,10 +325,28 @@ export class OverviewPart extends BasePart implements Part {
       this.loadWorkspace();
     }
 
+    const workspaceCommitHash = (workspace?.branch.commit.hash || '...').slice(
+      0,
+      5
+    );
+    const workspaceName = workspace?.name || '...';
+
     return html`<div class="le__part__overview__workspace">
-      <!-- <span>Workspace:</span> -->
-      <strong>${workspace?.name || '...'}</strong> @
-      <strong>${(workspace?.branch.commit.hash || '...').slice(0, 5)}</strong>
+      <strong
+        >${workspace?.branch.url
+          ? html`<a href="${workspace?.branch.url}" target="_blank"
+              >${workspaceName}</a
+            >`
+          : workspaceName}</strong
+      >
+      @
+      <strong>
+        ${workspace?.branch.commit.url
+          ? html`<a href="${workspace?.branch.commit.url}" target="_blank"
+              >${workspaceCommitHash}</a
+            >`
+          : workspaceCommitHash}
+      </strong>
       by
       <strong>${workspace?.branch.commit.author?.name || '...'}</strong>
       (${workspace?.branch?.commit.timestamp

@@ -99,6 +99,10 @@ export class EditorState extends ListenersMixin(Base) {
     this.api
       .copyFile(originalPath, path)
       .then(data => {
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
+
         if (callback) {
           callback(data);
         }
@@ -116,6 +120,10 @@ export class EditorState extends ListenersMixin(Base) {
     this.api
       .createFile(path)
       .then(data => {
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
+
         if (callback) {
           callback(data);
         }
@@ -151,6 +159,10 @@ export class EditorState extends ListenersMixin(Base) {
     this.api
       .deleteFile(file)
       .then(() => {
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
+
         if (callback) {
           callback();
         }
@@ -329,6 +341,10 @@ export class EditorState extends ListenersMixin(Base) {
       .loadWorkspace(workspace)
       .then((data: WorkspaceData) => {
         this.workspace = data;
+
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
         if (callback) {
           callback(data);
         }
@@ -346,6 +362,10 @@ export class EditorState extends ListenersMixin(Base) {
     this.api
       .publish(workspace, data)
       .then((result: PublishResult) => {
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
+
         if (callback) {
           callback(result);
         }
@@ -375,6 +395,11 @@ export class EditorState extends ListenersMixin(Base) {
       .then(data => {
         this.file = data;
         delete this.promises[promiseKey];
+
+        // Reload the workspace from the api.
+        // Refreshes the publish status.
+        this.workspace = this.getWorkspace();
+
         if (callback) {
           callback(data);
         }

@@ -1,3 +1,4 @@
+import {DataStorage, LocalDataStorage} from '../utility/dataStorage';
 import {EVENT_RENDER_COMPLETE, EVENT_SAVE} from './events';
 import {
   EditorConfig,
@@ -8,7 +9,6 @@ import {
   render,
 } from '@blinkk/selective-edit';
 import {ContentPart} from './parts/content';
-import {DataStorage} from '../utility/dataStorage';
 import {EditorState} from './state';
 import {EmptyPart} from './parts/empty';
 import {LiveEditorApiComponent} from './api';
@@ -97,7 +97,7 @@ export class LiveEditor {
     this.container = container;
     this.isRendering = false;
     this.isPendingRender = false;
-    this.storage = new DataStorage(Boolean(this.config.isTest));
+    this.storage = new LocalDataStorage();
     this.state = this.config.state;
     this.parts = {
       content: new ContentPart({

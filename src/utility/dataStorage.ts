@@ -1,32 +1,27 @@
+/**
+ * Utility for working with different storages.
+ *
+ * Built-in 'in-memory' storage fallback.
+ */
 export class DataStorage {
-  isTesting: boolean;
-
-  constructor(isTesting = false) {
-    this.isTesting = isTesting;
-  }
+  protected storage?: Storage;
 
   clear() {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.clear();
   }
 
   get storageObj(): Storage {
-    return localStorage;
+    if (!this.storage) {
+      this.storage = new InMemoryStorage();
+    }
+    return this.storage as Storage;
   }
 
   getItem(key: string): string | null {
-    if (this.isTesting) {
-      return null;
-    }
     return this.storageObj.getItem(key);
   }
 
   getItemArray(key: string): Array<any> {
-    if (this.isTesting) {
-      return [];
-    }
     const value = this.getItem(key);
     if (!value) {
       return [];
@@ -35,9 +30,6 @@ export class DataStorage {
   }
 
   getItemBoolean(key: string, defaultValue = false): boolean {
-    if (this.isTesting) {
-      return defaultValue;
-    }
     const value = this.getItem(key);
     if (value === null) {
       return defaultValue;
@@ -46,9 +38,6 @@ export class DataStorage {
   }
 
   getItemRecord(key: string): Record<string, any> {
-    if (this.isTesting) {
-      return {};
-    }
     const value = this.getItem(key);
     if (!value) {
       return {};
@@ -57,43 +46,77 @@ export class DataStorage {
   }
 
   removeItem(key: string) {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.removeItem(key);
   }
 
   setItem(key: string, value: string) {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.setItem(key, value);
   }
 
   setItemArray(key: string, value: Array<any>) {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.setItem(key, JSON.stringify(value));
   }
 
   setItemBoolean(key: string, value: boolean) {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.setItem(key, value ? 'true' : 'false');
   }
 
   setItemRecord(key: string, value: Record<string, any>) {
-    if (this.isTesting) {
-      return;
-    }
     return this.storageObj.setItem(key, JSON.stringify(value));
   }
 }
 
+/* istanbul ignore next */
+export class LocalDataStorage extends DataStorage {
+  get storageObj(): Storage {
+    return localStorage;
+  }
+}
+
+/* istanbul ignore next */
 export class SessionDataStorage extends DataStorage {
   get storageObj(): Storage {
     return sessionStorage;
+  }
+}
+
+class InMemoryStorage implements Storage {
+  protected obj: Record<string, string>;
+
+  constructor() {
+    this.obj = {};
+  }
+
+  clear() {
+    this.obj = {};
+  }
+
+  getItem(index: string): string | null {
+    if (this.obj[index] !== undefined) {
+      return this.obj[index];
+    }
+    return null;
+  }
+
+  key(index: number): string | null {
+    const keys = Object.keys(this.obj).sort();
+    if (index < keys.length) {
+      return this.obj[keys[index]];
+    }
+    return null;
+  }
+
+  get length() {
+    return Object.keys(this.obj).length;
+  }
+
+  removeItem(index: string) {
+    if (this.obj[index] !== undefined) {
+      delete this.obj[index];
+    }
+  }
+
+  setItem(index: string, value: string) {
+    this.obj[index] = value;
   }
 }

@@ -309,7 +309,7 @@ export class OverviewPart extends BasePart implements Part {
       <strong>${workspace?.name || '...'}</strong> @
       <strong>${(workspace?.branch.commit.hash || '...').slice(0, 5)}</strong>
       by
-      <strong>${workspace?.branch.commit.author.name || '...'}</strong>
+      <strong>${workspace?.branch.commit.author?.name || '...'}</strong>
       (${workspace?.branch?.commit.timestamp
         ? this.timeAgo.format(
             new Date(workspace?.branch?.commit.timestamp || new Date())

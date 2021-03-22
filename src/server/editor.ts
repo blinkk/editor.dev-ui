@@ -20,22 +20,21 @@ import {
   TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
-import {DevServiceServerApi, LocalServerApi, ServiceServerApi} from './api';
 import {AsideField} from '../editor/field/aside';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
+import {GithubApi} from './gh/githubApi';
 import {LiveEditor} from '../editor/editor';
 import {LiveEditorApiComponent} from '../editor/api';
+import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
 const container = document.querySelector('.container') as HTMLElement;
-
 const localPort = parseInt(container.dataset.port || '');
 const isLocal = localPort > 0;
-
 let api: LiveEditorApiComponent | null = null;
 if (isLocal) {
   api = new LocalServerApi(localPort);
@@ -44,6 +43,8 @@ if (isLocal) {
   const organization = container.dataset.organization;
   const project = container.dataset.project;
   const branch = container.dataset.branch;
+  const isUnstable = window.location.hostname.includes('beta');
+  const isDev = container.dataset.mode === 'dev';
 
   if (!service || !organization || !project || !branch) {
     throw new Error(
@@ -51,15 +52,26 @@ if (isLocal) {
     );
   }
 
-  if (container.dataset.mode === 'dev') {
-    api = new DevServiceServerApi(service, organization, project, branch);
-  } else {
-    api = new ServiceServerApi(service, organization, project, branch);
+  if (service === 'gh') {
+    api = new GithubApi(
+      service,
+      organization,
+      project,
+      branch,
+      isUnstable,
+      isDev
+    );
   }
 }
 
 if (!api) {
   throw new Error('Unable to determine api to load.');
+}
+
+// Stop the normal editor processing if the check auth fails.
+// The api should have set a location redirect, so just stop JS.
+if (!api.checkAuth()) {
+  throw new Error('Unable to verify authentication.');
 }
 
 const state = new EditorState(api);

@@ -3,10 +3,10 @@ import {
   NotificationLevel,
   announceNotification,
 } from './parts/notifications';
+import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
-import {FeatureManagerSettings} from '../utility/featureManager';
 
 /**
  * Interface for the live editor api.
@@ -16,6 +16,13 @@ import {FeatureManagerSettings} from '../utility/featureManager';
  * editor function.
  */
 export interface LiveEditorApiComponent {
+  /**
+   * Verify that the authentication for services that require auth.
+   *
+   * @returns True if the auth checks out.
+   */
+  checkAuth(): boolean;
+
   /**
    * Copy a file.
    *
@@ -529,7 +536,7 @@ export interface RepoCommit {
   /**
    * Author of the last commit.
    */
-  author: RepoAuthor;
+  author?: RepoAuthor;
   /**
    * Commit hash of the last commit.
    */
@@ -541,14 +548,18 @@ export interface RepoCommit {
   /**
    * Summary of the commit.
    */
-  summary: string;
+  summary?: string;
   /**
    * Timestamp of commit.
    *
    * Needs to be in a `Date.parse()` valid datetime format.
    * For example: ISO 8601.
    */
-  timestamp: string;
+  timestamp?: string;
+  /**
+   * Url to view the commit.
+   */
+  url?: string;
 }
 
 /**

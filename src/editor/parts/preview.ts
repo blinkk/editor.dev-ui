@@ -1,11 +1,11 @@
 import {BasePart, Part} from '.';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {DataStorage} from '../../utility/dataStorage';
 import {DeviceData} from '../api';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {PreviewFramePart} from './preview/frame';
 import {PreviewToolbarPart} from './preview/toolbar';
-import {Storage} from '../../utility/storage';
 
 export interface PreviewPartConfig {
   /**
@@ -15,7 +15,7 @@ export interface PreviewPartConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export interface PreviewParts {

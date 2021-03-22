@@ -11,6 +11,7 @@ import {ContentFooterPart} from './content/footer';
 import {ContentHeaderPart} from './content/header';
 import {ContentSectionPart} from './content/section';
 import {ContentToolbarPart} from './content/toolbar';
+import {DataStorage} from '../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../events';
 import {EditorState} from '../state';
 import {FieldsPart} from './content/sectionFields';
@@ -20,7 +21,6 @@ import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
-import {Storage} from '../../utility/storage';
 
 const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
 const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';
@@ -35,7 +35,7 @@ export interface ContentPartConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export interface ContentParts {
@@ -137,9 +137,9 @@ export class ContentSettings extends ListenersMixin(Base) {
   protected _highlightAuto?: boolean;
   protected _highlightDirty?: boolean;
   protected _showDeepLinks?: boolean;
-  storage: Storage;
+  storage: DataStorage;
 
-  constructor(storage: Storage) {
+  constructor(storage: DataStorage) {
     super();
     this.storage = storage;
     this._highlightAuto = this.storage.getItemBoolean(

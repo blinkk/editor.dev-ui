@@ -59,7 +59,7 @@ export class HistoryPart extends ContentSectionPart {
               <div class="le__change__meta">
                 <strong>${change.hash.slice(0, 5)}</strong>
                 by
-                <strong>${change.author.name}</strong>
+                <strong>${change.author?.name}</strong>
                 (${this.timeAgo.format(
                   new Date(change.timestamp || new Date())
                 )})

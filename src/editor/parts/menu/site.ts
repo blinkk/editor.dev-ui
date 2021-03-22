@@ -11,10 +11,10 @@ import {
   IncludeExcludeFilterConfig,
 } from '../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../..';
 import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
-import {Storage} from '../../../utility/storage';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
@@ -226,14 +226,24 @@ export class SitePart extends MenuSectionPart {
     }
 
     // Lazy load the files.
-    if (!files) {
+    if (files === undefined) {
       this.loadFiles();
     }
 
-    if (!project || !files) {
+    if (!project || files === undefined) {
       return templateLoading(editor, {
         pad: true,
       });
+    }
+
+    if (files.length === 0) {
+      return html`<div class="le__part__menu__section__content">
+        <div class="le__list">
+          <div class="le__list__item">
+            <div class="le__list__item__label">No files found.</div>
+          </div>
+        </div>
+      </div>`;
     }
 
     if (!this.fileStructure) {
@@ -438,12 +448,12 @@ class DirectoryStructure {
   eventHandlers: DirectoryEventHandlers;
   files: Array<FileData>;
   isExpanded?: boolean;
-  storage: Storage;
+  storage: DataStorage;
 
   constructor(
     rootFiles: Array<FileData>,
     eventHandlers: DirectoryEventHandlers,
-    storage: Storage,
+    storage: DataStorage,
     root = '/'
   ) {
     this.rootFiles = rootFiles;

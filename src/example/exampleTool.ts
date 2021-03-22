@@ -6,7 +6,7 @@ import {
   render,
   repeat,
 } from '@blinkk/selective-edit';
-import {Storage} from '../utility/storage';
+import {DataStorage} from '../utility/dataStorage';
 
 const STORAGE_ERROR_METHODS = 'example.api.error.methods';
 const STORAGE_WORKSPACE_WORKFLOW = 'example.workspace.workflow';
@@ -15,10 +15,10 @@ export class ExampleTool {
   api: ExampleApi;
   container: HTMLElement;
   isExpanded?: boolean;
-  storage: Storage;
+  storage: DataStorage;
   workflow: WorkspaceWorkflow;
 
-  constructor(api: ExampleApi, storage: Storage, container: HTMLElement) {
+  constructor(api: ExampleApi, storage: DataStorage, container: HTMLElement) {
     this.api = api;
     this.storage = storage;
     this.container = container;
@@ -79,6 +79,7 @@ export class ExampleTool {
     ${this.templateStructure(tool)}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateApiResponse(tool: ExampleTool): TemplateResult {
     if (!this.isExpanded) {
       return html``;

@@ -1,8 +1,8 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../..';
-import {Storage} from '../../../utility/storage';
 import {slugify} from '../../../utility/slugify';
 
 export interface MenuSectionPartConfig {
@@ -14,7 +14,7 @@ export interface MenuSectionPartConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class MenuSectionPart extends BasePart implements Part {

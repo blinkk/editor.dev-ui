@@ -42,6 +42,14 @@ app.get('/gh/:organization/:project/:branch/*', (req, res) => {
   });
 });
 
+app.all('/gh/callback', (req, res) => {
+  res.render('callback.njk', {
+    service: 'gh',
+    mode: MODE,
+    message: 'Processing GitHub login. Please wait.',
+  });
+});
+
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Running on http://localhost:${PORT}`);
 });

@@ -1,9 +1,9 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {UrlConfig, UrlLevel} from '../../api';
+import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {Storage} from '../../../utility/storage';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 
 const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';
@@ -16,7 +16,7 @@ export interface ContentToolbarConfig {
   /**
    * Storage class for working with settings.
    */
-  storage: Storage;
+  storage: DataStorage;
 }
 
 export class ContentToolbarPart extends BasePart implements Part {

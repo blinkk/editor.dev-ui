@@ -10,6 +10,10 @@ export class DataStorage {
     return this.storageObj.clear();
   }
 
+  get length(): number {
+    return this.storageObj.length;
+  }
+
   get storageObj(): Storage {
     if (!this.storage) {
       this.storage = new InMemoryStorage();

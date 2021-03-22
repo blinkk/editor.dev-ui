@@ -37,6 +37,14 @@ test('DataStorage key', t => {
   storage.setItem('test', 'foo');
   t.is(storage.getItem('test'), 'foo');
   t.is(storage.key(0), 'foo');
+  t.is(storage.key(1), null);
+});
+
+test('DataStorage length', t => {
+  const storage = new DataStorage();
+  t.is(storage.length, 0);
+  storage.setItem('test', 'foo');
+  t.is(storage.length, 1);
 });
 
 test('DataStorage removeItem', t => {

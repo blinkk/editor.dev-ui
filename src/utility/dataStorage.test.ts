@@ -1,56 +1,60 @@
 import {DataStorage} from './dataStorage';
 import test from 'ava';
 
-test('DataStorage clear no-op in tests', t => {
+test('DataStorage clear', t => {
   const storage = new DataStorage();
+  t.is(storage.getItem('test'), null);
+  t.is(storage.setItem('test', 'foo'), undefined);
+  t.is(storage.getItem('test'), 'foo');
   t.is(storage.clear(), undefined);
+  t.is(storage.getItem('test'), null);
 });
 
-test('DataStorage getItem null in tests', t => {
+test('DataStorage getItem null', t => {
   const storage = new DataStorage();
   t.is(storage.getItem('test'), null);
 });
 
-test('DataStorage getItemArray empty in tests', t => {
+test('DataStorage getItemArray empty', t => {
   const storage = new DataStorage();
   t.deepEqual(storage.getItemArray('test'), []);
 });
 
-test('DataStorage getItemBoolean default in tests', t => {
+test('DataStorage getItemBoolean default', t => {
   const storage = new DataStorage();
   t.is(storage.getItemBoolean('test'), false);
   t.is(storage.getItemBoolean('test', true), true);
 });
 
-test('DataStorage getItemRecord empty in tests', t => {
+test('DataStorage getItemRecord empty', t => {
   const storage = new DataStorage();
   t.deepEqual(storage.getItemRecord('test'), {});
 });
 
-test('DataStorage setItem no-op in tests', t => {
+test('DataStorage setItem', t => {
   const storage = new DataStorage();
   t.is(storage.getItem('test'), null);
   storage.setItem('test', 'foo');
-  t.is(storage.getItem('test'), null);
+  t.is(storage.getItem('test'), 'foo');
 });
 
-test('DataStorage setItemArray no-op in tests', t => {
+test('DataStorage setItemArray', t => {
   const storage = new DataStorage();
   t.deepEqual(storage.getItemArray('test'), []);
   storage.setItemArray('test', ['foo']);
-  t.deepEqual(storage.getItemArray('test'), []);
+  t.deepEqual(storage.getItemArray('test'), ['foo']);
 });
 
-test('DataStorage setItemBoolean no-op in tests', t => {
+test('DataStorage setItemBoolean', t => {
   const storage = new DataStorage();
   t.is(storage.getItemBoolean('test'), false);
   storage.setItemBoolean('test', true);
-  t.is(storage.getItemBoolean('test'), false);
+  t.is(storage.getItemBoolean('test'), true);
 });
 
-test('DataStorage setItemRecord no-op in tests', t => {
+test('DataStorage setItemRecord', t => {
   const storage = new DataStorage();
   t.deepEqual(storage.getItemRecord('test'), {});
   storage.setItemRecord('test', {foo: 'bar'});
-  t.deepEqual(storage.getItemRecord('test'), {});
+  t.deepEqual(storage.getItemRecord('test'), {foo: 'bar'});
 });

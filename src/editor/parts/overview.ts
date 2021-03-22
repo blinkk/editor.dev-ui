@@ -103,19 +103,36 @@ export class OverviewPart extends BasePart implements Part {
 
   handlePublishClick(evt: Event, editor: LiveEditor) {
     const project = this.config.state.project;
+    const workspace = this.config.state.workspace;
 
+    // Lazy load the project.
     if (!project) {
+      this.loadProject();
+    }
+
+    // Lazy load the workspace.
+    if (!workspace) {
+      this.loadWorkspace();
+    }
+
+    if (!workspace || !project) {
+      return;
+    }
+
+    // Check if the workspace is already in progress.
+    if (workspace.publish?.status === PublishStatus.Pending) {
+      // Open the url when there is a pending publish.
+      if (workspace.publish.urls?.length) {
+        const urlData = workspace.publish.urls[0];
+        window.open(urlData.url, '_blank');
+      }
+
       return;
     }
 
     if (!(project.publish?.fields || []).length) {
       // No fields defined for publishing.
       // Call the api for publishing without collecting data.
-
-      const workspace = this.config.state.workspace;
-      if (!workspace) {
-        return;
-      }
 
       this.isPendingPublish = true;
       this.render();

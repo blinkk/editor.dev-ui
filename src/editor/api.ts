@@ -334,6 +334,10 @@ export interface PublishResult {
    * editor to load a different workspace instead.
    */
   workspace?: WorkspaceData;
+  /**
+   * URLs for viewing the publish state.
+   */
+  urls?: Array<UrlConfig>;
 }
 
 /**
@@ -481,30 +485,30 @@ export enum PublishStatus {
    * Some workspaces may not allow for publishing.
    * For example the `main` branch has no where to be published.
    */
-  NotAllowed = 'NOT_ALLOWED',
+  NotAllowed = 'NotAllowed',
   /**
    * There are no active publish processes.
    */
-  NotStarted = 'NOT_STARTED',
+  NotStarted = 'NotStarted',
   /**
    * There are no changes to publish.
    *
    * For example, the main branch and the current branch are on the same
    * commit and there is nothing to publish.
    */
-  NoChanges = 'NO_CHANGES',
+  NoChanges = 'NoChanges',
   /**
    * There is an active publish in process.
    */
-  Pending = 'PENDING',
+  Pending = 'Pending',
   /**
    * The publish process has completed.
    */
-  Complete = 'COMPLETE',
+  Complete = 'Complete',
   /**
    * There was a problem during the publish process.
    */
-  Failure = 'FAILURE',
+  Failure = 'Failure',
 }
 
 /**
@@ -597,7 +601,7 @@ export enum UrlLevel {
    * widely due to the transitive nature of workspaces, but can
    * still be used to viewed when needed.
    */
-  Private = 'private',
+  Private = 'Private',
   /**
    * Protected url, a shared service that is used for sharing
    * but still restricted in how it is accessed.
@@ -605,26 +609,33 @@ export enum UrlLevel {
    * For example, a staging server to preview changes before
    * they are live.
    */
-  Protected = 'protected',
+  Protected = 'Protected',
   /**
    * Public url, a publicly accessbile way to access the resource.
    *
    * For example, the live version of the site that users normally
    * see.
    */
-  Public = 'public',
+  Public = 'Public',
   /**
    * Source url, a remotely hosted version of the resource.
    *
    * For example, a url that shows the resource in a repository
    * like github.
    */
-  Source = 'source',
+  Source = 'Source',
 }
 
 /**
  * Configuration for how publishing works with a workspace.
  */
 export interface WorkspacePublishConfig {
+  /**
+   * Current status of the workspace publishing.
+   */
   status: PublishStatus | string;
+  /**
+   * URLs for viewing the publish state.
+   */
+  urls?: Array<UrlConfig>;
 }

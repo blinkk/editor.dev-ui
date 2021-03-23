@@ -27,12 +27,12 @@ COPY ./sass ./sass
 COPY ./src ./src
 COPY ./views ./views
 
+# Compile the production js/css files.
+RUN yarn run compile
+
 # Copy the static files.
 # Use `public` directory to keep from serving source files.
 COPY ./static/server/* ./public/
-
-# Compile the production js/css files.
-RUN yarn run compile
 
 # Copy public files.
 RUN cp ./dist/css/server/editor.min.css ./public/ \

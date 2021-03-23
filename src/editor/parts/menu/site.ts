@@ -368,7 +368,9 @@ export class SitePart extends MenuSectionPart {
       let filterConfig = DEFAULT_SITE_FILTER;
       if (project.site?.files?.filter) {
         filterConfig = project.site.files.filter;
+        // TODO: Allow for service specific default (ex: grow).
       }
+
       const filesFilter = new IncludeExcludeFilter(filterConfig);
 
       // Create the directory structure using the filtered files.

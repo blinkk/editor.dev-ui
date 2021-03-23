@@ -7,6 +7,7 @@ import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
+import {LiveEditorLabels} from './editor';
 
 /**
  * Interface for the live editor api.
@@ -167,6 +168,17 @@ export interface EditorFileSettings {
    * Users or groups approved access to the editor.
    */
   users?: Array<UserData>;
+  /**
+   * Settings for customizing the editor UI.
+   */
+  ui?: EditorFileUiSettings;
+}
+
+export interface EditorFileUiSettings {
+  /**
+   * Labels for customizing the editor UI.
+   */
+  labels?: LiveEditorLabels;
 }
 
 /**
@@ -311,6 +323,13 @@ export interface ProjectData {
    * Configuration for the site display.
    */
   site?: SiteData;
+  /**
+   * Specialization type for the editor to use.
+   *
+   * Needs to match the known SpecializationComponent types to be
+   * applied to the editor. Ex: `grow` or `amagaki`.
+   */
+  specialization?: string;
   /**
    * Users or groups approved access to the editor.
    */

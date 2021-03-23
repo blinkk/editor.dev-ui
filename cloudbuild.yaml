@@ -1,0 +1,9 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+  - "-c"
+  - docker build --network cloudbuild --no-cache -t gcr.io/$PROJECT_ID/live-edit:main .
+
+images:
+- gcr.io/$PROJECT_ID/live-edit

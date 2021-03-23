@@ -26,4 +26,4 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
-    - run: make deploy-prod
+    - run: make build-and-deploy-prod-tag

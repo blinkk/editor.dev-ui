@@ -31,15 +31,21 @@ and loads in the specialized fields (such as for Grow or Amagaki sites) as neede
 To develop locally run `yarn run hosted` and visit https://localhost:8080/ and iterate and improve.
 If you are developing on the editor UI, use the `yarn run serve` command from above instead.
 
-### Deployment
+## Deployment
 
-The server is automatically built using Docker (using Github actions) and deployed on commits to the `main` branch.
+The live editor is built for production using a Docker image and Google Cloud Run.
 
-Production builds are built and deployed when a new tag is created for `live-edit` repository.
+Every commit to `main` builds the docker image with a `:main` tag and updates the cloud run image for [`beta.editor.dev`](https://beta.editor.dev).
+Every tag builds the docker image with a version tag (ex: `v1.0.5`) and the `:latest` tag then updates the cloud run image for [`editor.dev`](https://editor.dev).
+
+If there is an issue with the latest release for the prod you can roll back to an earlier version.
+
+To switch the production deployment run `make deploy-prod tag=<VERSION>` where `<VERSION>` is the desired version to roll back to.
+For example: `make deploy-prod tag=v1.0.5`.
 
 ### Service account
 
-The server builds use `gcloud` to build and deploy to a Cloud Run service.
+The builds use `gcloud` to build and deploy to a Cloud Run service.
 
 The service account needs to be setup to be a member of the `-compute@` service account to [deploy from cloud build](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run).:
 

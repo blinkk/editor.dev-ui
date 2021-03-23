@@ -34,4 +34,4 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
-    - run: make deploy
+    - run: make build-and-deploy

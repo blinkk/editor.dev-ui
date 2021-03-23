@@ -37,7 +37,7 @@ deploy:
 		--labels source=main \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/live-edit-server:main
+		--image gcr.io/${project}/live-edit:main
 
 deploy-prod:
 	gcloud run deploy ${service}-prod \
@@ -46,4 +46,4 @@ deploy-prod:
 		--labels source=latest \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/live-edit-server:${tag}
+		--image gcr.io/${project}/live-edit:${tag}

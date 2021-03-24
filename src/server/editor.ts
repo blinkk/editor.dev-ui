@@ -31,6 +31,20 @@ import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
+import StackdriverErrorReporter from 'stackdriver-errors-js';
+
+const projectId = document.body.dataset.projectId;
+
+// Check for configured stackdriver error reporting.
+const stackdriverKey = document.body.dataset.stackdriverKey;
+if (stackdriverKey) {
+  const errorHandler = new StackdriverErrorReporter();
+  errorHandler.start({
+    projectId: projectId,
+    key: stackdriverKey,
+    service: 'editor.dev',
+  });
+}
 
 const container = document.querySelector('.container') as HTMLElement;
 const localPort = parseInt(container.dataset.port || '');

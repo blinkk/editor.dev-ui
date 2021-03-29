@@ -17,7 +17,7 @@ import {ModalsPart} from './parts/modals';
 import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
-import {SpecializedComponent} from '../specialized/specialized';
+import {ProjectTypeComponent} from '../projectType/projectType';
 import TimeAgo from 'javascript-time-ago';
 import {ToastsPart} from './parts/toasts';
 import en from 'javascript-time-ago/locale/en';
@@ -90,7 +90,7 @@ export class LiveEditor {
   isPendingRender: boolean;
   isRendering: boolean;
   parts: LiveEditorParts;
-  specialization?: SpecializedComponent;
+  projectType?: ProjectTypeComponent;
   state: EditorState;
   storage: DataStorage;
 
@@ -207,8 +207,8 @@ export class LiveEditor {
     </div>`;
   }
 
-  updateSpecialization(specialization: SpecializedComponent) {
-    this.specialization = specialization;
+  updateProjectType(projectType: ProjectTypeComponent) {
+    this.projectType = projectType;
 
     // TODO: Update selective fields available.
     // TODO: Update selective validation rules available.

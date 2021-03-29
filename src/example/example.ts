@@ -25,7 +25,7 @@ import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
 import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
-import {GrowDocumentField} from '../specialized/grow/field/document';
+import {GrowDocumentField} from '../projectType/grow/field/document';
 import {LiveEditor} from '../editor/editor';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';

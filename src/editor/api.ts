@@ -324,12 +324,9 @@ export interface ProjectData {
    */
   site?: SiteData;
   /**
-   * Specialization type for the editor to use.
-   *
-   * Needs to match the known SpecializationComponent types to be
-   * applied to the editor. Ex: `grow` or `amagaki`.
+   * Project type for the editor to use.
    */
-  specialization?: string;
+  type?: ProjectTypes | string;
   /**
    * Users or groups approved access to the editor.
    */
@@ -492,6 +489,14 @@ export interface SiteFilesConfig {
    *  - Ignores files and directories starting with `_` and `.`.
    */
   filter?: IncludeExcludeFilterConfig;
+}
+
+/**
+ * Project types supported in the editor.
+ */
+export enum ProjectTypes {
+  Amagaki = 'Amagaki',
+  Grow = 'Grow',
 }
 
 /**

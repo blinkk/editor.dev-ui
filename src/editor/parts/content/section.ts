@@ -9,6 +9,7 @@ import {
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
+import {EVENT_PROJECT_TYPE_UPDATE} from '../../events';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
@@ -52,6 +53,16 @@ export class ContentSectionPart extends BasePart implements Part {
         this.isVisible = this.section === currentSection;
       }
     }
+
+    // When the project type is updated the field types change.
+    // Update the field types on the selective editor which
+    // also reloads the fields on the selective editor.
+    document.addEventListener(EVENT_PROJECT_TYPE_UPDATE, () => {
+      this.selective.addFieldTypes(
+        this.config.selectiveConfig.fieldTypes || {}
+      );
+      this.render();
+    });
   }
 
   get canChangeSection(): boolean {
@@ -125,10 +136,12 @@ export class ContentSectionPart extends BasePart implements Part {
     </button>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateContent(editor: LiveEditor): TemplateResult {
     return html`section content`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateStatus(editor: LiveEditor): TemplateResult {
     if (!this.selective.isValid) {
       return html`<div

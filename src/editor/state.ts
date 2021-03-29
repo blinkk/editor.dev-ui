@@ -13,8 +13,8 @@ import {
 } from './api';
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
-import {ListenersMixin} from '../mixin/listeners';
 import {FeatureManager} from '../utility/featureManager';
+import {ListenersMixin} from '../mixin/listeners';
 
 /**
  * Track the references to the editor state.

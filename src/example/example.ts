@@ -20,7 +20,6 @@ import {
   VariantField,
 } from '@blinkk/selective-edit';
 import {AsideField} from '../editor/field/aside';
-import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
 import {ExampleFieldField} from './field/exampleField';
@@ -30,7 +29,6 @@ import {LiveEditor} from '../editor/editor';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {RuleConstructor} from '@blinkk/selective-edit';
-import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 
 const container = document.querySelector('.container');
 const exampleApi = new ExampleApi();
@@ -83,16 +81,6 @@ if (url.searchParams.get('path')) {
     path: url.searchParams.get('path') || '',
   });
 }
-
-// Bind to the custom event to re-render the editor.
-document.addEventListener(EVENT_RENDER, () => {
-  exampleEditor.render();
-});
-
-// Bind to the selective event for rendering as well.
-document.addEventListener(SELECTIVE_EVENT_RENDER, () => {
-  exampleEditor.render();
-});
 
 /**
  * Tool for working with the api through the UI.

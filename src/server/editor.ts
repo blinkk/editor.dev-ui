@@ -21,7 +21,6 @@ import {
   VariantField,
 } from '@blinkk/selective-edit';
 import {AsideField} from '../editor/field/aside';
-import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {GithubApi} from './gh/githubApi';
@@ -30,7 +29,6 @@ import {LiveEditorApiComponent} from '../editor/api';
 import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
-import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 
 const projectId = document.body.dataset.projectId;
@@ -143,15 +141,5 @@ if (container.dataset.file) {
 
 // TODO: Determine which fields to load based on api call.
 // TODO: Reload the fields with an updated config. ex: grow fields.
-
-// Bind to the custom event to re-render the editor.
-document.addEventListener(EVENT_RENDER, () => {
-  editor.render();
-});
-
-// Bind to the selective event for rendering as well.
-document.addEventListener(SELECTIVE_EVENT_RENDER, () => {
-  editor.render();
-});
 
 editor.render();

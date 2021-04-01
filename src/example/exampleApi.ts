@@ -30,7 +30,7 @@ import {
 } from '@blinkk/selective-edit';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
-import {GrowDocumentConfig} from '../specialized/grow/field/document';
+import {GrowDocumentConfig} from '../projectType/grow/field/document';
 import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
@@ -1255,7 +1255,10 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  async saveFile(file: EditorFileData): Promise<EditorFileData> {
+  async saveFile(
+    file: EditorFileData,
+    isRawEdit: boolean
+  ): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {
       const methodName = 'saveFile';
       console.log(`API: ${methodName}`, file);

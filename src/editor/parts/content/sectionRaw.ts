@@ -1,21 +1,26 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
-import {DeepObject, FieldConfig, TemplateResult} from '@blinkk/selective-edit';
+import {
+  DeepObject,
+  TemplateResult,
+  TextAreaFieldConfig,
+} from '@blinkk/selective-edit';
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
 import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
 
-const RAW_FIELDS: Array<FieldConfig> = [
-  {
-    type: 'textarea',
-    key: 'dataRaw',
-    label: 'Data',
-  },
-  {
-    type: 'textarea',
-    key: 'content',
-    label: 'Content',
-  },
-];
+const EXTENSIONS_DATA_ONLY: Array<string> = ['yaml', 'yml'];
+const RAW_FIELD_CONTENT: TextAreaFieldConfig = {
+  type: 'textarea',
+  key: 'content',
+  label: 'Content',
+  wrap: 'hard',
+};
+const RAW_FIELD_DATA: TextAreaFieldConfig = {
+  type: 'textarea',
+  key: 'dataRaw',
+  label: 'Data',
+  wrap: 'hard',
+};
 
 export class RawPart extends ContentSectionPart {
   data: DeepObject;
@@ -46,10 +51,14 @@ export class RawPart extends ContentSectionPart {
 
     this.isProcessing = true;
     this.render();
-    this.config.state.saveFile(this.selective.value as EditorFileData, () => {
-      this.isProcessing = false;
-      this.render();
-    });
+    this.config.state.saveFile(
+      this.selective.value as EditorFileData,
+      true,
+      () => {
+        this.isProcessing = false;
+        this.render();
+      }
+    );
   }
 
   get label() {
@@ -58,9 +67,15 @@ export class RawPart extends ContentSectionPart {
 
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file || {});
+    this.selective.data = this.data;
     this.selective.resetFields();
-    for (const fieldConfig of RAW_FIELDS) {
-      this.selective.fields.addField(fieldConfig);
+
+    const extension = this.config.state.file?.file.path.split('.').pop() || '';
+    if (EXTENSIONS_DATA_ONLY.includes(extension)) {
+      this.selective.fields.addField(RAW_FIELD_DATA);
+    } else {
+      this.selective.fields.addField(RAW_FIELD_DATA);
+      this.selective.fields.addField(RAW_FIELD_CONTENT);
     }
     this.render();
   }

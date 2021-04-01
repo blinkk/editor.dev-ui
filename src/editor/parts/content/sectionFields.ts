@@ -39,7 +39,7 @@ export class FieldsPart extends ContentSectionPart {
 
     this.isProcessing = true;
     this.render();
-    this.config.state.saveFile(value as EditorFileData, () => {
+    this.config.state.saveFile(value as EditorFileData, false, () => {
       this.isProcessing = false;
       this.render();
     });
@@ -52,7 +52,8 @@ export class FieldsPart extends ContentSectionPart {
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file?.data || {});
     this.selective.resetFields();
-    for (const fieldConfig of this.config.state.file?.editor.fields || []) {
+    // TODO: Auto guess fields if not field configuration is defined.
+    for (const fieldConfig of this.config.state.file?.editor?.fields || []) {
       this.selective.fields.addField(fieldConfig);
     }
     this.render();

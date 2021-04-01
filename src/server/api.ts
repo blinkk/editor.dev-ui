@@ -156,11 +156,15 @@ export class ServerApi implements LiveEditorApiComponent {
     return `${this.baseUrl}${path}`;
   }
 
-  async saveFile(file: EditorFileData): Promise<EditorFileData> {
+  async saveFile(
+    file: EditorFileData,
+    isRawEdit: boolean
+  ): Promise<EditorFileData> {
     return postJSON(
       this.resolveUrl('/file.save'),
       this.expandParams({
         file: file,
+        isRawEdit: isRawEdit,
       })
     ) as Promise<EditorFileData>;
   }

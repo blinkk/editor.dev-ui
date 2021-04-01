@@ -1,5 +1,10 @@
 import {DataStorage, LocalDataStorage} from '../utility/dataStorage';
-import {EVENT_RENDER_COMPLETE, EVENT_SAVE} from './events';
+import {
+  EVENT_PROJECT_TYPE_UPDATE,
+  EVENT_RENDER,
+  EVENT_RENDER_COMPLETE,
+  EVENT_SAVE,
+} from './events';
 import {
   EditorConfig,
   GlobalConfig,
@@ -8,15 +13,19 @@ import {
   html,
   render,
 } from '@blinkk/selective-edit';
+import {LiveEditorApiComponent, ProjectTypes} from './api';
+import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
 import {ContentPart} from './parts/content';
 import {EditorState} from './state';
 import {EmptyPart} from './parts/empty';
-import {LiveEditorApiComponent} from './api';
+import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
 import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
+import {ProjectTypeComponent} from '../projectType/projectType';
+import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import {ToastsPart} from './parts/toasts';
 import en from 'javascript-time-ago/locale/en';
@@ -89,6 +98,7 @@ export class LiveEditor {
   isPendingRender: boolean;
   isRendering: boolean;
   parts: LiveEditorParts;
+  projectType?: ProjectTypeComponent;
   state: EditorState;
   storage: DataStorage;
 
@@ -124,6 +134,24 @@ export class LiveEditor {
       toasts: new ToastsPart(),
     };
 
+    // Update the project type when the project changes.
+    this.state.addListener('getProject', () => {
+      if (this.state.project?.type === ProjectTypes.Grow) {
+        this.updateProjectType(new GrowProjectType());
+      } else if (this.state.project?.type === ProjectTypes.Amagaki) {
+        this.updateProjectType(new AmagakiProjectType());
+      }
+
+      // Pull in the UI labels.
+      if (this.state.project?.ui?.labels) {
+        this.config.labels = Object.assign(
+          {},
+          this.config.labels || {},
+          this.state.project?.ui?.labels
+        );
+      }
+    });
+
     // Automatically re-render after the window resizes.
     window.addEventListener('resize', () => {
       this.render();
@@ -139,6 +167,16 @@ export class LiveEditor {
             break;
         }
       }
+    });
+
+    // Bind to the custom event to re-render the editor.
+    document.addEventListener(EVENT_RENDER, () => {
+      this.render();
+    });
+
+    // Bind to the selective event for rendering as well.
+    document.addEventListener(SELECTIVE_EVENT_RENDER, () => {
+      this.render();
     });
   }
 
@@ -203,6 +241,34 @@ export class LiveEditor {
       ${this.parts.content.template(editor)}
       ${this.parts.preview.template(editor)}
     </div>`;
+  }
+
+  updateProjectType(projectType: ProjectTypeComponent) {
+    this.projectType = projectType;
+    this.config.selectiveConfig = this.config.selectiveConfig || {};
+
+    // Update selective fields available.
+    this.config.selectiveConfig.fieldTypes =
+      this.config.selectiveConfig.fieldTypes || {};
+
+    for (const [key, value] of Object.entries(
+      this.projectType.fieldTypes || {}
+    )) {
+      this.config.selectiveConfig.fieldTypes[key] = value;
+    }
+
+    // Update selective validation rules available.
+    this.config.selectiveConfig.ruleTypes =
+      this.config.selectiveConfig.ruleTypes || {};
+
+    for (const [key, value] of Object.entries(
+      this.projectType.ruleTypes || {}
+    )) {
+      this.config.selectiveConfig.ruleTypes[key] = value;
+    }
+
+    // Event to allow existing selective editors to reset.
+    document.dispatchEvent(new CustomEvent(EVENT_PROJECT_TYPE_UPDATE));
   }
 }
 

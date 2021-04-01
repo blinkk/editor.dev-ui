@@ -105,7 +105,7 @@ export class ExampleFieldField extends Field {
         <pre><code>${unsafeHTML(
           formatCodeSample(
             yaml.dump(
-              replaceSpecialized(
+              replaceProjectType(
                 this.cleaner.clean(this.config.field) as FieldConfig
               )
             )
@@ -149,10 +149,10 @@ function formatCodeSample(code: string): string {
 }
 
 /**
- * The example page loads all the specialized fields at once.
+ * The example page loads all the project type fields at once.
  *
- * For the example page the field configs for the specialized fields
- * are prefixed. But when the fields are used in a specialized project,
+ * For the example page the field configs for the project type fields
+ * are prefixed. But when the fields are used in a project type project,
  * the field type is not prefixed.
  *
  * Since we want the code snippet to be copyable for projects, we need
@@ -162,7 +162,7 @@ function formatCodeSample(code: string): string {
  * @param fieldConfig Field config with example field configuration.
  * @returns Updated field config with correct type.
  */
-function replaceSpecialized(fieldConfig: FieldConfig): FieldConfig {
+function replaceProjectType(fieldConfig: FieldConfig): FieldConfig {
   let isModified = false;
 
   // Amagaki fields.

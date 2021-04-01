@@ -15,6 +15,7 @@ import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
 import {templateApiError} from './error';
+import {EVENT_PROJECT_TYPE_UPDATE} from '../events';
 
 /**
  * Priority of the modal.
@@ -353,6 +354,16 @@ export class FormDialogModal extends DialogModal {
     this.config = config;
     this.data = new DeepObject({});
     this.selective = new SelectiveEditor(this.config.selectiveConfig);
+
+    // When the project type is updated the field types change.
+    // Update the field types on the selective editor which
+    // also reloads the fields on the selective editor.
+    document.addEventListener(EVENT_PROJECT_TYPE_UPDATE, () => {
+      this.selective.addFieldTypes(
+        this.config.selectiveConfig.fieldTypes || {}
+      );
+      this.render();
+    });
   }
 
   handleKeyup(evt: KeyboardEvent) {

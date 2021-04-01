@@ -7,6 +7,7 @@ import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
 import bent from 'bent';
+import {LiveEditorLabels} from './editor';
 
 /**
  * Interface for the live editor api.
@@ -121,8 +122,9 @@ export interface LiveEditorApiComponent {
    * Save the updated file data.
    *
    * @param file File data to be saved.
+   * @param isRawEdit Is the edit to the raw file data?
    */
-  saveFile(file: EditorFileData): Promise<EditorFileData>;
+  saveFile(file: EditorFileData, isRawEdit: boolean): Promise<EditorFileData>;
 
   /**
    * Upload a file.
@@ -167,6 +169,17 @@ export interface EditorFileSettings {
    * Users or groups approved access to the editor.
    */
   users?: Array<UserData>;
+  /**
+   * Settings for customizing the editor UI.
+   */
+  ui?: EditorUiSettings;
+}
+
+export interface EditorUiSettings {
+  /**
+   * Labels for customizing the editor UI.
+   */
+  labels?: LiveEditorLabels;
 }
 
 /**
@@ -219,8 +232,10 @@ export interface EditorFileData {
   dataRaw?: string;
   /**
    * Editor configuration for the file.
+   *
+   * If not provided the editor will attempt to guess the fields to use.
    */
-  editor: EditorFileConfig;
+  editor?: EditorFileConfig;
   /**
    * File information.
    */
@@ -229,6 +244,13 @@ export interface EditorFileData {
    * File repository history.
    */
   history?: Array<RepoCommit>;
+  /**
+   * Sha of the file being edited.
+   *
+   * Used by the api to verify that there are no new changes to the file
+   * since the edit started to avoid overwriting external changes.
+   */
+  sha?: string;
   /**
    * URL for viewing the file in the preview iframe.
    *
@@ -311,6 +333,14 @@ export interface ProjectData {
    * Configuration for the site display.
    */
   site?: SiteData;
+  /**
+   * Project type for the editor to use.
+   */
+  type?: ProjectTypes | string;
+  /**
+   * Settings for customizing the editor UI.
+   */
+  ui?: EditorUiSettings;
   /**
    * Users or groups approved access to the editor.
    */
@@ -473,6 +503,14 @@ export interface SiteFilesConfig {
    *  - Ignores files and directories starting with `_` and `.`.
    */
   filter?: IncludeExcludeFilterConfig;
+}
+
+/**
+ * Project types supported in the editor.
+ */
+export enum ProjectTypes {
+  Amagaki = 'Amagaki',
+  Grow = 'Grow',
 }
 
 /**

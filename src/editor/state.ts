@@ -383,6 +383,7 @@ export class EditorState extends ListenersMixin(Base) {
 
   saveFile(
     file: EditorFileData,
+    isRawEdit: boolean,
     callback?: (file: EditorFileData) => void,
     callbackError?: (error: ApiError) => void
   ) {
@@ -391,7 +392,7 @@ export class EditorState extends ListenersMixin(Base) {
       return;
     }
     this.promises[promiseKey] = this.api
-      .saveFile(file)
+      .saveFile(file, isRawEdit)
       .then(data => {
         this.file = data;
         delete this.promises[promiseKey];

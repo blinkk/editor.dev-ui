@@ -1255,7 +1255,10 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
-  async saveFile(file: EditorFileData): Promise<EditorFileData> {
+  async saveFile(
+    file: EditorFileData,
+    isRawEdit: boolean
+  ): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {
       const methodName = 'saveFile';
       console.log(`API: ${methodName}`, file);

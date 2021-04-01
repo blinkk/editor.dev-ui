@@ -122,8 +122,9 @@ export interface LiveEditorApiComponent {
    * Save the updated file data.
    *
    * @param file File data to be saved.
+   * @param isRawEdit Is the edit to the raw file data?
    */
-  saveFile(file: EditorFileData): Promise<EditorFileData>;
+  saveFile(file: EditorFileData, isRawEdit: boolean): Promise<EditorFileData>;
 
   /**
    * Upload a file.
@@ -231,8 +232,10 @@ export interface EditorFileData {
   dataRaw?: string;
   /**
    * Editor configuration for the file.
+   *
+   * If not provided the editor will attempt to guess the fields to use.
    */
-  editor: EditorFileConfig;
+  editor?: EditorFileConfig;
   /**
    * File information.
    */
@@ -241,6 +244,13 @@ export interface EditorFileData {
    * File repository history.
    */
   history?: Array<RepoCommit>;
+  /**
+   * Sha of the file being edited.
+   *
+   * Used by the api to verify that there are no new changes to the file
+   * since the edit started to avoid overwriting external changes.
+   */
+  sha?: string;
   /**
    * URL for viewing the file in the preview iframe.
    *

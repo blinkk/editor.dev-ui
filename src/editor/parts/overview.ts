@@ -270,7 +270,7 @@ export class OverviewPart extends BasePart implements Part {
 
     let label = editor.config.labels?.publishNotStarted || 'Publish';
     if (this.isPendingPublish || status === PublishStatus.Pending) {
-      label = editor.config.labels?.publishNotStarted || 'Pending';
+      label = editor.config.labels?.publishPending || 'Pending';
     } else if (status === PublishStatus.NoChanges) {
       label = editor.config.labels?.publishNoChanges || 'No changes';
     } else if (status === PublishStatus.Complete) {

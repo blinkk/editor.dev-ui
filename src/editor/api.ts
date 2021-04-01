@@ -172,10 +172,10 @@ export interface EditorFileSettings {
   /**
    * Settings for customizing the editor UI.
    */
-  ui?: EditorFileUiSettings;
+  ui?: EditorUiSettings;
 }
 
-export interface EditorFileUiSettings {
+export interface EditorUiSettings {
   /**
    * Labels for customizing the editor UI.
    */
@@ -337,6 +337,10 @@ export interface ProjectData {
    * Project type for the editor to use.
    */
   type?: ProjectTypes | string;
+  /**
+   * Settings for customizing the editor UI.
+   */
+  ui?: EditorUiSettings;
   /**
    * Users or groups approved access to the editor.
    */

@@ -141,6 +141,15 @@ export class LiveEditor {
       } else if (this.state.project?.type === 'amagaki') {
         this.updateProjectType(new AmagakiProjectType());
       }
+
+      // Pull in the UI labels.
+      if (this.state.project?.ui?.labels) {
+        this.config.labels = Object.assign(
+          {},
+          this.config.labels || {},
+          this.state.project?.ui?.labels
+        );
+      }
     });
 
     // Automatically re-render after the window resizes.

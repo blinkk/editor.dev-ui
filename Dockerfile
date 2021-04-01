@@ -3,6 +3,7 @@ FROM node:14
 WORKDIR /usr/src/app
 
 ENV MODE=prod
+ENV PROJECT_ID=grow-prod
 
 # Upgrade base image and cleanup.
 RUN apt-get update \

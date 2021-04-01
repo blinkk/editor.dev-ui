@@ -13,12 +13,12 @@ import {
   html,
   render,
 } from '@blinkk/selective-edit';
+import {LiveEditorApiComponent, ProjectTypes} from './api';
 import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
 import {ContentPart} from './parts/content';
 import {EditorState} from './state';
 import {EmptyPart} from './parts/empty';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
-import {LiveEditorApiComponent} from './api';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
 import {NotificationsPart} from './parts/notifications';
@@ -136,9 +136,9 @@ export class LiveEditor {
 
     // Update the project type when the project changes.
     this.state.addListener('getProject', () => {
-      if (this.state.project?.type === 'grow') {
+      if (this.state.project?.type === ProjectTypes.Grow) {
         this.updateProjectType(new GrowProjectType());
-      } else if (this.state.project?.type === 'amagaki') {
+      } else if (this.state.project?.type === ProjectTypes.Amagaki) {
         this.updateProjectType(new AmagakiProjectType());
       }
 

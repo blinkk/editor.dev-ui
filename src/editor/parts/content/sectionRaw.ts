@@ -8,7 +8,7 @@ import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
 import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
 
-const EXTENSIONS_BODY_ONLY: Array<string> = ['yaml', 'yml'];
+const EXTENSIONS_DATA_ONLY: Array<string> = ['yaml', 'yml'];
 const RAW_FIELD_CONTENT: TextAreaFieldConfig = {
   type: 'textarea',
   key: 'content',
@@ -67,11 +67,12 @@ export class RawPart extends ContentSectionPart {
 
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file || {});
-    const extension = this.config.state.file?.file.path.split('.').pop() || '';
-
+    this.selective.data = this.data;
     this.selective.resetFields();
-    if (EXTENSIONS_BODY_ONLY.includes(extension)) {
-      this.selective.fields.addField(RAW_FIELD_CONTENT);
+
+    const extension = this.config.state.file?.file.path.split('.').pop() || '';
+    if (EXTENSIONS_DATA_ONLY.includes(extension)) {
+      this.selective.fields.addField(RAW_FIELD_DATA);
     } else {
       this.selective.fields.addField(RAW_FIELD_DATA);
       this.selective.fields.addField(RAW_FIELD_CONTENT);

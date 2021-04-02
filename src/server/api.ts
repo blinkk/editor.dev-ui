@@ -16,8 +16,12 @@ const postJSON = bent('json', 'POST');
  * Example api that returns data through a 'simulated' network.
  */
 export class ServerApi implements LiveEditorApiComponent {
-  get baseUrl() {
+  get apiBaseUrl() {
     return `https://api.${window.location.hostname}/`;
+  }
+
+  get baseUrl() {
+    return '/';
   }
 
   /**
@@ -42,7 +46,7 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return postJSON(
-      this.resolveUrl('/file.copy'),
+      this.resolveApiUrl('/file.copy'),
       this.expandParams({
         originalPath: originalPath,
         path: path,
@@ -52,7 +56,7 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async createFile(path: string): Promise<FileData> {
     return postJSON(
-      this.resolveUrl('/file.create'),
+      this.resolveApiUrl('/file.create'),
       this.expandParams({
         path: path,
       })
@@ -64,7 +68,7 @@ export class ServerApi implements LiveEditorApiComponent {
     workspace: string
   ): Promise<WorkspaceData> {
     return postJSON(
-      this.resolveUrl('/workspace.create'),
+      this.resolveApiUrl('/workspace.create'),
       this.expandParams({
         base: base,
         workspace: workspace,
@@ -74,7 +78,7 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async deleteFile(file: FileData): Promise<EmptyData> {
     return postJSON(
-      this.resolveUrl('/file.delete'),
+      this.resolveApiUrl('/file.delete'),
       this.expandParams({
         file: file,
       })
@@ -83,14 +87,16 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async getDevices(): Promise<Array<DeviceData>> {
     return postJSON(
-      this.resolveUrl('/devices.get'),
+      this.resolveApiUrl('/devices.get'),
       this.expandParams({})
     ) as Promise<Array<DeviceData>>;
   }
 
   async getFile(file: FileData): Promise<EditorFileData> {
+    window.history.pushState({}, '', this.resolveUrl(file.path));
+
     return postJSON(
-      this.resolveUrl('/file.get'),
+      this.resolveApiUrl('/file.get'),
       this.expandParams({
         file: file,
       })
@@ -99,7 +105,7 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async getFiles(): Promise<Array<FileData>> {
     return postJSON(
-      this.resolveUrl('/files.get'),
+      this.resolveApiUrl('/files.get'),
       this.expandParams({})
     ) as Promise<Array<FileData>>;
   }
@@ -114,21 +120,21 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async getProject(): Promise<ProjectData> {
     return postJSON(
-      this.resolveUrl('/project.get'),
+      this.resolveApiUrl('/project.get'),
       this.expandParams({})
     ) as Promise<ProjectData>;
   }
 
   async getWorkspace(): Promise<WorkspaceData> {
     return postJSON(
-      this.resolveUrl('/workspace.get'),
+      this.resolveApiUrl('/workspace.get'),
       this.expandParams({})
     ) as Promise<WorkspaceData>;
   }
 
   async getWorkspaces(): Promise<Array<WorkspaceData>> {
     return postJSON(
-      this.resolveUrl('/workspaces.get'),
+      this.resolveApiUrl('/workspaces.get'),
       this.expandParams({})
     ) as Promise<Array<WorkspaceData>>;
   }
@@ -142,12 +148,18 @@ export class ServerApi implements LiveEditorApiComponent {
     data?: Record<string, any>
   ): Promise<PublishResult> {
     return postJSON(
-      this.resolveUrl('/publish.start'),
+      this.resolveApiUrl('/publish.start'),
       this.expandParams({
         workspace: workspace,
         data: data,
       })
     ) as Promise<PublishResult>;
+  }
+
+  resolveApiUrl(path: string) {
+    // Strip off the preceding /.
+    path = path.replace(/\/*/, '');
+    return `${this.apiBaseUrl}${path}`;
   }
 
   resolveUrl(path: string) {
@@ -161,7 +173,7 @@ export class ServerApi implements LiveEditorApiComponent {
     isRawEdit: boolean
   ): Promise<EditorFileData> {
     return postJSON(
-      this.resolveUrl('/file.save'),
+      this.resolveApiUrl('/file.save'),
       this.expandParams({
         file: file,
         isRawEdit: isRawEdit,
@@ -171,7 +183,7 @@ export class ServerApi implements LiveEditorApiComponent {
 
   async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
     return postJSON(
-      this.resolveUrl('/file.upload'),
+      this.resolveApiUrl('/file.upload'),
       this.expandParams({
         file: file,
         meta: meta,
@@ -193,8 +205,12 @@ export class LocalServerApi extends ServerApi {
     this.port = port;
   }
 
-  get baseUrl() {
+  get apiBaseUrl() {
     return `http://localhost:${this.port}/`;
+  }
+
+  get baseUrl() {
+    return `/local/${this.port}/`;
   }
 }
 
@@ -227,7 +243,7 @@ export class ServiceServerApi extends ServerApi {
     this.isDev = isDev || false;
   }
 
-  get baseUrl() {
+  get apiBaseUrl() {
     let domain = 'https://api.editor.dev';
     if (this.isDev) {
       domain = 'http://localhost:9090';
@@ -236,6 +252,10 @@ export class ServiceServerApi extends ServerApi {
     }
     const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
     return `${domain}${path}`;
+  }
+
+  get baseUrl() {
+    return `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {

@@ -23,6 +23,7 @@ import {templateLoading} from '../template';
 
 export const DEFAULT_EXTRA_KEY = 'extra';
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
+  apng: 'image/apng',
   avif: 'image/avif',
   gif: 'image/gif',
   jpeg: 'image/jpg',
@@ -35,6 +36,7 @@ export const EXT_TO_MIME_TYPE: Record<string, string> = {
   webp: 'image/webp',
 };
 export const VALID_IMAGE_MIME_TYPES = [
+  'image/apng',
   'image/avif',
   'image/gif',
   'image/jpeg',

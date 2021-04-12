@@ -1257,6 +1257,7 @@ export class ExampleApi implements LiveEditorApiComponent {
 
   async saveFile(
     file: EditorFileData,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isRawEdit: boolean
   ): Promise<EditorFileData> {
     return new Promise<EditorFileData>((resolve, reject) => {

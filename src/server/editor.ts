@@ -27,11 +27,10 @@ import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {GithubApi} from './gh/githubApi';
 import {LocalServerApi} from './api';
+import {LocalStatus} from './local';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
-import bent from 'bent';
-import {LocalStatus} from './local';
 
 const projectId = document.body.dataset.projectId;
 

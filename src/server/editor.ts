@@ -20,16 +20,18 @@ import {
   TimeField,
   VariantField,
 } from '@blinkk/selective-edit';
+import {LiveEditor, LiveEditorSelectiveEditorConfig} from '../editor/editor';
+import {LiveEditorApiComponent, PingStatus} from '../editor/api';
 import {AsideField} from '../editor/field/aside';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {GithubApi} from './gh/githubApi';
-import {LiveEditor} from '../editor/editor';
-import {LiveEditorApiComponent} from '../editor/api';
 import {LocalServerApi} from './api';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
+import bent from 'bent';
+import {LocalStatus} from './local';
 
 const projectId = document.body.dataset.projectId;
 
@@ -123,23 +125,73 @@ const selectiveConfig = {
   },
 };
 
-const editor = new LiveEditor(
-  {
-    api: api,
-    selectiveConfig: selectiveConfig,
-    state: state,
-  },
-  container as HTMLElement
-);
+const startEditor = (
+  api: LiveEditorApiComponent,
+  selectiveConfig: LiveEditorSelectiveEditorConfig,
+  state: EditorState
+): LiveEditor => {
+  const editor = new LiveEditor(
+    {
+      api: api,
+      selectiveConfig: selectiveConfig,
+      state: state,
+    },
+    container as HTMLElement
+  );
 
-// Check for url path to load.
-if (container.dataset.file) {
-  editor.state.getFile({
-    path: container.dataset.file || '',
-  });
-}
+  // Check for url path to load.
+  if (container.dataset.file) {
+    editor.state.getFile({
+      path: container.dataset.file || '',
+    });
+  }
+
+  return editor;
+};
+
+let editor: LiveEditor | undefined = undefined;
 
 // TODO: Determine which fields to load based on api call.
 // TODO: Reload the fields with an updated config. ex: grow fields.
 
-editor.render();
+if (isLocal) {
+  const localStatus = new LocalStatus(container);
+
+  // Test the local api to make sure that it is available before
+  // we start rendering the editor. Otherwise show instructions for
+  // starting the local server.
+  const pingApi = () => {
+    (api as LocalServerApi)
+      .ping()
+      .then(pingResponse => {
+        if (pingResponse.status === PingStatus.Ok) {
+          editor = startEditor(
+            api as LiveEditorApiComponent,
+            selectiveConfig,
+            state
+          );
+          editor.render();
+        } else {
+          console.error('Ping response not expected: ', pingResponse);
+        }
+      })
+      .catch(err => {
+        console.error('Unable to ping the api.', err);
+        try {
+          localStatus.render();
+          setTimeout(pingApi, 5000);
+        } catch (err) {
+          // Ignore error.
+        }
+      });
+  };
+
+  try {
+    pingApi();
+  } catch (err) {
+    // Ignore error
+  }
+} else {
+  editor = startEditor(api as LiveEditorApiComponent, selectiveConfig, state);
+  editor.render();
+}

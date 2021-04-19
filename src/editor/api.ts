@@ -6,8 +6,8 @@ import {
 import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
-import bent from 'bent';
 import {LiveEditorLabels} from './editor';
+import bent from 'bent';
 
 /**
  * Interface for the live editor api.
@@ -348,6 +348,16 @@ export interface ProjectData {
 }
 
 /**
+ * Result from pinging the api.
+ */
+export interface PingResult {
+  /**
+   * Status of the api.
+   */
+  status: PingStatus | string;
+}
+
+/**
  * Result from starting the publish process.
  */
 export interface PublishResult {
@@ -511,6 +521,16 @@ export interface SiteFilesConfig {
 export enum ProjectTypes {
   Amagaki = 'Amagaki',
   Grow = 'Grow',
+}
+
+/**
+ * Status for the api ping.
+ */
+export enum PingStatus {
+  /**
+   * Api is available.
+   */
+  Ok = 'Ok',
 }
 
 /**

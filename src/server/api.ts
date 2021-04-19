@@ -4,6 +4,7 @@ import {
   EmptyData,
   FileData,
   LiveEditorApiComponent,
+  PingResult,
   ProjectData,
   PublishResult,
   WorkspaceData,
@@ -211,6 +212,13 @@ export class LocalServerApi extends ServerApi {
 
   get baseUrl() {
     return `/local/${this.port}/`;
+  }
+
+  async ping() {
+    return postJSON(
+      this.resolveApiUrl('/ping'),
+      this.expandParams({})
+    ) as Promise<PingResult>;
   }
 }
 

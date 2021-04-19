@@ -12,7 +12,7 @@ export class GrowState extends BaseProjectTypeState {
     callback?: (devices: Array<GrowPartialData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<GrowPartialData> | undefined {
-    const promiseKey = 'getDevices';
+    const promiseKey = 'getPartials';
     if (this.promises[promiseKey]) {
       return;
     }

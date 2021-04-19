@@ -7,9 +7,9 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DataStorage} from '../../../utility/dataStorage';
-import {EditorState} from '../../state';
-import {LiveEditor} from '../../editor';
 import {EVENT_PROJECT_TYPE_UPDATE} from '../../events';
+import {EditorState} from '../../../editor/state';
+import {LiveEditor} from '../../editor';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 

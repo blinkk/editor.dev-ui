@@ -107,6 +107,11 @@ export interface LiveEditorApiComponent {
   loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData>;
 
   /**
+   * Project type specific apis.
+   */
+  projectTypes: ApiProjectTypes;
+
+  /**
    * Start the publish process.
    *
    * Begins the publish process. Some publish processes may take time and cannot
@@ -133,6 +138,14 @@ export interface LiveEditorApiComponent {
    * or saved appropriately. Often for media like images or videos.
    */
   uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
+}
+
+export interface GrowProjectTypeApi {
+  getPartials(): Promise<Array<GrowPartialData>>;
+}
+
+export interface ApiProjectTypes {
+  grow: GrowProjectTypeApi;
 }
 
 /**
@@ -296,6 +309,10 @@ export interface FileData {
    * make a request to the `getFileUrl()` method.
    */
   url?: string | null;
+}
+
+export interface GrowPartialData {
+  key: string;
 }
 
 /**

@@ -1,4 +1,5 @@
 import {
+  ApiProjectTypes,
   DeviceData,
   EditorFileData,
   EmptyData,
@@ -9,14 +10,31 @@ import {
   PublishResult,
   WorkspaceData,
 } from '../editor/api';
+import {GrowApi} from '../projectType/grow/growApi';
 import bent from 'bent';
 
 const postJSON = bent('json', 'POST');
 
+export interface ServerApiComponent {
+  apiBaseUrl: string;
+  baseUrl: string;
+  expandParams(params: Record<string, any>): Record<string, any>;
+  resolveApiUrl(path: string): string;
+  resolveUrl(path: string): string;
+}
+
 /**
  * Example api that returns data through a 'simulated' network.
  */
-export class ServerApi implements LiveEditorApiComponent {
+export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
+  projectTypes: ApiProjectTypes;
+
+  constructor() {
+    this.projectTypes = {
+      grow: new GrowApi(this),
+    };
+  }
+
   get apiBaseUrl() {
     return `https://api.${window.location.hostname}/`;
   }

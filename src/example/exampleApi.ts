@@ -1,9 +1,12 @@
 import {
   ApiError,
+  ApiProjectTypes,
   DeviceData,
   EditorFileData,
   EmptyData,
   FileData,
+  GrowPartialData,
+  GrowProjectTypeApi,
   LiveEditorApiComponent,
   ProjectData,
   ProjectPublishConfig,
@@ -864,10 +867,14 @@ const currentWorkspaces: Array<WorkspaceData> = [
 export class ExampleApi implements LiveEditorApiComponent {
   errorController: ErrorController;
   workflow: WorkspaceWorkflow;
+  projectTypes: ApiProjectTypes;
 
   constructor() {
     this.errorController = new ErrorController();
     this.workflow = WorkspaceWorkflow.Success;
+    this.projectTypes = {
+      grow: new ExampleGrowApi(this.errorController),
+    };
   }
 
   checkAuth(): boolean {
@@ -1298,6 +1305,35 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: '/static/img/portrait.png',
         url: 'image-portrait.png',
       } as FileData);
+    });
+  }
+}
+
+export class ExampleGrowApi implements GrowProjectTypeApi {
+  errorController: ErrorController;
+
+  constructor(errorController: ErrorController) {
+    this.errorController = errorController;
+  }
+
+  async getPartials(): Promise<Array<GrowPartialData>> {
+    return new Promise<Array<GrowPartialData>>((resolve, reject) => {
+      const methodName = 'getPartials';
+      console.log(`Grow API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the partials.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, [
+        {
+          key: 'example',
+        } as GrowPartialData,
+      ]);
     });
   }
 }

@@ -14,7 +14,9 @@ import {
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {FeatureManager} from '../utility/featureManager';
+import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
+import {ProjectTypeState} from '../projectType/state';
 
 /**
  * Track the references to the editor state.
@@ -53,6 +55,10 @@ export class EditorState extends ListenersMixin(Base) {
    */
   project?: ProjectData;
   /**
+   * Project types states.
+   */
+  projectTypes: Record<string, ProjectTypeState>;
+  /**
    * Keep track of active promises to keep from requesting the same data
    * multiple times.
    */
@@ -88,6 +94,10 @@ export class EditorState extends ListenersMixin(Base) {
     this.experiments = new FeatureManager({
       defaultStatus: false,
     });
+
+    this.projectTypes = {
+      grow: new GrowState(this),
+    };
   }
 
   copyFile(

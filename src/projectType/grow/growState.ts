@@ -2,16 +2,16 @@ import {ApiError, GrowPartialData, catchError} from '../../editor/api';
 import {BaseProjectTypeState} from '../state';
 
 export class GrowState extends BaseProjectTypeState {
-  partials?: Array<GrowPartialData>;
+  partials?: Record<string, GrowPartialData>;
 
   get api() {
     return this.editorState.api;
   }
 
   getPartials(
-    callback?: (devices: Array<GrowPartialData>) => void,
+    callback?: (devices: Record<string, GrowPartialData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Array<GrowPartialData> | undefined {
+  ): Record<string, GrowPartialData> | undefined {
     const promiseKey = 'getPartials';
     if (this.promises[promiseKey]) {
       return;
@@ -25,7 +25,7 @@ export class GrowState extends BaseProjectTypeState {
         if (callback) {
           callback(this.partials || []);
         }
-        this.triggerListener(promiseKey);
+        this.triggerListener(promiseKey, this.partials);
         this.render();
       })
       .catch(error => catchError(error, callbackError));

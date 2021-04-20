@@ -1,0 +1,21 @@
+.selective__field__type__grow_partials
+  > .selective__field__header
+    align-items: center
+    display: flex
+    flex-flow: row-reverse
+
+    .selective__field__label
+      flex-grow: 1
+      margin: $le-space-small 0
+
+  > .selective__field__footer
+    margin-top: $le-space-small
+
+    button
+      +button
+      +button-outline
+      +button-primary-invert
+
+    .selective__action--add
+      +field-action-icon
+      +field-action-add-primary

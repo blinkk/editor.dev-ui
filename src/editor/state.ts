@@ -57,7 +57,7 @@ export class EditorState extends ListenersMixin(Base) {
   /**
    * Project types states.
    */
-  projectTypes: Record<string, ProjectTypeState>;
+  projectTypes: StateProjectTypes;
   /**
    * Keep track of active promises to keep from requesting the same data
    * multiple times.
@@ -420,6 +420,10 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(error => catchError(error, callbackError));
   }
+}
+
+export interface StateProjectTypes {
+  grow: GrowState;
 }
 
 export const DEFAULT_DEVICES = [

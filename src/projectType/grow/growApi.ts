@@ -10,10 +10,10 @@ export class GrowApi implements GrowProjectTypeApi {
     this.api = api;
   }
 
-  async getPartials(): Promise<Array<GrowPartialData>> {
+  async getPartials(): Promise<Record<string, GrowPartialData>> {
     return postJSON(
       this.api.resolveApiUrl('/grow/partials.get'),
       this.api.expandParams({})
-    ) as Promise<Array<GrowPartialData>>;
+    ) as Promise<Record<string, GrowPartialData>>;
   }
 }

@@ -1316,8 +1316,8 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
     this.errorController = errorController;
   }
 
-  async getPartials(): Promise<Array<GrowPartialData>> {
-    return new Promise<Array<GrowPartialData>>((resolve, reject) => {
+  async getPartials(): Promise<Record<string, GrowPartialData>> {
+    return new Promise<Record<string, GrowPartialData>>((resolve, reject) => {
       const methodName = 'getPartials';
       console.log(`Grow API: ${methodName}`);
 
@@ -1329,14 +1329,14 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
         return;
       }
 
-      simulateNetwork(resolve, [
-        {
+      simulateNetwork(resolve, {
+        example: {
           partial: 'example',
           editor: {
             fields: [],
           },
         } as GrowPartialData,
-      ]);
+      });
     });
   }
 }

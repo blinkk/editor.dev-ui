@@ -1331,7 +1331,10 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
 
       simulateNetwork(resolve, [
         {
-          key: 'example',
+          partial: 'example',
+          editor: {
+            fields: [],
+          },
         } as GrowPartialData,
       ]);
     });

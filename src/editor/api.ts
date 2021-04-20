@@ -312,7 +312,8 @@ export interface FileData {
 }
 
 export interface GrowPartialData {
-  key: string;
+  partial: string;
+  editor: EditorFileConfig;
 }
 
 /**

@@ -40,6 +40,7 @@ TimeAgo.addDefaultLocale(en);
  */
 export interface LiveEditorGlobalConfig extends GlobalConfig {
   api: LiveEditorApiComponent;
+  editor?: LiveEditor;
   labels: LiveEditorLabels;
   state: EditorState;
 }
@@ -133,6 +134,11 @@ export class LiveEditor {
       }),
       toasts: new ToastsPart(),
     };
+
+    // Bind the editor to the global selective config.
+    if (this.config.selectiveConfig.global) {
+      this.config.selectiveConfig.global.editor = this;
+    }
 
     // Update the project type when the project changes.
     this.state.addListener('getProject', () => {

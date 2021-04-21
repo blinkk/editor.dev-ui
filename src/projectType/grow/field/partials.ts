@@ -1,3 +1,4 @@
+import {ApiError, GrowPartialData} from '../../../editor/api';
 import {
   DeepObject,
   FieldConfig,
@@ -11,13 +12,17 @@ import {
   autoDeepObject,
   html,
 } from '@blinkk/selective-edit';
-import {GrowPartialData} from '../../../editor/api';
+import {DialogActionLevel, FormDialogModal} from '../../../editor/ui/modal';
 import {
   ListFieldComponent,
   ListFieldItem,
 } from '@blinkk/selective-edit/dist/src/selective/field/list';
-import {LiveEditorGlobalConfig} from '../../../editor/editor';
+import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
+import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+
+const MODAL_KEY_NEW = 'grow_partials_new';
 
 export interface GrowPartialsFieldComponent {
   partials?: Record<string, GrowPartialData>;
@@ -32,12 +37,25 @@ export interface GrowPartialsFieldConfig extends FieldConfig {
    * Label for when the list is empty.
    */
   emptyLabel?: string;
+  /**
+   * Label for partial.
+   */
+  partialLabel?: string;
+  /**
+   * Help text when adding a partial.
+   */
+  partialHelpLabel?: string;
+  /**
+   * Required message when adding a partial.
+   */
+  partialRequireLabel?: string;
 }
 
 export class GrowPartialsField extends ListField {
   config: GrowPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   partials?: Record<string, GrowPartialData>;
+  selective?: SelectiveEditor;
 
   constructor(
     types: Types,
@@ -129,6 +147,136 @@ export class GrowPartialsField extends ListField {
     return this.items;
   }
 
+  protected getOrCreateModalNew(
+    editor: LiveEditor,
+    selectiveEditor: SelectiveEditor
+  ): FormDialogModal {
+    if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
+      // Setup the editor.
+      const options = [];
+      for (const [partialKey, partial] of Object.entries(this.partials || {})) {
+        // Without the editor config there are no fields to add for a partial.
+        if (!partial.editor) {
+          continue;
+        }
+
+        options.push({
+          label: partial.editor.label || partialKey,
+          value: partialKey,
+        });
+      }
+
+      const selectiveConfig = merge(
+        {
+          fields: [
+            {
+              type: 'radio',
+              key: 'partial',
+              label: this.config.partialLabel || 'Partial',
+              help: this.config.partialHelpLabel || 'Choose a partial to add.',
+              options: options,
+              validation: [
+                {
+                  type: 'require',
+                  message:
+                    this.config.partialRequireLabel || 'Partial is required.',
+                },
+              ],
+            },
+          ],
+        },
+        editor.config.selectiveConfig
+      );
+      const modal = new FormDialogModal({
+        title: this.config.addLabel || 'Add partial',
+        selectiveConfig: selectiveConfig,
+      });
+
+      // Show an error when there are no partial configs for the editor.
+      if (!options.length) {
+        modal.error = {
+          message: 'Unable to find partial editor configurations.',
+        };
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      modal.templateModal = (editor: LiveEditor): TemplateResult => {
+        const isValid = modal.selective.isValid;
+        try {
+          return modal.selective.template(modal.selective, modal.data);
+        } finally {
+          if (isValid !== modal.selective.isValid) {
+            this.render();
+          }
+        }
+      };
+
+      modal.actions.push({
+        label: this.config.addLabel || 'Add partial',
+        level: DialogActionLevel.Primary,
+        isDisabledFunc: () => {
+          return modal.isProcessing || !modal.selective.isValid;
+        },
+        isSubmit: true,
+        onClick: () => {
+          const value = modal.selective.value;
+          modal.startProcessing();
+
+          if (!this.partials) {
+            console.error('Unable to find partials.');
+            modal.stopProcessing();
+            return;
+          }
+
+          if (!this.items) {
+            console.error('Unable to find items.');
+            modal.stopProcessing();
+            return;
+          }
+
+          const partialConfig = this.partials[value.partial] as GrowPartialData;
+          const fields = this.createFields(partialConfig.editor?.fields || []);
+          fields.updateOriginal(
+            selectiveEditor,
+            autoDeepObject({
+              partial: value.partial,
+            })
+          );
+          // Update original from the
+          fields.lock();
+
+          // Unlock fields after saving is complete to let the values be updated
+          // when clean.
+          // TODO: Automate this unlock without having to be done manually.
+          document.addEventListener(
+            EVENT_UNLOCK,
+            () => {
+              fields.unlock();
+              this.render();
+            },
+            {once: true}
+          );
+
+          const newItem = new this.ListItemCls(this, fields);
+          newItem.isExpanded = true;
+          this.items.push(newItem);
+          modal.stopProcessing(true);
+        },
+      });
+      modal.addCancelAction();
+      editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
+    }
+    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
+  }
+
+  handleAddItem(evt: Event, editor: SelectiveEditor, data: DeepObject) {
+    const modal = this.getOrCreateModalNew(
+      this.globalConfig.editor as LiveEditor,
+      editor
+    );
+    modal.show();
+  }
+
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     // While waiting for the partials config show the loading indicator.
     if (!this.partials) {
@@ -167,10 +315,8 @@ class GrowPartialListFieldItem extends ListFieldItem {
     data: DeepObject,
     index?: number
   ): TemplateResult {
-    const partialItem = (this.listField.originalValue as Array<any>)[
-      index || 0
-    ];
-    const partialKey = partialItem?.partial;
+    const partialValue = this.fields.value;
+    const partialKey = partialValue?.partial;
     if (partialKey && this.listField.partials) {
       const partial = this.listField.partials[partialKey];
       if (partial.editor?.label) {

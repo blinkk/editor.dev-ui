@@ -8,11 +8,11 @@ import {
 import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {EVENT_WORKSPACE_LOAD} from '../../events';
+import {FeatureFlags} from '../../features';
 import {LiveEditor} from '../../editor';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
-import {FeatureFlags} from '../../features';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 

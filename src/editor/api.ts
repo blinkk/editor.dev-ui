@@ -325,6 +325,10 @@ export interface GrowPartialEditorConfig {
    */
   label?: string;
   /**
+   * Partial description.
+   */
+  description?: string;
+  /**
    * Field configurations for the editor.
    */
   fields: Array<FieldConfig>;

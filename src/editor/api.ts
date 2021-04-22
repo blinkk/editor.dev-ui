@@ -141,7 +141,7 @@ export interface LiveEditorApiComponent {
 }
 
 export interface GrowProjectTypeApi {
-  getPartials(): Promise<Array<GrowPartialData>>;
+  getPartials(): Promise<Record<string, GrowPartialData>>;
 }
 
 export interface ApiProjectTypes {
@@ -313,7 +313,25 @@ export interface FileData {
 
 export interface GrowPartialData {
   partial: string;
-  editor: EditorFileConfig;
+  editor?: GrowPartialEditorConfig;
+}
+
+/**
+ * Configuration for rendering the file editor.
+ */
+export interface GrowPartialEditorConfig {
+  /**
+   * Partial label.
+   */
+  label?: string;
+  /**
+   * Partial description.
+   */
+  description?: string;
+  /**
+   * Field configurations for the editor.
+   */
+  fields: Array<FieldConfig>;
 }
 
 /**

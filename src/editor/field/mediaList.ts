@@ -374,7 +374,7 @@ export class MediaListField
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateEmpty(editor: SelectiveEditor, data: DeepObject): TemplateResult {
-    if (this.length > 0) {
+    if (this.length > 0 || this.allowAdd) {
       return html``;
     }
 

@@ -41,7 +41,14 @@
 
   > .selective__list__item__preview
     flex-grow: 1
+    overflow: hidden;
     padding: $le-space-small 0
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    img
+      max-height: $le-space-xxlarge
+      max-width: 100%
 
   &:not(.selective__list__item--simple):not(.selective__list__item--empty)
     border: $le-border-size-medium solid $le-color-border
@@ -71,10 +78,17 @@
 
     > .selective__list__fields__header
       +clickable
+      align-items: center
       background: $le-color-tertiary
       color: $le-color-on-tertiary
+      display: flex
+      flex-flow: row
       font-weight: 700
       padding: $le-space-medium
+
+      img
+        max-height: $le-space-xlarge
+        max-width: 100%
 
     > .selective__list__fields
       padding: $le-space-medium

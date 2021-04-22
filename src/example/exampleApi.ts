@@ -363,7 +363,7 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     editor: {
       fields: [
-        // Media example.
+        // Media list example.
         {
           type: 'exampleField',
           key: 'mediaList',

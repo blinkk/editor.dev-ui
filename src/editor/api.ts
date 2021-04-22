@@ -332,6 +332,13 @@ export interface GrowPartialEditorConfig {
    * Field configurations for the editor.
    */
   fields: Array<FieldConfig>;
+  /**
+   * Preview field keys.
+   *
+   * When showing a preview of the partial, use these field keys to determine
+   * the value to show for the preview.
+   */
+  previewFields?: Array<string>;
 }
 
 /**

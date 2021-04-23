@@ -32,6 +32,8 @@ app.get('/local/:port/*', (req, res) => {
   res.render('index.njk', {
     port: req.params.port,
     file: req.params['0'],
+    mode: MODE,
+    projectId: PROJECT_ID,
     stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
   });
 });

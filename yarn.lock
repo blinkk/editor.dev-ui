@@ -200,10 +200,10 @@
     "@babel/helper-validator-identifier" "^7.12.11"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^1.0.27":
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.27.tgz#d3c540721d8bcd8f72dd8e4909b69cc820bc50e5"
-  integrity sha512-J/Y3IzPfWSAHpDXKTgCND5KwKAEsegvaDNYQj51qHQ1a/JvVhBaOkxcQAEM6mmIFOlNcACV2KkbTqwptCk7HfQ==
+"@blinkk/selective-edit@^1.0.28":
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.0.28.tgz#8b1e343a5222d3585b11ae3571e7ec6ec725e743"
+  integrity sha512-jTrleN1Lw44qmK1+JVru6R18BsFe7JG68UPyjCKTR5imF+EmMGO7KvlO7c30BotgIXSZ3fiw0GddFgH6gFReOQ==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.3.0"
@@ -7174,9 +7174,9 @@ sver-compat@^1.5.0:
     es6-symbol "^3.1.1"
 
 table@^6.0.4:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/table/-/table-6.4.0.tgz#9501324358c313162cf52b2843a8b221e75fbefc"
-  integrity sha512-/Vfr23BDjJT2kfsCmYtnJqEPdD/8Dh/MDIQxfcbe+09lZUel6gluquwdMTrLERBw623Nv34DLGZ11krWn5AAqw==
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/table/-/table-6.5.1.tgz#930885a7430f15f8766b35cd1e36de40793db523"
+  integrity sha512-xGDXWTBJxahkzPQCsn1S9ESHEenU7TbMD5Iv4FeopXv/XwJyWatFjfbor+6ipI10/MNPXBYUamYukOrbPZ9L/w==
   dependencies:
     ajv "^8.0.1"
     lodash.clonedeep "^4.5.0"
@@ -7184,6 +7184,7 @@ table@^6.0.4:
     lodash.truncate "^4.4.2"
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
+    strip-ansi "^6.0.0"
 
 tapable@^2.1.1, tapable@^2.2.0:
   version "2.2.0"
@@ -7955,10 +7956,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.35.0:
-  version "5.35.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.35.0.tgz#4db23c2b96c4e53a90c5732d7cdb301a84a33576"
-  integrity sha512-au3gu55yYF/h6NXFr0KZPZAYxS6Nlc595BzYPke8n0CSff5WXcoixtjh5LC/8mXunkRKxhymhXmBY0+kEbR6jg==
+webpack@^5.35.1:
+  version "5.35.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.35.1.tgz#857670799465c8a5cbb94c4c175d60ac42d18ba3"
+  integrity sha512-uWKYStqJ23+N6/EnMEwUjPSSKUG1tFmcuKhALEh/QXoUxwN8eb3ATNIZB38A+fO6QZ0xfc7Cu7KNV9LXNhDCsw==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.47"

@@ -1,4 +1,3 @@
-import {ApiError, GrowPartialData} from '../../../editor/api';
 import {
   DeepObject,
   FieldConfig,
@@ -18,10 +17,11 @@ import {
   ListFieldItem,
 } from '@blinkk/selective-edit/dist/src/selective/field/list';
 import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {GrowPartialData} from '../../../editor/api';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
-import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 
 const MODAL_KEY_NEW = 'grow_partials_new';
 
@@ -127,7 +127,9 @@ export class GrowPartialsField
           this.usingAutoFields = true;
 
           // Auto-guess fields based on the first item in the list.
-          const autoFields = new this.types.globals.AutoFieldsCls({});
+          const autoFields = new this.types.globals.AutoFieldsCls({
+            ignoreKeys: ['partial'],
+          });
           fieldConfigs = autoFields.guessFields(value);
         }
 
@@ -332,6 +334,7 @@ class GrowPartialListFieldItem extends ListFieldItem {
         return html`${partial.editor?.label}
         ${previewValue ? html`<span>${previewValue}</span>` : ''}`;
       }
+      return html`${partialKey}`;
     }
 
     return super.templatePreviewValue(editor, data, index);

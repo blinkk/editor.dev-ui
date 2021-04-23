@@ -10,6 +10,7 @@ import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_PROJECT_TYPE_UPDATE} from '../../events';
 import {EditorState} from '../../../editor/state';
 import {LiveEditor} from '../../editor';
+import {LiveEditorAutoFields} from '../../autoFields';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
@@ -42,6 +43,9 @@ export class ContentSectionPart extends BasePart implements Part {
     super();
     this.config = config;
     this.selective = new SelectiveEditor(this.config.selectiveConfig);
+
+    // Override the autofields class.
+    this.selective.types.globals.AutoFieldsCls = LiveEditorAutoFields;
 
     if (this.isVisible === undefined) {
       const currentSection = this.config.storage.getItem(

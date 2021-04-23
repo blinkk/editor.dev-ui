@@ -21,12 +21,9 @@ import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 
 const MODAL_KEY_NEW = 'grow_partials_new';
-
-export interface GrowPartialsFieldComponent {
-  partials?: Record<string, GrowPartialData>;
-}
 
 export interface GrowPartialsFieldConfig extends FieldConfig {
   /**
@@ -51,7 +48,13 @@ export interface GrowPartialsFieldConfig extends FieldConfig {
   partialRequireLabel?: string;
 }
 
-export class GrowPartialsField extends ListField {
+export interface GrowPartialsFieldComponent {
+  partials?: Record<string, GrowPartialData>;
+}
+
+export class GrowPartialsField
+  extends ListField
+  implements GrowPartialsFieldComponent {
   config: GrowPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   partials?: Record<string, GrowPartialData>;
@@ -319,8 +322,15 @@ class GrowPartialListFieldItem extends ListFieldItem {
     const partialKey = partialValue?.partial;
     if (partialKey && this.listField.partials) {
       const partial = this.listField.partials[partialKey];
+      const previewValue = findPreviewValue(
+        this.fields.value,
+        partial.editor?.previewFields || [],
+        ''
+      );
+
       if (partial.editor?.label) {
-        return html`${partial.editor?.label}`;
+        return html`${partial.editor?.label}
+        ${previewValue ? html`<span>${previewValue}</span>` : ''}`;
       }
     }
 

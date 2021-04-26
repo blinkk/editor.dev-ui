@@ -178,7 +178,7 @@ if (isLocal) {
         console.error('Unable to ping the api.', err);
         try {
           localStatus.render();
-          setTimeout(pingApi, 5000);
+          setTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.
         }

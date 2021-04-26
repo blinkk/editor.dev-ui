@@ -4,6 +4,7 @@ import nunjucks from 'nunjucks';
 const PORT = 8080;
 const MODE = process.env.MODE || 'dev';
 const PROJECT_ID = process.env.PROJECT_ID || '';
+const DEFAULT_LOCAL_PORT = 9090;
 
 // Stackdriver api key
 const STACKDRIVER_KEY =
@@ -28,9 +29,20 @@ if (MODE === 'dev') {
 }
 
 // Use local server connector.
-app.get('/local/:port/*', (req, res) => {
+app.get('/local/:port(\\d+)/*', (req, res) => {
   res.render('index.njk', {
     port: req.params.port,
+    file: req.params['0'],
+    mode: MODE,
+    projectId: PROJECT_ID,
+    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
+  });
+});
+
+// Use local server with default port.
+app.get('/local/*', (req, res) => {
+  res.render('index.njk', {
+    port: DEFAULT_LOCAL_PORT,
     file: req.params['0'],
     mode: MODE,
     projectId: PROJECT_ID,

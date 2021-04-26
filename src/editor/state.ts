@@ -12,11 +12,11 @@ import {
   catchError,
 } from './api';
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
+import {AmagakiState} from '../projectType/amagaki/amagakiState';
 import {Base} from '@blinkk/selective-edit/dist/src/mixins';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
-import {ProjectTypeState} from '../projectType/state';
 
 /**
  * Track the references to the editor state.
@@ -96,6 +96,7 @@ export class EditorState extends ListenersMixin(Base) {
     });
 
     this.projectTypes = {
+      amagaki: new AmagakiState(this),
       grow: new GrowState(this),
     };
   }
@@ -423,6 +424,7 @@ export class EditorState extends ListenersMixin(Base) {
 }
 
 export interface StateProjectTypes {
+  amagaki: AmagakiState;
   grow: GrowState;
 }
 

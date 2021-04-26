@@ -10,6 +10,7 @@ import {
   PublishResult,
   WorkspaceData,
 } from '../editor/api';
+import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
 import {GrowApi} from '../projectType/grow/growApi';
 import bent from 'bent';
 
@@ -33,6 +34,7 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
 
   constructor() {
     this.projectTypes = {
+      amagaki: new AmagakiApi(this),
       grow: new GrowApi(this),
     };
   }

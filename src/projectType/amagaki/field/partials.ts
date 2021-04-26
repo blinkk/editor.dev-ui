@@ -1,9 +1,9 @@
 import {GenericPartialsField} from '../../generic/field/partials';
 
-export class GrowPartialsField extends GenericPartialsField {
+export class AmagakiPartialsField extends GenericPartialsField {
   initPartials() {
-    this.partials = this.globalConfig.state.projectTypes.grow.partials;
-    this.globalConfig.state.projectTypes.grow.addListener(
+    this.partials = this.globalConfig.state.projectTypes.amagaki.partials;
+    this.globalConfig.state.projectTypes.amagaki.addListener(
       'getPartials',
       partials => {
         this.partials = partials;
@@ -14,7 +14,7 @@ export class GrowPartialsField extends GenericPartialsField {
 
     // Load the partials if not loaded.
     if (this.partials === undefined) {
-      this.globalConfig.state.projectTypes.grow.getPartials();
+      this.globalConfig.state.projectTypes.amagaki.getPartials();
     }
   }
 }

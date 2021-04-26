@@ -1,13 +1,14 @@
 import {
+  AmagakiProjectTypeApi,
   ApiError,
   ApiProjectTypes,
   DeviceData,
   EditorFileData,
   EmptyData,
   FileData,
-  GrowPartialData,
   GrowProjectTypeApi,
   LiveEditorApiComponent,
+  PartialData,
   ProjectData,
   ProjectPublishConfig,
   PublishResult,
@@ -873,6 +874,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     this.errorController = new ErrorController();
     this.workflow = WorkspaceWorkflow.Success;
     this.projectTypes = {
+      amagaki: new ExampleAmagakiApi(this.errorController),
       grow: new ExampleGrowApi(this.errorController),
     };
   }
@@ -1309,6 +1311,38 @@ export class ExampleApi implements LiveEditorApiComponent {
   }
 }
 
+export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
+  errorController: ErrorController;
+
+  constructor(errorController: ErrorController) {
+    this.errorController = errorController;
+  }
+
+  async getPartials(): Promise<Record<string, PartialData>> {
+    return new Promise<Record<string, PartialData>>((resolve, reject) => {
+      const methodName = 'getPartials';
+      console.log(`Amagaki API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the partials.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {
+        example: {
+          partial: 'example',
+          editor: {
+            fields: [],
+          },
+        } as PartialData,
+      });
+    });
+  }
+}
+
 export class ExampleGrowApi implements GrowProjectTypeApi {
   errorController: ErrorController;
 
@@ -1316,8 +1350,8 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
     this.errorController = errorController;
   }
 
-  async getPartials(): Promise<Record<string, GrowPartialData>> {
-    return new Promise<Record<string, GrowPartialData>>((resolve, reject) => {
+  async getPartials(): Promise<Record<string, PartialData>> {
+    return new Promise<Record<string, PartialData>>((resolve, reject) => {
       const methodName = 'getPartials';
       console.log(`Grow API: ${methodName}`);
 
@@ -1335,7 +1369,7 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
           editor: {
             fields: [],
           },
-        } as GrowPartialData,
+        } as PartialData,
       });
     });
   }

@@ -1,10 +1,10 @@
-import {GrowProjectTypeApi, PartialData} from '../../editor/api';
+import {AmagakiProjectTypeApi, PartialData} from '../../editor/api';
 import {ServerApiComponent} from '../../server/api';
 import bent from 'bent';
 
 const postJSON = bent('json', 'POST');
 
-export class GrowApi implements GrowProjectTypeApi {
+export class AmagakiApi implements AmagakiProjectTypeApi {
   api: ServerApiComponent;
   constructor(api: ServerApiComponent) {
     this.api = api;
@@ -12,7 +12,7 @@ export class GrowApi implements GrowProjectTypeApi {
 
   async getPartials(): Promise<Record<string, PartialData>> {
     return postJSON(
-      this.api.resolveApiUrl('/grow/partials.get'),
+      this.api.resolveApiUrl('/amagaki/partials.get'),
       this.api.expandParams({})
     ) as Promise<Record<string, PartialData>>;
   }

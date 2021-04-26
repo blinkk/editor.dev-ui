@@ -1,17 +1,17 @@
-import {ApiError, GrowPartialData, catchError} from '../../editor/api';
+import {ApiError, PartialData, catchError} from '../../editor/api';
 import {BaseProjectTypeState} from '../state';
 
 export class GrowState extends BaseProjectTypeState {
-  partials?: Record<string, GrowPartialData>;
+  partials?: Record<string, PartialData>;
 
   get api() {
     return this.editorState.api;
   }
 
   getPartials(
-    callback?: (devices: Record<string, GrowPartialData>) => void,
+    callback?: (devices: Record<string, PartialData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Record<string, GrowPartialData> | undefined {
+  ): Record<string, PartialData> | undefined {
     const promiseKey = 'getPartials';
     if (this.promises[promiseKey]) {
       return;
@@ -23,7 +23,7 @@ export class GrowState extends BaseProjectTypeState {
 
         delete this.promises[promiseKey];
         if (callback) {
-          callback(this.partials || []);
+          callback(this.partials || {});
         }
         this.triggerListener(promiseKey, this.partials);
         this.render();

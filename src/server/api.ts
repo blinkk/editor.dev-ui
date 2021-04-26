@@ -13,6 +13,8 @@ import {
 import {GrowApi} from '../projectType/grow/growApi';
 import bent from 'bent';
 
+const DEFAULT_LOCAL_PORT = 9090;
+
 const postJSON = bent('json', 'POST');
 
 export interface ServerApiComponent {
@@ -229,6 +231,9 @@ export class LocalServerApi extends ServerApi {
   }
 
   get baseUrl() {
+    if (this.port === DEFAULT_LOCAL_PORT) {
+      return '/local/';
+    }
     return `/local/${this.port}/`;
   }
 

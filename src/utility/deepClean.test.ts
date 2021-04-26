@@ -1,6 +1,27 @@
 import {DeepClean} from './deepClean';
 import test from 'ava';
 
+test('protected key patterns', t => {
+  const cleaner = new DeepClean({
+    protectedKeyPatterns: ['foo', 'bar.*', /baz$/],
+    removeNulls: true,
+  });
+
+  t.deepEqual(
+    cleaner.clean({
+      clean: null,
+      foo: null,
+      barz: null,
+      lubaz: null,
+    }),
+    {
+      foo: null,
+      barz: null,
+      lubaz: null,
+    }
+  );
+});
+
 test('remove empty arrays', t => {
   const cleaner = new DeepClean({
     removeEmptyArrays: true,

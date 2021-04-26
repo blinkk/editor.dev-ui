@@ -12,7 +12,7 @@ export class AmagakiApi implements AmagakiProjectTypeApi {
 
   async getPartials(): Promise<Record<string, AmagakiPartialData>> {
     return postJSON(
-      this.api.resolveApiUrl('/grow/partials.get'),
+      this.api.resolveApiUrl('/amagaki/partials.get'),
       this.api.expandParams({})
     ) as Promise<Record<string, AmagakiPartialData>>;
   }

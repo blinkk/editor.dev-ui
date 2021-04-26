@@ -1339,7 +1339,7 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
             editor: {
               fields: [],
             },
-          } as GrowPartialData,
+          } as AmagakiPartialData,
         });
       }
     );

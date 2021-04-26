@@ -141,11 +141,11 @@ export interface LiveEditorApiComponent {
 }
 
 export interface AmagakiProjectTypeApi {
-  getPartials(): Promise<Record<string, AmagakiPartialData>>;
+  getPartials(): Promise<Record<string, PartialData>>;
 }
 
 export interface GrowProjectTypeApi {
-  getPartials(): Promise<Record<string, GrowPartialData>>;
+  getPartials(): Promise<Record<string, PartialData>>;
 }
 
 export interface ApiProjectTypes {
@@ -316,12 +316,7 @@ export interface FileData {
   url?: string | null;
 }
 
-export interface AmagakiPartialData {
-  partial: string;
-  editor?: PartialEditorConfig;
-}
-
-export interface GrowPartialData {
+export interface PartialData {
   partial: string;
   editor?: PartialEditorConfig;
 }

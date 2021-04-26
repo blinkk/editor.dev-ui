@@ -1,4 +1,4 @@
-import {GrowPartialData, GrowProjectTypeApi} from '../../editor/api';
+import {GrowProjectTypeApi, PartialData} from '../../editor/api';
 import {ServerApiComponent} from '../../server/api';
 import bent from 'bent';
 
@@ -10,10 +10,10 @@ export class GrowApi implements GrowProjectTypeApi {
     this.api = api;
   }
 
-  async getPartials(): Promise<Record<string, GrowPartialData>> {
+  async getPartials(): Promise<Record<string, PartialData>> {
     return postJSON(
       this.api.resolveApiUrl('/grow/partials.get'),
       this.api.expandParams({})
-    ) as Promise<Record<string, GrowPartialData>>;
+    ) as Promise<Record<string, PartialData>>;
   }
 }

@@ -1,6 +1,7 @@
 import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 
 export interface DeepCleanConfig {
+  protectedKeyPatterns?: Array<string | RegExp>;
   removeEmptyArrays?: boolean;
   removeEmptyObjects?: boolean;
   removeEmptyStrings?: boolean;
@@ -16,6 +17,14 @@ export class DeepClean {
 
   constructor(config: DeepCleanConfig) {
     this.config = config;
+
+    // Convert non-regex protected into regex.
+    const patterns = this.config.protectedKeyPatterns || [];
+    for (let i = 0; i < patterns.length; i++) {
+      if (DataType.isString(patterns[i])) {
+        patterns[i] = new RegExp(patterns[i]);
+      }
+    }
   }
 
   clean(value: CleanableType): CleanableType {
@@ -65,6 +74,11 @@ export class DeepClean {
 
     // eslint-disable-next-line prefer-const
     for (let [key, value] of Object.entries(originalValue)) {
+      if (this.isProtectedKey(key)) {
+        newValue[key] = value;
+        continue;
+      }
+
       if (removeKeys.includes(key)) {
         continue;
       }
@@ -95,5 +109,14 @@ export class DeepClean {
     }
 
     return newValue;
+  }
+
+  isProtectedKey(key: string): boolean {
+    for (const pattern of this.config.protectedKeyPatterns || []) {
+      if ((pattern as RegExp).test(key)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

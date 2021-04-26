@@ -1,4 +1,6 @@
 import {
+  AmagakiPartialData,
+  AmagakiProjectTypeApi,
   ApiError,
   ApiProjectTypes,
   DeviceData,
@@ -873,6 +875,7 @@ export class ExampleApi implements LiveEditorApiComponent {
     this.errorController = new ErrorController();
     this.workflow = WorkspaceWorkflow.Success;
     this.projectTypes = {
+      amagaki: new ExampleAmagakiApi(this.errorController),
       grow: new ExampleGrowApi(this.errorController),
     };
   }
@@ -1306,6 +1309,40 @@ export class ExampleApi implements LiveEditorApiComponent {
         url: 'image-portrait.png',
       } as FileData);
     });
+  }
+}
+
+export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
+  errorController: ErrorController;
+
+  constructor(errorController: ErrorController) {
+    this.errorController = errorController;
+  }
+
+  async getPartials(): Promise<Record<string, AmagakiPartialData>> {
+    return new Promise<Record<string, AmagakiPartialData>>(
+      (resolve, reject) => {
+        const methodName = 'getPartials';
+        console.log(`Amagaki API: ${methodName}`);
+
+        if (this.errorController.shouldError(methodName)) {
+          reject({
+            message: 'Failed to get the partials.',
+            description: 'Api is set to always return an error.',
+          } as ApiError);
+          return;
+        }
+
+        simulateNetwork(resolve, {
+          example: {
+            partial: 'example',
+            editor: {
+              fields: [],
+            },
+          } as GrowPartialData,
+        });
+      }
+    );
   }
 }
 

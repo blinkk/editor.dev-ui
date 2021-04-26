@@ -23,7 +23,7 @@ export class GrowState extends BaseProjectTypeState {
 
         delete this.promises[promiseKey];
         if (callback) {
-          callback(this.partials || []);
+          callback(this.partials || {});
         }
         this.triggerListener(promiseKey, this.partials);
         this.render();

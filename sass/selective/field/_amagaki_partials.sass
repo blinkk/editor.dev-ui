@@ -1,0 +1,38 @@
+.selective__field__type__grow_partials
+  > .selective__field__header
+    align-items: center
+    display: flex
+    flex-flow: row-reverse
+
+    .selective__field__label
+      flex-grow: 1
+      margin: $le-space-small 0
+
+  > .selective__field__input__structure
+    > .selective__list
+      > .selective__list__item
+        &:focus-within
+          border-color: $le-color-border-dark
+
+        > .selective__list__fields__header > .selective__list__item__preview,
+        > .selective__list__item__preview
+          span
+            margin-left: $le-space-small
+            font-size: $le-font-size-small
+
+            &::after
+              content: ')'
+            &::before
+              content: '('
+
+  > .selective__field__footer
+    margin-top: $le-space-small
+
+    button
+      +button
+      +button-outline
+      +button-primary-invert
+
+    .selective__action--add
+      +field-action-icon
+      +field-action-add-primary

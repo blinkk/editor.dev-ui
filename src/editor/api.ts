@@ -140,11 +140,16 @@ export interface LiveEditorApiComponent {
   uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
 }
 
+export interface AmagakiProjectTypeApi {
+  getPartials(): Promise<Record<string, AmagakiPartialData>>;
+}
+
 export interface GrowProjectTypeApi {
   getPartials(): Promise<Record<string, GrowPartialData>>;
 }
 
 export interface ApiProjectTypes {
+  amagaki: AmagakiProjectTypeApi;
   grow: GrowProjectTypeApi;
 }
 
@@ -311,15 +316,20 @@ export interface FileData {
   url?: string | null;
 }
 
+export interface AmagakiPartialData {
+  partial: string;
+  editor?: PartialEditorConfig;
+}
+
 export interface GrowPartialData {
   partial: string;
-  editor?: GrowPartialEditorConfig;
+  editor?: PartialEditorConfig;
 }
 
 /**
  * Configuration for rendering the file editor.
  */
-export interface GrowPartialEditorConfig {
+export interface PartialEditorConfig {
   /**
    * Partial label.
    */

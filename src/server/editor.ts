@@ -150,11 +150,10 @@ const startEditor = (
 
 let editor: LiveEditor | undefined = undefined;
 
-// TODO: Determine which fields to load based on api call.
-// TODO: Reload the fields with an updated config. ex: grow fields.
-
 if (isLocal) {
-  const localStatus = new LocalStatus(container);
+  const localStatus = new LocalStatus(container, {
+    port: localPort,
+  });
 
   // Test the local api to make sure that it is available before
   // we start rendering the editor. Otherwise show instructions for
@@ -178,7 +177,7 @@ if (isLocal) {
         console.error('Unable to ping the api.', err);
         try {
           localStatus.render();
-          setTimeout(pingApi, 5000);
+          setTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.
         }

@@ -31,6 +31,7 @@ import {LocalStatus} from './local';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
+import {rafTimeout} from '../utility/rafTimeout';
 
 const projectId = document.body.dataset.projectId;
 
@@ -158,7 +159,11 @@ if (isLocal) {
   // Test the local api to make sure that it is available before
   // we start rendering the editor. Otherwise show instructions for
   // starting the local server.
+  let lastPing = new Date().getTime();
   const pingApi = () => {
+    console.log('ping:', new Date().getTime() - lastPing);
+    lastPing = new Date().getTime();
+
     (api as LocalServerApi)
       .ping()
       .then(pingResponse => {
@@ -177,7 +182,7 @@ if (isLocal) {
         console.error('Unable to ping the api.', err);
         try {
           localStatus.render();
-          setTimeout(pingApi, 2500);
+          rafTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.
         }

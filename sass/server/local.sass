@@ -5,6 +5,9 @@
   margin: $le-space-medium auto
   max-width: $le-space-xxxxlarge
 
+  code
+    font-family: $le-font-family-mono
+
   pre
     background: $le-color-tertiary
     border: $le-border-size-medium solid $le-color-border-dark
@@ -12,6 +15,28 @@
     color: $le-color-on-tertiary
     line-height: $le-line-height-paragraph
     padding: $le-space-medium
+
+.le__local__command__input
+  &::after
+    content: " copied"
+    font-size: $le-font-size-small
+    font-weight: 400
+    opacity: 0
+    transition: opacity $le-speed-xxslow
+  &--copied
+    &::after
+      opacity: 1
+
+.le__local__command
+  background: transparent
+  border: none
+  font-weight: 700
+  margin-top: $le-space-small
+  padding: 0
+  width: auto
+
+  &:focus
+    outline: none
 
 .le__local__version
   color: $le-color-secondary

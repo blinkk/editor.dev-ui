@@ -32,9 +32,10 @@ export class LocalStatus {
       <div class="le__local">
         <h2>Local editor not found</h2>
         <p>To use the editor with a local project run the following command in the main directory of your local project:</p>
-        <p><pre><code>npx @blinkk/editor.dev ${
-          this.isNonDefaultPort ? `--port ${this.options?.port}` : ''
-        }</code></pre></p>
+        <p><pre><code><span class="le__local__version"># Requires Node.js >= 14</span>
+npx @blinkk/editor.dev ${
+      this.isNonDefaultPort ? `--port ${this.options?.port}` : ''
+    }</code></pre></p>
       </div>
     </div>`;
   }

@@ -96,5 +96,8 @@ export class GrowDocumentField extends ConstructorField {
     this.autoCompleteUi.items = documentFiles.map(
       value => new AutoCompleteUIItem(value.path, value.path)
     );
+
+    // TODO: Validate the field to ensure that the document is
+    // one of the available documents.
   }
 }

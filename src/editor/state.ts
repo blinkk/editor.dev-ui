@@ -252,7 +252,7 @@ export class EditorState extends ListenersMixin(Base) {
         if (callback) {
           callback(data);
         }
-        this.triggerListener(promiseKey);
+        this.triggerListener(promiseKey, data);
         this.render();
       })
       .catch(error => catchError(error, callbackError));

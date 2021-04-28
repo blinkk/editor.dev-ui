@@ -159,11 +159,7 @@ if (isLocal) {
   // Test the local api to make sure that it is available before
   // we start rendering the editor. Otherwise show instructions for
   // starting the local server.
-  let lastPing = new Date().getTime();
   const pingApi = () => {
-    console.log('ping:', new Date().getTime() - lastPing);
-    lastPing = new Date().getTime();
-
     (api as LocalServerApi)
       .ping()
       .then(pingResponse => {

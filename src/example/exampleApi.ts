@@ -35,6 +35,7 @@ import {
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
 import {GrowDocumentConfig} from '../projectType/grow/field/document';
+import {GrowStaticConfig} from '../projectType/grow/field/static';
 import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
@@ -761,15 +762,15 @@ const fullFiles: Record<string, EditorFileData> = {
   '/example/grow/constructor.yaml': {
     editor: {
       fields: [
-        // Grow constructor example.
+        // Grow constructor examples.
         {
           type: 'exampleField',
-          key: 'constructor',
+          key: 'document',
           docUrls: [
             {
               label: 'Config interface',
               url:
-                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
             },
           ],
           field: {
@@ -783,6 +784,28 @@ const fullFiles: Record<string, EditorFileData> = {
               },
             ],
           } as GrowDocumentConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'static',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_static.growstaticconfig.html',
+            },
+          ],
+          field: {
+            type: 'growStatic',
+            key: 'static',
+            label: 'Grow static',
+            validation: [
+              {
+                type: 'require',
+                message: 'Static file is required.',
+              },
+            ],
+          } as GrowStaticConfig,
         } as ExampleFieldConfig,
       ],
     },
@@ -798,8 +821,25 @@ const currentFileset: Array<FileData> = [
     path: '/content/pages/index.yaml',
   },
   {
+    path: '/content/pages/index.png',
+  },
+  {
+    path: '/content/pages/about.md',
+  },
+  {
+    path: '/content/pages/contact.yaml',
+  },
+  {
+    path: '/static/img/landscape.png',
+    url: 'image-landscape.png',
+  },
+  {
     path: '/static/img/portrait.png',
     url: 'image-portrait.png',
+  },
+  {
+    path: '/static/img/square.png',
+    url: 'image-square.png',
   },
 ];
 

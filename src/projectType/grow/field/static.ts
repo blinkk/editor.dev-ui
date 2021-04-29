@@ -11,23 +11,21 @@ import {FileData} from '../../../editor/api';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 import {Types} from '@blinkk/selective-edit';
 
-const VALID_DOC_EXTS = ['yaml', 'md', 'html'];
-
-export interface GrowDocumentConfig extends ConstructorConfig {
+export interface GrowStaticConfig extends ConstructorConfig {
   /**
    * Filter to apply for the file list.
    */
   filter?: IncludeExcludeFilterConfig;
 }
 
-export class GrowDocumentField extends ConstructorField {
-  config: GrowDocumentConfig;
+export class GrowStaticField extends ConstructorField {
+  config: GrowStaticConfig;
   filter: IncludeExcludeFilter;
   globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
-    config: GrowDocumentConfig,
+    config: GrowStaticConfig,
     globalConfig: LiveEditorGlobalConfig,
     fieldType = 'document'
   ) {
@@ -61,12 +59,12 @@ export class GrowDocumentField extends ConstructorField {
     // Default filtering for the field.
     this.filter = new IncludeExcludeFilter({
       includes: [
-        // Needs to be in `/content/` directory with a valid ext.
-        `^/content/.*(${VALID_DOC_EXTS.join('|')})$`,
+        // Needs to be in a `/static/` directory.
+        /\/static\//,
       ],
       excludes: [
         // Ignore files starting with a period or underscore.
-        /\/[._][^/]+$/,
+        /\/[._][^\/]+$/,
       ],
     });
   }
@@ -91,12 +89,12 @@ export class GrowDocumentField extends ConstructorField {
     }
   }
 
-  updateItems(documentFiles: Array<FileData>) {
-    this.autoCompleteUi.items = documentFiles.map(
+  updateItems(filteredFiles: Array<FileData>) {
+    this.autoCompleteUi.items = filteredFiles.map(
       value => new AutoCompleteUIItem(value.path, value.path)
     );
 
-    // TODO: Validate the field to ensure that the document is
-    // one of the available documents.
+    // TODO: Validate the field to ensure that the static is
+    // one of the available static files.
   }
 }

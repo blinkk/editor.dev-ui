@@ -23,7 +23,7 @@ test('selectively replace strings', async t => {
   t.deepEqual(
     await walker.walk(
       {
-        foo: ['bar'],
+        foo: ['bar', ['bub'], {eeb: 'loo'}],
         test: {
           floo: 'baz',
           bab: ['tar'],
@@ -37,7 +37,7 @@ test('selectively replace strings', async t => {
       transformValue
     ),
     {
-      foo: ['foobar'],
+      foo: ['foobar', ['foobub'], {eeb: 'fooloo'}],
       test: {
         floo: 'foobaz',
         bab: ['footar'],
@@ -154,7 +154,7 @@ test('selectively replace strings sync', t => {
   t.deepEqual(
     walker.walkSync(
       {
-        foo: ['bar'],
+        foo: ['bar', ['bub'], {eeb: 'loo'}],
         test: {
           floo: 'baz',
           bab: ['tar'],
@@ -168,7 +168,7 @@ test('selectively replace strings sync', t => {
       transformValue
     ),
     {
-      foo: ['foobar'],
+      foo: ['foobar', ['foobub'], {eeb: 'fooloo'}],
       test: {
         floo: 'foobaz',
         bab: ['footar'],

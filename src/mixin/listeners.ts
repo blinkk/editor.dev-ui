@@ -1,7 +1,13 @@
 import {Constructor} from '@blinkk/selective-edit/dist/src/mixins';
 
+export interface ListenersMixinComponent {
+  addListener(eventName: string, callback: (...args: any) => void): void;
+  listeners: Record<string, Array<(...args: any) => void>>;
+  triggerListener(eventName: string, ...args: any): void;
+}
+
 export function ListenersMixin<TBase extends Constructor>(Base: TBase) {
-  return class ListenersClass extends Base {
+  return class ListenersClass extends Base implements ListenersMixinComponent {
     _listeners?: Record<string, Array<(...args: any) => void>>;
 
     /**

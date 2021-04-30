@@ -31,6 +31,7 @@ import {LocalStatus} from './local';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
+import {rafTimeout} from '../utility/rafTimeout';
 
 const projectId = document.body.dataset.projectId;
 
@@ -177,7 +178,7 @@ if (isLocal) {
         console.error('Unable to ping the api.', err);
         try {
           localStatus.render();
-          setTimeout(pingApi, 2500);
+          rafTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.
         }

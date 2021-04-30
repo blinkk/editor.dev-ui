@@ -1,4 +1,3 @@
-import * as yaml from 'js-yaml';
 import {
   DeepObject,
   Field,
@@ -13,6 +12,7 @@ import {
 } from '@blinkk/selective-edit';
 import {DeepClean} from '../../utility/deepClean';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
+import yaml from 'js-yaml';
 
 export interface ExampleFieldUrl {
   label: string;
@@ -107,7 +107,12 @@ export class ExampleFieldField extends Field {
             yaml.dump(
               replaceProjectType(
                 this.cleaner.clean(this.config.field) as FieldConfig
-              )
+              ),
+              {
+                noArrayIndent: true,
+                noCompatMode: true,
+                sortKeys: true,
+              }
             )
           )
         )}</code></pre>

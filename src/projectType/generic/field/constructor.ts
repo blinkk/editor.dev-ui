@@ -9,30 +9,31 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
+import {AutoCompleteMixin} from '../../../mixin/autocomplete';
 import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/validation';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 
-export interface GrowConstructorConfig extends FieldConfig {
+export interface ConstructorConfig extends FieldConfig {
   /**
    * Placeholder for the text input.
    */
   placeholder?: string;
 }
 
-export interface GrowConstructorComponent extends FieldComponent {
-  config: GrowConstructorConfig;
+export interface ConstructorComponent extends FieldComponent {
+  config: ConstructorConfig;
 }
 
-export class GrowConstructorField
-  extends Field
-  implements GrowConstructorComponent {
-  config: GrowConstructorConfig;
+export class ConstructorField
+  extends AutoCompleteMixin(Field)
+  implements ConstructorComponent {
+  config: ConstructorConfig;
   tag: string;
   globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
-    config: GrowConstructorConfig,
+    config: ConstructorConfig,
     globalConfig: LiveEditorGlobalConfig,
     fieldType = 'constructor'
   ) {
@@ -45,6 +46,12 @@ export class GrowConstructorField
     // having to have a complex validation structure in the config.
     this.zoneToKey = {};
     this.zoneToKey[DEFAULT_ZONE_KEY] = 'value';
+
+    // Update the value for the field when an autocomplete value is selected.
+    this.autoCompleteUi.addListener('select', value => {
+      this.setCurrentValue(value);
+      this.render();
+    });
   }
 
   /**
@@ -55,29 +62,50 @@ export class GrowConstructorField
   handleInput(evt: Event) {
     const target = evt.target as HTMLInputElement;
 
-    if (target.value.trim() === '') {
+    this.setCurrentValue(target.value);
+
+    // Refresh the filter list options when the value has changed.
+    this.autoCompleteUi.filter(target.value);
+
+    this.render();
+  }
+
+  setCurrentValue(value: string) {
+    if (value.trim() === '') {
       this.currentValue = null;
     } else {
       this.currentValue = {
         tag: this.tag,
-        value: target.value,
+        value: value,
       };
     }
-    this.render();
   }
 
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
-    const value = this.currentValue || '';
+    const value = this.currentValue || {};
 
     return html`${this.templateHelp(editor, data)}
       <div class=${classMap(this.classesForInput())}>
         <input
+          aria-autocomplete="list"
+          aria-expanded="false"
+          autocapitalize="none"
+          autocomplete="off"
+          role="combobox"
           type="text"
           id="${this.uid}"
           placeholder=${this.config.placeholder || ''}
           @input=${this.handleInput.bind(this)}
-          value=${value}
+          @focus=${this.autoCompleteUi.handleFocus.bind(this.autoCompleteUi)}
+          @keydown=${this.autoCompleteUi.handleInputKeyDown.bind(
+            this.autoCompleteUi
+          )}
+          @keyup=${this.autoCompleteUi.handleInputKeyUp.bind(
+            this.autoCompleteUi
+          )}
+          .value=${value.value || ''}
         />
+        ${this.autoCompleteUi.templateList(editor)}
       </div>
       ${this.templateErrors(editor, data)}`;
   }

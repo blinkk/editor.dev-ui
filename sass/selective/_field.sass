@@ -180,6 +180,11 @@
   textarea
     line-height: $le-line-height-paragraph
 
+  &--row
+    align-items: center
+    display: flex
+    flex-flow: row
+
   &--error
     color: $le-color-extreme
 
@@ -236,6 +241,7 @@
 @import './field/variant'
 
 // Generic/shared fields.
+@import './field/generic_constructor'
 @import './field/generic_partials'
 
 // Amagaki project type fields.

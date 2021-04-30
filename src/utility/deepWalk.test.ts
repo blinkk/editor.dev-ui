@@ -26,6 +26,10 @@ test('selectively replace strings', async t => {
         foo: ['bar'],
         test: {
           floo: 'baz',
+          bab: ['tar'],
+          subtest: {
+            hub: 'web',
+          },
         },
         bar: 1,
         baz: 'boo',
@@ -36,6 +40,10 @@ test('selectively replace strings', async t => {
       foo: ['foobar'],
       test: {
         floo: 'foobaz',
+        bab: ['footar'],
+        subtest: {
+          hub: 'fooweb',
+        },
       },
       bar: 1,
       baz: 'fooboo',
@@ -149,6 +157,10 @@ test('selectively replace strings sync', t => {
         foo: ['bar'],
         test: {
           floo: 'baz',
+          bab: ['tar'],
+          subtest: {
+            hub: 'web',
+          },
         },
         bar: 1,
         baz: 'boo',
@@ -159,6 +171,10 @@ test('selectively replace strings sync', t => {
       foo: ['foobar'],
       test: {
         floo: 'foobaz',
+        bab: ['footar'],
+        subtest: {
+          hub: 'fooweb',
+        },
       },
       bar: 1,
       baz: 'fooboo',

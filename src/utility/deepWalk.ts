@@ -6,32 +6,7 @@ export interface DeepWalkConfig {}
 export type WalkableType = Record<string, any> | Array<any>;
 
 export type TransformFunction = (value: any) => Promise<any>;
-export type TransformArrayFunction = (
-  originalValue: Array<any>,
-  transformValue: TransformFunction,
-  transformArray: TransformArrayFunction,
-  transformRecord: TransformRecordFunction
-) => Promise<Array<any>>;
-export type TransformRecordFunction = (
-  originalValue: Record<string, any>,
-  transformValue: TransformFunction,
-  transformArray: TransformArrayFunction,
-  transformRecord: TransformRecordFunction
-) => Promise<Record<string, any>>;
-
 export type TransformFunctionSync = (value: any) => any;
-export type TransformArrayFunctionSync = (
-  originalValue: Array<any>,
-  transformValue: TransformFunctionSync,
-  transformArray: TransformArrayFunctionSync,
-  transformRecord: TransformRecordFunctionSync
-) => Array<any>;
-export type TransformRecordFunctionSync = (
-  originalValue: Record<string, any>,
-  transformValue: TransformFunctionSync,
-  transformArray: TransformArrayFunctionSync,
-  transformRecord: TransformRecordFunctionSync
-) => Record<string, any>;
 
 export class DeepWalk {
   config: DeepWalkConfig;
@@ -42,86 +17,35 @@ export class DeepWalk {
 
   async walk(
     value: WalkableType,
-    transformValue: TransformFunction,
-    transformArray?: TransformArrayFunction,
-    transformRecord?: TransformRecordFunction
+    transformValue: TransformFunction
   ): Promise<WalkableType> {
-    if (!transformArray) {
-      transformArray = this.walkArray;
-    }
-    if (!transformRecord) {
-      transformRecord = this.walkRecord;
-    }
-
     if (DataType.isArray(value)) {
-      return await transformArray(
-        value as Array<any>,
-        transformValue,
-        transformArray,
-        transformRecord
-      );
+      return await this.walkArray(value as Array<any>, transformValue);
     }
-    return await transformRecord(
-      value as Record<string, any>,
-      transformValue,
-      transformArray,
-      transformRecord
-    );
+    return await this.walkRecord(value as Record<string, any>, transformValue);
   }
 
   walkSync(
     value: WalkableType,
-    transformValue: TransformFunctionSync,
-    transformArray?: TransformArrayFunctionSync,
-    transformRecord?: TransformRecordFunctionSync
+    transformValue: TransformFunctionSync
   ): WalkableType {
-    if (!transformArray) {
-      transformArray = this.walkArraySync;
-    }
-    if (!transformRecord) {
-      transformRecord = this.walkRecordSync;
-    }
-
     if (DataType.isArray(value)) {
-      return transformArray(
-        value as Array<any>,
-        transformValue,
-        transformArray,
-        transformRecord
-      );
+      return this.walkArraySync(value as Array<any>, transformValue);
     }
-    return transformRecord(
-      value as Record<string, any>,
-      transformValue,
-      transformArray,
-      transformRecord
-    );
+    return this.walkRecordSync(value as Record<string, any>, transformValue);
   }
 
   protected async walkArray(
     originalValue: Array<any>,
-    transformValue: TransformFunction,
-    transformArray: TransformArrayFunction,
-    transformRecord: TransformRecordFunction
+    transformValue: TransformFunction
   ): Promise<Array<any>> {
     const newValue: Array<any> = [];
-
     for (let value of originalValue) {
       if (DataType.isObject(value)) {
         // Clean in depth before testing for walking.
-        value = await transformRecord(
-          value,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = await this.walkRecord(value, transformValue);
       } else if (DataType.isArray(value)) {
-        value = await transformArray(
-          value as Array<any>,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = await this.walkArray(value as Array<any>, transformValue);
       } else {
         value = await transformValue(value);
       }
@@ -133,28 +57,15 @@ export class DeepWalk {
 
   protected walkArraySync(
     originalValue: Array<any>,
-    transformValue: TransformFunctionSync,
-    transformArray: TransformArrayFunctionSync,
-    transformRecord: TransformRecordFunctionSync
+    transformValue: TransformFunctionSync
   ): Array<any> {
     const newValue: Array<any> = [];
-
     for (let value of originalValue) {
       if (DataType.isObject(value)) {
         // Clean in depth before testing for walking.
-        value = transformRecord(
-          value,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = this.walkRecordSync(value, transformValue);
       } else if (DataType.isArray(value)) {
-        value = transformArray(
-          value as Array<any>,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = this.walkArraySync(value as Array<any>, transformValue);
       } else {
         value = transformValue(value);
       }
@@ -165,29 +76,16 @@ export class DeepWalk {
 
   protected async walkRecord(
     originalValue: Record<string, any>,
-    transformValue: TransformFunction,
-    transformArray: TransformArrayFunction,
-    transformRecord: TransformRecordFunction
+    transformValue: TransformFunction
   ): Promise<Record<string, any>> {
     const newValue: Record<string, any> = {};
-
     // eslint-disable-next-line prefer-const
     for (let [key, value] of Object.entries(originalValue)) {
       if (DataType.isObject(value)) {
         // Clean in depth before testing for walking.
-        value = await transformRecord(
-          value,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = await this.walkRecord(value, transformValue);
       } else if (DataType.isArray(value)) {
-        value = await transformArray(
-          value as Array<any>,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = await this.walkArray(value as Array<any>, transformValue);
       } else {
         value = await transformValue(value);
       }
@@ -198,29 +96,16 @@ export class DeepWalk {
 
   protected walkRecordSync(
     originalValue: Record<string, any>,
-    transformValue: TransformFunctionSync,
-    transformArray: TransformArrayFunctionSync,
-    transformRecord: TransformRecordFunctionSync
+    transformValue: TransformFunctionSync
   ): Record<string, any> {
     const newValue: Record<string, any> = {};
-
     // eslint-disable-next-line prefer-const
     for (let [key, value] of Object.entries(originalValue)) {
       if (DataType.isObject(value)) {
         // Clean in depth before testing for walking.
-        value = transformRecord(
-          value,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = this.walkRecordSync(value, transformValue);
       } else if (DataType.isArray(value)) {
-        value = transformArray(
-          value as Array<any>,
-          transformValue,
-          transformArray,
-          transformRecord
-        );
+        value = this.walkArraySync(value as Array<any>, transformValue);
       } else {
         value = transformValue(value);
       }

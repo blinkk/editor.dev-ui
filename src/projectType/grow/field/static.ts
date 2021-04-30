@@ -32,7 +32,7 @@ export class GrowStaticField extends ConstructorField {
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.tag = '!g.doc';
+    this.type = 'g.static';
     this.filter = new IncludeExcludeFilter({});
 
     this.initFilter();

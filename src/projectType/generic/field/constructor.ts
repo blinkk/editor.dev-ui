@@ -11,6 +11,7 @@ import {
 } from '@blinkk/selective-edit';
 import {AutoCompleteMixin} from '../../../mixin/autocomplete';
 import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/validation';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 
 export interface ConstructorConfig extends FieldConfig {
@@ -28,7 +29,7 @@ export class ConstructorField
   extends AutoCompleteMixin(Field)
   implements ConstructorComponent {
   config: ConstructorConfig;
-  tag: string;
+  type: string;
   globalConfig: LiveEditorGlobalConfig;
 
   constructor(
@@ -40,7 +41,7 @@ export class ConstructorField
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.tag = 'g.constructor';
+    this.type = 'constructor';
 
     // Workaround to validate the constructor value without
     // having to have a complex validation structure in the config.
@@ -75,10 +76,24 @@ export class ConstructorField
       this.currentValue = null;
     } else {
       this.currentValue = {
-        tag: this.tag,
-        value: value,
+        _type: this.type,
+        _data: value,
       };
     }
+
+    this.lock();
+
+    // Unlock after saving is complete to let the values be updated
+    // when clean.
+    // TODO: Automate this unlock without having to be done manually.
+    document.addEventListener(
+      EVENT_UNLOCK,
+      () => {
+        this.unlock();
+        this.render();
+      },
+      {once: true}
+    );
   }
 
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
@@ -103,7 +118,7 @@ export class ConstructorField
           @keyup=${this.autoCompleteUi.handleInputKeyUp.bind(
             this.autoCompleteUi
           )}
-          .value=${value.value || ''}
+          .value=${value._data || ''}
         />
         ${this.autoCompleteUi.templateList(editor)}
       </div>

@@ -10,7 +10,7 @@ import {
 import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 import test from 'ava';
 
-test('selectively replace strings', async t => {
+test('selectively replace strings in record', async t => {
   t.plan(1);
   const walker = new DeepWalk({});
   const transformValue = async (value: any) => {
@@ -48,6 +48,22 @@ test('selectively replace strings', async t => {
       bar: 1,
       baz: 'fooboo',
     }
+  );
+});
+
+test('selectively replace strings in array', async t => {
+  t.plan(1);
+  const walker = new DeepWalk({});
+  const transformValue = async (value: any) => {
+    if (DataType.isString(value)) {
+      return `foo${value}`;
+    }
+    return value;
+  };
+
+  t.deepEqual(
+    await walker.walk(['bar', ['bub'], {eeb: 'loo'}], transformValue),
+    ['foobar', ['foobub'], {eeb: 'fooloo'}]
   );
 });
 
@@ -141,7 +157,7 @@ test('selectively replace objects custom', async t => {
   );
 });
 
-test('selectively replace strings sync', t => {
+test('selectively replace strings in record sync', t => {
   t.plan(1);
   const walker = new DeepWalk({});
   const transformValue = (value: any) => {
@@ -180,6 +196,23 @@ test('selectively replace strings sync', t => {
       baz: 'fooboo',
     }
   );
+});
+
+test('selectively replace strings in array sync', t => {
+  t.plan(1);
+  const walker = new DeepWalk({});
+  const transformValue = (value: any) => {
+    if (DataType.isString(value)) {
+      return `foo${value}`;
+    }
+    return value;
+  };
+
+  t.deepEqual(walker.walkSync(['bar', ['bub'], {eeb: 'loo'}], transformValue), [
+    'foobar',
+    ['foobub'],
+    {eeb: 'fooloo'},
+  ]);
 });
 
 test('selectively replace array custom sync', t => {

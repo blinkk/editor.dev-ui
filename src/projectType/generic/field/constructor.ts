@@ -11,6 +11,7 @@ import {
 } from '@blinkk/selective-edit';
 import {AutoCompleteMixin} from '../../../mixin/autocomplete';
 import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/validation';
+import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 
@@ -25,10 +26,11 @@ export interface ConstructorComponent extends FieldComponent {
   config: ConstructorConfig;
 }
 
-export class ConstructorField
-  extends AutoCompleteMixin(Field)
-  implements ConstructorComponent {
+export class ConstructorField extends Field implements ConstructorComponent {
   config: ConstructorConfig;
+  /**
+   * Yaml type. ex: `constructor` => `!constructor`
+   */
   type: string;
   globalConfig: LiveEditorGlobalConfig;
 
@@ -47,6 +49,71 @@ export class ConstructorField
     // having to have a complex validation structure in the config.
     this.zoneToKey = {};
     this.zoneToKey[DEFAULT_ZONE_KEY] = 'value';
+  }
+
+  /**
+   * Handle when the input changes value.
+   *
+   * @param evt Input event from changing value.
+   */
+  handleInput(evt: Event) {
+    const target = evt.target as HTMLInputElement;
+    this.setCurrentValue(target.value);
+    this.render();
+  }
+
+  setCurrentValue(value: any) {
+    if (DataType.isString(value) && value.trim() === '') {
+      this.currentValue = null;
+    } else {
+      this.currentValue = {
+        _type: this.type,
+        _data: value,
+      };
+    }
+
+    this.lock();
+
+    // Unlock after saving is complete to let the values be updated
+    // when clean.
+    // TODO: Automate this unlock without having to be done manually.
+    document.addEventListener(
+      EVENT_UNLOCK,
+      () => {
+        this.unlock();
+        this.render();
+      },
+      {once: true}
+    );
+  }
+
+  templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
+    const value = this.currentValue || {};
+
+    return html`${this.templateHelp(editor, data)}
+      <div class=${classMap(this.classesForInput())}>
+        <input
+          type="text"
+          id="${this.uid}"
+          placeholder=${this.config.placeholder || ''}
+          @input=${this.handleInput.bind(this)}
+          .value=${value._data || ''}
+        />
+      </div>
+      ${this.templateErrors(editor, data)}`;
+  }
+}
+
+export class AutocompleteConstructorField
+  extends AutoCompleteMixin(ConstructorField)
+  implements ConstructorComponent {
+  constructor(
+    types: Types,
+    config: ConstructorConfig,
+    globalConfig: LiveEditorGlobalConfig,
+    fieldType = 'constructor'
+  ) {
+    super(types, config, globalConfig, fieldType);
 
     // Update the value for the field when an autocomplete value is selected.
     this.autoCompleteUi.addListener('select', value => {
@@ -69,31 +136,6 @@ export class ConstructorField
     this.autoCompleteUi.filter(target.value);
 
     this.render();
-  }
-
-  setCurrentValue(value: string) {
-    if (value.trim() === '') {
-      this.currentValue = null;
-    } else {
-      this.currentValue = {
-        _type: this.type,
-        _data: value,
-      };
-    }
-
-    this.lock();
-
-    // Unlock after saving is complete to let the values be updated
-    // when clean.
-    // TODO: Automate this unlock without having to be done manually.
-    document.addEventListener(
-      EVENT_UNLOCK,
-      () => {
-        this.unlock();
-        this.render();
-      },
-      {once: true}
-    );
   }
 
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {

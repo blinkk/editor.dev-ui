@@ -1,6 +1,6 @@
 import {
+  AutocompleteConstructorField,
   ConstructorConfig,
-  ConstructorField,
 } from '../../generic/field/constructor';
 import {
   IncludeExcludeFilter,
@@ -20,7 +20,7 @@ export interface GrowDocumentConfig extends ConstructorConfig {
   filter?: IncludeExcludeFilterConfig;
 }
 
-export class GrowDocumentField extends ConstructorField {
+export class GrowDocumentField extends AutocompleteConstructorField {
   config: GrowDocumentConfig;
   filter: IncludeExcludeFilter;
   globalConfig: LiveEditorGlobalConfig;

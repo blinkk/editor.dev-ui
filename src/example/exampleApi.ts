@@ -32,6 +32,8 @@ import {
   TimeFieldConfig,
   VariantFieldConfig,
 } from '@blinkk/selective-edit';
+import {AmagakiDocumentConfig} from '../projectType/amagaki/field/document';
+import {AmagakiStringConfig} from '../projectType/amagaki/field/string';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
 import {GrowDocumentConfig} from '../projectType/grow/field/document';
@@ -759,6 +761,57 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/amagaki/constructor.yaml': {
+    editor: {
+      fields: [
+        // Amagaki constructor examples.
+        {
+          type: 'exampleField',
+          key: 'document',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiDocument',
+            key: 'doc',
+            label: 'Amagaki document',
+            help: 'In yaml: !pod.document: <document path>',
+            validation: [
+              {
+                type: 'require',
+                message: 'Document is required.',
+              },
+            ],
+          } as AmagakiDocumentConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'string',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiString',
+            key: 'string',
+            label: 'Amagaki string',
+            help: 'In yaml: !pod.string: { value: "<string value>" }',
+          } as AmagakiStringConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/constructor.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/grow/constructor.yaml': {
     editor: {
       fields: [
@@ -777,6 +830,7 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'growDocument',
             key: 'doc',
             label: 'Grow document',
+            help: 'In yaml: !g.doc: <document path>',
             validation: [
               {
                 type: 'require',
@@ -799,6 +853,7 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'growStatic',
             key: 'static',
             label: 'Grow static',
+            help: 'In yaml: !g.static: <static file path>',
             validation: [
               {
                 type: 'require',

@@ -9,7 +9,7 @@ import {
 import {AutoCompleteUIItem} from '../../../mixin/autocomplete';
 import {FileData} from '../../../editor/api';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
-import {Types} from '@blinkk/selective-edit';
+import {MatchRuleConfig, RuleConfig, Types} from '@blinkk/selective-edit';
 
 const VALID_DOC_EXTS = ['yaml', 'md', 'html'];
 
@@ -89,6 +89,7 @@ export class GrowDocumentField extends AutocompleteConstructorField {
     if (this.globalConfig.state.files === undefined) {
       this.globalConfig.state.getFiles();
     }
+    this.render();
   }
 
   updateItems(documentFiles: Array<FileData>) {
@@ -96,7 +97,31 @@ export class GrowDocumentField extends AutocompleteConstructorField {
       value => new AutoCompleteUIItem(value.path, value.path)
     );
 
-    // TODO: Validate the field to ensure that the document is
+    this.config.validation = (this.config.validation ||
+      []) as Array<RuleConfig>;
+    const existingIndex = this.listItemValidationRule
+      ? this.config.validation.indexOf(this.listItemValidationRule)
+      : -1;
+
+    // Validate the field to ensure that the document is
     // one of the available documents.
+    this.listItemValidationRule = {
+      type: 'match',
+      allowed: {
+        message: 'Document path needs to be an existing file.',
+        values: documentFiles.map(value => value.path),
+      },
+    } as MatchRuleConfig;
+
+    if (existingIndex >= 0) {
+      // Replace the existing rule.
+      this.config.validation[existingIndex] = this.listItemValidationRule;
+    } else {
+      // Add as new rule.
+      this.config.validation.push(this.listItemValidationRule);
+    }
+
+    // Reset the rules
+    this._rules = undefined;
   }
 }

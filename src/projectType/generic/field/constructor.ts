@@ -3,6 +3,7 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
+  RuleConfig,
   SelectiveEditor,
   TemplateResult,
   Types,
@@ -108,6 +109,14 @@ export class ConstructorField extends Field implements ConstructorComponent {
 export class AutocompleteConstructorField
   extends AutoCompleteMixin(ConstructorField)
   implements ConstructorComponent {
+  /**
+   * When validating that the value needs to be part of list items
+   * keep track of the validation rule config. When the list items
+   * change the validation rule should be updated to have the correct
+   * options.
+   */
+  protected listItemValidationRule?: RuleConfig;
+
   constructor(
     types: Types,
     config: ConstructorConfig,

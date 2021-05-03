@@ -762,10 +762,10 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
-  '/example/amagaki/constructor.yaml': {
+  '/example/amagaki/document.yaml': {
     editor: {
       fields: [
-        // Amagaki constructor examples.
+        // Amagaki document examples.
         {
           type: 'exampleField',
           key: 'document',
@@ -789,6 +789,17 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as AmagakiDocumentConfig,
         } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/document.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/amagaki/static.yaml': {
+    editor: {
+      fields: [
+        // Amagaki static file examples.
         {
           type: 'exampleField',
           key: 'static',
@@ -806,6 +817,17 @@ const fullFiles: Record<string, EditorFileData> = {
             help: 'In yaml: !pod.staticFile: <static file path>',
           } as AmagakiStaticConfig,
         } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/static.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/amagaki/string.yaml': {
+    editor: {
+      fields: [
+        // Amagaki string examples.
         {
           type: 'exampleField',
           key: 'string',
@@ -826,14 +848,14 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/amagaki/constructor.yaml',
+      path: '/example/amagaki/string.yaml',
     },
     url: 'preview.html',
   },
-  '/example/grow/constructor.yaml': {
+  '/example/grow/document.yaml': {
     editor: {
       fields: [
-        // Grow constructor examples.
+        // Grow document examples.
         {
           type: 'exampleField',
           key: 'document',
@@ -857,6 +879,17 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as GrowDocumentConfig,
         } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/document.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/grow/static.yaml': {
+    editor: {
+      fields: [
+        // Grow static file examples.
         {
           type: 'exampleField',
           key: 'static',
@@ -883,7 +916,7 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/grow/constructor.yaml',
+      path: '/example/grow/static.yaml',
     },
     url: 'preview.html',
   },

@@ -3,6 +3,7 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
+  RuleConfig,
   SelectiveEditor,
   TemplateResult,
   Types,
@@ -28,6 +29,7 @@ export interface ExampleFieldConfig extends FieldConfig {
 export class ExampleFieldField extends Field {
   cleaner: DeepClean;
   config: ExampleFieldConfig;
+  originalFieldConfig: FieldConfig;
   field?: FieldComponent | null;
   isExpanded?: boolean;
 
@@ -39,6 +41,18 @@ export class ExampleFieldField extends Field {
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
+
+    // Copy the config to show the original before the field makes changes.
+    this.originalFieldConfig = Object.assign({}, config.field);
+
+    this.originalFieldConfig.validation = [
+      ...((this.originalFieldConfig.validation as Array<RuleConfig>) || []),
+    ];
+    console.log(
+      this.originalFieldConfig.validation,
+      this.config.field.validation
+    );
+
     this.cleaner = new DeepClean({
       removeKeys: (this.config.cleanerKeys || []).concat([
         'isGuessed',
@@ -106,7 +120,7 @@ export class ExampleFieldField extends Field {
           formatCodeSample(
             yaml.dump(
               replaceProjectType(
-                this.cleaner.clean(this.config.field) as FieldConfig
+                this.cleaner.clean(this.originalFieldConfig) as FieldConfig
               ),
               {
                 noArrayIndent: true,
@@ -135,6 +149,8 @@ export class ExampleFieldField extends Field {
 }
 
 function formatCodeSample(code: string): string {
+  code = code.replace(/\</g, '&lt;');
+  code = code.replace(/\>/g, '&gt;');
   const cleanLines: Array<string> = [];
   let indentLength = -1;
   for (const line of code.split('\n')) {

@@ -89,6 +89,7 @@ export class GrowDocumentField extends AutocompleteConstructorField {
     if (this.globalConfig.state.files === undefined) {
       this.globalConfig.state.getFiles();
     }
+    this.render();
   }
 
   updateItems(documentFiles: Array<FileData>) {
@@ -96,7 +97,9 @@ export class GrowDocumentField extends AutocompleteConstructorField {
       value => new AutoCompleteUIItem(value.path, value.path)
     );
 
-    // TODO: Validate the field to ensure that the document is
-    // one of the available documents.
+    this.updateValidation(
+      documentFiles.map(value => value.path),
+      'Document path needs to be an existing file.'
+    );
   }
 }

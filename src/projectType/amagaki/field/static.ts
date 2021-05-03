@@ -11,30 +11,28 @@ import {FileData} from '../../../editor/api';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 import {Types} from '@blinkk/selective-edit';
 
-const VALID_DOC_EXTS = ['yaml', 'md', 'html', 'njk'];
-
-export interface AmagakiDocumentConfig extends ConstructorConfig {
+export interface AmagakiStaticConfig extends ConstructorConfig {
   /**
    * Filter to apply for the file list.
    */
   filter?: IncludeExcludeFilterConfig;
 }
 
-export class AmagakiDocumentField extends AutocompleteConstructorField {
-  config: AmagakiDocumentConfig;
+export class AmagakiStaticField extends AutocompleteConstructorField {
+  config: AmagakiStaticConfig;
   filter: IncludeExcludeFilter;
   globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
-    config: AmagakiDocumentConfig,
+    config: AmagakiStaticConfig,
     globalConfig: LiveEditorGlobalConfig,
     fieldType = 'document'
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.type = 'pod.document';
+    this.type = 'pod.staticFile';
     this.filter = new IncludeExcludeFilter({});
 
     this.initFilter();
@@ -61,12 +59,12 @@ export class AmagakiDocumentField extends AutocompleteConstructorField {
     // Default filtering for the field.
     this.filter = new IncludeExcludeFilter({
       includes: [
-        // Needs to be in `/content/` directory with a valid ext.
-        `^/content/.*(${VALID_DOC_EXTS.join('|')})$`,
+        // Needs to be in a `/static/` directory.
+        /\/static\//,
       ],
       excludes: [
         // Ignore files starting with a period or underscore.
-        /\/[._][^/]+$/,
+        /\/[._][^\/]+$/,
       ],
     });
   }
@@ -91,14 +89,14 @@ export class AmagakiDocumentField extends AutocompleteConstructorField {
     }
   }
 
-  updateItems(documentFiles: Array<FileData>) {
-    this.autoCompleteUi.items = documentFiles.map(
+  updateItems(filteredFiles: Array<FileData>) {
+    this.autoCompleteUi.items = filteredFiles.map(
       value => new AutoCompleteUIItem(value.path, value.path)
     );
 
     this.updateValidation(
-      documentFiles.map(value => value.path),
-      'Document path needs to be an existing file.'
+      filteredFiles.map(value => value.path),
+      'Static file path needs to be an existing file.'
     );
   }
 }

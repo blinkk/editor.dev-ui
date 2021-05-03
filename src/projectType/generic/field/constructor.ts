@@ -3,6 +3,8 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
+  MatchRuleConfig,
+  RuleConfig,
   SelectiveEditor,
   TemplateResult,
   Types,
@@ -108,6 +110,14 @@ export class ConstructorField extends Field implements ConstructorComponent {
 export class AutocompleteConstructorField
   extends AutoCompleteMixin(ConstructorField)
   implements ConstructorComponent {
+  /**
+   * When validating that the value needs to be part of list items
+   * keep track of the validation rule config. When the list items
+   * change the validation rule should be updated to have the correct
+   * options.
+   */
+  protected listItemValidationRule?: RuleConfig;
+
   constructor(
     types: Types,
     config: ConstructorConfig,
@@ -166,5 +176,41 @@ export class AutocompleteConstructorField
         ${this.autoCompleteUi.templateList(editor)}
       </div>
       ${this.templateErrors(editor, data)}`;
+  }
+
+  /**
+   * When using the autocomplete, a field can require that the value be part of
+   * the available options to be valid.
+   *
+   * @param validValues Values that are valid for the field.
+   * @param errorMessage Error message shown when the value is not valid.
+   */
+  updateValidation(validValues: Array<string>, errorMessage: string) {
+    this.config.validation = (this.config.validation ||
+      []) as Array<RuleConfig>;
+    const existingIndex = this.listItemValidationRule
+      ? this.config.validation.indexOf(this.listItemValidationRule)
+      : -1;
+
+    // Validate the field to ensure that the document is
+    // one of the available documents.
+    this.listItemValidationRule = {
+      type: 'match',
+      allowed: {
+        message: errorMessage,
+        values: validValues,
+      },
+    } as MatchRuleConfig;
+
+    if (existingIndex >= 0) {
+      // Replace the existing rule.
+      this.config.validation[existingIndex] = this.listItemValidationRule;
+    } else {
+      // Add as new rule.
+      this.config.validation.push(this.listItemValidationRule);
+    }
+
+    // Reset the compiled rules.
+    this._rules = undefined;
   }
 }

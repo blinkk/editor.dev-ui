@@ -33,6 +33,7 @@ import {
   VariantFieldConfig,
 } from '@blinkk/selective-edit';
 import {AmagakiDocumentConfig} from '../projectType/amagaki/field/document';
+import {AmagakiStaticConfig} from '../projectType/amagaki/field/static';
 import {AmagakiStringConfig} from '../projectType/amagaki/field/string';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
@@ -761,10 +762,10 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
-  '/example/amagaki/constructor.yaml': {
+  '/example/amagaki/document.yaml': {
     editor: {
       fields: [
-        // Amagaki constructor examples.
+        // Amagaki document examples.
         {
           type: 'exampleField',
           key: 'document',
@@ -788,6 +789,45 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as AmagakiDocumentConfig,
         } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/document.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/amagaki/static.yaml': {
+    editor: {
+      fields: [
+        // Amagaki static file examples.
+        {
+          type: 'exampleField',
+          key: 'static',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiStatic',
+            key: 'doc',
+            label: 'Amagaki static file',
+            help: 'In yaml: !pod.staticFile: <static file path>',
+          } as AmagakiStaticConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/static.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/amagaki/string.yaml': {
+    editor: {
+      fields: [
+        // Amagaki string examples.
         {
           type: 'exampleField',
           key: 'string',
@@ -808,14 +848,14 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/amagaki/constructor.yaml',
+      path: '/example/amagaki/string.yaml',
     },
     url: 'preview.html',
   },
-  '/example/grow/constructor.yaml': {
+  '/example/grow/document.yaml': {
     editor: {
       fields: [
-        // Grow constructor examples.
+        // Grow document examples.
         {
           type: 'exampleField',
           key: 'document',
@@ -839,6 +879,17 @@ const fullFiles: Record<string, EditorFileData> = {
             ],
           } as GrowDocumentConfig,
         } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/document.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/grow/static.yaml': {
+    editor: {
+      fields: [
+        // Grow static file examples.
         {
           type: 'exampleField',
           key: 'static',
@@ -865,7 +916,7 @@ const fullFiles: Record<string, EditorFileData> = {
       ],
     },
     file: {
-      path: '/example/grow/constructor.yaml',
+      path: '/example/grow/static.yaml',
     },
     url: 'preview.html',
   },

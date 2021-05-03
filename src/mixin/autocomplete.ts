@@ -89,7 +89,7 @@ export class AutoCompleteUi
     if (!this.hasBoundDocument) {
       this.hasBoundDocument = true;
       document.addEventListener('click', (clickEvt: Event) => {
-        if (!this.container) {
+        if (!this.container || !this.isVisible) {
           return;
         }
 

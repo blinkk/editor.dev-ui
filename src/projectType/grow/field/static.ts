@@ -94,7 +94,9 @@ export class GrowStaticField extends AutocompleteConstructorField {
       value => new AutoCompleteUIItem(value.path, value.path)
     );
 
-    // TODO: Validate the field to ensure that the static is
-    // one of the available static files.
+    this.updateValidation(
+      filteredFiles.map(value => value.path),
+      'Static file path needs to be an existing file.'
+    );
   }
 }

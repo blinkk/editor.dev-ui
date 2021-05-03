@@ -3,7 +3,9 @@ name: 'Push to main'
 on:
   push:
     branches:
-      - main
+    - main
+    tags-ignore:
+    - *
 
 jobs:
   gh-pages:

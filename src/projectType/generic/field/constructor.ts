@@ -14,6 +14,7 @@ import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/valida
 import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
+import merge from 'lodash.merge';
 
 export interface ConstructorConfig extends FieldConfig {
   /**
@@ -48,7 +49,7 @@ export class ConstructorField extends Field implements ConstructorComponent {
     // Workaround to validate the constructor value without
     // having to have a complex validation structure in the config.
     this.zoneToKey = {};
-    this.zoneToKey[DEFAULT_ZONE_KEY] = 'value';
+    this.zoneToKey[DEFAULT_ZONE_KEY] = '_data';
   }
 
   /**
@@ -66,10 +67,10 @@ export class ConstructorField extends Field implements ConstructorComponent {
     if (DataType.isString(value) && value.trim() === '') {
       this.currentValue = null;
     } else {
-      this.currentValue = {
+      this.currentValue = merge({}, this.currentValue || {}, {
         _type: this.type,
         _data: value,
-      };
+      });
     }
 
     this.lock();

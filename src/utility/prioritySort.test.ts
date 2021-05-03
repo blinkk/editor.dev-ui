@@ -9,11 +9,13 @@ const outOfOrderKeys = [
   'partial',
   'label',
   'bar',
+  'bar', // Test duplicate key.
 ];
 
 test('sort without priority keys', t => {
   const compareSort = createPriorityKeySort([]);
   t.deepEqual([...outOfOrderKeys].sort(compareSort), [
+    'bar',
     'bar',
     'foo',
     'key',
@@ -30,6 +32,7 @@ test('sort with priority keys', t => {
     'partial',
     'title',
     'key',
+    'bar',
     'bar',
     'foo',
     'label',

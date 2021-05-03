@@ -13,6 +13,7 @@ import {
 } from '@blinkk/selective-edit';
 import {DeepClean} from '../../utility/deepClean';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
+import {createPriorityKeySort} from '../../utility/prioritySort';
 import yaml from 'js-yaml';
 
 export interface ExampleFieldUrl {
@@ -48,10 +49,9 @@ export class ExampleFieldField extends Field {
     this.originalFieldConfig.validation = [
       ...((this.originalFieldConfig.validation as Array<RuleConfig>) || []),
     ];
-    console.log(
-      this.originalFieldConfig.validation,
-      this.config.field.validation
-    );
+    if (!this.originalFieldConfig.validation.length) {
+      this.originalFieldConfig.validation = undefined;
+    }
 
     this.cleaner = new DeepClean({
       removeKeys: (this.config.cleanerKeys || []).concat([
@@ -125,7 +125,7 @@ export class ExampleFieldField extends Field {
               {
                 noArrayIndent: true,
                 noCompatMode: true,
-                sortKeys: true,
+                sortKeys: createPriorityKeySort(['type', 'key', 'label']),
               }
             )
           )

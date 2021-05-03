@@ -3,6 +3,7 @@ import {
   Field,
   FieldComponent,
   FieldConfig,
+  MatchRuleConfig,
   RuleConfig,
   SelectiveEditor,
   TemplateResult,
@@ -175,5 +176,34 @@ export class AutocompleteConstructorField
         ${this.autoCompleteUi.templateList(editor)}
       </div>
       ${this.templateErrors(editor, data)}`;
+  }
+
+  updateValidation(validValues: Array<string>, errorMessage: string) {
+    this.config.validation = (this.config.validation ||
+      []) as Array<RuleConfig>;
+    const existingIndex = this.listItemValidationRule
+      ? this.config.validation.indexOf(this.listItemValidationRule)
+      : -1;
+
+    // Validate the field to ensure that the document is
+    // one of the available documents.
+    this.listItemValidationRule = {
+      type: 'match',
+      allowed: {
+        message: errorMessage,
+        values: validValues,
+      },
+    } as MatchRuleConfig;
+
+    if (existingIndex >= 0) {
+      // Replace the existing rule.
+      this.config.validation[existingIndex] = this.listItemValidationRule;
+    } else {
+      // Add as new rule.
+      this.config.validation.push(this.listItemValidationRule);
+    }
+
+    // Reset the rules
+    this._rules = undefined;
   }
 }

@@ -178,6 +178,13 @@ export class AutocompleteConstructorField
       ${this.templateErrors(editor, data)}`;
   }
 
+  /**
+   * When using the autocomplete, a field can require that the value be part of
+   * the available options to be valid.
+   *
+   * @param validValues Values that are valid for the field.
+   * @param errorMessage Error message shown when the value is not valid.
+   */
   updateValidation(validValues: Array<string>, errorMessage: string) {
     this.config.validation = (this.config.validation ||
       []) as Array<RuleConfig>;
@@ -203,7 +210,7 @@ export class AutocompleteConstructorField
       this.config.validation.push(this.listItemValidationRule);
     }
 
-    // Reset the rules
+    // Reset the compiled rules.
     this._rules = undefined;
   }
 }

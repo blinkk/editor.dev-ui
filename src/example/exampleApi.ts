@@ -33,6 +33,7 @@ import {
   VariantFieldConfig,
 } from '@blinkk/selective-edit';
 import {AmagakiDocumentConfig} from '../projectType/amagaki/field/document';
+import {AmagakiStaticConfig} from '../projectType/amagaki/field/static';
 import {AmagakiStringConfig} from '../projectType/amagaki/field/string';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
@@ -787,6 +788,23 @@ const fullFiles: Record<string, EditorFileData> = {
               },
             ],
           } as AmagakiDocumentConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'static',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiStatic',
+            key: 'doc',
+            label: 'Amagaki static file',
+            help: 'In yaml: !pod.staticFile: <static file path>',
+          } as AmagakiStaticConfig,
         } as ExampleFieldConfig,
         {
           type: 'exampleField',

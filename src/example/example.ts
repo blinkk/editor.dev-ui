@@ -29,6 +29,7 @@ import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
 import {GrowDocumentField} from '../projectType/grow/field/document';
 import {GrowStaticField} from '../projectType/grow/field/static';
+import {GrowStringField} from '../projectType/grow/field/string';
 import {LiveEditor} from '../editor/editor';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
@@ -55,6 +56,7 @@ const exampleEditor = new LiveEditor(
         group: (GroupField as unknown) as FieldConstructor,
         growDocument: (GrowDocumentField as unknown) as FieldConstructor,
         growStatic: (GrowStaticField as unknown) as FieldConstructor,
+        growString: (GrowStringField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
         media: (MediaField as unknown) as FieldConstructor,
         mediaList: (MediaListField as unknown) as FieldConstructor,

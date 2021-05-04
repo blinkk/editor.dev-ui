@@ -1,7 +1,7 @@
-.selective__filter_list
+.selective__autocomplete
   position: relative
 
-.selective__filter_list__list
+.selective__autocomplete__list
   background: $le-color-tertiary-light
   box-shadow: $le-shadow-small
   border: $le-color-border-light $le-border-size-medium solid
@@ -16,7 +16,7 @@
   top: $le-border-size-large
   z-index: 200
 
-.selective__filter_list__list__item
+.selective__autocomplete__list__item
   padding: $le-space-small $le-space-medium
 
   &:focus,
@@ -25,6 +25,10 @@
     background: $le-color-tertiary
     color: $le-color-on-tertiary
 
-.selective__filter_list__list__status
+.selective__autocomplete__list__item__meta
+  font-size: $le-font-size-small
+  padding: $le-space-small $le-space-xsmall $le-space-xsmall $le-space-small
+
+.selective__autocomplete__list__status
   font-size: $le-font-size-small
   padding: $le-space-small $le-space-medium

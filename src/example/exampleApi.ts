@@ -39,6 +39,7 @@ import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
 import {GrowDocumentConfig} from '../projectType/grow/field/document';
 import {GrowStaticConfig} from '../projectType/grow/field/static';
+import {GrowStringConfig} from '../projectType/grow/field/string';
 import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
@@ -920,6 +921,34 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/grow/string.yaml': {
+    editor: {
+      fields: [
+        // Grow string examples.
+        {
+          type: 'exampleField',
+          key: 'string',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_string.growstringconfig.html',
+            },
+          ],
+          field: {
+            type: 'growString',
+            key: 'string',
+            label: 'Grow string',
+            help: 'In yaml: !g.string: <string reference>',
+          } as GrowStringConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/string.yaml',
+    },
+    url: 'preview.html',
+  },
 };
 
 const currentFileset: Array<FileData> = [
@@ -1516,6 +1545,37 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
             fields: [],
           },
         } as PartialData,
+      });
+    });
+  }
+
+  async getStrings(): Promise<Record<string, any>> {
+    return new Promise<Record<string, any>>((resolve, reject) => {
+      const methodName = 'getStrings';
+      console.log(`Grow API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the strings.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(resolve, {
+        '/content/strings/example.yaml': {
+          title: 'example',
+          foo: {
+            bar: '42',
+          },
+        },
+        '/content/strings/foobar.yaml': {
+          title: 'foobar',
+          bar: 'anything',
+          lorem: `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+            veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+        },
       });
     });
   }

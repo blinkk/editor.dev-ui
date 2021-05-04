@@ -16,4 +16,11 @@ export class GrowApi implements GrowProjectTypeApi {
       this.api.expandParams({})
     ) as Promise<Record<string, PartialData>>;
   }
+
+  async getStrings(): Promise<Record<string, any>> {
+    return postJSON(
+      this.api.resolveApiUrl('/grow/strings.get'),
+      this.api.expandParams({})
+    ) as Promise<Record<string, any>>;
+  }
 }

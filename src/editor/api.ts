@@ -141,11 +141,32 @@ export interface LiveEditorApiComponent {
 }
 
 export interface AmagakiProjectTypeApi {
+  /**
+   * Retrieve the partials for the project for the partials field.
+   */
   getPartials(): Promise<Record<string, PartialData>>;
 }
 
 export interface GrowProjectTypeApi {
+  /**
+   * Retrieve the partials for the project for the partials field.
+   */
   getPartials(): Promise<Record<string, PartialData>>;
+
+  /**
+   * Retrieve the available strings used in the `!g.string` yaml constructor.
+   *
+   * Returns a mapping of strings podpath to the contents of the strings file.
+   *
+   * ```json
+   * {
+   *   "/content/strings/example.yaml": {
+   *     "foo": "bar"
+   *   }
+   * }
+   * ```
+   */
+  getStrings(): Promise<Record<string, any>>;
 }
 
 export interface ApiProjectTypes {

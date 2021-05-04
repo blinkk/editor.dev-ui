@@ -36,6 +36,7 @@ export interface AutoCompleteUiItemComponent {
     handleClick: (evt: Event) => void
   ): TemplateResult;
   value: string;
+  label: string;
   uid: string;
 }
 
@@ -215,7 +216,7 @@ export class AutoCompleteUi
     }
 
     const listElement = this.container.querySelector(
-      '.selective__filter_list__list'
+      '.selective__autocomplete__list'
     ) as HTMLElement;
     if (!listElement) {
       console.error('Unable to find the autocomplete list.');
@@ -265,8 +266,8 @@ export class AutoCompleteUi
       return html``;
     }
 
-    return html`<div class="selective__filter_list">
-      <div class="selective__filter_list__list" role="listbox">
+    return html`<div class="selective__autocomplete">
+      <div class="selective__autocomplete__list" role="listbox">
         ${this.templateStatus(editor, this.filteredItems || [])}
         ${repeat(
           this.filteredItems || [],
@@ -297,7 +298,7 @@ export class AutoCompleteUi
     }
 
     return html`<div
-      class="selective__filter_list__list__status"
+      class="selective__autocomplete__list__status"
       aria-live="polite"
       role="status"
     >
@@ -342,7 +343,7 @@ export class AutoCompleteUIItem
   ): TemplateResult {
     return html` <div
       aria-selected=${isSelected ? 'true' : 'false'}
-      class="selective__filter_list__list__item"
+      class="selective__autocomplete__list__item"
       role="option"
       tabindex="-1"
       data-index=${index}

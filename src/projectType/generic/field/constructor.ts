@@ -152,6 +152,14 @@ export class AutocompleteConstructorField
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     const value = this.currentValue || {};
 
+    // Support aritrary field values.
+    const inputValue =
+      value._data !== undefined
+        ? value._data // Value is from a yaml tag.
+        : DataType.isString(value)
+        ? value // Value is an arbitrary string
+        : '';
+
     return html`${this.templateHelp(editor, data)}
       <div class=${classMap(this.classesForInput())}>
         <input
@@ -171,11 +179,22 @@ export class AutocompleteConstructorField
           @keyup=${this.autoCompleteUi.handleInputKeyUp.bind(
             this.autoCompleteUi
           )}
-          .value=${value._data || ''}
+          .value=${inputValue}
         />
         ${this.autoCompleteUi.templateList(editor)}
+        ${this.templateValuePreview(editor, data)}
       </div>
       ${this.templateErrors(editor, data)}`;
+  }
+
+  /**
+   * Template for showing a preview specific to the value of the field.
+   */
+  templateValuePreview(
+    editor: SelectiveEditor,
+    data: DeepObject
+  ): TemplateResult {
+    return html``;
   }
 
   /**

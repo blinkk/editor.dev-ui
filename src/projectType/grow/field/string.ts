@@ -37,6 +37,11 @@ export class GrowStringField extends AutocompleteConstructorField {
     this.config = config;
     this.globalConfig = globalConfig;
     this.type = 'g.string';
+    this.autoCompleteUi.labels = {
+      resultsMultiple: '${items.length} strings found.',
+      resultsNone: 'No matching strings, will use as custom value.',
+      resultsSingle: '1 string found',
+    };
 
     this.initItems();
   }

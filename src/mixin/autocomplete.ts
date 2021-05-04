@@ -11,6 +11,7 @@ import {EVENT_RENDER} from '../editor/events';
 
 export interface AutoCompleteUiComponent {
   items?: Array<AutoCompleteUiItemComponent>;
+  labels?: AutoCompleteUiLabels;
   filter(value: string): void;
   handleFocus(evt: Event): void;
   handleIconClick(evt: Event): void;
@@ -40,6 +41,12 @@ export interface AutoCompleteUiItemComponent {
   uid: string;
 }
 
+export interface AutoCompleteUiLabels {
+  resultsNone?: string;
+  resultsSingle?: string;
+  resultsMultiple?: string;
+}
+
 export function AutoCompleteMixin<TBase extends Constructor>(Base: TBase) {
   return class AutoCompleteClass extends Base {
     _autoCompleteUi?: AutoCompleteUiComponent & ListenersMixinComponent;
@@ -61,6 +68,7 @@ export class AutoCompleteUi
   currentIndex?: number;
   filteredItems?: Array<AutoCompleteUiItemComponent>;
   private hasBoundDocument?: boolean;
+  labels?: AutoCompleteUiLabels;
   isVisible?: boolean;
   _items?: Array<AutoCompleteUiItemComponent>;
 
@@ -307,11 +315,16 @@ export class AutoCompleteUi
     editor: SelectiveEditor,
     items: Array<AutoCompleteUiItemComponent>
   ): TemplateResult {
-    let statusString = `${items.length} results available.`;
+    let statusString = this.labels?.resultsMultiple
+      ? this.labels.resultsMultiple.replace(
+          '${items.length}',
+          `${items.length}`
+        )
+      : `${items.length} results available.`;
     if (items.length === 0) {
-      statusString = 'No results available.';
+      statusString = this.labels?.resultsNone || 'No results available.';
     } else if (items.length === 1) {
-      statusString = '1 result available.';
+      statusString = this.labels?.resultsSingle || '1 result available.';
     }
 
     return html`<div

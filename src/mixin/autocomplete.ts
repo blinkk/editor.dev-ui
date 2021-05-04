@@ -57,13 +57,15 @@ export class AutoCompleteUi
   extends ListenersMixin(Base)
   implements AutoCompleteUiComponent {
   container?: HTMLElement;
+  currentFilter?: string;
   currentIndex?: number;
   filteredItems?: Array<AutoCompleteUiItemComponent>;
   private hasBoundDocument?: boolean;
   isVisible?: boolean;
-  items?: Array<AutoCompleteUiItemComponent>;
+  _items?: Array<AutoCompleteUiItemComponent>;
 
   filter(value: string) {
+    this.currentFilter = value;
     this.filteredItems = this.items?.filter(item => item.matchesFilter(value));
 
     // If it is an exact match show all the items instead.
@@ -113,6 +115,21 @@ export class AutoCompleteUi
     this.render();
   }
 
+  get items(): Array<AutoCompleteUiItemComponent> | undefined {
+    return this._items;
+  }
+
+  set items(values: Array<AutoCompleteUiItemComponent> | undefined) {
+    this._items = values;
+
+    if (this.currentFilter) {
+      this.filter(this.currentFilter);
+    } else {
+      this.filteredItems = [...(values || [])];
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleIconClick(evt: Event) {
     this.isVisible = !this.isVisible;
     this.render();

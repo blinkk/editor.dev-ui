@@ -37,10 +37,14 @@ export class GrowStringField extends AutocompleteConstructorField {
     this.config = config;
     this.globalConfig = globalConfig;
     this.type = 'g.string';
-    this.autoCompleteUi.labels = {
-      resultsMultiple: '${items.length} strings found.',
-      resultsNone: 'No matching strings, will use as custom value.',
-      resultsSingle: '1 string found',
+
+    // The string field allows for arbitrary strings, so if there are
+    // no matches and there is a value, hide the autocomplete.
+    this.autoCompleteUi.shouldShowEmpty = (value: string) => {
+      if (DataType.isString(value) && value.trim() !== '') {
+        return false;
+      }
+      return true;
     };
 
     this.initItems();

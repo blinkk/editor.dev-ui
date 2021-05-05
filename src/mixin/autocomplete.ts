@@ -17,8 +17,17 @@ export interface AutoCompleteUiComponent {
   handleIconClick(evt: Event): void;
   handleInputKeyDown(evt: KeyboardEvent): void;
   handleInputKeyUp(evt: KeyboardEvent): void;
+  /**
+   * Function for determining if the 'empty' message should be
+   * shown based on the value.
+   *
+   * For fields that allow additional characters (ex: query string on yaml)
+   * or arbitrary values it should hide the empty message since it can be
+   * a valid value even though there are no matches found in the items list.
+   */
+  shouldShowEmpty?: (value: string) => boolean;
   templateIcons(editor: SelectiveEditor): TemplateResult;
-  templateList(editor: SelectiveEditor): TemplateResult;
+  templateList(editor: SelectiveEditor, value: string): TemplateResult;
 }
 
 export interface AutoCompleteUiItemComponent {
@@ -68,9 +77,10 @@ export class AutoCompleteUi
   currentIndex?: number;
   filteredItems?: Array<AutoCompleteUiItemComponent>;
   private hasBoundDocument?: boolean;
-  labels?: AutoCompleteUiLabels;
   isVisible?: boolean;
   _items?: Array<AutoCompleteUiItemComponent>;
+  labels?: AutoCompleteUiLabels;
+  shouldShowEmpty?: (value: string) => boolean;
 
   filter(value: string) {
     this.currentFilter = value;
@@ -286,9 +296,17 @@ export class AutoCompleteUi
     </div>`;
   }
 
-  templateList(editor: SelectiveEditor): TemplateResult {
+  templateList(editor: SelectiveEditor, value: string): TemplateResult {
     if (!this.isVisible) {
       return html``;
+    }
+
+    // Certain fields allow values that are not in the list but do not need
+    // to show the empty items status and should hide the entire list.
+    if ((this.filteredItems || []).length === 0) {
+      if (this.shouldShowEmpty && !this.shouldShowEmpty(value)) {
+        return html``;
+      }
     }
 
     return html`<div class="selective__autocomplete">

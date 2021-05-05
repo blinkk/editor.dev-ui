@@ -65,3 +65,13 @@ export class IncludeExcludeFilter implements FilterComponent {
     return matchesIncludes && !matchesExcludes;
   }
 }
+
+/**
+ * Escapes a string to be used as a 'constant' in a regex.
+ *
+ * @param value string to be escaped
+ * @returns escaped string to use in regex.
+ */
+export function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+}

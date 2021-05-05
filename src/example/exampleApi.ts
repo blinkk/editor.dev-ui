@@ -35,11 +35,13 @@ import {
 import {AmagakiDocumentConfig} from '../projectType/amagaki/field/document';
 import {AmagakiStaticConfig} from '../projectType/amagaki/field/static';
 import {AmagakiStringConfig} from '../projectType/amagaki/field/string';
+import {AmagakiYamlConfig} from '../projectType/amagaki/field/yaml';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
 import {GrowDocumentConfig} from '../projectType/grow/field/document';
 import {GrowStaticConfig} from '../projectType/grow/field/static';
 import {GrowStringConfig} from '../projectType/grow/field/string';
+import {GrowYamlConfig} from '../projectType/grow/field/yaml';
 import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
@@ -853,6 +855,35 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/amagaki/yaml.yaml': {
+    editor: {
+      fields: [
+        // Amagaki yaml examples.
+        {
+          type: 'exampleField',
+          key: 'yaml',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiYaml',
+            key: 'yaml',
+            label: 'Amagaki yaml',
+            help:
+              'In yaml: !pod.yaml: { value: "<yaml file and query reference>" }',
+          } as AmagakiYamlConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/yaml.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/grow/document.yaml': {
     editor: {
       fields: [
@@ -946,6 +977,34 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     file: {
       path: '/example/grow/string.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/grow/yaml.yaml': {
+    editor: {
+      fields: [
+        // Grow yaml examples.
+        {
+          type: 'exampleField',
+          key: 'yaml',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url:
+                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
+            },
+          ],
+          field: {
+            type: 'growYaml',
+            key: 'yaml',
+            label: 'Grow yaml',
+            help: 'In yaml: !g.yaml: <yaml file and query reference>',
+          } as GrowYamlConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/yaml.yaml',
     },
     url: 'preview.html',
   },

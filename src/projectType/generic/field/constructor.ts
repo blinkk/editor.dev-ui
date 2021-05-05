@@ -181,7 +181,7 @@ export class AutocompleteConstructorField
           )}
           .value=${inputValue}
         />
-        ${this.autoCompleteUi.templateList(editor)}
+        ${this.autoCompleteUi.templateList(editor, inputValue)}
         ${this.templateValuePreview(editor, data)}
       </div>
       ${this.templateErrors(editor, data)}`;
@@ -204,7 +204,7 @@ export class AutocompleteConstructorField
    * @param validValues Values that are valid for the field.
    * @param errorMessage Error message shown when the value is not valid.
    */
-  updateValidation(validValues: Array<string>, errorMessage: string) {
+  updateValidation(validValues: Array<string | RegExp>, errorMessage: string) {
     this.config.validation = (this.config.validation ||
       []) as Array<RuleConfig>;
     const existingIndex = this.listItemValidationRule

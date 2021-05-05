@@ -54,7 +54,7 @@
     "@types/async": "^3.2.6",
     "@types/express": "^4.17.11",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^15.0.1",
+    "@types/node": "^15.0.2",
     "@types/nunjucks": "^3.1.4",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
@@ -84,7 +84,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^1.1.1",
+    "@blinkk/selective-edit": "^1.1.2",
     "@types/bent": "^7.3.2",
     "@types/javascript-time-ago": "^2.0.2",
     "@types/js-yaml": "^4.0.1",

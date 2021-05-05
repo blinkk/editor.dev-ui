@@ -67,6 +67,14 @@ export class ContentSectionPart extends BasePart implements Part {
       );
       this.render();
     });
+
+    // Show a message when there are pending changes and navigating.
+    window.addEventListener('beforeunload', (evt: BeforeUnloadEvent) => {
+      if (!this.selective.isClean) {
+        evt.preventDefault();
+        evt.returnValue = '';
+      }
+    });
   }
 
   get canChangeSection(): boolean {

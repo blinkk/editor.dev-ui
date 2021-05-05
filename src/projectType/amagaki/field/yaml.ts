@@ -5,37 +5,51 @@ import {
 import {
   IncludeExcludeFilter,
   IncludeExcludeFilterConfig,
+  escapeRegExp,
 } from '../../../utility/filter';
 import {AutoCompleteUIItem} from '../../../mixin/autocomplete';
 import {FileData} from '../../../editor/api';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 import {Types} from '@blinkk/selective-edit';
 
-const VALID_DOC_EXTS = ['yaml', 'md', 'html', 'njk'];
+const VALID_EXTS = ['yaml', 'yml'];
 
-export interface AmagakiDocumentConfig extends ConstructorConfig {
+export interface AmagakiYamlConfig extends ConstructorConfig {
   /**
    * Filter to apply for the file list.
    */
   filter?: IncludeExcludeFilterConfig;
 }
 
-export class AmagakiDocumentField extends AutocompleteConstructorField {
-  config: AmagakiDocumentConfig;
+export class AmagakiYamlField extends AutocompleteConstructorField {
+  config: AmagakiYamlConfig;
   filter: IncludeExcludeFilter;
   globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
-    config: AmagakiDocumentConfig,
+    config: AmagakiYamlConfig,
     globalConfig: LiveEditorGlobalConfig,
-    fieldType = 'document'
+    fieldType = 'yaml'
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.type = 'pod.document';
+    this.type = 'pod.yaml';
     this.filter = new IncludeExcludeFilter({});
+
+    // When there is a query string in the value, it should not show the
+    // empty status in the autocomplete because it is valid to not find
+    // a match in the autocomplete items.
+    this.autoCompleteUi.shouldShowEmpty = (value: string) => {
+      const searchValues = VALID_EXTS.map(ext => `.${ext}?`);
+      for (const searchValue of searchValues) {
+        if (value.includes(searchValue)) {
+          return false;
+        }
+      }
+      return true;
+    };
 
     this.initFilter();
     this.initItems();
@@ -62,7 +76,7 @@ export class AmagakiDocumentField extends AutocompleteConstructorField {
     this.filter = new IncludeExcludeFilter({
       includes: [
         // Needs to be in `/content/` directory with a valid ext.
-        `^/content/.*(${VALID_DOC_EXTS.join('|')})$`,
+        `^/content/.*(${VALID_EXTS.join('|')})$`,
       ],
       excludes: [
         // Ignore files starting with a period or underscore.
@@ -98,8 +112,10 @@ export class AmagakiDocumentField extends AutocompleteConstructorField {
     );
 
     this.updateValidation(
-      documentFiles.map(value => value.path),
-      'Document path needs to be an existing file.'
+      documentFiles.map(
+        value => new RegExp(`^${escapeRegExp(value.path)}([?].*)?$`)
+      ),
+      'Yaml path needs to be an existing file.'
     );
   }
 }

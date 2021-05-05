@@ -22,6 +22,7 @@ import {
 import {AmagakiDocumentField} from '../projectType/amagaki/field/document';
 import {AmagakiStaticField} from '../projectType/amagaki/field/static';
 import {AmagakiStringField} from '../projectType/amagaki/field/string';
+import {AmagakiYamlField} from '../projectType/amagaki/field/yaml';
 import {AsideField} from '../editor/field/aside';
 import {EditorState} from '../editor/state';
 import {ExampleApi} from './exampleApi';
@@ -30,6 +31,7 @@ import {ExampleTool} from './exampleTool';
 import {GrowDocumentField} from '../projectType/grow/field/document';
 import {GrowStaticField} from '../projectType/grow/field/static';
 import {GrowStringField} from '../projectType/grow/field/string';
+import {GrowYamlField} from '../projectType/grow/field/yaml';
 import {LiveEditor} from '../editor/editor';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
@@ -46,6 +48,7 @@ const exampleEditor = new LiveEditor(
         amagakiDocument: (AmagakiDocumentField as unknown) as FieldConstructor,
         amagakiStatic: (AmagakiStaticField as unknown) as FieldConstructor,
         amagakiString: (AmagakiStringField as unknown) as FieldConstructor,
+        amagakiYaml: (AmagakiYamlField as unknown) as FieldConstructor,
         aside: (AsideField as unknown) as FieldConstructor,
         checkbox: (CheckboxField as unknown) as FieldConstructor,
         checkboxMulti: (CheckboxMultiField as unknown) as FieldConstructor,
@@ -57,6 +60,7 @@ const exampleEditor = new LiveEditor(
         growDocument: (GrowDocumentField as unknown) as FieldConstructor,
         growStatic: (GrowStaticField as unknown) as FieldConstructor,
         growString: (GrowStringField as unknown) as FieldConstructor,
+        growYaml: (GrowYamlField as unknown) as FieldConstructor,
         list: (ListField as unknown) as FieldConstructor,
         media: (MediaField as unknown) as FieldConstructor,
         mediaList: (MediaListField as unknown) as FieldConstructor,

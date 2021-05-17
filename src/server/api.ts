@@ -4,7 +4,10 @@ import {
   EditorFileData,
   EmptyData,
   FileData,
+  GoogleMediaMeta,
   LiveEditorApiComponent,
+  MediaFileData,
+  MediaMeta,
   PingResult,
   ProjectData,
   PublishResult,
@@ -204,14 +207,25 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     ) as Promise<EditorFileData>;
   }
 
-  async uploadFile(file: File, meta?: Record<string, any>): Promise<FileData> {
-    return postJSON(
+  async uploadFile(file: File, meta?: MediaMeta): Promise<MediaFileData> {
+    // Providers can upload the file to different services.
+    if (meta?.provider === 'google') {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', (meta as GoogleMediaMeta).bucket || '');
+      const response = await postJSON((meta as GoogleMediaMeta).url, formData);
+
+      console.log('upload response', response);
+      return response;
+    }
+
+    return await postJSON(
       this.resolveApiUrl('/file.upload'),
       this.expandParams({
         file: file,
         meta: meta,
       })
-    ) as Promise<FileData>;
+    );
   }
 }
 

@@ -22,14 +22,14 @@ import {
 } from '@blinkk/selective-edit';
 import {LiveEditor, LiveEditorSelectiveEditorConfig} from '../editor/editor';
 import {LiveEditorApiComponent, PingStatus} from '../editor/api';
+import {MediaField, RemoteMediaField} from '../editor/field/media';
+import {MediaListField, RemoteMediaListField} from '../editor/field/mediaList';
 import {AsideField} from '../editor/field/aside';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {GithubApi} from './gh/githubApi';
 import {LocalServerApi} from './api';
 import {LocalStatus} from './local';
-import {MediaField} from '../editor/field/media';
-import {MediaListField} from '../editor/field/mediaList';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 import {rafTimeout} from '../utility/rafTimeout';
 
@@ -90,33 +90,35 @@ if (!api.checkAuth()) {
 
 const state = new EditorState(api);
 const fieldTypes = {
-  aside: (AsideField as unknown) as FieldConstructor,
-  checkbox: (CheckboxField as unknown) as FieldConstructor,
-  checkboxMulti: (CheckboxMultiField as unknown) as FieldConstructor,
-  color: (ColorField as unknown) as FieldConstructor,
-  date: (DateField as unknown) as FieldConstructor,
-  datetime: (DatetimeField as unknown) as FieldConstructor,
-  exampleField: (ExampleFieldField as unknown) as FieldConstructor,
-  group: (GroupField as unknown) as FieldConstructor,
-  list: (ListField as unknown) as FieldConstructor,
-  media: (MediaField as unknown) as FieldConstructor,
-  mediaList: (MediaListField as unknown) as FieldConstructor,
-  number: (NumberField as unknown) as FieldConstructor,
-  radio: (RadioField as unknown) as FieldConstructor,
-  text: (TextField as unknown) as FieldConstructor,
-  textarea: (TextareaField as unknown) as FieldConstructor,
-  time: (TimeField as unknown) as FieldConstructor,
-  variant: (VariantField as unknown) as FieldConstructor,
+  aside: AsideField as unknown as FieldConstructor,
+  checkbox: CheckboxField as unknown as FieldConstructor,
+  checkboxMulti: CheckboxMultiField as unknown as FieldConstructor,
+  color: ColorField as unknown as FieldConstructor,
+  date: DateField as unknown as FieldConstructor,
+  datetime: DatetimeField as unknown as FieldConstructor,
+  exampleField: ExampleFieldField as unknown as FieldConstructor,
+  group: GroupField as unknown as FieldConstructor,
+  list: ListField as unknown as FieldConstructor,
+  media: MediaField as unknown as FieldConstructor,
+  mediaList: MediaListField as unknown as FieldConstructor,
+  number: NumberField as unknown as FieldConstructor,
+  radio: RadioField as unknown as FieldConstructor,
+  remoteMedia: RemoteMediaField as unknown as FieldConstructor,
+  remoteMediaList: RemoteMediaListField as unknown as FieldConstructor,
+  text: TextField as unknown as FieldConstructor,
+  textarea: TextareaField as unknown as FieldConstructor,
+  time: TimeField as unknown as FieldConstructor,
+  variant: VariantField as unknown as FieldConstructor,
 };
 
 const selectiveConfig = {
   fieldTypes: fieldTypes,
   ruleTypes: {
-    length: (LengthRule as unknown) as RuleConstructor,
-    match: (MatchRule as unknown) as RuleConstructor,
-    pattern: (PatternRule as unknown) as RuleConstructor,
-    range: (RangeRule as unknown) as RuleConstructor,
-    require: (RequireRule as unknown) as RuleConstructor,
+    length: LengthRule as unknown as RuleConstructor,
+    match: MatchRule as unknown as RuleConstructor,
+    pattern: PatternRule as unknown as RuleConstructor,
+    range: RangeRule as unknown as RuleConstructor,
+    require: RequireRule as unknown as RuleConstructor,
   },
   global: {
     api: api,

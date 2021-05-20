@@ -20,6 +20,7 @@ import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview'
 import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
+import {MediaFileData} from '../api';
 
 export const DEFAULT_EXTRA_KEY = 'extra';
 export const EXT_TO_MIME_TYPE: Record<string, string> = {
@@ -121,7 +122,8 @@ export interface MediaMeta {
 
 export class MediaField
   extends DroppableMixin(Field)
-  implements MediaFieldComponent {
+  implements MediaFieldComponent
+{
   config: MediaFieldConfig;
   group?: GroupField;
   globalConfig: LiveEditorGlobalConfig;
@@ -190,7 +192,7 @@ export class MediaField
     this.render();
 
     // Uploads only the first file.
-    this.globalConfig.api.uploadFile(files[0]).then(file => {
+    this.uploadFile(files[0]).then(file => {
       this.currentValue = merge({}, this.currentValue || {}, {
         path: file.path,
         url: file.url,
@@ -371,9 +373,9 @@ export class MediaField
         document.addEventListener(
           EVENT_RENDER_COMPLETE,
           () => {
-            (document.querySelector(
-              `#media-file-${this.uid}`
-            ) as HTMLElement).click();
+            (
+              document.querySelector(`#media-file-${this.uid}`) as HTMLElement
+            ).click();
           },
           {
             once: true,
@@ -533,6 +535,13 @@ export class MediaField
     return metaInfo;
   }
 
+  async uploadFile(uploadFile: File): Promise<MediaFileData> {
+    return this.globalConfig.api.uploadFile(
+      uploadFile,
+      this.globalConfig.state.project?.media?.options
+    );
+  }
+
   /**
    * Get the value for the field, optionally including the extra values.
    */
@@ -542,5 +551,23 @@ export class MediaField
       extraValue[this.config.extraKey || DEFAULT_EXTRA_KEY] = this.group.value;
     }
     return merge({}, this.currentValue || {}, extraValue);
+  }
+}
+
+export class RemoteMediaField extends MediaField {
+  constructor(
+    types: Types,
+    config: MediaFieldConfig,
+    globalConfig: LiveEditorGlobalConfig,
+    fieldType = 'remoteMedia'
+  ) {
+    super(types, config, globalConfig, fieldType);
+  }
+
+  async uploadFile(uploadFile: File): Promise<MediaFileData> {
+    return this.globalConfig.api.uploadFile(
+      uploadFile,
+      this.globalConfig.state.project?.media?.remote
+    );
   }
 }

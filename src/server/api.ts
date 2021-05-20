@@ -4,16 +4,18 @@ import {
   EditorFileData,
   EmptyData,
   FileData,
-  GoogleMediaMeta,
+  GoogleMediaOptions,
   LiveEditorApiComponent,
   MediaFileData,
-  MediaMeta,
+  MediaOptions,
   PingResult,
   ProjectData,
   PublishResult,
+  RemoteMediaProviders,
   WorkspaceData,
 } from '../editor/api';
 import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
+import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GrowApi} from '../projectType/grow/growApi';
 import bent from 'bent';
 
@@ -207,23 +209,18 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     ) as Promise<EditorFileData>;
   }
 
-  async uploadFile(file: File, meta?: MediaMeta): Promise<MediaFileData> {
+  async uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData> {
     // Providers can upload the file to different services.
-    if (meta?.provider === 'google') {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('bucket', (meta as GoogleMediaMeta).bucket || '');
-      const response = await postJSON((meta as GoogleMediaMeta).url, formData);
-
-      console.log('upload response', response);
-      return response;
+    if (options?.provider === RemoteMediaProviders.GCS) {
+      const uploader = new GCSRemoteMedia(options as GoogleMediaOptions);
+      return uploader.upload(file);
     }
 
     return await postJSON(
       this.resolveApiUrl('/file.upload'),
       this.expandParams({
         file: file,
-        meta: meta,
+        options: options,
       })
     );
   }

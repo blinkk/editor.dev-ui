@@ -137,7 +137,7 @@ export interface LiveEditorApiComponent {
    * Uses a File object to provide a blob file that should be uploaded
    * or saved appropriately. Often for media like images or videos.
    */
-  uploadFile(file: File, meta?: MediaMeta): Promise<MediaFileData>;
+  uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData>;
 }
 
 export interface ApiProjectTypes {
@@ -575,12 +575,17 @@ export interface EditorFileConfig {
  */
 export interface ProjectMediaConfig {
   /**
-   * Field information for collecting information for the publish process.
+   * Remote configuration for uploading media to a remote provider.
    *
-   * If there are field configurations provided the UI will prompt the user
-   * for the information and pass it on to the `publish` api call.
+   * This is used for things such as uploading to a CDN or
+   * optimization service.
    */
-  remote?: Array<MediaMeta>;
+  remote?: RemoteMediaOptions;
+  /**
+   * Local media configuration for uploading media using the
+   * connector api.
+   */
+  options?: MediaOptions;
 }
 
 /**
@@ -608,6 +613,13 @@ export interface SiteFilesConfig {
    *  - Ignores files and directories starting with `_` and `.`.
    */
   filter?: IncludeExcludeFilterConfig;
+}
+
+/**
+ * Remote media providers supported in the editor.
+ */
+export enum RemoteMediaProviders {
+  GCS = 'GCS',
 }
 
 /**
@@ -823,12 +835,12 @@ export interface MediaFileData extends FileData {
  * Used by the file upload to support different services to upload the
  * media to be processed/stored.
  */
-export interface MediaMeta {
+export interface MediaOptions {
   /**
-   * Iidentifier for the provider that will be handling the upload
+   * Identifier for the provider that will be handling the upload
    * request.
    */
-  provider?: string;
+  provider?: RemoteMediaProviders | string;
 }
 
 /**
@@ -836,7 +848,7 @@ export interface MediaMeta {
  *
  * Currently works with the backend from https://github.com/grow/grow-ext-google-cloud-images
  */
-export interface GoogleMediaMeta extends MediaMeta {
+export interface GoogleMediaOptions extends MediaOptions {
   /**
    * Url for the endpoint to handle the file upload.
    */
@@ -846,3 +858,8 @@ export interface GoogleMediaMeta extends MediaMeta {
    */
   bucket?: string;
 }
+
+/**
+ * Supported options for remote media provider options.
+ */
+export type RemoteMediaOptions = GoogleMediaOptions;

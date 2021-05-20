@@ -8,7 +8,8 @@ export interface ProjectTypeState {}
 
 export class BaseProjectTypeState
   extends ListenersMixin(Base)
-  implements ProjectTypeState {
+  implements ProjectTypeState
+{
   editorState: EditorState;
   /**
    * Keep track of active promises to keep from requesting the same data

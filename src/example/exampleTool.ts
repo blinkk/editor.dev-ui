@@ -114,6 +114,7 @@ export class ExampleTool {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateFloatButton(tool: ExampleTool): TemplateResult {
     return html`<div
       class="example_tool__float_button ${this.api.errorController.errorMethods
@@ -126,6 +127,7 @@ export class ExampleTool {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateSettings(tool: ExampleTool): TemplateResult {
     if (!this.isExpanded) {
       return html``;

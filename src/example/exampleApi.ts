@@ -161,8 +161,7 @@ const fullFiles: Record<string, EditorFileData> = {
       listSimple: ['values', 'in', 'a', 'list'],
       listSimpleMedia: [
         {
-          url:
-            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
       ],
@@ -176,8 +175,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
             },
           ],
           field: {
@@ -211,8 +209,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
             },
           ],
           field: {
@@ -236,8 +233,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_list.listfieldconfig.html',
             },
           ],
           field: {
@@ -280,13 +276,11 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
             },
           ],
           field: {
@@ -317,13 +311,11 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
             },
           ],
           field: {
@@ -363,8 +355,7 @@ const fullFiles: Record<string, EditorFileData> = {
     data: {
       mediaList: [
         {
-          url:
-            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
       ],
@@ -378,13 +369,11 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
             },
           ],
           field: {
@@ -410,8 +399,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_text.textfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_text.textfieldconfig.html',
             },
           ],
           field: {
@@ -434,8 +422,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_textarea.textareafieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_textarea.textareafieldconfig.html',
             },
           ],
           field: {
@@ -452,8 +439,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkbox.checkboxfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkbox.checkboxfieldconfig.html',
             },
           ],
           field: {
@@ -470,8 +456,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkboxmulti.checkboxmultifieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_checkboxmulti.checkboxmultifieldconfig.html',
             },
           ],
           field: {
@@ -502,8 +487,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_radio.radiofieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_radio.radiofieldconfig.html',
             },
           ],
           field: {
@@ -553,8 +537,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_number.numberfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_number.numberfieldconfig.html',
             },
           ],
           field: {
@@ -574,8 +557,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Module',
-              url:
-                'https://blinkkcode.github.io/selective-edit/modules/selective_field_color.html',
+              url: 'https://blinkkcode.github.io/selective-edit/modules/selective_field_color.html',
             },
           ],
           field: {
@@ -592,8 +574,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Module',
-              url:
-                'https://blinkkcode.github.io/selective-edit/modules/selective_field_date.html',
+              url: 'https://blinkkcode.github.io/selective-edit/modules/selective_field_date.html',
             },
           ],
           field: {
@@ -610,8 +591,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Module',
-              url:
-                'https://blinkkcode.github.io/selective-edit/modules/selective_field_datetime.html',
+              url: 'https://blinkkcode.github.io/selective-edit/modules/selective_field_datetime.html',
             },
           ],
           field: {
@@ -628,8 +608,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Module',
-              url:
-                'https://blinkkcode.github.io/selective-edit/modules/selective_field_time.html',
+              url: 'https://blinkkcode.github.io/selective-edit/modules/selective_field_time.html',
             },
           ],
           field: {
@@ -661,8 +640,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_group.groupfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_group.groupfieldconfig.html',
             },
           ],
           field: {
@@ -688,13 +666,11 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantfieldconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantfieldconfig.html',
             },
             {
               label: 'Option interface',
-              url:
-                'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantoptionconfig.html',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field_variant.variantoptionconfig.html',
             },
           ],
           field: {
@@ -747,8 +723,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
             },
           ],
           field: {
@@ -775,8 +750,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
             },
           ],
           field: {
@@ -809,8 +783,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
             },
           ],
           field: {
@@ -837,8 +810,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
             },
           ],
           field: {
@@ -865,16 +837,14 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
             },
           ],
           field: {
             type: 'amagakiYaml',
             key: 'yaml',
             label: 'Amagaki yaml',
-            help:
-              'In yaml: !pod.yaml: { value: "<yaml file and query reference>" }',
+            help: 'In yaml: !pod.yaml: { value: "<yaml file and query reference>" }',
           } as AmagakiYamlConfig,
         } as ExampleFieldConfig,
       ],
@@ -894,8 +864,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
             },
           ],
           field: {
@@ -928,8 +897,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_static.growstaticconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_static.growstaticconfig.html',
             },
           ],
           field: {
@@ -962,8 +930,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_string.growstringconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_string.growstringconfig.html',
             },
           ],
           field: {
@@ -990,8 +957,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url:
-                'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
             },
           ],
           field: {

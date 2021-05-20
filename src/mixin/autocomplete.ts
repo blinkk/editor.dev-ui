@@ -71,7 +71,8 @@ export function AutoCompleteMixin<TBase extends Constructor>(Base: TBase) {
 
 export class AutoCompleteUi
   extends ListenersMixin(Base)
-  implements AutoCompleteUiComponent {
+  implements AutoCompleteUiComponent
+{
   container?: HTMLElement;
   currentFilter?: string;
   currentIndex?: number;
@@ -283,6 +284,7 @@ export class AutoCompleteUi
     this.render();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateIcons(editor: SelectiveEditor): TemplateResult {
     return html`<div class="selective__field__actions">
       <div
@@ -320,7 +322,7 @@ export class AutoCompleteUi
               editor,
               index,
               this.currentIndex === index,
-              (evt: Event) => {
+              () => {
                 this.selectItem(item);
               }
             )
@@ -357,7 +359,8 @@ export class AutoCompleteUi
 
 export class AutoCompleteUIItem
   extends UuidMixin(Base)
-  implements AutoCompleteUiItemComponent {
+  implements AutoCompleteUiItemComponent
+{
   value: string;
   label: string;
 

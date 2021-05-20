@@ -30,6 +30,11 @@ const DEFAULT_FIELD_CONFIG: MediaFieldConfig = {
   key: '',
   label: 'Media',
 };
+const DEFAULT_REMOTE_FIELD_CONFIG: MediaFieldConfig = {
+  type: 'remoteMedia',
+  key: '',
+  label: 'Media',
+};
 
 export interface MediaListFieldConfig extends FieldConfig {
   /**
@@ -95,11 +100,13 @@ export interface MediaListItemConstructor {
 
 export class MediaListField
   extends DroppableMixin(SortableMixin(Field))
-  implements MediaListFieldComponent {
+  implements MediaListFieldComponent
+{
   config: MediaListFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   protected items: Array<MediaListItemComponent> | null;
   protected MediaListItemCls: MediaListItemConstructor;
+  protected MediaListItemDefaultConfig: MediaFieldConfig;
   usingAutoFields: boolean;
 
   constructor(
@@ -114,6 +121,7 @@ export class MediaListField
     this.items = null;
     this.usingAutoFields = false;
     this.MediaListItemCls = MediaListFieldItem;
+    this.MediaListItemDefaultConfig = DEFAULT_FIELD_CONFIG;
     this.sortableUi.listeners.add('sort', this.handleSort.bind(this));
     this.droppableUi.validTypes = this.config.fieldConfig?.accepted || [
       ...VALID_IMAGE_MIME_TYPES,
@@ -149,7 +157,8 @@ export class MediaListField
   ): Array<MediaListItemComponent> {
     if (this.items === null) {
       this.items = [];
-      const fieldConfig = this.config.fieldConfig || DEFAULT_FIELD_CONFIG;
+      const fieldConfig =
+        this.config.fieldConfig || this.MediaListItemDefaultConfig;
 
       // Add list items for each of the values in the list already.
       for (const value of this.originalValue || []) {
@@ -423,7 +432,8 @@ export class MediaListField
 
 class MediaListFieldItem
   extends UuidMixin(Base)
-  implements MediaListItemComponent {
+  implements MediaListItemComponent
+{
   listField: MediaListFieldComponent & SortableFieldComponent;
   mediaField: MediaFieldComponent;
   isExpanded: boolean;
@@ -561,5 +571,17 @@ class MediaListFieldItem
     >
       <i class="material-icons icon icon--delete">remove_circle</i>
     </div>`;
+  }
+}
+
+export class RemoteMediaListField extends MediaListField {
+  constructor(
+    types: Types,
+    config: MediaListFieldConfig,
+    globalConfig: LiveEditorGlobalConfig,
+    fieldType = 'remoteMediaList'
+  ) {
+    super(types, config, globalConfig, fieldType);
+    this.MediaListItemDefaultConfig = DEFAULT_REMOTE_FIELD_CONFIG;
   }
 }

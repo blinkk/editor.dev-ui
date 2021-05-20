@@ -10,10 +10,10 @@ export class GrowProjectType implements ProjectTypeComponent {
 
   get fieldTypes(): Record<string, FieldConstructor> {
     return {
-      document: (GrowDocumentField as unknown) as FieldConstructor,
-      partials: (GrowPartialsField as unknown) as FieldConstructor,
-      static: (GrowStaticField as unknown) as FieldConstructor,
-      string: (GrowStringField as unknown) as FieldConstructor,
+      document: GrowDocumentField as unknown as FieldConstructor,
+      partials: GrowPartialsField as unknown as FieldConstructor,
+      static: GrowStaticField as unknown as FieldConstructor,
+      string: GrowStringField as unknown as FieldConstructor,
     };
   }
 }

@@ -137,7 +137,12 @@ export interface LiveEditorApiComponent {
    * Uses a File object to provide a blob file that should be uploaded
    * or saved appropriately. Often for media like images or videos.
    */
-  uploadFile(file: File, meta?: Record<string, any>): Promise<FileData>;
+  uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData>;
+}
+
+export interface ApiProjectTypes {
+  amagaki: AmagakiProjectTypeApi;
+  grow: GrowProjectTypeApi;
 }
 
 export interface AmagakiProjectTypeApi {
@@ -169,11 +174,6 @@ export interface GrowProjectTypeApi {
   getStrings(): Promise<Record<string, any>>;
 }
 
-export interface ApiProjectTypes {
-  amagaki: AmagakiProjectTypeApi;
-  grow: GrowProjectTypeApi;
-}
-
 /**
  * Interface for the structure of the editor settings file.
  *
@@ -200,6 +200,13 @@ export interface EditorFileSettings {
    * Used to control editor.dev features for the project.
    */
   features?: Record<string, boolean | FeatureManagerSettings>;
+  /**
+   * Media configuration for the project.
+   *
+   * This controls options around how the media is handled in the project.
+   * Including custom providers for media upload.
+   */
+  media?: ProjectMediaConfig;
   /**
    * Configuration for the site display in the editor.
    */
@@ -392,6 +399,12 @@ export interface ProjectData {
    */
   features?: Record<string, boolean | FeatureManagerSettings>;
   /**
+   * Media configuration for the project.
+   *
+   * This controls options around how the media is handled in the project.
+   */
+  media?: ProjectMediaConfig;
+  /**
    * Publish configuration for the project.
    *
    * This controls if the UI allows for publishing and what information
@@ -558,6 +571,24 @@ export interface EditorFileConfig {
 }
 
 /**
+ * Configuration for how media works in the editor UI.
+ */
+export interface ProjectMediaConfig {
+  /**
+   * Remote configuration for uploading media to a remote provider.
+   *
+   * This is used for things such as uploading to a CDN or
+   * optimization service.
+   */
+  remote?: RemoteMediaOptions;
+  /**
+   * Local media configuration for uploading media using the
+   * connector api.
+   */
+  options?: MediaOptions;
+}
+
+/**
  * Configuration for how publishing works in the editor UI.
  */
 export interface ProjectPublishConfig {
@@ -582,6 +613,13 @@ export interface SiteFilesConfig {
    *  - Ignores files and directories starting with `_` and `.`.
    */
   filter?: IncludeExcludeFilterConfig;
+}
+
+/**
+ * Remote media providers supported in the editor.
+ */
+export enum RemoteMediaProviders {
+  GCS = 'GCS',
 }
 
 /**
@@ -770,3 +808,58 @@ export interface WorkspacePublishConfig {
    */
   urls?: Array<UrlConfig>;
 }
+
+/**
+ * Media interfaces.
+ */
+
+/**
+ * Metadata from a remote provider media upload.
+ */
+export interface MediaFileMetaInfo {
+  height?: number;
+  mimeType?: string;
+  width?: number;
+}
+
+/**
+ * File data specific to media files.
+ */
+export interface MediaFileData extends FileData {
+  meta?: MediaFileMetaInfo;
+}
+
+/**
+ * Configuration for remote media providers.
+ *
+ * Used by the file upload to support different services to upload the
+ * media to be processed/stored.
+ */
+export interface MediaOptions {
+  /**
+   * Identifier for the provider that will be handling the upload
+   * request.
+   */
+  provider?: RemoteMediaProviders | string;
+}
+
+/**
+ * Configuration for the Google remote media provider.
+ *
+ * Currently works with the backend from https://github.com/grow/grow-ext-google-cloud-images
+ */
+export interface GoogleMediaOptions extends MediaOptions {
+  /**
+   * Url for the endpoint to handle the file upload.
+   */
+  url: string;
+  /**
+   * Bucket name to upload the media file to.
+   */
+  bucket?: string;
+}
+
+/**
+ * Supported options for remote media provider options.
+ */
+export type RemoteMediaOptions = GoogleMediaOptions;

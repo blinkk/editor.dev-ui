@@ -31,6 +31,7 @@ import {ExampleFieldField} from '../example/field/exampleField';
 import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GithubApi} from './gh/githubApi';
 import {LocalStatus} from './local';
+import {MarkdownField} from '../editor/field/markdown';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 import {rafTimeout} from '../utility/rafTimeout';
@@ -106,6 +107,7 @@ const fieldTypes = {
   exampleField: ExampleFieldField as unknown as FieldConstructor,
   group: GroupField as unknown as FieldConstructor,
   list: ListField as unknown as FieldConstructor,
+  markdown: MarkdownField as unknown as FieldConstructor,
   media: MediaField as unknown as FieldConstructor,
   mediaList: MediaListField as unknown as FieldConstructor,
   number: NumberField as unknown as FieldConstructor,

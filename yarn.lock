@@ -200,13 +200,13 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.1.2.tgz#222da8c83e1a6b9f0e9526019a347941d9ff039b"
-  integrity sha512-pD7AsREm4IJkk85o0okquCvSTvxv3I+049o7W2u6wA+oQ6GaELfHVmVguP+KTS8QEkkXqukyCrgWNaIry//fow==
+"@blinkk/selective-edit@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-1.2.0.tgz#1452fd323a74e4fb6a80d9cb6335e923b494d409"
+  integrity sha512-gJfOaW74lyS6lYEGcVXXj2zFVbsL8CrjBCt/OwNE7e4dT0kdyJvHPVM6drjmanZdRIl9/QIddrP/Rn4n4DOB3A==
   dependencies:
     json-stable-stringify "^1.0.1"
-    lit-html "^1.4.0"
+    lit-html "^1.4.1"
     lodash.merge "^4.6.2"
 
 "@concordance/react@^2.0.0":
@@ -4609,7 +4609,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lit-html@^1.4.0:
+lit-html@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.4.1.tgz#0c6f3ee4ad4eb610a49831787f0478ad8e9ae5e0"
   integrity sha512-B9btcSgPYb1q4oSOb/PrOT6Z/H+r6xuNzfH4lFli/AWhYwdtrgQkQWBbIc6mdnf6E2IL3gDXdkkqNktpU0OZQA==

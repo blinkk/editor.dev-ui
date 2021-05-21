@@ -4,19 +4,17 @@ import {
   EditorFileData,
   EmptyData,
   FileData,
-  GoogleMediaOptions,
   LiveEditorApiComponent,
   MediaFileData,
   MediaOptions,
   PingResult,
   ProjectData,
   PublishResult,
-  RemoteMediaProviders,
   WorkspaceData,
 } from '../editor/api';
 import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
-import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GrowApi} from '../projectType/grow/growApi';
+import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
 
 const DEFAULT_LOCAL_PORT = 9090;
@@ -27,6 +25,7 @@ export interface ServerApiComponent {
   apiBaseUrl: string;
   baseUrl: string;
   expandParams(params: Record<string, any>): Record<string, any>;
+  remoteMediaProviders: Array<RemoteMediaConstructor>;
   resolveApiUrl(path: string): string;
   resolveUrl(path: string): string;
 }
@@ -36,12 +35,14 @@ export interface ServerApiComponent {
  */
 export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   projectTypes: ApiProjectTypes;
+  remoteMediaProviders: Array<RemoteMediaConstructor>;
 
   constructor() {
     this.projectTypes = {
       amagaki: new AmagakiApi(this),
       grow: new GrowApi(this),
     };
+    this.remoteMediaProviders = [];
   }
 
   get apiBaseUrl() {
@@ -211,9 +212,11 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
 
   async uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData> {
     // Providers can upload the file to different services.
-    if (options?.provider === RemoteMediaProviders.GCS) {
-      const uploader = new GCSRemoteMedia(options as GoogleMediaOptions);
-      return uploader.upload(file);
+    for (const provider of this.remoteMediaProviders) {
+      if ((provider as any).canApply(file, options)) {
+        const uploader = new provider(options as MediaOptions);
+        return uploader.upload(file);
+      }
     }
 
     return await postJSON(

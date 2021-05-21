@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.2.1](https://www.github.com/blinkk/live-edit/compare/v1.2.0...v1.2.1) (2021-05-21)
+
+
+### Bug Fixes
+
+* Release please release process for packaging. ([5daadd1](https://www.github.com/blinkk/live-edit/commit/5daadd170d1b26172a7fa79b3ff447e97d7cea0f))
+
 ## [1.2.0](https://www.github.com/blinkk/live-edit/compare/v1.1.0...v1.2.0) (2021-05-21)
 
 

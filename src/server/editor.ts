@@ -22,14 +22,16 @@ import {
 } from '@blinkk/selective-edit';
 import {LiveEditor, LiveEditorSelectiveEditorConfig} from '../editor/editor';
 import {LiveEditorApiComponent, PingStatus} from '../editor/api';
+import {LocalServerApi, ServerApiComponent} from './api';
 import {MediaField, RemoteMediaField} from '../editor/field/media';
 import {MediaListField, RemoteMediaListField} from '../editor/field/mediaList';
 import {AsideField} from '../editor/field/aside';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
+import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GithubApi} from './gh/githubApi';
-import {LocalServerApi} from './api';
 import {LocalStatus} from './local';
+import {RemoteMediaConstructor} from '../remoteMedia';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 import {rafTimeout} from '../utility/rafTimeout';
 
@@ -49,7 +51,7 @@ if (stackdriverKey) {
 const container = document.querySelector('.container') as HTMLElement;
 const localPort = parseInt(container.dataset.port || '');
 const isLocal = localPort > 0;
-let api: LiveEditorApiComponent | null = null;
+let api: (LiveEditorApiComponent & ServerApiComponent) | null = null;
 if (isLocal) {
   api = new LocalServerApi(localPort);
 } else {
@@ -87,6 +89,11 @@ if (!api) {
 if (!api.checkAuth()) {
   throw new Error('Unable to verify authentication.');
 }
+
+// Add the remote media providers.
+api.remoteMediaProviders.push(
+  GCSRemoteMedia as unknown as RemoteMediaConstructor
+);
 
 const state = new EditorState(api);
 const fieldTypes = {

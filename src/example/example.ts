@@ -33,6 +33,7 @@ import {GrowStaticField} from '../projectType/grow/field/static';
 import {GrowStringField} from '../projectType/grow/field/string';
 import {GrowYamlField} from '../projectType/grow/field/yaml';
 import {LiveEditor} from '../editor/editor';
+import {MarkdownField} from '../editor/field/markdown';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {RuleConstructor} from '@blinkk/selective-edit';
@@ -62,6 +63,7 @@ const exampleEditor = new LiveEditor(
         growString: GrowStringField as unknown as FieldConstructor,
         growYaml: GrowYamlField as unknown as FieldConstructor,
         list: ListField as unknown as FieldConstructor,
+        markdown: MarkdownField as unknown as FieldConstructor,
         media: MediaField as unknown as FieldConstructor,
         mediaList: MediaListField as unknown as FieldConstructor,
         number: NumberField as unknown as FieldConstructor,

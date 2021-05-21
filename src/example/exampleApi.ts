@@ -43,6 +43,7 @@ import {GrowStaticConfig} from '../projectType/grow/field/static';
 import {GrowStringConfig} from '../projectType/grow/field/string';
 import {GrowYamlConfig} from '../projectType/grow/field/yaml';
 import {MediaFieldConfig} from '../editor/field/media';
+import {MarkdownFieldConfig} from '../editor/field/markdown';
 
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
@@ -348,6 +349,36 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     file: {
       path: '/example/media.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/markdown.yaml': {
+    editor: {
+      fields: [
+        // Markdown example.
+        {
+          type: 'exampleField',
+          key: 'markdown',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://blinkkcode.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url: 'https://blinkkcode.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'markdown',
+            key: 'markdown',
+            label: 'Markdown',
+          } as MarkdownFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/markdown.yaml',
     },
     url: 'preview.html',
   },

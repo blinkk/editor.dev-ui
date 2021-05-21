@@ -1,6 +1,6 @@
 {
   "name": "@blinkk/editor",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "homepage": "https://blinkkcode.github.com/live-edit",
   "description": "Structured content editor with live previews.",

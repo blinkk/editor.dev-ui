@@ -1,9 +1,9 @@
 import {baseKeymap, toggleMark, wrapIn} from 'prosemirror-commands';
 import {history, redo, undo} from 'prosemirror-history';
+import {menuIcon, menuPlugin} from './menu';
 import {EditorState} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 import {keymap} from 'prosemirror-keymap';
-import {menuPlugin} from './menu';
 import {schema} from 'prosemirror-schema-basic';
 
 export class MarkdownEditor {
@@ -17,12 +17,15 @@ export class MarkdownEditor {
     const menu = menuPlugin([
       {
         command: toggleMark(schema.marks.strong),
-        dom: icon('format_bold', 'strong'),
+        dom: menuIcon('format_bold', 'strong'),
       },
-      {command: toggleMark(schema.marks.em), dom: icon('format_italic', 'em')},
+      {
+        command: toggleMark(schema.marks.em),
+        dom: menuIcon('format_italic', 'em'),
+      },
       {
         command: wrapIn(schema.nodes.blockquote),
-        dom: icon('format_indent_increase', 'blockquote'),
+        dom: menuIcon('format_indent_increase', 'blockquote'),
       },
     ]);
 
@@ -38,13 +41,4 @@ export class MarkdownEditor {
     this.state = state;
     this.view = new EditorView(this.container, {state});
   }
-}
-
-// Helper function to create menu icons
-function icon(text: string, name: string) {
-  const span = document.createElement('span');
-  span.className = 'material-icons';
-  span.title = name;
-  span.textContent = text;
-  return span;
 }

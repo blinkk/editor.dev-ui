@@ -51,3 +51,11 @@ export function menuPlugin(items: Array<any>) {
     },
   });
 }
+
+export function menuIcon(text: string, name: string) {
+  const span = document.createElement('span');
+  span.className = 'material-icons';
+  span.title = name;
+  span.textContent = text;
+  return span;
+}

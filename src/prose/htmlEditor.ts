@@ -6,7 +6,7 @@ import {EditorView} from 'prosemirror-view';
 import {keymap} from 'prosemirror-keymap';
 import {schema} from 'prosemirror-schema-basic';
 
-export class MarkdownEditor {
+export class HtmlEditor {
   container: HTMLElement;
   state: EditorState;
   view: EditorView;

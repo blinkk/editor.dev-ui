@@ -174,11 +174,17 @@
   input[type=file],
   input[type=number],
   input[type=time],
-  textarea
+  textarea,
+  [contenteditable=true]
     +field-input
 
-  textarea
+  textarea,
+  [contenteditable=true]
     line-height: $le-line-height-paragraph
+
+  [contenteditable=true]
+    // padding: $le-space-small $le-space-medium $le-space-small $le-space-large
+    padding: $le-space-small $le-space-medium
 
   &--row
     align-items: center

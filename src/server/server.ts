@@ -31,8 +31,8 @@ if (MODE === 'dev') {
 // Use local server connector.
 app.get('/local/:port(\\d+)/*', (req, res) => {
   res.render('index.njk', {
-    port: req.params.port,
-    file: req.params['0'],
+    port: (req.params as any).port,
+    file: (req.params as any)['0'] as string,
     mode: MODE,
     projectId: PROJECT_ID,
     stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
@@ -43,7 +43,7 @@ app.get('/local/:port(\\d+)/*', (req, res) => {
 app.get('/local/*', (req, res) => {
   res.render('index.njk', {
     port: DEFAULT_LOCAL_PORT,
-    file: req.params['0'],
+    file: (req.params as any)['0'] as string,
     mode: MODE,
     projectId: PROJECT_ID,
     stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
@@ -57,7 +57,7 @@ app.get('/gh/:organization/:project/:branch/*', (req, res) => {
     organization: req.params.organization,
     project: req.params.project,
     branch: req.params.branch,
-    file: req.params['0'],
+    file: (req.params as any)['0'] as string,
     mode: MODE,
     projectId: PROJECT_ID,
     stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,

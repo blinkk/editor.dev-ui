@@ -1,0 +1,58 @@
+.ProseMirror
+  height: 20vh
+  position: relative
+  word-wrap: break-word
+  white-space: pre-wrap
+  white-space: break-spaces
+  -webkit-font-variant-ligatures: none
+  font-variant-ligatures: none
+  // the above doesn't seem to work in Edge
+  font-feature-settings: "liga" 0
+
+  &--small
+    height: 10vh
+
+  &--large
+    height: 30vh
+
+  &--xlarge
+    height: 50vh
+
+  &--xxlarge
+    height: 80vh
+
+  pre
+    white-space: pre-wrap
+
+  li
+    position: relative
+
+  &-hideselection
+    caret-color: transparent
+
+    *::selection
+      background: transparent
+
+  &-selectednode
+    outline: 2px solid #8cf
+
+// Make sure li selections wrap around markers.
+li.ProseMirror-selectednode
+  outline: none
+
+  &:after
+    content: ""
+    position: absolute
+    left: -32px
+    right: -2px
+    top: -2px
+    bottom: -2px
+    border: 2px solid #8cf
+    pointer-events: none
+
+.selective__field__prosemirror
+  .menubar
+    border: $le-border-size-medium solid $le-color-border
+
+    .material-icons
+      padding: $le-space-xsmall

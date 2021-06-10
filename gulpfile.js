@@ -14,7 +14,7 @@ const compileSass = () => {
     .pipe(
       sass({
         outputStyle: 'compressed',
-        includePaths: ['node_modules'],
+        includePaths: ['./node_modules/'],
       })
     )
     .on('error', sass.logError)

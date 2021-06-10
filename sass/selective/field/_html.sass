@@ -1,0 +1,42 @@
+@import "quill/dist/quill.core"
+@import "quill/dist/quill.snow"
+
+.selective__field__quill
+  +field-input
+
+  .ql-toolbar.ql-snow
+    border: none
+
+  .ql-editor
+    line-height: 1.2em
+    max-height: 50vh
+    min-height: $le-space-xxlarge
+    padding: 0
+
+    // ***
+    // * Configure common html formatting for inside the editor.
+    // ***
+
+    h1, h2, h3, h4, h5, h6
+      margin: $le-space-medium 0 $le-space-small 0
+
+    p
+      line-height: 1.5em
+      margin: $le-space-medium 0
+
+      &:first-child
+        margin-top: 0
+
+  &--small
+    .ql-editor
+      max-height: $le-space-xlarge * 2
+      min-height: $le-space-xlarge
+
+  &--medium
+    .ql-editor
+      max-height: $le-space-xxlarge * 2
+      min-height: $le-space-xxlarge
+
+  &--large
+    .ql-editor
+      min-height: $le-space-xxxlarge

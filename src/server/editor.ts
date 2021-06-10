@@ -30,6 +30,7 @@ import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
 import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GithubApi} from './gh/githubApi';
+import {HtmlField} from '../editor/field/html';
 import {LocalStatus} from './local';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
@@ -105,6 +106,7 @@ const fieldTypes = {
   datetime: DatetimeField as unknown as FieldConstructor,
   exampleField: ExampleFieldField as unknown as FieldConstructor,
   group: GroupField as unknown as FieldConstructor,
+  html: HtmlField as unknown as FieldConstructor,
   list: ListField as unknown as FieldConstructor,
   media: MediaField as unknown as FieldConstructor,
   mediaList: MediaListField as unknown as FieldConstructor,

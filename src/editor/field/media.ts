@@ -15,12 +15,12 @@ import {
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {MediaFileData} from '../api';
 import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
-import {MediaFileData} from '../api';
 
 export const DEFAULT_EXTRA_KEY = 'extra';
 export const EXT_TO_MIME_TYPE: Record<string, string> = {

@@ -6,10 +6,10 @@ Editor for providing a rich UI for editing structured data with live previews.
 
 See the [typescript docs][tsdocs] or [example][example].
 
-[![codecov](https://codecov.io/gh/blinkk/live-edit/branch/main/graph/badge.svg?token=Z327B3XPKO)](https://codecov.io/gh/blinkk/live-edit)
+[![codecov](https://codecov.io/gh/blinkk/editor.dev-ui/branch/main/graph/badge.svg?token=Z327B3XPKO)](https://codecov.io/gh/blinkk/editor.dev-ui)
 
-[example]: https://blinkk.github.io/live-edit/example/
-[tsdocs]: https://blinkk.github.io/live-edit/
+[example]: https://blinkk.github.io/editor.dev-ui/example/
+[tsdocs]: https://blinkk.github.io/editor.dev-ui/
 
 ## Developing
 

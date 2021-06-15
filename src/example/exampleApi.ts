@@ -150,7 +150,7 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
       level: UrlLevel.Public,
     },
     {
-      url: 'https://github.com/blinkk/live-edit/',
+      url: 'https://github.com/blinkk/editor.dev-ui/',
       label: 'View in Github',
       level: UrlLevel.Source,
     },
@@ -168,7 +168,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -188,7 +188,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -208,7 +208,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -349,7 +349,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -369,7 +369,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -389,7 +389,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -420,7 +420,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -455,7 +455,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -513,7 +513,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -867,7 +867,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_aside.asidefieldconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_aside.asidefieldconfig.html',
             },
           ],
           field: {
@@ -894,7 +894,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
             },
           ],
           field: {
@@ -927,7 +927,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
             },
           ],
           field: {
@@ -954,7 +954,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
             },
           ],
           field: {
@@ -981,7 +981,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
             },
           ],
           field: {
@@ -1008,7 +1008,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
             },
           ],
           field: {
@@ -1041,7 +1041,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_grow_field_static.growstaticconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_static.growstaticconfig.html',
             },
           ],
           field: {
@@ -1074,7 +1074,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_grow_field_string.growstringconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_string.growstringconfig.html',
             },
           ],
           field: {
@@ -1101,7 +1101,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/live-edit/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
             },
           ],
           field: {

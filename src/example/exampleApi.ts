@@ -43,6 +43,7 @@ import {GrowStaticConfig} from '../projectType/grow/field/static';
 import {GrowStringConfig} from '../projectType/grow/field/string';
 import {GrowYamlConfig} from '../projectType/grow/field/yaml';
 import {HtmlFieldConfig} from '../editor/field/html';
+import {MarkdownFieldConfig} from '../editor/field/markdown';
 import {MediaFieldConfig} from '../editor/field/media';
 
 const MAX_RESPONSE_MS = 1200;
@@ -335,6 +336,77 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     file: {
       path: '/example/list.yaml',
+    },
+    url: 'preview.html',
+  },
+  '/example/markdown.yaml': {
+    editor: {
+      fields: [
+        // Markdown example.
+        {
+          type: 'exampleField',
+          key: 'markdown-small',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url: 'https://blinkk.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'markdown',
+            key: 'markdown',
+            label: 'Markdown (small)',
+            size: 'small',
+          } as MarkdownFieldConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'markdown-medium',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url: 'https://blinkk.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'markdown',
+            key: 'markdown',
+            label: 'Markdown (medium)',
+            size: 'medium',
+          } as MarkdownFieldConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'markdown-large',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://blinkk.github.io/live-edit/interfaces/editor_field_markdown.markdownfieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url: 'https://blinkk.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'markdown',
+            key: 'markdown',
+            label: 'Markdown (large)',
+            size: 'large',
+          } as MarkdownFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/markdown.yaml',
     },
     url: 'preview.html',
   },

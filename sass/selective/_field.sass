@@ -174,10 +174,10 @@
   input[type=file],
   input[type=number],
   input[type=time],
-  textarea
+  textarea:not(.toastui-editor-pseudo-clipboard)
     +field-input
 
-  textarea
+  textarea:not(.toastui-editor-pseudo-clipboard)
     line-height: $le-line-height-paragraph
 
   &--row
@@ -194,7 +194,7 @@
     input[type=file],
     input[type=number],
     input[type=time],
-    textarea
+    textarea:not(.toastui-editor-pseudo-clipboard)
       +field-input--error
 
   &--warning
@@ -206,7 +206,7 @@
     input[type=file],
     input[type=number],
     input[type=time],
-    textarea
+    textarea:not(.toastui-editor-pseudo-clipboard)
       +field-input--warning
 
   &--info
@@ -218,7 +218,7 @@
     input[type=file],
     input[type=number],
     input[type=time],
-    textarea
+    textarea:not(.toastui-editor-pseudo-clipboard)
       +field-input--info
 
 .selective__field__error
@@ -232,6 +232,7 @@
 @import './field/html'
 @import './field/image'
 @import './field/list'
+@import './field/markdown'
 @import './field/media'
 @import './field/mediaList'
 @import './field/number'

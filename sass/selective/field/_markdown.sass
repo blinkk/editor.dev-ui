@@ -1,0 +1,41 @@
+@import 'codemirror/lib/codemirror'
+@import '@toast-ui/editor/dist/toastui-editor'
+
+// .tui-editor-defaultUI,
+// .te-toolbar-section
+//   border: none
+
+// .CodeMirror-lines
+//   padding: $le-space-medium 0 !important
+
+// .tui-editor-contents
+//   padding: $le-space-medium !important
+
+// .tui-editor-defaultUI-toolbar,
+// .CodeMirror-line
+//   border-radius: $le-radius-small
+//   padding: 0 $le-space-medium !important
+
+// .CodeMirror,
+// .te-ww-container
+//   background: none
+
+
+.selective__field__toastui
+  &--small
+    .ql-editor
+      max-height: $le-space-xlarge * 2
+      min-height: $le-space-xlarge
+
+  &--medium
+    .ql-editor
+      max-height: $le-space-xxlarge * 2
+      min-height: $le-space-xxlarge
+
+  &--large
+    .ql-editor
+      min-height: $le-space-xxxlarge
+
+    .toastui-editor-md-preview,
+    .toastui-editor-md-splitter
+      display: none

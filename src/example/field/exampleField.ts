@@ -104,43 +104,45 @@ export class ExampleFieldField extends Field {
       );
     }
 
-    if (!this.isExpanded) {
-      return html`${this.field?.template(editor, data) || ''}
-        <div
-          class="le__clickable selective__example_field__expand"
-          @click=${this.handleExpandClick.bind(this)}
-        >
-          Show config…
-        </div>`;
+    let extra = html` <div
+      class="le__clickable selective__example_field__expand"
+      @click=${this.handleExpandClick.bind(this)}
+    >
+      Show config…
+    </div>`;
+
+    if (this.isExpanded) {
+      extra = html`<div class="selective__example_field__code">
+          <pre><code>${unsafeHTML(
+            formatCodeSample(
+              yaml.dump(
+                replaceProjectType(
+                  this.cleaner.clean(this.originalFieldConfig) as FieldConfig
+                ),
+                {
+                  noArrayIndent: true,
+                  noCompatMode: true,
+                  sortKeys: createPriorityKeySort(['type', 'key', 'label']),
+                }
+              )
+            )
+          )}</code></pre>
+        </div>
+        ${this.config.docUrls
+          ? html`<div class="selective__example_field__doc_url">
+              ${repeat(
+                this.config.docUrls,
+                docUrl => docUrl.label,
+                docUrl =>
+                  html`<a href=${docUrl.url} target="_blank"
+                    >${docUrl.label}</a
+                  >`
+              )}
+            </div>`
+          : ''}`;
     }
 
-    return html`${this.field?.template(editor, data) || ''}
-      <div class="selective__example_field__code">
-        <pre><code>${unsafeHTML(
-          formatCodeSample(
-            yaml.dump(
-              replaceProjectType(
-                this.cleaner.clean(this.originalFieldConfig) as FieldConfig
-              ),
-              {
-                noArrayIndent: true,
-                noCompatMode: true,
-                sortKeys: createPriorityKeySort(['type', 'key', 'label']),
-              }
-            )
-          )
-        )}</code></pre>
-      </div>
-      ${this.config.docUrls
-        ? html`<div class="selective__example_field__doc_url">
-            ${repeat(
-              this.config.docUrls,
-              docUrl => docUrl.label,
-              docUrl =>
-                html`<a href=${docUrl.url} target="_blank">${docUrl.label}</a>`
-            )}
-          </div>`
-        : ''}`;
+    return html`${this.field?.template(editor, data) || ''}${extra}`;
   }
 
   get value() {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/blinkk/editor.dev-ui/compare/v1.2.1...v1.3.0) (2021-06-15)
+
+
+### Features
+
+* Html and Markdown Fields ([#49](https://www.github.com/blinkk/editor.dev-ui/issues/49)) ([51c5c4d](https://www.github.com/blinkk/editor.dev-ui/commit/51c5c4de2ce3ff657aeefd63e36923d4ca61c612))
+
 ### [1.2.1](https://www.github.com/blinkk/editor.dev-ui/compare/v1.2.0...v1.2.1) (2021-05-21)
 
 

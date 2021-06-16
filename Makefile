@@ -1,5 +1,5 @@
 project := grow-prod
-service := editor.dev-ui
+service := editor-dev-ui
 region := us-central1
 tag := latest
 
@@ -37,7 +37,7 @@ deploy:
 		--labels source=main \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/editor.dev-ui:main
+		--image gcr.io/${project}/editor-dev-ui:main
 
 deploy-prod:
 	gcloud run deploy ${service}-prod \
@@ -46,4 +46,4 @@ deploy-prod:
 		--labels source=latest \
 		--region ${region} \
 		--allow-unauthenticated \
-		--image gcr.io/${project}/editor.dev-ui:${tag}
+		--image gcr.io/${project}/editor-dev-ui:${tag}

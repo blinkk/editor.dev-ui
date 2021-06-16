@@ -70,6 +70,7 @@ export class MarkdownField extends Field {
               }
             },
           },
+          height: 'auto',
           hideModeSwitch: true,
           initialEditType: 'markdown',
           initialValue: this.currentValue || '',

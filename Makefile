@@ -15,7 +15,7 @@ build-prod:
 build-prod-tag:
 	gcloud builds submit \
 		--project=$(project) \
-		--substitutions _GITHUB_REF=${GITHUB_REF} \
+		--substitutions _TAG=${tag} \
 		--config=cloudbuild-prod-tag.yaml
 
 build-and-deploy:

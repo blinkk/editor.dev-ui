@@ -4,7 +4,7 @@ steps:
   entrypoint: 'bash'
   args:
   - "-c"
-  - docker build --network cloudbuild --no-cache --build-arg GH_CLIENT_SECRET="$$GH_CLIENT_SECRET" -t gcr.io/$PROJECT_ID/editor-dev-ui:latest -t gcr.io/$PROJECT_ID/editor-dev-ui:`echo $_GITHUB_REF | sed 's/refs\/tags\///'` .
+  - docker build --network cloudbuild --no-cache --build-arg GH_CLIENT_SECRET="$$GH_CLIENT_SECRET" -t gcr.io/$PROJECT_ID/editor-dev-ui:latest -t gcr.io/$PROJECT_ID/editor-dev-ui:$_TAG .
 
 images:
 - gcr.io/$PROJECT_ID/editor-dev-ui

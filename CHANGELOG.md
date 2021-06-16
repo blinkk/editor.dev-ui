@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.3](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.2...v1.3.3) (2021-06-16)
+
+
+### Bug Fixes
+
+* skip lib check when compiling for prod. ([30ae60a](https://www.github.com/blinkk/editor.dev-ui/commit/30ae60ad78e8dc0b161c6515e1a247ffa74ebd79))
+
 ### [1.3.2](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.1...v1.3.2) (2021-06-16)
 
 

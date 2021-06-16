@@ -30,3 +30,11 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       if: ${{ steps.release.outputs.release_created }}
+    - name: Setup Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.2.1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+      if: ${{ steps.release.outputs.release_created }}
+    - run: make build-and-deploy-prod-tag
+      if: ${{ steps.release.outputs.release_created }}

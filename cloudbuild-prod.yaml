@@ -3,7 +3,7 @@ steps:
   entrypoint: 'bash'
   args:
   - "-c"
-  - docker build --network cloudbuild --no-cache -t gcr.io/$PROJECT_ID/editor.dev-ui:latest .
+  - docker build --network cloudbuild --no-cache -t gcr.io/$PROJECT_ID/editor-dev-ui:latest .
 
 images:
-- gcr.io/$PROJECT_ID/editor.dev-ui
+- gcr.io/$PROJECT_ID/editor-dev-ui

@@ -1,9 +1,9 @@
-name: 'Tag'
+name: 'Release'
 
 on:
-  push:
-    tags:
-    - '*'
+  release:
+    types:
+    - created
 
 jobs:
   deploy:

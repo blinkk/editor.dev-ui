@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.3.1](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.0...v1.3.1) (2021-06-16)
+
+
+### Bug Fixes
+
+* Update gcloud ids to be valid. ([b60c4c9](https://www.github.com/blinkk/editor.dev-ui/commit/b60c4c94fc77db7d8c8f2e3d0cfd0b41a96c0469))
+* Update image ids for cloudbuild. ([3ea60a8](https://www.github.com/blinkk/editor.dev-ui/commit/3ea60a86e7d6230682bab9cab025c5ac330526d9))
+* Using older version of tui editor. ([f56fdad](https://www.github.com/blinkk/editor.dev-ui/commit/f56fdada1da08e88ab0d64fdac003c51d184bb2d))
+
 ## [1.3.0](https://www.github.com/blinkk/editor.dev-ui/compare/v1.2.1...v1.3.0) (2021-06-15)
 
 

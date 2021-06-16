@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.3.4](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.3...v1.3.4) (2021-06-16)
+
+
+### Bug Fixes
+
+* add deploy step after tagging. ([d6c87d1](https://www.github.com/blinkk/editor.dev-ui/commit/d6c87d11cd0dc578f3fbb769b35b43fd27071b9b))
+* Remove deploy from the release please process. ([012a73e](https://www.github.com/blinkk/editor.dev-ui/commit/012a73ed0162b00137e6692ae9bf3b1d3aa456d9))
+
 ### [1.3.3](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.2...v1.3.3) (2021-06-16)
 
 

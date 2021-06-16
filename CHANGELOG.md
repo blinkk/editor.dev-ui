@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.2](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.1...v1.3.2) (2021-06-16)
+
+
+### Bug Fixes
+
+* Update release process to deploy production version. ([38d6f19](https://www.github.com/blinkk/editor.dev-ui/commit/38d6f1989a29505eb694a22648a630ec023309d5))
+
 ### [1.3.1](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.0...v1.3.1) (2021-06-16)
 
 

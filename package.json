@@ -29,7 +29,7 @@
   "scripts": {
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc && npx gulp compile && webpack --config webpack.prod.js",
+    "compile": "npx tsc --skipLibCheck && npx gulp compile && webpack --config webpack.prod.js",
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "typedoc",

@@ -13,9 +13,10 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
+import {MediaFileData, MediaOptions} from '../api';
+
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
-import {MediaFileData} from '../api';
 import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
@@ -100,6 +101,11 @@ export interface MediaFieldConfig extends FieldConfig {
    * If no fields are no preview will be shown for the group when collapsed.
    */
   previewFields?: Array<string>;
+  /**
+   * Override the default media upload provider to determine if the upload
+   * should be remote.
+   */
+  remote?: boolean;
 }
 
 export interface MediaFieldComponent extends FieldComponent {
@@ -536,10 +542,26 @@ export class MediaField
   }
 
   async uploadFile(uploadFile: File): Promise<MediaFileData> {
-    return this.globalConfig.api.uploadFile(
-      uploadFile,
-      this.globalConfig.state.project?.media?.options
-    );
+    /**
+     * When uploading a file the local field is allowed to override the default
+     * remote configuration. If the `remote` config is undefined no options are
+     * specified and can use the global configurations to determine which
+     * configuration should be used.
+     */
+    let mediaOptions: MediaOptions | undefined = undefined;
+    if (this.config.remote === true) {
+      mediaOptions = this.globalConfig.state.project?.media?.remote;
+    } else if (this.config.remote === false) {
+      mediaOptions = this.globalConfig.state.project?.media?.options;
+    } else {
+      if (this.globalConfig.state.project?.media?.remote?.isDefault) {
+        mediaOptions = this.globalConfig.state.project?.media?.remote;
+      } else {
+        mediaOptions = this.globalConfig.state.project?.media?.options;
+      }
+    }
+
+    return this.globalConfig.api.uploadFile(uploadFile, mediaOptions);
   }
 
   /**
@@ -551,23 +573,5 @@ export class MediaField
       extraValue[this.config.extraKey || DEFAULT_EXTRA_KEY] = this.group.value;
     }
     return merge({}, this.currentValue || {}, extraValue);
-  }
-}
-
-export class RemoteMediaField extends MediaField {
-  constructor(
-    types: Types,
-    config: MediaFieldConfig,
-    globalConfig: LiveEditorGlobalConfig,
-    fieldType = 'remoteMedia'
-  ) {
-    super(types, config, globalConfig, fieldType);
-  }
-
-  async uploadFile(uploadFile: File): Promise<MediaFileData> {
-    return this.globalConfig.api.uploadFile(
-      uploadFile,
-      this.globalConfig.state.project?.media?.remote
-    );
   }
 }

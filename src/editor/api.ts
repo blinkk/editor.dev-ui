@@ -841,6 +841,12 @@ export interface MediaOptions {
    * request.
    */
   provider?: RemoteMediaProviders | string;
+  /**
+   * Set if it is set as the default used for all media uploads.
+   *
+   * Local media upload is the default upload unless otherwise designated.
+   */
+  isDefault?: boolean;
 }
 
 /**

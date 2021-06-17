@@ -23,8 +23,7 @@ import {
 import {LiveEditor, LiveEditorSelectiveEditorConfig} from '../editor/editor';
 import {LiveEditorApiComponent, PingStatus} from '../editor/api';
 import {LocalServerApi, ServerApiComponent} from './api';
-import {MediaField, RemoteMediaField} from '../editor/field/media';
-import {MediaListField, RemoteMediaListField} from '../editor/field/mediaList';
+
 import {AsideField} from '../editor/field/aside';
 import {EditorState} from '../editor/state';
 import {ExampleFieldField} from '../example/field/exampleField';
@@ -33,6 +32,8 @@ import {GithubApi} from './gh/githubApi';
 import {HtmlField} from '../editor/field/html';
 import {LocalStatus} from './local';
 import {MarkdownField} from '../editor/field/markdown';
+import {MediaField} from '../editor/field/media';
+import {MediaListField} from '../editor/field/mediaList';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 import {rafTimeout} from '../utility/rafTimeout';
@@ -114,8 +115,6 @@ const fieldTypes = {
   mediaList: MediaListField as unknown as FieldConstructor,
   number: NumberField as unknown as FieldConstructor,
   radio: RadioField as unknown as FieldConstructor,
-  remoteMedia: RemoteMediaField as unknown as FieldConstructor,
-  remoteMediaList: RemoteMediaListField as unknown as FieldConstructor,
   text: TextField as unknown as FieldConstructor,
   textarea: TextareaField as unknown as FieldConstructor,
   time: TimeField as unknown as FieldConstructor,

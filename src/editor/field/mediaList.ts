@@ -30,11 +30,6 @@ const DEFAULT_FIELD_CONFIG: MediaFieldConfig = {
   key: '',
   label: 'Media',
 };
-const DEFAULT_REMOTE_FIELD_CONFIG: MediaFieldConfig = {
-  type: 'remoteMedia',
-  key: '',
-  label: 'Media',
-};
 
 export interface MediaListFieldConfig extends FieldConfig {
   /**
@@ -49,6 +44,11 @@ export interface MediaListFieldConfig extends FieldConfig {
    * Field definition for the media field.
    */
   fieldConfig?: MediaFieldConfig;
+  /**
+   * Override the default media upload provider to determine if the upload
+   * should be remote.
+   */
+  remote?: boolean;
 }
 
 export interface MediaListFieldComponent extends FieldComponent {
@@ -106,7 +106,6 @@ export class MediaListField
   globalConfig: LiveEditorGlobalConfig;
   protected items: Array<MediaListItemComponent> | null;
   protected MediaListItemCls: MediaListItemConstructor;
-  protected MediaListItemDefaultConfig: MediaFieldConfig;
   usingAutoFields: boolean;
 
   constructor(
@@ -121,7 +120,6 @@ export class MediaListField
     this.items = null;
     this.usingAutoFields = false;
     this.MediaListItemCls = MediaListFieldItem;
-    this.MediaListItemDefaultConfig = DEFAULT_FIELD_CONFIG;
     this.sortableUi.listeners.add('sort', this.handleSort.bind(this));
     this.droppableUi.validTypes = this.config.fieldConfig?.accepted || [
       ...VALID_IMAGE_MIME_TYPES,
@@ -158,7 +156,13 @@ export class MediaListField
     if (this.items === null) {
       this.items = [];
       const fieldConfig =
-        this.config.fieldConfig || this.MediaListItemDefaultConfig;
+        this.config.fieldConfig ||
+        Object.assign(
+          {
+            remote: this.config.remote,
+          },
+          DEFAULT_FIELD_CONFIG
+        );
 
       // Add list items for each of the values in the list already.
       for (const value of this.originalValue || []) {
@@ -187,7 +191,14 @@ export class MediaListField
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAddItem(evt: Event, editor: SelectiveEditor, data: DeepObject) {
     const items = this.ensureItems(editor);
-    const fieldConfig = this.config.fieldConfig || DEFAULT_FIELD_CONFIG;
+    const fieldConfig =
+      this.config.fieldConfig ||
+      Object.assign(
+        {
+          remote: this.config.remote,
+        },
+        DEFAULT_FIELD_CONFIG
+      );
     const newField = this.types.fields.newFromKey(
       fieldConfig.type,
       this.types,
@@ -571,17 +582,5 @@ class MediaListFieldItem
     >
       <i class="material-icons icon icon--delete">remove_circle</i>
     </div>`;
-  }
-}
-
-export class RemoteMediaListField extends MediaListField {
-  constructor(
-    types: Types,
-    config: MediaListFieldConfig,
-    globalConfig: LiveEditorGlobalConfig,
-    fieldType = 'remoteMediaList'
-  ) {
-    super(types, config, globalConfig, fieldType);
-    this.MediaListItemDefaultConfig = DEFAULT_REMOTE_FIELD_CONFIG;
   }
 }

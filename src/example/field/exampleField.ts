@@ -15,6 +15,7 @@ import {DeepClean} from '../../utility/deepClean';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
 import {createPriorityKeySort} from '../../utility/prioritySort';
 import yaml from 'js-yaml';
+import {DataType} from '../../../../selective-edit/dist/src/utility/dataType';
 
 export interface ExampleFieldUrl {
   label: string;
@@ -46,11 +47,13 @@ export class ExampleFieldField extends Field {
     // Copy the config to show the original before the field makes changes.
     this.originalFieldConfig = Object.assign({}, config.field);
 
-    this.originalFieldConfig.validation = [
-      ...((this.originalFieldConfig.validation as Array<RuleConfig>) || []),
-    ];
-    if (!this.originalFieldConfig.validation.length) {
-      this.originalFieldConfig.validation = undefined;
+    if (DataType.isArray(this.originalFieldConfig.validation)) {
+      this.originalFieldConfig.validation = [
+        ...((this.originalFieldConfig.validation as Array<RuleConfig>) || []),
+      ];
+      if (!this.originalFieldConfig.validation.length) {
+        this.originalFieldConfig.validation = undefined;
+      }
     }
 
     this.cleaner = new DeepClean({

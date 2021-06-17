@@ -11,9 +11,10 @@ import {
   IncludeExcludeFilterConfig,
 } from '../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
+
 import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
-import {LiveEditor} from '../../..';
+import {LiveEditor} from '../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/src/selective/validationRules';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';

@@ -1,4 +1,5 @@
 import {
+  DataType,
   DeepObject,
   Field,
   FieldComponent,
@@ -15,7 +16,6 @@ import {DeepClean} from '../../utility/deepClean';
 import {LiveEditorGlobalConfig} from '../../editor/editor';
 import {createPriorityKeySort} from '../../utility/prioritySort';
 import yaml from 'js-yaml';
-import {DataType} from '../../../../selective-edit/dist/src/utility/dataType';
 
 export interface ExampleFieldUrl {
   label: string;

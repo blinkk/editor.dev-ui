@@ -1,6 +1,6 @@
 import {ProjectData, UserData} from '../../api';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {LiveEditor} from '../../..';
+import {LiveEditor} from '../../editor';
 import {MenuSectionPart} from './index';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';

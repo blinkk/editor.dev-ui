@@ -2,7 +2,7 @@ import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
-import {LiveEditor} from '../../..';
+import {LiveEditor} from '../../editor';
 import {slugify} from '../../../utility/slugify';
 
 export interface MenuSectionPartConfig {

@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.3.7](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.6...v1.3.7) (2021-06-17)
+
+
+### Bug Fixes
+
+* Adding tsc compile for the publish only. ([3d71c9b](https://www.github.com/blinkk/editor.dev-ui/commit/3d71c9b45ceb88e0b7ad3bf6b484c02f80274fd8))
+* Simplify the yarn publishing process. ([5e30c55](https://www.github.com/blinkk/editor.dev-ui/commit/5e30c554fe4b4c5e2686b0662eeaaa1c86c9b241))
+
 ### [1.3.6](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.5...v1.3.6) (2021-06-16)
 
 

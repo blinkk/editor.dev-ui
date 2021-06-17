@@ -35,6 +35,7 @@
     "docs": "typedoc",
     "fix": "npx eslint --fix src/**/*.ts",
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"npx gulp watch\" \"nodemon ./src/server/server.ts\"",
+    "prepublishOnly": "npx tsc --skipLibCheck",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
     "test": "nyc ava",
     "test-ci": "nyc --reporter=lcov ava && codecov"

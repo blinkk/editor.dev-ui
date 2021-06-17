@@ -54,6 +54,40 @@ export class ExampleFieldField extends Field {
       if (!this.originalFieldConfig.validation.length) {
         this.originalFieldConfig.validation = undefined;
       }
+    } else if (DataType.isObject(this.originalFieldConfig.validation)) {
+      const keys = Object.keys(
+        this.originalFieldConfig.validation as Record<string, Array<RuleConfig>>
+      );
+      for (const key of keys) {
+        (
+          this.originalFieldConfig.validation as Record<
+            string,
+            Array<RuleConfig>
+          >
+        )[key] = [
+          ...(((
+            this.originalFieldConfig.validation as Record<
+              string,
+              Array<RuleConfig>
+            >
+          )[key] as Array<RuleConfig>) || []),
+        ];
+        if (
+          !(
+            this.originalFieldConfig.validation as Record<
+              string,
+              Array<RuleConfig>
+            >
+          )[key].length
+        ) {
+          (
+            this.originalFieldConfig.validation as Record<
+              string,
+              Array<RuleConfig> | undefined
+            >
+          )[key] = undefined;
+        }
+      }
     }
 
     this.cleaner = new DeepClean({

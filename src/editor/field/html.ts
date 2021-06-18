@@ -6,12 +6,20 @@ import {
   TemplateResult,
   Types,
   html,
+  unsafeHTML,
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {MediaOptions} from '../api';
 import Quill from 'quill';
+import {base64toFile} from '../../utility/base64';
 
 export interface HtmlFieldConfig extends FieldConfig {
+  /**
+   * Override the default media upload provider to determine if the upload
+   * should be remote.
+   */
+  remote?: boolean;
   /**
    * Size of the hrml field. Allows for the field to be taller
    * or shorter.
@@ -31,6 +39,7 @@ export enum HtmlFieldSize {
 export class HtmlField extends Field {
   htmlEditor?: Quill;
   config: HtmlFieldConfig;
+  globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
@@ -40,6 +49,7 @@ export class HtmlField extends Field {
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
+    this.globalConfig = globalConfig;
   }
 
   createEditorIfMissing() {
@@ -77,11 +87,36 @@ export class HtmlField extends Field {
 
           for (const pendingImg of pendingImgs) {
             pendingImg.classList.add('selective__image__uploading');
-            // TODO: Upload image.
-            // this.imageUpload(pendingImg).then(url => {
-            //   pendingImg.setAttribute('src', url);
-            //   pendingImg.classList.remove('selective__image__uploading');
-            // });
+
+            /**
+             * When uploading a file the local field is allowed to override the default
+             * remote configuration. If the `remote` config is undefined no options are
+             * specified and can use the global configurations to determine which
+             * configuration should be used.
+             */
+            let mediaOptions: MediaOptions | undefined = undefined;
+            if (this.config.remote === true) {
+              mediaOptions = this.globalConfig.state.project?.media?.remote;
+            } else if (this.config.remote === false) {
+              mediaOptions = this.globalConfig.state.project?.media?.options;
+            } else {
+              if (this.globalConfig.state.project?.media?.remote?.isDefault) {
+                mediaOptions = this.globalConfig.state.project?.media?.remote;
+              } else {
+                mediaOptions = this.globalConfig.state.project?.media?.options;
+              }
+            }
+
+            // Convert into a file.
+            const base64Str = pendingImg.getAttribute('src') as string;
+            const imageFile = base64toFile(base64Str, 'upload');
+
+            this.globalConfig.api
+              .uploadFile(imageFile, mediaOptions)
+              .then(fileData => {
+                pendingImg.setAttribute('src', fileData.url || base64Str);
+                pendingImg.classList.remove('selective__image__uploading');
+              });
           }
 
           this.currentValue =
@@ -112,7 +147,7 @@ export class HtmlField extends Field {
           class="selective__field__quill selective__field__quill--${this.config
             .size || 'medium'}"
         >
-          ${this.currentValue || ''}
+          ${unsafeHTML(this.currentValue || '')}
         </div>
       </div>`;
   }

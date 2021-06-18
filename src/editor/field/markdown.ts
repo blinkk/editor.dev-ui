@@ -10,12 +10,18 @@ import {
 import {EVENT_RENDER_COMPLETE} from '../events';
 import Editor from '@toast-ui/editor';
 import {LiveEditorGlobalConfig} from '../editor';
+import {MediaOptions} from '../api';
 
 export interface MarkdownFieldConfig extends FieldConfig {
   /**
    * Placeholder for the markdown field.
    */
   placeholder?: string;
+  /**
+   * Override the default media upload provider to determine if the upload
+   * should be remote.
+   */
+  remote?: boolean;
   /**
    * Size of the hrml field. Allows for the field to be taller
    * or shorter.
@@ -35,6 +41,7 @@ export enum MarkdownFieldSize {
 export class MarkdownField extends Field {
   markdownEditor?: Editor;
   config: MarkdownFieldConfig;
+  globalConfig: LiveEditorGlobalConfig;
 
   constructor(
     types: Types,
@@ -44,6 +51,7 @@ export class MarkdownField extends Field {
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;
+    this.globalConfig = globalConfig;
   }
 
   createEditorIfMissing() {
@@ -68,6 +76,46 @@ export class MarkdownField extends Field {
               if (this.markdownEditor) {
                 this.render();
               }
+            },
+          },
+          hooks: {
+            addImageBlobHook: (
+              blob: File | Blob,
+              callback: (url: string, altText: string) => void
+            ) => {
+              /**
+               * When uploading a file the local field is allowed to override the default
+               * remote configuration. If the `remote` config is undefined no options are
+               * specified and can use the global configurations to determine which
+               * configuration should be used.
+               */
+              let mediaOptions: MediaOptions | undefined = undefined;
+              if (this.config.remote === true) {
+                mediaOptions = this.globalConfig.state.project?.media?.remote;
+              } else if (this.config.remote === false) {
+                mediaOptions = this.globalConfig.state.project?.media?.options;
+              } else {
+                if (this.globalConfig.state.project?.media?.remote?.isDefault) {
+                  mediaOptions = this.globalConfig.state.project?.media?.remote;
+                } else {
+                  mediaOptions =
+                    this.globalConfig.state.project?.media?.options;
+                }
+              }
+
+              // Convert from Blob to File if needed.
+              if (!(blob as File).lastModified) {
+                (blob as any).lastModified = new Date();
+              }
+              if (!(blob as File).name) {
+                (blob as any).name = 'upload';
+              }
+
+              this.globalConfig.api
+                .uploadFile(blob as File, mediaOptions)
+                .then(fileData => {
+                  callback(fileData.url as string, '');
+                });
             },
           },
           height: 'auto',

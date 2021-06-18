@@ -95,9 +95,7 @@ export class HtmlField extends Field {
             this.globalConfig.api
               .uploadFile(
                 imageFile,
-                this.globalConfig.state.getDefaultMediaOptions(
-                  this.config.remote
-                )
+                this.globalConfig.state.getMediaOptions(this.config.remote)
               )
               .then(fileData => {
                 pendingImg.setAttribute('src', fileData.url || base64Str);

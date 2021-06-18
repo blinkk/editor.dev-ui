@@ -94,9 +94,7 @@ export class MarkdownField extends Field {
               this.globalConfig.api
                 .uploadFile(
                   blob as File,
-                  this.globalConfig.state.getDefaultMediaOptions(
-                    this.config.remote
-                  )
+                  this.globalConfig.state.getMediaOptions(this.config.remote)
                 )
                 .then(fileData => {
                   callback(fileData.url as string, '');

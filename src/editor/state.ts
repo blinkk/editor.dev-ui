@@ -190,7 +190,7 @@ export class EditorState extends ListenersMixin(Base) {
    * specified and can use the global configurations to determine which
    * configuration should be used.
    */
-  getDefaultMediaOptions(useRemote?: boolean): MediaOptions | undefined {
+  getMediaOptions(useRemote?: boolean): MediaOptions | undefined {
     if (useRemote === true) {
       return this.project?.media?.remote;
     } else if (useRemote === false) {

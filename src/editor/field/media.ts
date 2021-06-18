@@ -544,7 +544,7 @@ export class MediaField
   async uploadFile(uploadFile: File): Promise<MediaFileData> {
     return this.globalConfig.api.uploadFile(
       uploadFile,
-      this.globalConfig.state.getDefaultMediaOptions(this.config.remote)
+      this.globalConfig.state.getMediaOptions(this.config.remote)
     );
   }
 

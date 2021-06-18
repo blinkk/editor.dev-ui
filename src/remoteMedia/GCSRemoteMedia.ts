@@ -28,10 +28,32 @@ export class GCSRemoteMedia
     const formData = new FormData();
     formData.append('file', file);
     formData.append('bucket', this.options.bucket || '');
-    const response = await postJSON(this.options.url, formData);
+
+    // Bug in bent with sending FormData
+    // https://github.com/mikeal/bent/pull/135
+    // const response = await postJSON(this.options.url, formData);
+    // return {
+    //   path: response.url,
+    //   url: response.url,
+    // };
+
+    // TODO: Remove the following when the bent issue is fixed.
+    const codes = new Set();
+    codes.add(200);
+
+    const response = await fetch(this.options.url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!codes.has(response.status)) {
+      throw new Error(await response.text());
+    }
+
+    const parsed = await response.json();
     return {
-      path: response.url,
-      url: response.url,
+      path: parsed.url,
+      url: parsed.url,
     };
   }
 }

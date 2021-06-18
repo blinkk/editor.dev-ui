@@ -219,13 +219,35 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
       }
     }
 
-    return await postJSON(
-      this.resolveApiUrl('/file.upload'),
-      this.expandParams({
-        file: file,
-        options: options,
-      })
-    );
+    // Local file upload using built-in api.
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('options', JSON.stringify(options));
+
+    // Need to add the expanded variables into the form data for the request.
+    const expanded = this.expandParams({});
+    for (const [key, value] of Object.entries(expanded)) {
+      formData.append(key, value);
+    }
+
+    // Bug in bent with sending FormData
+    // https://github.com/mikeal/bent/pull/135
+    // return await postJSON(this.resolveApiUrl('/file.upload'), formData);
+
+    // TODO: Remove the following when the bent issue is fixed.
+    const codes = new Set();
+    codes.add(200);
+
+    const response = await fetch(this.resolveApiUrl('/file.upload'), {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!codes.has(response.status)) {
+      throw new Error(await response.text());
+    }
+
+    return await response.json();
   }
 }
 

@@ -88,31 +88,17 @@ export class HtmlField extends Field {
           for (const pendingImg of pendingImgs) {
             pendingImg.classList.add('selective__image__uploading');
 
-            /**
-             * When uploading a file the local field is allowed to override the default
-             * remote configuration. If the `remote` config is undefined no options are
-             * specified and can use the global configurations to determine which
-             * configuration should be used.
-             */
-            let mediaOptions: MediaOptions | undefined = undefined;
-            if (this.config.remote === true) {
-              mediaOptions = this.globalConfig.state.project?.media?.remote;
-            } else if (this.config.remote === false) {
-              mediaOptions = this.globalConfig.state.project?.media?.options;
-            } else {
-              if (this.globalConfig.state.project?.media?.remote?.isDefault) {
-                mediaOptions = this.globalConfig.state.project?.media?.remote;
-              } else {
-                mediaOptions = this.globalConfig.state.project?.media?.options;
-              }
-            }
-
             // Convert into a file.
             const base64Str = pendingImg.getAttribute('src') as string;
             const imageFile = base64toFile(base64Str, 'upload');
 
             this.globalConfig.api
-              .uploadFile(imageFile, mediaOptions)
+              .uploadFile(
+                imageFile,
+                this.globalConfig.state.getDefaultMediaOptions(
+                  this.config.remote
+                )
+              )
               .then(fileData => {
                 pendingImg.setAttribute('src', fileData.url || base64Str);
                 pendingImg.classList.remove('selective__image__uploading');

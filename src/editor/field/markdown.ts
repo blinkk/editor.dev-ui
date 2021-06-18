@@ -83,26 +83,6 @@ export class MarkdownField extends Field {
               blob: File | Blob,
               callback: (url: string, altText: string) => void
             ) => {
-              /**
-               * When uploading a file the local field is allowed to override the default
-               * remote configuration. If the `remote` config is undefined no options are
-               * specified and can use the global configurations to determine which
-               * configuration should be used.
-               */
-              let mediaOptions: MediaOptions | undefined = undefined;
-              if (this.config.remote === true) {
-                mediaOptions = this.globalConfig.state.project?.media?.remote;
-              } else if (this.config.remote === false) {
-                mediaOptions = this.globalConfig.state.project?.media?.options;
-              } else {
-                if (this.globalConfig.state.project?.media?.remote?.isDefault) {
-                  mediaOptions = this.globalConfig.state.project?.media?.remote;
-                } else {
-                  mediaOptions =
-                    this.globalConfig.state.project?.media?.options;
-                }
-              }
-
               // Convert from Blob to File if needed.
               if (!(blob as File).lastModified) {
                 (blob as any).lastModified = new Date();
@@ -112,7 +92,12 @@ export class MarkdownField extends Field {
               }
 
               this.globalConfig.api
-                .uploadFile(blob as File, mediaOptions)
+                .uploadFile(
+                  blob as File,
+                  this.globalConfig.state.getDefaultMediaOptions(
+                    this.config.remote
+                  )
+                )
                 .then(fileData => {
                   callback(fileData.url as string, '');
                 });

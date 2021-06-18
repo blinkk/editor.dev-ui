@@ -542,26 +542,10 @@ export class MediaField
   }
 
   async uploadFile(uploadFile: File): Promise<MediaFileData> {
-    /**
-     * When uploading a file the local field is allowed to override the default
-     * remote configuration. If the `remote` config is undefined no options are
-     * specified and can use the global configurations to determine which
-     * configuration should be used.
-     */
-    let mediaOptions: MediaOptions | undefined = undefined;
-    if (this.config.remote === true) {
-      mediaOptions = this.globalConfig.state.project?.media?.remote;
-    } else if (this.config.remote === false) {
-      mediaOptions = this.globalConfig.state.project?.media?.options;
-    } else {
-      if (this.globalConfig.state.project?.media?.remote?.isDefault) {
-        mediaOptions = this.globalConfig.state.project?.media?.remote;
-      } else {
-        mediaOptions = this.globalConfig.state.project?.media?.options;
-      }
-    }
-
-    return this.globalConfig.api.uploadFile(uploadFile, mediaOptions);
+    return this.globalConfig.api.uploadFile(
+      uploadFile,
+      this.globalConfig.state.getDefaultMediaOptions(this.config.remote)
+    );
   }
 
   /**

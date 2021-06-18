@@ -4,6 +4,7 @@ import {
   EditorFileData,
   FileData,
   LiveEditorApiComponent,
+  MediaOptions,
   ProjectData,
   PublishResult,
   SiteData,
@@ -181,6 +182,26 @@ export class EditorState extends ListenersMixin(Base) {
         this.getFiles();
       })
       .catch(error => catchError(error, callbackError));
+  }
+
+  /**
+   * When uploading a file the local field is allowed to override the default
+   * remote configuration. If the `remote` config is undefined no options are
+   * specified and can use the global configurations to determine which
+   * configuration should be used.
+   */
+  getDefaultMediaOptions(useRemote?: boolean): MediaOptions | undefined {
+    if (useRemote === true) {
+      return this.project?.media?.remote;
+    } else if (useRemote === false) {
+      return this.project?.media?.options;
+    }
+
+    if (this.project?.media?.remote?.isDefault) {
+      return this.project?.media?.remote;
+    }
+
+    return this.project?.media?.options;
   }
 
   getDevices(

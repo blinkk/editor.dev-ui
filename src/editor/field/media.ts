@@ -415,7 +415,7 @@ export class MediaField
                 id="media-${this.uid}"
                 placeholder=${this.config.placeholder || ''}
                 @input=${this.handleInput.bind(this)}
-                value=${value.url || ''}
+                value=${value.path || ''}
               />
             </div>
             ${this.isProcessing

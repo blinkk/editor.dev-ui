@@ -234,7 +234,7 @@ const fullFiles: Record<string, EditorFileData> = {
       listSimple: ['values', 'in', 'a', 'list'],
       listSimpleMedia: [
         {
-          url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          path: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
       ],
@@ -499,7 +499,7 @@ const fullFiles: Record<string, EditorFileData> = {
     data: {
       mediaList: [
         {
-          url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          path: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
       ],

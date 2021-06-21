@@ -464,8 +464,8 @@ export class MediaField
     index?: number
   ): TemplateResult {
     return html`${findPreviewValue(
-      this.value,
-      [],
+      this.currentValue,
+      ['label'],
       `{ Media ${index !== undefined ? index + 1 : ''} }`
     )}`;
   }

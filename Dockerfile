@@ -31,9 +31,6 @@ COPY ./views ./views
 # Compile the production js/css files.
 RUN yarn run compile
 
-# Copy api documentation.
-COPY ./api ./public/
-
 # Copy the static files.
 # Use `public` directory to keep from serving source files.
 COPY ./static/server/* ./public/
@@ -42,6 +39,9 @@ COPY ./static/server/* ./public/
 RUN cp ./dist/css/server/editor.min.css ./public/ \
   && cp ./dist/src/server/editor.* ./public/ \
   && cp -r ./dist/src/server/gh ./public/gh
+
+# Copy api documentation.
+COPY ./api/* ./public/api/
 
 EXPOSE 8080
 

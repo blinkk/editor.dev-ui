@@ -1,36 +1,28 @@
 name: 'Push to main'
 
-on:
-  push:
-    branches:
-    - main
-    tags-ignore:
-    - '*'
+on: [push]
+  # push:
+  #   branches:
+  #   - main
 
 jobs:
-  gh-pages:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: bahmutov/npm-install@v1
-    - name: Build docs
-      run: yarn run docs
-    - name: Add example
-      run: |
-        mkdir -p docs/example
-        yarn run compile
-        cp static/example/* docs/example/
-        cp dist/css/example/* docs/example/
-        cp dist/src/example.* docs/example/
-    - name: Deploy to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
   deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Checkout editor.dev for api doc generation for Dockerfile
+      uses: actions/checkout@v2
+      with:
+        repository: blinkk/editor.dev
+        path: connector
+    - name: Install npm to generate docs.
+      uses: bahmutov/npm-install@v1
+    - name: Install npm to generate docs for connector.
+      uses: bahmutov/npm-install@v1
+      with:
+        working-directory: connector
+    - run: yarn run docs
+    - run: cd connector && yarn run docs && mv api/connector ../api/
     - name: Setup Cloud SDK
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:

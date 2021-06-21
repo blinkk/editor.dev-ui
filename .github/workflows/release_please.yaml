@@ -22,7 +22,7 @@ jobs:
         node-version: 14
         registry-url: 'https://registry.npmjs.org'
       if: ${{ steps.release.outputs.release_created }}
-    - run: yarn install --frozen-lockfile
+    - uses: bahmutov/npm-install@v1
       if: ${{ steps.release.outputs.release_created }}
     - name: Publish npm package
       run: yarn publish
@@ -35,6 +35,20 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
       if: ${{ steps.release.outputs.release_created }}
+    - run: yarn run docs
+      if: ${{ steps.release.outputs.release_created }}
+    - name: Checkout editor.dev for api doc generation in Dockerfile
+      uses: actions/checkout@v2
+      with:
+        repository: blinkk/editor.dev
+        path: connector
+      if: ${{ steps.release.outputs.release_created }}
+    - name: Install npm to generate docs for connector.
+      uses: bahmutov/npm-install@v1
+      with:
+        working-directory: connector
+      if: ${{ steps.release.outputs.release_created }}
+    - run: cd connector && yarn run docs && mv api/connector ../api/
     - name: Deploy to prod
       run: make build-and-deploy-prod-tag tag=${{ steps.release.outputs.tag_name }}
       if: ${{ steps.release.outputs.release_created }}

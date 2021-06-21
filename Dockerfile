@@ -31,6 +31,9 @@ COPY ./views ./views
 # Compile the production js/css files.
 RUN yarn run compile
 
+# Copy api documentation.
+COPY ./api ./public/
+
 # Copy the static files.
 # Use `public` directory to keep from serving source files.
 COPY ./static/server/* ./public/

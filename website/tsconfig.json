@@ -1,0 +1,26 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "rootDir": "src/ts/",
+    "outDir": "dist/js/",
+    "declaration": false,
+    "moduleResolution": "node",
+    "module": "es2015",
+    "target": "es2018",
+    "pretty": true,
+    "esModuleInterop": true,
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+  },
+  "include": [
+    "src/ts/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+}

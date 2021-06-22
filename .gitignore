@@ -1,8 +1,8 @@
 .DS_Store
 .npmrc
 api/
+build/
 dist/
-docs/
 node_modules/
 .nyc_output/
 yarn-error.log

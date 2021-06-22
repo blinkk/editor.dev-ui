@@ -1,0 +1,44 @@
+@import '../utils/spacing'
+@import '../utils/type'
+@import '../utils/grid'
+
+.columns-50x50-simple
+    +grid-container
+
+.columns-50x50-simple__column
+    align-items: center
+    display: flex
+
+.columns-50x50-simple__column--primary
+    +laptop-gt
+        +grid-range(1, 6)
+
+.columns-50x50-simple__column--assets
+    +laptop-gt
+        +grid-range(7, 12)
+    display: flex
+    justify-content: center
+
+.columns-50x50-simple__column__primary__title
+    +type-heading-3
+
+    & + .columns-50x50-simple__column__primary__body
+        margin-top: $spacing-20
+
+.columns-50x50-simple__column__primary__body
+    max-width: $spacing-max-body-width
+    & + .columns-50x50-simple__column__primary__buttons
+        margin-top: $spacing-20
+
+.columns-50x50-simple__column__assets
+    background: red
+
+.columns-50x50-simple__column__assets__asset
+    display: flex
+
+.columns-50x50-simple__column__assets__asset img
+    max-width: 100%
+    width: 400px
+
+.columns-50x50-simple--reversed
+    +grid-reversed

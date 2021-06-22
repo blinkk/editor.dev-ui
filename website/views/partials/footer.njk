@@ -1,0 +1,24 @@
+<div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
+  <div class="footer__content">
+    <div class="footer__content__links">
+      {% for item in partial.nav %}
+        <a href="{{item.url.path or item.url}}" class="header__links__link">
+          {{item.fields.navTitle or item.fields.title or item.title}}
+        </a>
+      {% endfor %}
+    </div>
+    {# <div class="footer__content__aside">
+      {{"Select language:"|t}}
+      <form autocomplete="off">
+        <select onchange="window.location.href = this.value">
+          {% for locale in doc.locales %}
+          {% set localized_doc = pod.doc(doc.podPath, locale) %}
+          <option value="{{localized_doc.url.path}}" {% if localized_doc.locale == doc.locale %}selected{% endif %}>
+            {{locale.id}}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
+    </div> #}
+  </div>
+</div>

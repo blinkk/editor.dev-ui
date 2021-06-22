@@ -1,0 +1,49 @@
+{
+  "name": "@amagaki/amagaki-starter",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blinkk/amagaki-starter.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "browsersync:reload": "browser-sync reload",
+    "browsersync:start": "browser-sync start --proxy localhost:8080 --files dist",
+    "build": "npm run rollup:build; npm run sass:build; amagaki build",
+    "rollup:watch": "rollup -c -w",
+    "rollup:build": "rollup -c",
+    "dev": "npm-run-all --parallel watch:pages serve rollup:watch sass:watch browsersync:start",
+    "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed",
+    "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed",
+    "fix": "npm run fix:sass",
+    "fix:sass": "sass-lint-auto-fix -c .sasslintrc.fix.yaml",
+    "serve": "amagaki serve",
+    "watch:src": "nodemon --watch src -e ts,js,sass --exec npm run browsersync:reload",
+    "watch:pages": "nodemon --watch content --watch views -e njk,yaml --exec npm run browsersync:reload"
+  },
+  "dependencies": {
+    "@amagaki/amagaki": "^1.0.0",
+    "@blinkk/degu": "0.0.347",
+    "browser-sync": "^2.26.13",
+    "concurrently": "^5.3.0",
+    "glob": "^7.1.6",
+    "gts": "^3.1.0",
+    "nodemon": "^2.0.7",
+    "sass": "^1.32.13",
+    "typescript": "^4.1.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.48.0",
+    "rollup-plugin-browsersync": "^1.3.1",
+    "rollup-plugin-notify": "^1.1.0",
+    "rollup-plugin-scss": "^2.6.1",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}

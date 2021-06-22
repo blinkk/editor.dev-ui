@@ -1,0 +1,42 @@
+{% set social_metadata = pod.doc('/content/partials/base.yaml') %}
+
+{% macro headMetadata() %}
+    {% if doc.description %}
+      <meta name="description" content="{{doc.description}}">
+    {% endif %}
+    {% if podspec.meta.site_author %}
+      <meta name="author" content="{{podspec.meta.site_author}}">
+    {% endif %}
+    <link rel="canonical" href="{{doc.url}}">
+    {% if doc.noindex or doc.collection.noindex %}
+      <meta name="robots" content="noindex">
+    {% endif %}
+    <meta name="referrer" content="no-referrer">
+    <title>{% if doc.title %}{{doc.title}}{% endif %}</title>
+    {% for locale in doc.locales %}
+      {% set localized_doc = doc.localize(locale) -%}
+      <link
+        href="{{localized_doc.url|localize}}"
+        hreflang="{{'x-default' if locale == podspec.localization.default_locale
+                                else locale|lower()|replace('_', '-'}}"
+        rel="alternate"
+      >
+    {% endfor %}
+    <meta property="og:url" content="{{doc.url}}">
+    <meta property="og:title" content="{{doc.title}}">
+    <meta property="og:description" content="{{doc.description}}">
+    <meta property="og:site_name" content="{{podspec.meta.site_name}}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="{{doc.locale.language}}">
+    <meta property="og:image:secure_url" content="{{doc.meta_image or podspec.meta.og_image_url}}">
+    <meta property="og:image" content="{{doc.meta_image or podspec.meta.og_image_url}}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="{{doc.description}}">
+    <meta name="twitter:title" content="{{doc.title}}">
+    <meta name="twitter:site" content="{{podspec.meta.twitter_user}}">
+    <meta
+      name="twitter:image"
+      content="{{doc.meta_image or podspec.meta.og_image_url}}"
+    >
+    <meta name="twitter:creator" content="{{podspec.meta.twitter_user}}">
+{% endmacro %}

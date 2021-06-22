@@ -1,12 +1,14 @@
 {% set _loadedStylesheets = [] %}
 
 {% macro renderPartial(partial) %}
-    <div class="help">
-        <u>Template:</u> {{partial.partial}}
-        {% if partial.options %}
-        <u>Options:</u> {{partial.options|join(', ')}}
-        {% endif %}
-    </div>
+    {% if req.query.help or req.query.editor %}
+        <div class="help">
+            <u>Template:</u> {{partial.partial}}
+            {% if partial.options %}
+            <u>Options:</u> {{partial.options|join(', ')}}
+            {% endif %}
+        </div>
+    {% endif %}
     {# Load partial CSS only once per page. #}
     {% set staticFile = pod.staticFile('/dist/css/partials/' + partial.partial + '.css') %}
     {% if pod.fileExists(staticFile.podPath) and staticFile.url.path not in _loadedStylesheets %}

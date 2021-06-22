@@ -1,0 +1,16 @@
+title: editor.dev example
+navTitle: Example
+description: Example of the editor UI.
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: editor.dev example
+  body: Stub for the example page.
+
+- partial: spacer
+  options:
+  - large

@@ -57,7 +57,10 @@ RUN mkdir -p ./public/ \
   && cp -r ./website/build/* ./public/ \
   && cp ./dist/css/server/editor.min.css ./public/ \
   && cp ./dist/src/server/editor.* ./public/ \
-  && cp -r ./dist/src/server/gh ./public/gh
+  && cp -r ./dist/src/server/gh ./public/gh \
+  && cp static/example/* example/ \
+  && cp dist/css/example/* example/ \
+  && cp dist/src/example.* example/
 
 # Copy api documentation.
 COPY ./api ./public/api

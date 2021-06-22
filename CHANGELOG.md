@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.7...v2.0.0) (2021-06-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* Media field improvements (#58)
+
+### Features
+
+* Media field improvements ([#58](https://www.github.com/blinkk/editor.dev-ui/issues/58)) ([d283b3e](https://www.github.com/blinkk/editor.dev-ui/commit/d283b3ea69c1e1b4b92b28236b13756e6620f972))
+
+
+### Bug Fixes
+
+* Add missing amagaki yaml type. ([8797645](https://www.github.com/blinkk/editor.dev-ui/commit/879764573bc59447cf8a1c8c4708e9c3a67625e4))
+* correct documentation build for releases. ([c9ed85b](https://www.github.com/blinkk/editor.dev-ui/commit/c9ed85b7945f327559fa5929b27b8766248f6765))
+* Html and Markdown fields support for image uploads ([#61](https://www.github.com/blinkk/editor.dev-ui/issues/61)) ([eb95c59](https://www.github.com/blinkk/editor.dev-ui/commit/eb95c59b2fe919f935b176a603aafdce1381cf75))
+* Remove LiveEditor from default export. ([6c8de6b](https://www.github.com/blinkk/editor.dev-ui/commit/6c8de6bc929a4cf4cc61bfb23eefe2589c8be2df))
+* Update label for media list expanded view to use label. ([fa962d4](https://www.github.com/blinkk/editor.dev-ui/commit/fa962d41a29adc0e7ec90a3720f712a43a771857))
+* Upload file needs to use fetch until bent issue is fixed. ([#60](https://www.github.com/blinkk/editor.dev-ui/issues/60)) ([03b563d](https://www.github.com/blinkk/editor.dev-ui/commit/03b563dc924a67796d50605ed803087ed8f4c297))
+* Use the path for input value in the media field. ([1bb86e3](https://www.github.com/blinkk/editor.dev-ui/commit/1bb86e37bd8475ac538952603cb2f383a0569384))
+
 ### [1.3.7](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.6...v1.3.7) (2021-06-17)
 
 

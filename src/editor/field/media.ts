@@ -13,10 +13,10 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {MediaFileData, MediaOptions} from '../api';
 
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {MediaFileData} from '../api';
 import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';

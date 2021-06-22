@@ -1,28 +1,9 @@
-substitutions:
-  _CACHE_DIRS: node_modules
-
 steps:
-- name: gcr.io/cloud-builders/gsutil
-  id: Download build cache
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gsutil -m cp gs://${PROJECT_ID}_cloudbuild/cache-${REPO_NAME}/cache.tgz cache.tgz || echo 'No cache to download.'
-    tar -xzf cache.tgz || echo 'No cache to extract.'
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
   - "-c"
   - docker build --network cloudbuild --no-cache -t gcr.io/$PROJECT_ID/editor-dev-ui:main .
-- name: gcr.io/cloud-builders/gsutil
-  id: Store build cache
-  entrypoint: 'bash'
-  args:
-  - '-ec'
-  - |
-    tar -czf cache.tgz $(ls -d ${_CACHE_DIRS})
-    gsutil cp cache.tgz gs://${PROJECT_ID}_cloudbuild/cache-${REPO_NAME}/cache.tgz
 
 images:
 - gcr.io/$PROJECT_ID/editor-dev-ui

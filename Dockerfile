@@ -43,8 +43,6 @@ RUN cp ./dist/css/server/editor.min.css ./public/ \
 # Copy api documentation.
 COPY ./api ./public/api
 
-RUN ls -la ./public/api/
-
 EXPOSE 8080
 
 CMD [ "node", "dist/src/server/server.js" ]

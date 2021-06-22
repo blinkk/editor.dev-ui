@@ -1,0 +1,31 @@
+{% import "/views/macros/asset.njk" as asset %}
+{% import "/views/macros/button.njk" as button %}
+
+<div class="simple-intro {{partial.class}}">
+    <div class="simple-intro__content">
+        {% if partial.title %}
+            <div class="simple-intro__content__title">
+                {{partial.title}}
+            </div>
+        {% endif %}
+        {% if partial.body %}
+            <div class="simple-intro__content__body">
+                {{partial.body}}
+            </div>
+        {% endif %}
+        {% if partial.buttons %}
+            <div class="simple-intro__content__buttons">
+                {% for item in partial.buttons %}
+                    {{button.button(item)}}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if partial.images %}
+            <div class="simple-intro__content__images">
+                {% for image in partial.images %}
+                    {{asset.asset(image)}}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>

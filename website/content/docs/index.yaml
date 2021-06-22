@@ -1,0 +1,16 @@
+title: editor.dev documentation
+navTitle: Docs
+description: Online editor providing a rich UI for editing structured data with live previews.
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: editor.dev
+  body: Online editor providing a rich UI for editing structured data with live previews.
+
+- partial: spacer
+  options:
+  - large

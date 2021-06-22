@@ -1,0 +1,5 @@
+partial: footer
+nav:
+- !pod.doc /content/pages/example.yaml
+- !pod.doc /content/docs/index.yaml
+- !pod.doc /content/pages/api.yaml

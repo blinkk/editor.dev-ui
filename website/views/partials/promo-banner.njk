@@ -1,0 +1,33 @@
+{% import "/views/macros/asset.njk" as asset %}
+{% import "/views/macros/button.njk" as button %}
+
+<div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
+    <div class="promo-banner__wrap">
+        {% if partial.assets %}
+            <div class="promo-banner__wrap__assets">
+                {% for image in partial.assets %}
+                    {{asset.asset(image)}}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="promo-banner__wrap__content">
+            {% if partial.title %}
+                <div class="promo-banner__wrap__content__title">
+                    {{partial.title}}
+                </div>
+            {% endif %}
+            {% if partial.body %}
+                <div class="promo-banner__wrap__content__body">
+                    {{partial.body}}
+                </div>
+            {% endif %}
+            {% if partial.buttons %}
+                <div class="promo-banner__wrap__content__buttons">
+                    {% for item in partial.buttons %}
+                        {{button.button(item)}}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

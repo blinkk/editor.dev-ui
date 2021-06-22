@@ -1,0 +1,20 @@
+title: Editor.dev
+description: Online editor providing a rich UI for editing structured data with live previews.
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: editor.dev
+  body: Online editor providing a rich UI for editing structured data with live previews.
+  buttons:
+  - label: Local project
+    url: /local/
+  - label: Github project
+    url: /gh/
+
+- partial: spacer
+  options:
+  - large

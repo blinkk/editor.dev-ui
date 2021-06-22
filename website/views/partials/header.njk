@@ -1,0 +1,18 @@
+{% import "/views/macros/asset.njk" as asset with context %}
+
+<div class="header {% for option in partial.options %}header--{{option}}{% endfor %}">
+    <div class="header__logo">
+        <a href="{{partial.logo.doc.url.path}}">
+            {{asset.asset(partial.logo.image, {
+                'class': 'header__logo__image'
+            })}}
+        </a>
+    </div>
+    <div class="header__links">
+        {% for item in partial.nav %}
+            <a href="{{item.url.path}}" class="header__links__link">
+                {{item.fields.title}}
+            </a>
+        {% endfor %}
+    </div>
+</div>

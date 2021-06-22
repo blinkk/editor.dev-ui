@@ -23,5 +23,6 @@
       "./src/example/example.ts",
       "./src/**/*.test.ts",
     ],
+    "out": "api/ui",
   }
 }

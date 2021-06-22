@@ -1,0 +1,31 @@
+@import '../utils/spacing'
+@import '../utils/type'
+
+.hero
+    text-align: center
+
+.hero__content
+    margin: 0 auto
+    max-width: 1440px
+
+.hero__content__title
+    +type-heading-1
+    max-width: $spacing-max-headline-width
+    margin-left: auto
+    margin-right: auto
+
+    & + .hero__content__body
+        +type-body-large
+        margin-top: $spacing-40
+
+.hero__content__body
+    margin-left: auto
+    margin-right: auto
+    max-width: $spacing-max-body-width
+
+    & + .hero__content__buttons
+        margin-top: $spacing-40
+
+.hero__content__assets
+    display: flex
+    margin-top: $spacing-60

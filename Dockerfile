@@ -41,7 +41,7 @@ RUN cp ./dist/css/server/editor.min.css ./public/ \
   && cp -r ./dist/src/server/gh ./public/gh
 
 # Copy api documentation.
-COPY ./api/* ./public/api/
+COPY ./api ./public/api
 
 RUN ls -la ./public/api/
 

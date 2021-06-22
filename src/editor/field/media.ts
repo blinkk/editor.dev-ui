@@ -13,10 +13,10 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {MediaFileData, MediaOptions} from '../api';
 
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
+import {MediaFileData} from '../api';
 import {Template} from '@blinkk/selective-edit/dist/src/selective/template';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
 import merge from 'lodash.merge';
@@ -415,7 +415,7 @@ export class MediaField
                 id="media-${this.uid}"
                 placeholder=${this.config.placeholder || ''}
                 @input=${this.handleInput.bind(this)}
-                value=${value.url || ''}
+                value=${value.path || ''}
               />
             </div>
             ${this.isProcessing
@@ -464,8 +464,8 @@ export class MediaField
     index?: number
   ): TemplateResult {
     return html`${findPreviewValue(
-      this.value,
-      [],
+      this.currentValue,
+      ['label'],
       `{ Media ${index !== undefined ? index + 1 : ''} }`
     )}`;
   }

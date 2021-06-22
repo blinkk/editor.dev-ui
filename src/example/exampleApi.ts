@@ -234,7 +234,7 @@ const fullFiles: Record<string, EditorFileData> = {
       listSimple: ['values', 'in', 'a', 'list'],
       listSimpleMedia: [
         {
-          url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          path: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
       ],
@@ -499,6 +499,12 @@ const fullFiles: Record<string, EditorFileData> = {
     data: {
       mediaList: [
         {
+          path: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+          label: 'Google logo',
+        },
+      ],
+      mediaListExtra: [
+        {
           url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
           label: 'Google logo',
         },
@@ -524,6 +530,36 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'mediaList',
             key: 'mediaList',
             label: 'Media list',
+          } as MediaFieldConfig,
+        } as ExampleFieldConfig,
+        {
+          type: 'exampleField',
+          key: 'mediaListExtra',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
+            },
+            {
+              label: 'Generic config interface',
+              url: 'https://blinkk.github.io/selective-edit/interfaces/selective_field.fieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'mediaList',
+            key: 'mediaList',
+            label: 'Media list w/extra fields',
+            fieldConfig: {
+              type: 'media',
+              label: 'Media w/extra fields',
+              fields: [
+                {
+                  type: 'checkbox',
+                  key: 'loop',
+                  label: 'Loop?',
+                },
+              ],
+            },
           } as MediaFieldConfig,
         } as ExampleFieldConfig,
       ],

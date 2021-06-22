@@ -206,6 +206,23 @@ export class MediaListField
       this.globalConfig
     ) as MediaFieldComponent;
     newField.updateOriginal(editor, new DeepObject());
+
+    // When adding a new item to a locked field
+    if (this.isLocked) {
+      newField.lock();
+
+      // Unlock fields after saving is complete to let the values be updated
+      // when clean.
+      // TODO: Automate this unlock without having to be done manually.
+      document.addEventListener(
+        EVENT_UNLOCK,
+        () => {
+          newField.unlock();
+        },
+        {once: true}
+      );
+    }
+
     const newItem = new this.MediaListItemCls(this, newField);
     items.push(newItem);
     this.expandItem(newItem);
@@ -408,6 +425,7 @@ export class MediaListField
 
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     const items = this.ensureItems(editor);
+
     return html`${this.templateHelp(editor, data)}
       <div class="selective__media_list">
         ${repeat(
@@ -415,9 +433,9 @@ export class MediaListField
           item => item.uid,
           (item, index) => {
             const itemValue = new DeepObject(
-              index < this.originalValue?.length || 0
-                ? this.originalValue[index]
-                : 'TODO: Default value?'
+              index < this.currentValue?.length || 0
+                ? this.currentValue[index]
+                : {}
             );
             return item.template(editor, itemValue, index);
           }

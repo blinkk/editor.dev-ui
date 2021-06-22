@@ -41,7 +41,7 @@ RUN cp ./dist/css/server/editor.min.css ./public/ \
   && cp -r ./dist/src/server/gh ./public/gh
 
 # Copy api documentation.
-COPY ./docs/* ./public/api/
+COPY ./api/* ./public/api/
 
 EXPOSE 8080
 

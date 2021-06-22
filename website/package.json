@@ -25,7 +25,7 @@
     "watch:pages": "nodemon --watch content --watch views -e njk,yaml --exec npm run browsersync:reload"
   },
   "dependencies": {
-    "@amagaki/amagaki": "^1.0.0",
+    "@amagaki/amagaki": "^1.1.0",
     "@blinkk/degu": "0.0.347",
     "browser-sync": "^2.26.13",
     "concurrently": "^5.3.0",

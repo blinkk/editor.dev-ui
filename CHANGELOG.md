@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.1](https://www.github.com/blinkk/editor.dev-ui/compare/v2.0.0...v2.0.1) (2021-06-22)
+
+
+### Bug Fixes
+
+* Media list add new and lock new items when field is locked. ([921df0c](https://www.github.com/blinkk/editor.dev-ui/commit/921df0c4bdee4068f376ddc270504da26fcb81ee))
+
 ## [2.0.0](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.7...v2.0.0) (2021-06-22)
 
 

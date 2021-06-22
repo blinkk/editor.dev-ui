@@ -18,19 +18,25 @@
 </head>
 <body>
     <div class="main">
-        {% set partial = pod.doc('/content/partials/header.yaml').fields %}
-        {{renderPartial.renderPartial(partial)}}
-        {% if doc.fields.partials %}
-            {% for partial in doc.fields.partials %}
-                {{renderPartial.renderPartial(partial)}}
-            {% endfor %}
-        {% else %}
-            <div class="main__body">
-                {{doc.body|markdown|safe}}
-            </div>
-        {% endif %}
-        {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
-        {{renderPartial.renderPartial(partial)}}
+        <header>
+            {% set partial = pod.doc('/content/partials/header.yaml').fields %}
+            {{renderPartial.renderPartial(partial)}}
+        </header>
+        <content class="partials">
+            {% if doc.fields.partials %}
+                {% for partial in doc.fields.partials %}
+                    {{renderPartial.renderPartial(partial)}}
+                {% endfor %}
+            {% else %}
+                <div class="main__body">
+                    {{doc.body|markdown|safe}}
+                </div>
+            {% endif %}
+        </content>
+        <footer>
+            {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
+            {{renderPartial.renderPartial(partial)}}
+        </footer>
     </div>
     <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
 </body>

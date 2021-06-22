@@ -34,6 +34,7 @@ COPY ./gulpfile.js ./
 COPY ./tsconfig.json ./
 COPY ./sass ./sass
 COPY ./src ./src
+COPY ./static ./static
 COPY ./views ./views
 
 # Copy website files.

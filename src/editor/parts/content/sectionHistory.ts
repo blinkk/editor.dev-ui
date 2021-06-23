@@ -64,7 +64,9 @@ export class HistoryPart extends ContentSectionPart {
                   new Date(change.timestamp || new Date())
                 )})
               </div>
-              <div class="le__change__summary">${change.summary}</div>
+              <div class="le__change__summary">
+                ${this.trimSummary(change.summary)}
+              </div>
             </div>
           </div>`
         )}
@@ -84,5 +86,17 @@ export class HistoryPart extends ContentSectionPart {
         </div>
       </div>
       ${this.templateChanges(editor)}`;
+  }
+
+  trimSummary(summary?: string): string {
+    if (!summary) {
+      return '';
+    }
+
+    if (summary.includes('\n')) {
+      return summary.slice(0, summary.indexOf('\n'));
+    }
+
+    return summary;
   }
 }

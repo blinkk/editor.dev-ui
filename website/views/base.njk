@@ -3,36 +3,46 @@
 <!DOCTYPE html>
 <html lang="{{doc.locale.id}}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{doc.fields.title}}</title>
-    <meta name="description" value="{{doc.fields.description}}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{pod.staticFile('/dist/css/main.css')|url}}">
-    <link rel="icon" type="image/png" sizes="256x256" href="{{pod.staticFile('/static/favicon-256.png')|url}}">
-    <link rel="icon" type="image/png" sizes="128x128" href="{{pod.staticFile('/static/favicon-128.png')|url}}">
-    <link rel="icon" type="image/png" sizes="64x64" href="{{pod.staticFile('/static/favicon-64.png')|url}}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{pod.staticFile('/static/favicon-32.png')|url}}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{doc.fields.title}}</title>
+  <meta name="description" value="{{doc.fields.description}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{pod.staticFile('/dist/css/main.css')|url}}">
+  <link rel="icon" type="image/png" sizes="256x256" href="{{pod.staticFile('/static/favicon-256.png')|url}}">
+  <link rel="icon" type="image/png" sizes="128x128" href="{{pod.staticFile('/static/favicon-128.png')|url}}">
+  <link rel="icon" type="image/png" sizes="64x64" href="{{pod.staticFile('/static/favicon-64.png')|url}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{pod.staticFile('/static/favicon-32.png')|url}}">
 </head>
 <body>
+  <div
+      class="container"
+      data-port="{{doc.fields.config.port}}"
+      data-service="{{doc.fields.config.service}}"
+      data-organization="{{doc.fields.config.organization}}"
+      data-project="{{doc.fields.config.project}}"
+      data-branch="{{doc.fields.config.branch}}"
+      data-mode="{{doc.fields.config.mode}}"
+      data-file="{{doc.fields.config.file}}">
     <div class="main">
-        {% set partial = pod.doc('/content/partials/header.yaml').fields %}
-        {{renderPartial.renderPartial(partial)}}
-        <content class="partials">
-            {% if doc.fields.partials %}
-                {% for partial in doc.fields.partials %}
-                    {{renderPartial.renderPartial(partial)}}
-                {% endfor %}
-            {% else %}
-                <div class="main__body">
-                    {{doc.body|markdown|safe}}
-                </div>
-            {% endif %}
-        </content>
-        {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
-        {{renderPartial.renderPartial(partial)}}
+      {% set partial = pod.doc('/content/partials/header.yaml').fields %}
+      {{renderPartial.renderPartial(partial)}}
+      <content class="partials">
+        {% if doc.fields.partials %}
+          {% for partial in doc.fields.partials %}
+            {{renderPartial.renderPartial(partial)}}
+          {% endfor %}
+        {% else %}
+          <div class="main__body">
+            {{doc.body|markdown|safe}}
+          </div>
+        {% endif %}
+      </content>
+      {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
+      {{renderPartial.renderPartial(partial)}}
     </div>
-    <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
+  </div>
+  <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
 </body>

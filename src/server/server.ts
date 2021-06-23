@@ -31,6 +31,7 @@ app.get('/local/:port(\\d+)/*', (req, res) => {
 });
 
 // Use local server with default port.
+// TODO: Serve any local/* using the public/local/index.html file.
 app.get('/local/*', (req, res) => {
   res.render('index.njk', {
     port: DEFAULT_LOCAL_PORT,

@@ -164,10 +164,6 @@ const startEditor = (
 let editor: LiveEditor | undefined = undefined;
 
 if (isLocal) {
-  const localStatus = new LocalStatus(container, {
-    port: localPort,
-  });
-
   // Test the local api to make sure that it is available before
   // we start rendering the editor. Otherwise show instructions for
   // starting the local server.
@@ -189,7 +185,6 @@ if (isLocal) {
       .catch(err => {
         console.error('Unable to ping the api.', err);
         try {
-          localStatus.render();
           rafTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.

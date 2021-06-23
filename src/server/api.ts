@@ -31,7 +31,7 @@ export interface ServerApiComponent {
 }
 
 /**
- * Example api that returns data through a 'simulated' network.
+ * Api for connecting with the editor.dev api connector.
  */
 export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   projectTypes: ApiProjectTypes;

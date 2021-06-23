@@ -1,6 +1,6 @@
 import {TemplateResult, html, render} from '@blinkk/selective-edit';
 
-const COPIED_CLASS = 'le__local__command__input--copied';
+const COPIED_CLASS = 'local__instruction__command--copied';
 const DEFAULT_PORT = 9090;
 
 export interface LocalStatusOptions {

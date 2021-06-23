@@ -8,11 +8,11 @@
 
 {% macro asset(params) %}
   {% if params.url %}
-    {% set url = params.url %}
+    {% set url = params.url.path %}
   {% elif params.file %}
     {% set url = params.file %}
   {% endif %}
-  {{_image(url|url, params)}}
+  {{_image(url, params)}}
 {% endmacro %}
 
 {% macro _renderImage(url, params) %}

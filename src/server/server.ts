@@ -19,15 +19,6 @@ nunjucks.configure('views', {
   express: app,
 });
 
-// Determine where to server static files from.
-if (MODE === 'dev') {
-  app.use(express.static('static/server'));
-  app.use(express.static('dist/css/server'));
-  app.use(express.static('dist/src/server'));
-} else {
-  app.use(express.static('public'));
-}
-
 // Use local server connector.
 app.get('/local/:port(\\d+)/*', (req, res) => {
   res.render('index.njk', {
@@ -72,6 +63,14 @@ app.all('/gh/callback', (req, res) => {
     message: 'Processing GitHub login. Please wait.',
   });
 });
+
+// Determine where to server static files from.
+if (MODE === 'dev') {
+  app.use(express.static('dist/css/server'));
+  app.use(express.static('dist/src/server'));
+} else {
+  app.use(express.static('public'));
+}
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Running on http://localhost:${PORT}`);

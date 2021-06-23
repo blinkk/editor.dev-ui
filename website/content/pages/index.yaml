@@ -11,8 +11,10 @@ partials:
   body: Online editor providing a rich UI for editing structured data with live previews.
   buttons:
   - label: Local project
+    doc: !pod.doc /content/pages/local/
     url: /local/
   - label: Github project
+    doc: !pod.doc /content/pages/gh/
     url: /gh/
 
 - partial: spacer

@@ -8,7 +8,7 @@ partials:
   - large
 
 - partial: hero
-  title: editor.dev example
+  title: Example
   body: Stub for the example page.
 
 - partial: spacer

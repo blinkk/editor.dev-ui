@@ -1,18 +1,28 @@
 {% import "/views/macros/asset.njk" as asset with context %}
 
-<div class="header {% for option in partial.options %}header--{{option}}{% endfor %}">
-    <div class="header__logo">
-        <a href="{{partial.logo.doc.url.path}}">
-            {{asset.asset(partial.logo.image, {
-                'class': 'header__logo__image'
-            })}}
-        </a>
+<div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
+    <script>
+        if (window.location.hostname !== 'editor.dev') {
+            document.body.classList.add('beta');
+        }
+    </script>
+    <div class="header__beta">
+        You are viewing the documentation for the next release of the editor. <a href="{{partial.stable.url}}{{doc.url.path}}">View stable version.</a>
     </div>
-    <div class="header__links">
-        {% for item in partial.nav %}
-            <a href="{{item.url.path}}" class="header__links__link">
-                {{item.fields.title}}
+    <div class="header__content">
+        <div class="header__logo">
+            <a href="{{partial.logo.doc.url.path}}">
+                {{asset.asset(partial.logo.image, {
+                    'class': 'header__logo__image'
+                })}}
             </a>
-        {% endfor %}
+        </div>
+        <div class="header__links">
+            {% for item in partial.nav %}
+                <a href="{{item.url.path}}" class="header__links__link">
+                    {{item.fields.title}}
+                </a>
+            {% endfor %}
+        </div>
     </div>
 </div>

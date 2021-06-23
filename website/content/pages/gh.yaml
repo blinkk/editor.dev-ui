@@ -1,0 +1,16 @@
+title: Github
+navTitle: Github
+description: Github
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: Github
+  body: Stub for the github page.
+
+- partial: spacer
+  options:
+  - large

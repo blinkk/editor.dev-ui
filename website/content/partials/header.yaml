@@ -3,5 +3,5 @@ logo:
   doc: !pod.doc /content/pages/index.yaml
   title: 'Logo'
   image: !pod.staticFile /static/editor.dev.png
-# nav:
-# - !pod.doc /content/pages/index.yaml
+stable:
+  url: https://editor.dev

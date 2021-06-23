@@ -1,7 +1,22 @@
+@import '../utils/color'
 @import '../utils/spacing'
 @import '../utils/type'
 
-.header
+.header__beta
+    background: $color-secondary
+    color: $color-on-secondary
+    display: none
+    padding: $spacing-20
+    text-align: center
+
+    .beta &
+        display: block
+
+    a
+        color: $color-on-secondary
+        font-weight: 700
+
+.header__content
     align-items: center
     display: flex
     justify-content: space-between
@@ -12,4 +27,3 @@
 
 .header__logo img
     width: 200px
-

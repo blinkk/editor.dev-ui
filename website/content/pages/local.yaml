@@ -1,0 +1,16 @@
+title: Local
+navTitle: Local
+description: Local
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: Local
+  body: Stub for the local page.
+
+- partial: spacer
+  options:
+  - large

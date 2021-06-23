@@ -5,7 +5,7 @@ import {Document, NunjucksPlugin, Pod, StaticFile} from '@amagaki/amagaki';
 export default (pod: Pod) => {
   pod.configure({
     meta: {
-      name: 'Amagaki Starter',
+      name: 'editor.dev',
     },
     localization: {
       defaultLocale: 'en',

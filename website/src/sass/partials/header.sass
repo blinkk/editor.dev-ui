@@ -23,7 +23,13 @@
     padding: $spacing-20
 
 .header__logo a
-    display: flex
+    +type-heading-2
+    color: $color-primary
+    text-decoration: none
+
+    &:hover
+        color: $color-primary-hover
+        text-decoration: underline
 
 .header__logo img
     width: 200px

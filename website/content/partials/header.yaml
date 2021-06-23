@@ -2,6 +2,5 @@ partial: header
 logo:
   doc: !pod.doc /content/pages/index.yaml
   title: editor.dev
-  image: !pod.staticFile /static/editor.dev.png
 stable:
   url: https://editor.dev

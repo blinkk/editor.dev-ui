@@ -72,6 +72,19 @@ if (MODE === 'dev') {
   app.use(express.static('public'));
 }
 
+/**
+ * Check for missing trailing slashes and redirect.
+ */
+app.use(
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.path.slice(-1) !== '/') {
+      res.redirect(302, req.path + '/' + req.url.slice(req.path.length));
+    } else {
+      next();
+    }
+  }
+);
+
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Running on http://localhost:${PORT}`);
 });

@@ -1,60 +1,50 @@
-# Live Editor
+# editor.dev UI
 
-Experimental.
+Provides a rich UI for editing structured data with live previews.
 
-Editor for providing a rich UI for editing structured data with live previews.
+See the [docs][docs], [typescript docs][tsdocs], or [example][example] of the UI.
 
-See the [typescript docs][tsdocs] or [example][example].
+[docs]: https://editor.dev/docs/
+[example]: https://editor.dev/example/
+[tsdocs]: https://editor.dev/api/ui/
 
-[![codecov](https://codecov.io/gh/blinkk/editor.dev-ui/branch/main/graph/badge.svg?token=Z327B3XPKO)](https://codecov.io/gh/blinkk/editor.dev-ui)
+## Usage
 
-[example]: https://blinkk.github.io/editor.dev-ui/example/
-[tsdocs]: https://blinkk.github.io/editor.dev-ui/
+To start using, visit [editor.dev][live] and choose between editing against a local project or a
+GitHub hosted project.
 
 ## Developing
 
-To start developing on the live editor UI run the following:
+To start developing on the editor UI run the following:
 
 ```sh
 yarn install
 yarn run serve
 ```
 
-Then visit https://localhost:8888/ to iterate and improve the editor.
+Then visit https://localhost:8888/ to iterate and improve the editor UI.
 
-## Live edit server
+## editor.dev UI server
 
-The live edit server is used to deploy the live editor UI using Cloud Run.
-It contains logic for connecting to different live edit connectors (such as github and local)
-and loads in the specialized fields (such as for Grow or Amagaki sites) as needed.
+The editor UI server is used to deploy the editor UI to the bet and live environments.
+It contains logic for connecting to different editor connectors (such as GitHub and local)
+and loads in the specialized fields (such as for [Grow][grow] or [Amagaki][amagaki] sites) as needed.
 
 To develop locally run `yarn run hosted` and visit https://localhost:8080/ and iterate and improve.
 If you are developing on the editor UI, use the `yarn run serve` command from above instead.
 
 ## Deployment
 
-The live editor is built for production using a Docker image and Google Cloud Run.
+The editor is built for production using a Docker image and Google Cloud Run.
 
-Every commit to `main` builds the docker image with a `:main` tag and updates the cloud run image for [`beta.editor.dev`](https://beta.editor.dev).
-Every tag builds the docker image with a version tag (ex: `v1.0.5`) and the `:latest` tag then updates the cloud run image for [`editor.dev`](https://editor.dev).
+Every commit to `main` builds the docker image with a `:main` tag and updates the cloud run image for [`beta.editor.dev`][beta].
+Every tag builds the docker image with a version tag (ex: `v1.0.5`) and the `:latest` tag then updates the cloud run image for [`editor.dev`][live].
 
-If there is an issue with the latest release for the prod you can roll back to an earlier version.
+To switch the production deployment run `make deploy-prod tag=<VERSION>` where `<VERSION>` is the
+desired version to roll back to. For example: `make deploy-prod tag=v1.0.5`.
 
-To switch the production deployment run `make deploy-prod tag=<VERSION>` where `<VERSION>` is the desired version to roll back to.
-For example: `make deploy-prod tag=v1.0.5`.
+[beta]: https://beta.editor.dev/
+[live]: https://editor.dev/
 
-### Service account
-
-The builds use `gcloud` to build and deploy to a Cloud Run service.
-
-The service account needs to be setup to be a member of the `-compute@` service account to [deploy from cloud build](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run).:
-
-```sh
-gcloud iam service-accounts add-iam-policy-binding \
-  --project=$PROJECT \
-  --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
-  --role="roles/iam.serviceAccountUser" \
-  $PROJECT_ID-compute@developer.gserviceaccount.com
-```
-
-The service account also needs to have a [set of permissions](https://github.com/google-github-actions/deploy-cloudrun#setup) to be able to build and deploy to cloud run.
+[grow]: https://grow.dev/
+[amagaki]: https://amagaki.dev/

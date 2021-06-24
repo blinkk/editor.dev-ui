@@ -1,0 +1,18 @@
+title: Github Authentication
+description: Authentication callback from GitHub.
+
+js:
+- !pod.staticFile /static/gh.callback.min.js
+
+partials:
+- partial: spacer
+  options:
+  - large
+
+- partial: hero
+  title: GitHub authentication
+  body: Authenticating GitHub login, please wait.
+
+- partial: spacer
+  options:
+  - large

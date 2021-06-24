@@ -5,6 +5,8 @@ import path from 'path';
 const PORT = 8080;
 const MODE = process.env.MODE || 'dev';
 const PROJECT_ID = process.env.PROJECT_ID || '';
+const STACKDRIVER_KEY =
+  process.env.STACKDRIVER_KEY || 'AIzaSyAvmyHYE91XvlFzPI5SA5LcRoIx-aOCGJU';
 
 // Determine base for website files.
 let websiteRoot = path.join(__dirname, '..', '..', 'public');
@@ -46,18 +48,20 @@ app.all('/gh/callback', (req, res, next) => {
   });
 });
 
-app.get('/gh/*', (req, res, next) => {
-  const filename = 'gh/index.html';
-  res.sendFile(filename, websiteOptions, err => {
-    if (err) {
-      next(err);
-    }
+// Use github connector.
+app.get('/gh/*', (req, res) => {
+  res.render('index.njk', {
+    service: 'gh',
+    mode: MODE,
+    projectId: PROJECT_ID,
+    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
   });
 });
 
 // Determine where to server static files from.
 if (MODE === 'dev') {
   app.use(express.static('website/build'));
+  app.use(express.static('website/build/static'));
 } else {
   app.use(express.static('public'));
 }

@@ -29,14 +29,16 @@
   "scripts": {
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "npx tsc --skipLibCheck && npx gulp compile && webpack --config webpack.prod.js",
+    "compile": "npx tsc --skipLibCheck && yarn run sass:build && webpack --config webpack.prod.js",
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "npx typedoc",
     "fix": "npx eslint --fix src/**/*.ts",
-    "hosted": "concurrently \"webpack --config webpack.server.js\" \"npx gulp watch\" \"nodemon ./src/server/server.ts\"",
+    "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/server/server.ts\"",
     "prepublishOnly": "npx tsc --skipLibCheck",
-    "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
+    "sass:build": "sass --no-source-map ./sass/:./dist/css --style compressed",
+    "sass:watch": "sass --watch --no-source-map ./sass/:./dist/css --style compressed",
+    "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "test": "npx nyc ava",
     "test-ci": "npx nyc --reporter=lcov ava && codecov"
   },
@@ -73,10 +75,6 @@
     "eslint-plugin-sort-class-members": "^1.11.0",
     "express": "^4.17.1",
     "gts": "^3.1.0",
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-sass": "^4.1.1",
     "nodemon": "^2.0.7",
     "nunjucks": "^3.2.3",
     "nyc": "^15.1.0",
@@ -100,6 +98,7 @@
     "lodash.merge": "^4.6.2",
     "marked": "^2.1.2",
     "quill": "^1.3.7",
+    "sass": "^1.35.1",
     "stackdriver-errors-js": "^0.8.0"
   }
 }

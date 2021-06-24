@@ -1,7 +1,7 @@
 .le__part__content__header
   align-items: center
-  background-color: $le-color-tertiary
-  color: $le-color-on-tertiary
+  background-color: var(--color-tertiary)
+  color: var(--color-on-tertiary)
   display: flex
   flex-flow: row
   justify-content: space-between
@@ -13,7 +13,7 @@
 .le__part__content__header__section
   padding: $le-space-medium
   border-bottom: $le-border-size-large solid transparent
-  color: $le-color-secondary-light
+  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   font-weight: 700
   text-transform: uppercase
@@ -23,15 +23,15 @@
     opacity: $le-opacity-disabled
 
   &:hover:not(.le__part__content__header__section--disabled)
-    border-bottom: $le-border-size-large solid $le-color-secondary-light
-    color: $le-color-secondary
+    border-bottom: $le-border-size-large solid var(--color-secondary-light)
+    color: var(--color-secondary)
 
   &--selected
-    border-bottom: $le-border-size-large solid $le-color-secondary
-    color: $le-color-secondary
+    border-bottom: $le-border-size-large solid var(--color-secondary)
+    color: var(--color-secondary)
 
   &--selected:hover
-    border-bottom: $le-border-size-large solid $le-color-secondary-dark
+    border-bottom: $le-border-size-large solid var(--color-secondary-dark)
 
 .le__part__content__header__actions
   align-items: center

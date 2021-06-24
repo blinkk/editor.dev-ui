@@ -89,15 +89,15 @@
     padding-left: $le-space-xxlarge
 
   &--primary
-    color: $le-color-primary
+    color: var(--color-primary)
     font-weight: 700
 
   &--secondary
-    color: $le-color-secondary
+    color: var(--color-secondary)
     font-weight: 700
 
   &--heading
-    color: $le-color-secondary-dark
+    color: var(--color-secondary-dark)
     font-weight: 700
 
   &--emphasis
@@ -108,30 +108,30 @@
     transition: opacity $le-speed-xfast
 
   &.le__clickable:hover
-    background-color: $le-color-tertiary
-    color: $le-color-on-tertiary
+    background-color: var(--color-tertiary)
+    color: var(--color-on-tertiary)
 
     .le__part__menu &
-      box-shadow: -15vw 0 0 $le-color-tertiary;
+      box-shadow: -15vw 0 0 var(--color-tertiary)
 
     .le__actions
       opacity: 1
 
   &--primary.le__clickable,
   &--primary.le__clickable:hover
-    color: $le-color-primary
+    color: var(--color-primary)
 
   &--secondary.le__clickable,
   &--secondary.le__clickable:hover
-    color: $le-color-secondary
+    color: var(--color-secondary)
 
   &--selected,
   &--selected.le__clickable:hover
-    background-color: $le-color-secondary
-    color: $le-color-on-secondary
+    background-color: var(--color-secondary)
+    color: var(--color-on-secondary)
 
     .le__part__menu &
-      box-shadow: -15vw 0 0 $le-color-secondary;
+      box-shadow: -15vw 0 0 var(--color-secondary)
 
 .le__list__item__label
   flex-grow: 1

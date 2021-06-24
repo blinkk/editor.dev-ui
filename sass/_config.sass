@@ -1,44 +1,20 @@
 // Default configuration for the live editor.
 
-// Primary Colors
-$le-color-primary: #48a0f4 !default
-$le-color-primary-light: #84d1ff !default
-$le-color-primary-dark: #0072c1 !default
-$le-color-on-primary: #ffffff !default
-$le-color-on-primary-light: #000000 !default
-$le-color-on-primary-dark: #ffffff !default
-
-// Secondary Colors
-$le-color-secondary: #2c2c2c !default
-$le-color-secondary-light: #555555 !default
-$le-color-secondary-dark: #000000 !default
-$le-color-on-secondary: #ffffff !default
-$le-color-on-secondary-light: #ffffff !default
-$le-color-on-secondary-dark: #ffffff !default
-
-// Tertiary Colors
-$le-color-tertiary: #eeeeee !default
-$le-color-tertiary-light: #ffffff !default
-$le-color-tertiary-dark: #bcbcbc !default
-$le-color-on-tertiary: #000000 !default
-$le-color-on-tertiary-light: #000000 !default
-$le-color-on-tertiary-dark: #000000 !default
 
 // Utility Colors
+// TODO: Remove in favor of CSS vars for schemes.
 $le-color-border: #e5e5e5 !default
 $le-color-border-dark: rgba(0, 0, 0, 0.8) !default
 $le-color-border-light: rgba(0, 0, 0, 0.1) !default
 $le-color-extreme: #C71F25 !default
 $le-color-warning: #D78528 !default
 $le-color-info: #4F9CD1 !default
-$le-color-back: #ffffff !default
 $le-color-back-highlight: #e1fc8d !default
 $le-color-back-error: $le-color-extreme !default
 $le-color-back-warning: $le-color-warning !default
 $le-color-back-info: $le-color-info !default
 $le-color-oclude: rgba(0, 0, 0, .25) !default
-$le-color-on-back: #000000 !default
-$le-color-on-back-subtle: rgba($le-color-on-back, .25) !default
+$le-color-on-back-subtle: #121212 !default
 $le-color-on-back-highlight: #000000 !default
 $le-color-on-back-error: #ffffff !default
 $le-color-on-back-warning: #000000 !default
@@ -116,7 +92,7 @@ $le-toast-speed: 5000ms !default
 $le-opacity-disabled: .35 !default
 
 =section-heading
-  color: $le-color-secondary-light
+  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   text-transform: uppercase
 

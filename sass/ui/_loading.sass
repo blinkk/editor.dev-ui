@@ -1,3 +1,5 @@
+@use 'sass:math'
+
 .le__loading
   display: inline-block
   height: $le-loading-size
@@ -6,8 +8,8 @@
 
   &:after
     animation: editor__loading $le-loading-speed linear infinite
-    border: $le-loading-border-size solid $le-color-secondary
-    border-color: $le-color-secondary transparent $le-color-secondary transparent
+    border: $le-loading-border-size solid var(--color-secondary)
+    border-color: var(--color-secondary) transparent var(--color-secondary) transparent
     border-radius: 50%
     content: " "
     display: block
@@ -18,8 +20,8 @@
 
   &:before
     animation: editor__loading__inner $le-loading-speed * 1.5 linear infinite
-    border: $le-loading-border-size solid $le-color-secondary
-    border-color: $le-color-primary transparent $le-color-primary transparent
+    border: $le-loading-border-size solid var(--color-secondary)
+    border-color: var(--color-primary) transparent var(--color-primary) transparent
     border-radius: 50%
     content: " "
     display: block
@@ -38,20 +40,20 @@
     margin: $le-space-medium 0
 
   &--small
-    height: $le-loading-size / 2
-    width: $le-loading-size / 2
+    height: math.div($le-loading-size, 2)
+    width: math.div($le-loading-size, 2)
 
     &:after
-      border-width: $le-loading-border-size / 2
-      height: ($le-loading-size - ($le-loading-border-size * 4)) / 2
-      margin: $le-loading-border-size / 2
-      width: ($le-loading-size - ($le-loading-border-size * 4)) / 2
+      border-width: math.div($le-loading-border-size, 2)
+      height: math.div(($le-loading-size - ($le-loading-border-size * 4)), 2)
+      margin: math.div($le-loading-border-size, 2)
+      width: math.div(($le-loading-size - ($le-loading-border-size * 4)), 2)
 
     &:before
-      border-width: $le-loading-border-size / 2
-      height: ($le-loading-size - ($le-loading-border-size * 8)) / 2
-      margin: $le-loading-border-size * 3 / 2
-      width: ($le-loading-size - ($le-loading-border-size * 8)) / 2
+      border-width: math.div($le-loading-border-size, 2)
+      height: math.div(($le-loading-size - ($le-loading-border-size * 8)), 2)
+      margin: math.div($le-loading-border-size * 3, 2)
+      width: math.div(($le-loading-size - ($le-loading-border-size * 8)), 2)
 
 @keyframes editor__loading__inner
   0%

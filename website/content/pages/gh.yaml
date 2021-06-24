@@ -3,7 +3,7 @@ navTitle: Github
 description: Github
 
 css:
-- !pod.staticFile /static/editor.min.css
+- !pod.staticFile /static/editor.css
 
 js:
 - !pod.staticFile /static/editor.min.js

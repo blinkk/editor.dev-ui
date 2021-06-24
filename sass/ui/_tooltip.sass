@@ -3,10 +3,10 @@
   display: inline-block
 
   &:before
-    background: $le-color-secondary
+    background: var(--color-secondary)
     border-radius: $le-radius-small
     box-shadow: $le-shadow-medium
-    color: $le-color-on-secondary
+    color: var(--color-on-secondary)
     content: attr(data-tip)
     display: none
     font-family: $le-font-family
@@ -27,8 +27,8 @@
       display: block
 
   &:after
-    border: $le-space-small solid $le-color-secondary
-    border-color: transparent $le-color-secondary transparent transparent
+    border: $le-space-small solid var(--color-secondary)
+    border-color: transparent var(--color-secondary) transparent transparent
     content: ""
     display: none
     left: 100%
@@ -69,7 +69,7 @@
       margin: initial
       top: initial
 
-      border-color: transparent transparent $le-color-secondary transparent
+      border-color: transparent transparent var(--color-secondary) transparent
       top: 100%
       left: 50%
       margin-top: -$le-space-small
@@ -100,7 +100,7 @@
       left: initial
       margin: initial
 
-      border-color: transparent transparent transparent $le-color-secondary
+      border-color: transparent transparent transparent var(--color-secondary)
       margin-right: -$le-space-small
       right: 100%
 
@@ -127,7 +127,7 @@
       margin: initial
       top: initial
 
-      border-color: $le-color-secondary transparent transparent transparent
+      border-color: var(--color-secondary) transparent transparent transparent
       bottom: 100%
       left: 50%
       margin-bottom: -$le-space-small

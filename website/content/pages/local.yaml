@@ -1,6 +1,15 @@
-title: Local
+title: Local Development
 navTitle: Local
-description: Local
+description: Develop projects using a local set of project files.
+
+css:
+- !pod.staticFile /static/editor.min.css
+
+js:
+- !pod.staticFile /static/editor.min.js
+
+config:
+  port: 9090
 
 partials:
 - partial: spacer
@@ -8,8 +17,19 @@ partials:
   - large
 
 - partial: hero
-  title: Local
-  body: Stub for the local page.
+  title: Local development
+  body: Edit project in a local project.
+
+- partial: spacer
+  options:
+  - medium
+
+- partial: local
+  title: Searching for local project...
+  body: "Run the following command in the main directory of your local project:"
+  instructions:
+    version: 14
+    command: npx @blinkk/editor.dev
 
 - partial: spacer
   options:

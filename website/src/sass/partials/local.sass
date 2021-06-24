@@ -1,0 +1,52 @@
+@import '../utils/spacing'
+@import '../utils/type'
+
+.local
+  margin-left: auto
+  margin-right: auto
+  max-width: $spacing-max-body-width
+
+.local__title
+  +type-heading-3
+
+  & + .local__body
+      +type-body-large
+      margin-top: $spacing-40
+
+.local__instruction
+  border: 1px dashed var(--color-primary-light)
+  padding: $spacing-20
+  margin-top: $spacing-20
+
+  a
+    font-weight: 700
+
+  pre
+    margin: 0
+    padding: 0
+
+.local__instruction__version
+  +type-small
+
+.local__instruction__command
+  &::after
+    +type-small
+    content: " copied"
+    opacity: 0
+    transition: opacity 500ms
+
+  &--copied
+    &::after
+      opacity: 1
+
+  input
+    +type-large
+    background: transparent
+    border: none
+    color: var(--color-on-background)
+    font-weight: 700
+    padding: 0
+    width: auto
+
+    &:focus
+      outline: none

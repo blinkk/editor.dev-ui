@@ -30,7 +30,6 @@ import {ExampleFieldField} from '../example/field/exampleField';
 import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GithubApi} from './gh/githubApi';
 import {HtmlField} from '../editor/field/html';
-import {LocalStatus} from './local';
 import {MarkdownField} from '../editor/field/markdown';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
@@ -54,22 +53,44 @@ if (stackdriverKey) {
 const container = document.querySelector('.container') as HTMLElement;
 const localPort = parseInt(container.dataset.port || '');
 const isLocal = localPort > 0;
+let initialFile: string | undefined = undefined;
 let api: (LiveEditorApiComponent & ServerApiComponent) | null = null;
 if (isLocal) {
+  const urlParts = window.location.pathname
+    .split('/')
+    .filter(value => value.length) // Do not need empty items.
+    .slice(1); // Remove the 'local' portion of url.
+
+  if (urlParts.length) {
+    initialFile = `/${urlParts.join('/')}`;
+  }
+
   api = new LocalServerApi(localPort);
 } else {
   const service = container.dataset.service;
-  const organization = container.dataset.organization;
-  const project = container.dataset.project;
-  const branch = container.dataset.branch;
+  let organization: string | undefined = undefined;
+  let project: string | undefined = undefined;
+  let branch: string | undefined = undefined;
+  const urlParts = window.location.pathname
+    .split('/')
+    .filter(value => value.length) // Do not need empty items.
+    .slice(1); // Remove the 'service' portion of url.
+
+  if (urlParts.length >= 1) {
+    organization = urlParts[0];
+  }
+  if (urlParts.length >= 2) {
+    project = urlParts[1];
+  }
+  if (urlParts.length >= 3) {
+    branch = urlParts[2];
+  }
+  if (urlParts.length >= 4) {
+    initialFile = `/${urlParts.slice(3).join('/')}`;
+  }
+
   const isUnstable = window.location.hostname.includes('beta');
   const isDev = container.dataset.mode === 'dev';
-
-  if (!service || !organization || !project || !branch) {
-    throw new Error(
-      'Missing service, organization, project, or branch information.'
-    );
-  }
 
   if (service === 'gh') {
     api = new GithubApi(
@@ -79,6 +100,12 @@ if (isLocal) {
       branch,
       isUnstable,
       isDev
+    );
+  }
+
+  if (!service || !organization || !project || !branch) {
+    throw new Error(
+      'Missing service, organization, project, or branch information.'
     );
   }
 }
@@ -151,10 +178,10 @@ const startEditor = (
     container as HTMLElement
   );
 
-  // Check for url path to load.
-  if (container.dataset.file) {
+  // Check for initial file to load.
+  if (initialFile) {
     editor.state.getFile({
-      path: container.dataset.file || '',
+      path: initialFile || '',
     });
   }
 
@@ -164,10 +191,6 @@ const startEditor = (
 let editor: LiveEditor | undefined = undefined;
 
 if (isLocal) {
-  const localStatus = new LocalStatus(container, {
-    port: localPort,
-  });
-
   // Test the local api to make sure that it is available before
   // we start rendering the editor. Otherwise show instructions for
   // starting the local server.
@@ -189,7 +212,6 @@ if (isLocal) {
       .catch(err => {
         console.error('Unable to ping the api.', err);
         try {
-          localStatus.render();
           rafTimeout(pingApi, 2500);
         } catch (err) {
           // Ignore error.

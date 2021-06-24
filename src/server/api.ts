@@ -31,7 +31,7 @@ export interface ServerApiComponent {
 }
 
 /**
- * Example api that returns data through a 'simulated' network.
+ * Api for connecting with the editor.dev api connector.
  */
 export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   projectTypes: ApiProjectTypes;
@@ -297,16 +297,16 @@ export class ServiceServerApi extends ServerApi {
 
   constructor(
     service: string,
-    organization: string,
-    project: string,
+    organization?: string,
+    project?: string,
     branch?: string,
     isUnstable?: boolean,
     isDev?: boolean
   ) {
     super();
     this.service = service;
-    this.organization = organization;
-    this.project = project;
+    this.organization = organization || '';
+    this.project = project || '';
     this.branch = branch || 'main';
     this.isUnstable = isUnstable || false;
     this.isDev = isDev || false;

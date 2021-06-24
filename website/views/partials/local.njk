@@ -1,0 +1,18 @@
+<div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
+  {% if partial.title %}
+    <div class="{{partial.partial}}__title">
+      {{partial.title}}
+    </div>
+  {% endif %}
+  {% if partial.body %}
+    <div class="{{partial.partial}}__body">
+      {{partial.body}}
+    </div>
+  {% endif %}
+  {% if partial.instructions %}
+    <div class="{{partial.partial}}__instruction">
+      <pre><code><span class="{{partial.partial}}__instruction__version"># Requires <a href="https://nodejs.org/" target="_blank">Node.js</a> &gt;= {{partial.instructions.version}}</span>
+<div class="{{partial.partial}}__instruction__command"><input readonly value="{{partial.instructions.command}}"></div></code></pre>
+    </div>
+  {% endif %}
+</div>

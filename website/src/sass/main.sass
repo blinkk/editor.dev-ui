@@ -1,28 +1,40 @@
+@import utils/color
 @import utils/type
 @import partials/button
 
-html,
 body
-    +type-body
-    margin: 0
-    padding: 0
+  background: var(--color-background)
+  color: var(--color-on-background)
+  +type-body
+  margin: 0
+  padding: 0
+
+a
+  color: var(--color-primary)
+
+.container
+  height: 100vh
+  display: flex
+  flex-flow: column
+
+  > div
+  flex-grow: 1
 
 .main
-    display: flex
-    flex-flow: column
-    min-height: 100vh
+  display: flex
+  flex-flow: column
 
 .partials
-    flex-grow: 1
+  flex-grow: 1
 
 .help
-    background: black
-    color: white
-    font-size: 12px
-    font-weight: bold
-    line-height: 14px
-    padding: 4px 8px
-    position: absolute
+  background: black
+  color: white
+  font-size: 12px
+  font-weight: bold
+  line-height: 14px
+  padding: 4px 8px
+  position: absolute
 
 img
-    max-width: 100%
+  max-width: 100%

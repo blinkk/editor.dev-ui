@@ -30,8 +30,21 @@ The editor UI server is used to deploy the editor UI to the bet and live environ
 It contains logic for connecting to different editor connectors (such as GitHub and local)
 and loads in the specialized fields (such as for [Grow][grow] or [Amagaki][amagaki] sites) as needed.
 
-To develop locally run `yarn run hosted` and visit https://localhost:8080/ and iterate and improve.
-If you are developing on the editor UI, use the `yarn run serve` command from above instead.
+To develop the hosted project locally:
+
+```
+# Need to build the static files for the site.
+cd website/
+yarn run build
+cd ..
+
+# Run the hosted node server.
+yarn run hosted
+```
+
+Then visit https://localhost:8080/ to iterate and improve.
+
+If you are developing on the editor app UI only, use the `yarn run serve` command from above instead.
 
 ## Deployment
 

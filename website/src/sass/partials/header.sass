@@ -1,35 +1,40 @@
-@import '../utils/color'
 @import '../utils/spacing'
 @import '../utils/type'
 
 .header__beta
-    background: $color-secondary
-    color: $color-on-secondary
-    display: none
-    padding: $spacing-20
-    text-align: center
+  background: var(--color-secondary-dark)
+  color: var(--color-on-secondary-dark)
+  display: none
+  padding: $spacing-20
+  text-align: center
 
-    .beta &
-        display: block
+  .beta &
+    display: block
 
-    a
-        color: $color-on-secondary
-        font-weight: 700
+  a
+    color: var(--color-on-secondary-dark)
+    font-weight: 700
 
 .header__content
-    align-items: center
-    display: flex
-    justify-content: space-between
-    padding: $spacing-20
+  align-items: center
+  display: flex
+  justify-content: space-between
+  padding: $spacing-20
 
 .header__logo a
-    +type-heading-2
-    color: $color-primary
-    text-decoration: none
+  +type-heading-2
+  color: var(--color-primary)
+  text-decoration: none
 
-    &:hover
-        color: $color-primary-hover
-        text-decoration: underline
+  &:hover
+    color: var(--color-primary-light)
+    text-decoration: underline
 
 .header__logo img
-    width: 200px
+  width: 200px
+
+.header__links
+  display: flex
+  flex-flow: row
+  flex-wrap: wrap
+  column-gap: $spacing-20

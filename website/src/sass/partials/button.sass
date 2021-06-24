@@ -1,5 +1,4 @@
 @import ../utils/breakpoints
-@import ../utils/color
 @import ../utils/spacing
 @import ../utils/type
 
@@ -7,10 +6,10 @@
   +type-button
   align-items: center
   appearance: none
-  background-color: $color-primary
+  background-color: var(--color-primary)
   border: 1px solid transparent
   border-radius: 30px
-  color: $color-on-primary
+  color: var(--color-on-primary)
   cursor: pointer
   display: inline-flex
   justify-content: center
@@ -20,12 +19,12 @@
   transition: background-color .2s, box-shadow .2s, color .2s
 
   &:visited
-    color: $color-on-primary
+    color: var(--color-on-primary)
 
   &:hover:not(.button--medium):not(.button--low):not(.button--tonal):not(.button--link)
-    background-color: $color-primary-hover
+    background-color: var(--color-primary-light)
     box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15)
-    color: $color-on-primary-hover
+    color: var(--color-on-primary-light)
 
   &:active:not(.button--medium):not(.button--low):not(.button--tonal):not(.button--link)
     background-color: #174ea6
@@ -36,47 +35,47 @@
     box-shadow: 0 0 0 2px #aecbfa
 
   &--medium
-    background-color: $color-on-primary
+    background-color: var(--color-on-primary)
     border-color: #dadce0
-    color: $color-primary
+    color: var(--color-primary)
     &:visited
-      color: $color-primary
+      color: var(--color-primary)
     &:hover
       background-color: #f4f8fe
-      border-color: $color-primary
+      border-color: var(--color-primary)
       box-shadow: none
-      color: $color-primary
+      color: var(--color-primary)
     &:active
       background-color: #e8f0fe
-      box-shadow: 0 0 0 1px $color-primary
-      border-color: $color-primary
+      box-shadow: 0 0 0 1px var(--color-primary)
+      border-color: var(--color-primary)
     &:focus
       background-color: #f4f8fe
-      box-shadow: 0 0 0 1px $color-primary
-      border-color: $color-primary
+      box-shadow: 0 0 0 1px var(--color-primary)
+      border-color: var(--color-primary)
 
   &--low
     background-color: transparent
-    color: $color-primary
+    color: var(--color-primary)
     &:visited
-      color: $color-primary
+      color: var(--color-primary)
     &:focus,
     &:hover
       background-color: #f4f8fe
-      color: $color-primary
+      color: var(--color-primary)
       box-shadow: none
     &:active
       background-color: #e8f0fe
 
   &--tonal
     background-color: #f4f8fe
-    color: $color-primary
+    color: var(--color-primary)
     &:visited
-      color: $color-primary
+      color: var(--color-primary)
     &:focus,
     &:hover
       background-color: #d2e3fc
-      color: $color-primary
+      color: var(--color-primary)
       box-shadow: none
     &:active
       background-color: #aecbfa
@@ -84,17 +83,17 @@
   &--link
     background-color: transparent
     border-radius: 0
-    color: $color-primary
+    color: var(--color-primary)
     padding: 0
     position: relative
     &:visited
-      color: $color-primary
+      color: var(--color-primary)
     &:focus,
     &:hover
       background-color: transparent
       box-shadow: none
       &:after
-        background-color: $color-primary
+        background-color: var(--color-primary)
         bottom: 0
         content: ''
         display: block

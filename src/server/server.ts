@@ -30,8 +30,7 @@ nunjucks.configure('views', {
 
 // Use local server page.
 app.get('/local/*', (req, res, next) => {
-  const filename = 'local/index.html';
-  res.sendFile(filename, websiteOptions, err => {
+  res.sendFile('local/index.html', websiteOptions, err => {
     if (err) {
       next(err);
     }
@@ -39,8 +38,7 @@ app.get('/local/*', (req, res, next) => {
 });
 
 app.all('/gh/callback', (req, res, next) => {
-  const filename = 'gh/callback/index.html';
-  res.sendFile(filename, websiteOptions, err => {
+  res.sendFile('gh/callback/index.html', websiteOptions, err => {
     if (err) {
       next(err);
     }

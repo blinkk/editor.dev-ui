@@ -10,7 +10,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="{{pod.staticFile('/dist/css/main.css')|url}}">
+  {% if doc.fields.config -%}
+    <link rel="stylesheet" href="{{pod.staticFile('/static/editor.min.css')|url}}">
+  {%- endif %}
   <link rel="icon" type="image/png" sizes="256x256" href="{{pod.staticFile('/static/favicon-256.png')|url}}">
   <link rel="icon" type="image/png" sizes="128x128" href="{{pod.staticFile('/static/favicon-128.png')|url}}">
   <link rel="icon" type="image/png" sizes="64x64" href="{{pod.staticFile('/static/favicon-64.png')|url}}">
@@ -45,4 +49,7 @@
     </div>
   </div>
   <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
+  {% if doc.fields.config %}
+    <script src="{{pod.staticFile('/static/editor.min.js')|url}}"></script>
+  {% endif %}
 </body>

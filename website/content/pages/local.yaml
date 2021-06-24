@@ -3,7 +3,7 @@ navTitle: Local
 description: Develop projects using a local set of project files.
 
 config:
-  port: 8080
+  port: 9090
   mode: dev
 
 partials:

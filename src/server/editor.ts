@@ -30,7 +30,6 @@ import {ExampleFieldField} from '../example/field/exampleField';
 import {GCSRemoteMedia} from '../remoteMedia/GCSRemoteMedia';
 import {GithubApi} from './gh/githubApi';
 import {HtmlField} from '../editor/field/html';
-import {LocalStatus} from './local';
 import {MarkdownField} from '../editor/field/markdown';
 import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';

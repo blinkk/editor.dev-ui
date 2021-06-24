@@ -1,11 +1,16 @@
+@import utils/color
 @import utils/type
 @import partials/button
 
-html,
 body
+    background: var(--color-background)
+    color: var(--color-on-background)
     +type-body
     margin: 0
     padding: 0
+
+a
+    color: var(--color-primary)
 
 .main
     display: flex

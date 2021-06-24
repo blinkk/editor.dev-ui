@@ -1,16 +1,31 @@
-$color-primary: #212121
-$color-on-primary: #ffffff
-$color-primary-light: #484848
-$color-on-primary-light: #ffffff
-$color-primary-dark: #000000
-$color-on-primary-dark: #ffffff
-$color-primary-hover: #484848
-$color-on-primary-hover: #ffffff
-$color-secondary: #00796b
-$color-on-secondary: #ffffff
-$color-secondary-light: #48a999
-$color-on-secondary-light: #ffffff
-$color-secondary-dark: #004c40
-$color-on-secondary-dark: #ffffff
-$color-secondary-hover: #004c40
-$color-on-secondary-hover: #ffffff
+:root
+  --color-background: #ffffff
+  --color-on-background: #121212
+  --color-primary: #212121
+  --color-on-primary: #ffffff
+  --color-primary-light: #484848
+  --color-on-primary-light: #ffffff
+  --color-primary-dark: #000000
+  --color-on-primary-dark: #ffffff
+  --color-secondary: #00796b
+  --color-on-secondary: #ffffff
+  --color-secondary-light: #48a999
+  --color-on-secondary-light: #ffffff
+  --color-secondary-dark: #004c40
+  --color-on-secondary-dark: #ffffff
+
+  @media (prefers-color-scheme: dark)
+    --color-background: #121212
+    --color-on-background: #f2f2f2
+    --color-primary: #eeeeee
+    --color-on-primary: #121212
+    --color-primary-light: #ffffff
+    --color-on-primary-light: #121212
+    --color-primary-dark: #bcbcbc
+    --color-on-primary-dark: #121212
+    --color-secondary: #80cbc4
+    --color-on-secondary: #121212
+    --color-secondary-light: #b2fef7
+    --color-on-secondary-light: #121212
+    --color-secondary-dark: #4f9a94
+    --color-on-secondary-dark: #121212

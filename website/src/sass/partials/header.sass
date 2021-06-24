@@ -1,10 +1,9 @@
-@import '../utils/color'
 @import '../utils/spacing'
 @import '../utils/type'
 
 .header__beta
-    background: $color-secondary
-    color: $color-on-secondary
+    background: var(--color-secondary)
+    color: var(--color-on-secondary)
     display: none
     padding: $spacing-20
     text-align: center
@@ -13,7 +12,7 @@
         display: block
 
     a
-        color: $color-on-secondary
+        color: var(--color-on-secondary)
         font-weight: 700
 
 .header__content
@@ -24,11 +23,11 @@
 
 .header__logo a
     +type-heading-2
-    color: $color-primary
+    color: var(--color-primary)
     text-decoration: none
 
     &:hover
-        color: $color-primary-hover
+        color: var(--color-primary-light)
         text-decoration: underline
 
 .header__logo img

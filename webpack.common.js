@@ -4,7 +4,7 @@ module.exports = {
   entry: {
     example: './src/example/example.ts',
     'server/editor': './src/server/editor.ts',
-    'server/gh/callback': './src/server/gh/githubCallback.ts',
+    'server/gh.callback': './src/server/gh/githubCallback.ts',
   },
   mode: 'development',
   module: {

@@ -14,6 +14,7 @@ export default [
         input: 'src/ts/main.ts',
         output: {
             file: 'dist/js/main.min.js',
+            sourcemap: true,
         },
         plugins: [
             notify(),

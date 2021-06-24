@@ -1,3 +1,5 @@
-import {LocalCommand} from './partials/local';
+import {LocalPartial} from './partials/local';
+import {ServiceGithubPartial} from './partials/service-gh';
 
-new LocalCommand(document.body);
+new LocalPartial(document.body);
+new ServiceGithubPartial(document.body);

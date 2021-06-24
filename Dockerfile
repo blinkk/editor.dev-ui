@@ -51,7 +51,7 @@ COPY ./website/tsconfig.json ./website/tsconfig.json
 RUN yarn run compile
 
 # Build website
-RUN cd website && yarn run build
+RUN cd website && yarn run build:prod
 
 # Copy public files.
 RUN mkdir -p ./public/ \

@@ -12,10 +12,17 @@ body
 a
     color: var(--color-primary)
 
+.container
+  height: 100vh
+  display: flex
+  flex-flow: column
+
+  > div
+    flex-grow: 1
+
 .main
     display: flex
     flex-flow: column
-    min-height: 100vh
 
 .partials
     flex-grow: 1

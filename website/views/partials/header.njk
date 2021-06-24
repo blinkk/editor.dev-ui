@@ -1,26 +1,26 @@
 {% import "/views/macros/asset.njk" as asset with context %}
 
 <div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
-    <script>
-        if (window.location.hostname !== 'editor.dev') {
-            document.body.classList.add('beta');
-        }
-    </script>
-    <div class="header__beta">
-        Previewing the next release. <a href="{{partial.stable.url}}{{doc.url.path}}">View stable version.</a>
+  <script>
+    if (window.location.hostname !== 'editor.dev') {
+      document.body.classList.add('beta');
+    }
+  </script>
+  <div class="header__beta">
+    Previewing the next release. <a href="{{partial.stable.url}}{{doc.url.path}}">View stable version.</a>
+  </div>
+  <div class="header__content">
+    <div class="header__logo">
+      <a href="{{partial.logo.doc.url.path}}">
+        {{pod.meta.name}}
+      </a>
     </div>
-    <div class="header__content">
-        <div class="header__logo">
-            <a href="{{partial.logo.doc.url.path}}">
-                {{pod.meta.name}}
-            </a>
-        </div>
-        <div class="header__links">
-            {% for item in partial.nav %}
-                <a href="{{item.url.path}}" class="header__links__link">
-                    {{item.fields.title}}
-                </a>
-            {% endfor %}
-        </div>
+    <div class="header__links">
+      {% for item in partial.nav %}
+        <a href="{{item.url.path or item.url}}" class="header__links__link">
+        {{item.fields.navTitle or item.fields.title or item.title}}
+        </a>
+      {% endfor %}
     </div>
+  </div>
 </div>

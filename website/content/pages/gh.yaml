@@ -2,14 +2,29 @@ title: Github
 navTitle: Github
 description: Github
 
+css:
+- !pod.staticFile /static/editor.min.css
+
+js:
+- !pod.staticFile /static/editor.min.js
+
+config:
+  service: gh
+
 partials:
 - partial: spacer
   options:
   - large
 
 - partial: hero
-  title: Github
-  body: Stub for the github page.
+  title: GitHub
+  body: Edit projects hosted on GitHub.
+
+- partial: spacer
+  options:
+  - medium
+
+- partial: service-github
 
 - partial: spacer
   options:

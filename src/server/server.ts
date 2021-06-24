@@ -1,14 +1,22 @@
 import express from 'express';
 import nunjucks from 'nunjucks';
+import path from 'path';
 
 const PORT = 8080;
 const MODE = process.env.MODE || 'dev';
 const PROJECT_ID = process.env.PROJECT_ID || '';
-const DEFAULT_LOCAL_PORT = 9090;
 
-// Stackdriver api key
-const STACKDRIVER_KEY =
-  process.env.STACKDRIVER_KEY || 'AIzaSyAvmyHYE91XvlFzPI5SA5LcRoIx-aOCGJU';
+// Determine base for website files.
+let websiteRoot = path.join(__dirname, '..', '..', 'public');
+
+if (MODE === 'dev') {
+  websiteRoot = path.join(__dirname, '..', '..', 'website', 'build');
+}
+
+const websiteOptions = {
+  root: websiteRoot,
+  dotfiles: 'deny',
+};
 
 // App
 const app = express();
@@ -19,56 +27,37 @@ nunjucks.configure('views', {
   express: app,
 });
 
-// Use local server connector.
-app.get('/local/:port(\\d+)/*', (req, res) => {
-  res.render('index.njk', {
-    port: (req.params as any).port,
-    file: (req.params as any)['0'],
-    mode: MODE,
-    projectId: PROJECT_ID,
-    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
+// Use local server page.
+app.get('/local/*', (req, res, next) => {
+  const filename = 'local/index.html';
+  res.sendFile(filename, websiteOptions, err => {
+    if (err) {
+      next(err);
+    }
   });
 });
 
-// Use local server with default port.
-// TODO: Serve any local/* using the public/local/index.html file.
-app.get('/local/*', (req, res) => {
-  res.render('index.njk', {
-    port: DEFAULT_LOCAL_PORT,
-    file: (req.params as any)['0'],
-    mode: MODE,
-    projectId: PROJECT_ID,
-    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
+app.all('/gh/callback', (req, res, next) => {
+  const filename = 'gh/callback/index.html';
+  res.sendFile(filename, websiteOptions, err => {
+    if (err) {
+      next(err);
+    }
   });
 });
 
-// Use github connector.
-app.get('/gh/:organization/:project/:branch/*', (req, res) => {
-  res.render('index.njk', {
-    service: 'gh',
-    organization: req.params.organization,
-    project: req.params.project,
-    branch: req.params.branch,
-    file: (req.params as any)['0'],
-    mode: MODE,
-    projectId: PROJECT_ID,
-    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
-  });
-});
-
-app.all('/gh/callback', (req, res) => {
-  res.render('callback.njk', {
-    service: 'gh',
-    mode: MODE,
-    projectId: PROJECT_ID,
-    message: 'Processing GitHub login. Please wait.',
+app.get('/gh/*', (req, res, next) => {
+  const filename = 'gh/index.html';
+  res.sendFile(filename, websiteOptions, err => {
+    if (err) {
+      next(err);
+    }
   });
 });
 
 // Determine where to server static files from.
 if (MODE === 'dev') {
-  app.use(express.static('dist/css/server'));
-  app.use(express.static('dist/src/server'));
+  app.use(express.static('website/build'));
 } else {
   app.use(express.static('public'));
 }

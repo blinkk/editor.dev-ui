@@ -14,6 +14,7 @@
     "browsersync:reload": "browser-sync reload",
     "browsersync:start": "browser-sync start --proxy localhost:8080 --files dist",
     "build": "yarn run rollup:build; yarn run sass:build; amagaki build",
+    "build:prod": "yarn run rollup:build; yarn run sass:build; amagaki --env prod build",
     "rollup:watch": "rollup -c -w",
     "rollup:build": "rollup -c",
     "dev": "npm-run-all --parallel watch:pages serve rollup:watch sass:watch browsersync:start",

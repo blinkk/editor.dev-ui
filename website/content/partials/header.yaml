@@ -4,3 +4,6 @@ logo:
   title: editor.dev
 stable:
   url: https://editor.dev
+nav:
+- !pod.doc /content/docs/index.yaml
+- !pod.doc /content/pages/example.yaml

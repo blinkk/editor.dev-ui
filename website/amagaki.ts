@@ -11,6 +11,10 @@ export default (pod: Pod) => {
       defaultLocale: 'en',
       locales: ['en'],
     },
+    environments: {
+      default: {},
+      prod: {},
+    },
     staticRoutes: [
       {
         path: '/static/css/',

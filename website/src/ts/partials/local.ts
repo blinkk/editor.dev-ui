@@ -1,6 +1,6 @@
 const COPIED_CLASS = 'local__instruction__command--copied';
 
-export class LocalCommand {
+export class LocalPartial {
   instructionContainer: HTMLElement | null;
   inputTimeout?: number;
 
@@ -12,13 +12,10 @@ export class LocalCommand {
   }
 
   bindCommandInput() {
-    console.log('bind', this.instructionContainer);
-
     if (!this.instructionContainer) {
       return;
     }
     const commandInput = this.instructionContainer.querySelector('input');
-    console.log('input', commandInput);
 
     if (!commandInput) {
       console.error('Unable to find the command input.');

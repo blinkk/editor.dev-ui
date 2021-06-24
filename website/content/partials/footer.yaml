@@ -1,5 +1,5 @@
 partial: footer
 nav:
-- !pod.doc /content/pages/example.yaml
-- !pod.doc /content/docs/index.yaml
+- title: Github
+  url: https://github.com/blinkk/editor.dev-ui
 - !pod.doc /content/pages/api.yaml

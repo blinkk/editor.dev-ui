@@ -31,14 +31,15 @@
     "clean": "gts clean",
     "compile": "npx tsc --skipLibCheck && npx gulp compile && webpack --config webpack.prod.js",
     "coverage": "codecov",
-    "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
+    "dev": "concurrently \"npx ava --watch\" \"tsc --watch\" \"webpack --config webpack.server.js\"",
     "docs": "npx typedoc",
     "fix": "npx eslint --fix src/**/*.ts",
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"npx gulp watch\" \"nodemon ./src/server/server.ts\"",
     "prepublishOnly": "npx tsc --skipLibCheck",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"npx gulp watch\"",
     "test": "npx nyc ava",
-    "test-ci": "npx nyc --reporter=lcov ava && codecov"
+    "test-ci": "npx nyc --reporter=lcov ava && codecov",
+    "watch": "concurrently \"webpack --config webpack.server.js\" \"npx gulp watch\""
   },
   "ava": {
     "extensions": [

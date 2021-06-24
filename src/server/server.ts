@@ -10,7 +10,6 @@ const STACKDRIVER_KEY =
 
 // Determine base for website files.
 let websiteRoot = path.join(__dirname, '..', '..', 'public');
-
 if (MODE === 'dev') {
   websiteRoot = path.join(__dirname, '..', '..', 'website', 'build');
 }

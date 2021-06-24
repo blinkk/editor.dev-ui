@@ -50,12 +50,10 @@ COPY ./website/tsconfig.json ./website/tsconfig.json
 # Compile the production js/css files.
 RUN yarn run compile
 
-# Docker is having issues with git symlinks to generated files.
-RUN ls -la ./website/static \
-  && cp ./dist/css/server/editor.min.css ./website/static/ \
+# Having issues with git symlinks to generated files.
+RUN cp ./dist/css/server/editor.css ./website/static/ \
   && cp ./dist/src/server/editor.min.js ./website/static/ \
-  && cp ./dist/src/server/gh.callback.min.js ./website/static/ \
-  && ls -la ./website/static
+  && cp ./dist/src/server/gh.callback.min.js ./website/static/
 
 # Build website
 RUN cd website && yarn run build:prod

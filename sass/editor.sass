@@ -1,7 +1,9 @@
 @import 'config'
+@import 'scheme'
 
 .le
-  background: $le-color-back
+  background: var(--color-background)
+  color: var(--color-on-background)
   display: grid
   font-family: $le-font-family
   font-size: $le-font-size
@@ -15,6 +17,9 @@
 
   *
     box-sizing: border-box
+
+  a
+    color: var(--color-primary)
 
   p
     line-height: $le-line-height-paragraph
@@ -63,7 +68,7 @@ a,
     $hex: str-slice(ie-hex-str($string), 4)
     $string: unquote('#{$hex}')
     @return '%23' + $string
-  @return $string;
+  @return $string
 
 @import './ui/actions'
 @import './ui/button'

@@ -3,7 +3,7 @@ navTitle: Local
 description: Develop projects using a local set of project files.
 
 css:
-- !pod.staticFile /static/editor.min.css
+- !pod.staticFile /static/editor.css
 
 js:
 - !pod.staticFile /static/editor.min.js

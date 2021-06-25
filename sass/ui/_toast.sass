@@ -9,10 +9,10 @@
   z-index: 2000
 
 .le__toast
-  animation: toast-slide-down $le-speed-normal ease-in forwards;
-  background: $le-color-secondary
+  animation: toast-slide-down $le-speed-normal ease-in forwards
+  background: var(--color-secondary)
   border-radius: $le-radius-medium
-  color: $le-color-on-secondary
+  color: var(--color-on-secondary)
   display: flex
   flex-flow: column
   margin-bottom: $le-space-medium
@@ -22,7 +22,7 @@
   width: 60vw
 
   &--removed
-    animation: toast-remove $le-speed-normal*2 ease forwards;
+    animation: toast-remove $le-speed-normal*2 ease forwards
 
 .le__toast__structure
   align-items: center
@@ -37,19 +37,19 @@
   padding: $le-space-medium $le-space-small
 
   &:hover
-    background: $le-color-secondary-light
-    color: $le-color-on-secondary-light
+    background: var(--color-secondary-light)
+    color: var(--color-on-secondary-light)
 
 .le__toast__close
   padding: $le-space-small $le-space-medium
 
 .le__toast__timer
   height: $le_space-xsmall
-  background: $le-color-primary
-  animation: toast-timer $le-toast-speed linear forwards;
+  background: var(--color-primary)
+  animation: toast-timer $le-toast-speed linear forwards
 
   .le__toast--paused &,
-  .le__toast:hover:not(.le__toast--no-hover-pause) &,
+  .le__toast:hover:not(.le__toast--no-hover-pause) &
     animation-play-state: paused
 
 @keyframes toast-slide-down

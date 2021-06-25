@@ -9,13 +9,13 @@
 
 .ls__part__notifications__notification
   align-items: center
-  display: grid;
+  display: grid
   grid-template-columns: $le-space-large 1fr $le-space-xlarge
   padding: $le-space-medium
 
   &:hover
-    background-color: $le-color-tertiary
-    color: $le-color-on-tertiary
+    background-color: var(--color-tertiary)
+    color: var(--color-on-tertiary)
 
   &--error
     color: $le-color-extreme
@@ -42,12 +42,12 @@
   margin: $le-space-small 0
 
 .ls__part__notifications__notification__mark
-  grid-column: 3;
+  grid-column: 3
 
 .ls__part__notifications__notification__description,
 .ls__part__notifications__notification__expand,
 .ls__part__notifications__notification__meta
-  grid-column: 2 / span 2;
+  grid-column: 2 / span 2
   padding: $le-space-small 0
 
 .ls__part__notifications__notification__expand
@@ -55,7 +55,7 @@
   text-transform: uppercase
 
 .ls__part__notifications__notification__actions
-  grid-column: 2 / span 2;
+  grid-column: 2 / span 2
 
   button
     margin-right: $le-space-medium

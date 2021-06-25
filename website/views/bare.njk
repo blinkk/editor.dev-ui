@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{doc.locale.id}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{doc.fields.title}}</title>
+  <meta name="description" value="{{doc.fields.description}}">
+  {% if doc.fields.css -%}
+    {% for file in doc.fields.css -%}
+      <link rel="stylesheet" href="{{file|url}}">
+    {%- endfor %}
+  {%- endif %}
+</head>
+<body>
+  <div class="main__body">
+    {{doc.body|markdown|safe}}
+  </div>
+  {% if doc.fields.js -%}
+    {% for file in doc.fields.js -%}
+      <script src="{{file|url}}"></script>
+    {%- endfor %}
+  {%- endif %}
+</body>

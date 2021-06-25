@@ -12,7 +12,7 @@
       color: $le-color-extreme
 
 .selective__field__help
-  color: $le-color-secondary-light
+  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   margin-bottom: $le-space-small
 
@@ -55,17 +55,17 @@
     color: $le-color-extreme
 
 =field-input
-  background: $le-color-tertiary
-  color: $le-color-on-tertiary
+  background: var(--color-tertiary)
+  color: var(--color-on-tertiary)
   border: none
-  box-shadow: 0 $le-border-size-medium 0 0 $le-color-secondary
+  box-shadow: 0 $le-border-size-medium 0 0 var(--color-secondary)
   font-family: $le-font-family-text
   padding: $le-space-medium
   width: 100%
 
   &:focus
     outline: none
-    box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-secondary-dark
+    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-secondary-dark)
 
   &:disabled
     opacity: .5
@@ -92,7 +92,7 @@
     box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-warning
 
 =field-section-heading
-  color: $le-color-secondary-light
+  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   text-transform: uppercase
   margin: $le-space-medium 0 $le-space-small 0
@@ -107,29 +107,35 @@
     background-position: left $le-space-xsmall top $le-space-xsmall
     padding-left: $le-font-size-icon + $le-space-small
 
+// TODO: Figure out how to do as css variables in svg?
+$le-svg-on-back: #000000 !default
+$le-svg-primary: #48a0f4 !default
+$le-svg-secondary: #2c2c2c !default
+$le-svg-tertiary: #eeeeee !default
+
 =field-action-add
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
 
 =field-action-add-primary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
 
 =field-action-add-secondary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
 
-=field-action-add-secondary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
+=field-action-add-tertiary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>')
 
 =field-action-remove
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-on-back)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
 
 =field-action-remove-primary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-primary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
 
 =field-action-remove-secondary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-secondary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
 
-=field-action-remove-secondary
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-color-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
+=field-action-remove-tertiary
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#{encodecolor($le-svg-tertiary)}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>')
 
 .selective__action
   &--add
@@ -139,12 +145,12 @@
   position: relative
 
 .selective__droppable--hover
-  background: $le-color-primary-light
-  color: $le-color-on-primary-light
+  background: var(--color-primary-light)
+  color: var(--color-on-primary-light)
 
   &::before
-    background: $le-color-primary-dark
-    background: linear-gradient(45deg, $le-color-primary-dark 0%, $le-color-primary 50%, $le-color-primary-light 100%);
+    background: var(--color-primary-dark)
+    background: linear-gradient(45deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%)
     box-shadow: $le-shadow-small
     content: ''
     height: 100%
@@ -154,14 +160,14 @@
     width: 100%
 
   &::after
-    color: $le-color-on-primary-dark
+    color: var(--color-on-primary-dark)
     content: 'Drop file…'
     font-size: $le-font-size-large
     font-weight: 700
     left: 50%
     position: absolute
     top: 50%
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)
 
   // Pointer events cause issues with triggering extra drag events from children nodes.
   *

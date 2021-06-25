@@ -2,12 +2,12 @@
   position: relative
 
 .selective__autocomplete__list
-  background: $le-color-tertiary-light
+  background: var(--color-tertiary-light)
   box-shadow: $le-shadow-small
   border: $le-color-border-light $le-border-size-medium solid
   border-bottom-left-radius: $le-radius-medium
   border-bottom-right-radius: $le-radius-medium
-  color: $le-color-on-tertiary-light
+  color: var(--color-on-tertiary-light)
   left: 0
   max-height: $le-space-xxxlarge
   overflow-y: auto
@@ -22,8 +22,8 @@
   &:focus,
   &:hover,
   &[aria-selected=true]
-    background: $le-color-tertiary
-    color: $le-color-on-tertiary
+    background: var(--color-tertiary)
+    color: var(--color-on-tertiary)
 
 .selective__autocomplete__list__item__meta
   font-size: $le-font-size-small

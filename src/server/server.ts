@@ -9,9 +9,9 @@ const STACKDRIVER_KEY =
   process.env.STACKDRIVER_KEY || 'AIzaSyAvmyHYE91XvlFzPI5SA5LcRoIx-aOCGJU';
 
 // Determine base for website files.
-let websiteRoot = path.join(__dirname, '..', '..', 'public');
+let websiteRoot = path.join(process.cwd(), 'public');
 if (MODE === 'dev') {
-  websiteRoot = path.join(__dirname, '..', '..', 'website', 'build');
+  websiteRoot = path.join(process.cwd(), 'website', 'build');
 }
 
 const websiteOptions = {

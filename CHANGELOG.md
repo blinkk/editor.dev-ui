@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.1.0](https://www.github.com/blinkk/editor.dev-ui/compare/v2.0.0...v2.1.0) (2021-06-25)
+
+
+### Features
+
+* Banner for unstable version of the docs to direct to stable. ([82f554c](https://www.github.com/blinkk/editor.dev-ui/commit/82f554c5548b5247747a559942769b994c20d72f))
+* dark mode editor ([#68](https://www.github.com/blinkk/editor.dev-ui/issues/68)) ([2b89d4d](https://www.github.com/blinkk/editor.dev-ui/commit/2b89d4d04ebabbab4c392011b0d659092ddf5d1d))
+* Dark mode for the website. ([a6ed3e1](https://www.github.com/blinkk/editor.dev-ui/commit/a6ed3e15e216643359fdf60c9aa1632a9fcfc9e8))
+* website maintained local server ui ([#67](https://www.github.com/blinkk/editor.dev-ui/issues/67)) ([a6ed3e1](https://www.github.com/blinkk/editor.dev-ui/commit/a6ed3e15e216643359fdf60c9aa1632a9fcfc9e8))
+
+
+### Bug Fixes
+
+* bad css indentation ([15e4cd3](https://www.github.com/blinkk/editor.dev-ui/commit/15e4cd313a618d85c6907da9e59bd0d462ae7c2b))
+* docker build with symlinked build files. ([dcd1b7d](https://www.github.com/blinkk/editor.dev-ui/commit/dcd1b7d2f738b0bbeb04c88336249a033d3e1927))
+* logo on website header ([ee9afac](https://www.github.com/blinkk/editor.dev-ui/commit/ee9afacddd85433a8b7a1d0cf3fac96f58f93479))
+* Media list add new and lock new items when field is locked. ([921df0c](https://www.github.com/blinkk/editor.dev-ui/commit/921df0c4bdee4068f376ddc270504da26fcb81ee))
+* redirect missing trailing slashes when not found ([c34f778](https://www.github.com/blinkk/editor.dev-ui/commit/c34f7786e5ee65b42f476d86210414396ce1de21))
+* remove copy of old github callback file ([2a04f79](https://www.github.com/blinkk/editor.dev-ui/commit/2a04f792976a827ed287023d4e02149ddd233835))
+* serve static files after normal routing ([f5e6036](https://www.github.com/blinkk/editor.dev-ui/commit/f5e60365b50e51a6e50364c868322f23cc6eca37))
+* trim the summary for the history to the first line ([35b3af3](https://www.github.com/blinkk/editor.dev-ui/commit/35b3af375a6c01231f553246b4b82307a4967df9))
+* update footer and header styling ([d8c37e3](https://www.github.com/blinkk/editor.dev-ui/commit/d8c37e33c373b268135e6b4baae02cea6d5e38ae))
+* website root using `cwd`. ([ff27ba7](https://www.github.com/blinkk/editor.dev-ui/commit/ff27ba72307ab8b0fa5c004284dd24e7ab045936))
+
 ## [2.0.0](https://www.github.com/blinkk/editor.dev-ui/compare/v1.3.7...v2.0.0) (2021-06-22)
 
 

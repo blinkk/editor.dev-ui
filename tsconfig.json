@@ -5,22 +5,22 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "src/ts/",
     "target": "es2020",
   },
   "declaration": true,
   "extends": "./node_modules/gts/tsconfig-google.json",
   "include": [
-    "src/**/*.ts"
+    "src/ts/**/*.ts"
   ],
   "typedocOptions": {
     "excludeProtected": true,
     "excludeExternals": true,
     "entryPoints": [
-      "./src/",
+      "./src/ts/",
     ],
     "exclude": [
-      "./src/example/example.ts",
+      "./src/ts/example/example.ts",
       "./src/**/*.test.ts",
     ],
     "out": "api/ui",

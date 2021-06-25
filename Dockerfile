@@ -52,8 +52,8 @@ RUN yarn run compile
 
 # Having issues with git symlinks to generated files.
 RUN cp ./dist/css/server/editor.css ./website/static/ \
-  && cp ./dist/src/server/editor.min.js ./website/static/ \
-  && cp ./dist/src/server/gh.callback.min.js ./website/static/
+  && cp ./dist/server/editor.min.js ./website/static/ \
+  && cp ./dist/server/gh.callback.min.js ./website/static/
 
 # Build website
 RUN cd website && yarn run build:prod
@@ -62,10 +62,10 @@ RUN cd website && yarn run build:prod
 RUN mkdir -p ./public/ \
   && cp -r ./website/build/* ./public/ \
   && cp ./dist/css/server/editor.css ./public/ \
-  && cp ./dist/src/server/editor.* ./public/ \
+  && cp ./dist/server/editor.* ./public/ \
   && cp static/example/* ./public/example/ \
   && cp dist/css/example/* ./public/example/ \
-  && cp dist/src/example.* ./public/example/ \
+  && cp dist/example.* ./public/example/ \
   && ls -R ./public/
 
 # Copy api documentation.
@@ -73,4 +73,4 @@ COPY ./api ./public/api
 
 EXPOSE 8080
 
-CMD [ "node", "dist/src/server/server.js" ]
+CMD [ "node", "dist/server/server.js" ]

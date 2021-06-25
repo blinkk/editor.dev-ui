@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/blinkk/editor.dev-ui/issues"
   },
-  "types": "dist/src/index.d.ts",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/blinkk/editor.dev-ui.git"
@@ -23,8 +23,7 @@
     "node": ">=14"
   },
   "files": [
-    "dist/src",
-    "dist/css"
+    "dist"
   ],
   "scripts": {
     "check": "gts check",
@@ -33,11 +32,11 @@
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "npx typedoc",
-    "fix": "npx eslint --fix src/**/*.ts",
-    "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/server/server.ts\"",
+    "fix": "npx eslint --fix src/ts/**/*.ts",
+    "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/server.ts\"",
     "prepublishOnly": "npx tsc --skipLibCheck",
-    "sass:build": "sass --no-source-map ./sass/:./dist/css --style compressed",
-    "sass:watch": "sass --watch --no-source-map ./sass/:./dist/css --style compressed",
+    "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed",
+    "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "test": "npx nyc ava",
     "test-ci": "npx nyc --reporter=lcov ava && codecov"

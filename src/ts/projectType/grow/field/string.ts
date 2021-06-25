@@ -10,8 +10,8 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {AutoCompleteUIItem} from '../../../mixin/autocomplete';
-import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 import merge from 'lodash.merge';
 

@@ -13,7 +13,7 @@ import {ApiError} from '../api';
 import {BaseUI} from '.';
 import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
-import {UuidMixin} from '@blinkk/selective-edit/dist/src/mixins/uuid';
+import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
 import {templateApiError} from './error';
 import {EVENT_PROJECT_TYPE_UPDATE} from '../events';
 

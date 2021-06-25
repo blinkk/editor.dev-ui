@@ -1,6 +1,6 @@
 import {ServiceServerApi} from '../api';
 import {SessionDataStorage} from '../../utility/dataStorage';
-import {generateUUID} from '@blinkk/selective-edit/dist/src/utility/uuid';
+import {generateUUID} from '@blinkk/selective-edit/dist/utility/uuid';
 
 const CLIENT_ID = 'Iv1.e422a5bfa1197db1';
 const sessionStorage = new SessionDataStorage();

@@ -1,4 +1,4 @@
-import {Base} from '@blinkk/selective-edit/dist/src/mixins';
+import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {EVENT_RENDER} from '../editor/events';
 import {EditorState} from '../editor/state';
 import {ListenersMixin} from '../mixin/listeners';

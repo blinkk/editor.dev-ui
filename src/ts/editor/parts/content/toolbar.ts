@@ -4,7 +4,7 @@ import {UrlConfig, UrlLevel} from '../../api';
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
-import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 
 const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';
 

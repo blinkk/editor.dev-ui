@@ -14,7 +14,7 @@ import {
 } from './api';
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
 import {AmagakiState} from '../projectType/amagaki/amagakiState';
-import {Base} from '@blinkk/selective-edit/dist/src/mixins';
+import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';

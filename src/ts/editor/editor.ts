@@ -25,7 +25,7 @@ import {NotificationsPart} from './parts/notifications';
 import {OverviewPart} from './parts/overview';
 import {PreviewPart} from './parts/preview';
 import {ProjectTypeComponent} from '../projectType/projectType';
-import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/src/selective/events';
+import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import {ToastsPart} from './parts/toasts';
 import en from 'javascript-time-ago/locale/en';

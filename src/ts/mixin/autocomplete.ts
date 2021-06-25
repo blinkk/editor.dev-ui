@@ -1,4 +1,4 @@
-import {Base, Constructor} from '@blinkk/selective-edit/dist/src/mixins';
+import {Base, Constructor} from '@blinkk/selective-edit/dist/mixins';
 import {ListenersMixin, ListenersMixinComponent} from './listeners';
 import {
   SelectiveEditor,

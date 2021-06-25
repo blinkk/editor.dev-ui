@@ -15,11 +15,11 @@ import {DialogActionLevel, FormDialogModal} from '../../../editor/ui/modal';
 import {
   ListFieldComponent,
   ListFieldItem,
-} from '@blinkk/selective-edit/dist/src/selective/field/list';
+} from '@blinkk/selective-edit/dist/selective/field/list';
 import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
-import {findPreviewValue} from '@blinkk/selective-edit/dist/src/utility/preview';
+import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 
@@ -54,7 +54,8 @@ export interface GenericPartialsFieldComponent {
 
 export class GenericPartialsField
   extends ListField
-  implements GenericPartialsFieldComponent {
+  implements GenericPartialsFieldComponent
+{
   config: GenericPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   partials?: Record<string, PartialData>;

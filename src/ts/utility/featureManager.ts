@@ -1,4 +1,4 @@
-import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
+import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
 
 export interface FeatureManagerConfig {
   defaultStatus: boolean;

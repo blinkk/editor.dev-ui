@@ -1,4 +1,4 @@
-import {Base} from '@blinkk/selective-edit/dist/src/mixins';
+import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {ListenersMixin} from './listeners';
 import test from 'ava';
 

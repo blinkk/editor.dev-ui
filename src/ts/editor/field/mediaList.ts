@@ -22,7 +22,7 @@ import {
   VALID_IMAGE_MIME_TYPES,
   VALID_VIDEO_MIME_TYPES,
 } from './media';
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {LiveEditorGlobalConfig} from '../editor';
 
 const DEFAULT_FIELD_CONFIG: MediaFieldConfig = {

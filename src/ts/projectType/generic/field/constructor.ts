@@ -12,9 +12,9 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {AutoCompleteMixin} from '../../../mixin/autocomplete';
-import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/src/selective/validation';
-import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/src/selective/events';
+import {DEFAULT_ZONE_KEY} from '@blinkk/selective-edit/dist/selective/validation';
+import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
 import merge from 'lodash.merge';
 
@@ -109,7 +109,8 @@ export class ConstructorField extends Field implements ConstructorComponent {
 
 export class AutocompleteConstructorField
   extends AutoCompleteMixin(ConstructorField)
-  implements ConstructorComponent {
+  implements ConstructorComponent
+{
   /**
    * When validating that the value needs to be part of list items
    * keep track of the validation rule config. When the list items

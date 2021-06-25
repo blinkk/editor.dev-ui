@@ -1,5 +1,5 @@
 import {DeepWalk, TransformFunction, TransformFunctionSync} from './deepWalk';
-import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
+import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
 import test from 'ava';
 
 test('selectively replace strings in record', async t => {

@@ -1,6 +1,6 @@
 import {EXT_TO_MIME_TYPE, MediaFieldConfig} from './field/media';
-import {AutoFields} from '@blinkk/selective-edit/dist/src/selective/autoFields';
-import {DataType} from '@blinkk/selective-edit/dist/src/utility/dataType';
+import {AutoFields} from '@blinkk/selective-edit/dist/selective/autoFields';
+import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
 
 export class LiveEditorAutoFields extends AutoFields {
   protected deepGuessObject(

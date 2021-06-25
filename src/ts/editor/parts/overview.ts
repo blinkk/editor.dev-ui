@@ -9,7 +9,7 @@ import {
 import {DialogActionLevel, FormDialogModal} from '../ui/modal';
 import {EVENT_WORKSPACE_LOAD} from '../events';
 import {EditorState} from '../state';
-import {FieldConfig} from '@blinkk/selective-edit/dist/src/selective/field';
+import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {LiveEditor} from '../editor';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';

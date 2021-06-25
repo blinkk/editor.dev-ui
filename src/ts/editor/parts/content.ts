@@ -6,7 +6,7 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {Base} from '@blinkk/selective-edit/dist/src/mixins';
+import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {ContentFooterPart} from './content/footer';
 import {ContentHeaderPart} from './content/header';
 import {ContentSectionPart} from './content/section';

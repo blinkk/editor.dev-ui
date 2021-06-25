@@ -1,4 +1,4 @@
-import {Constructor} from '@blinkk/selective-edit/dist/src/mixins';
+import {Constructor} from '@blinkk/selective-edit/dist/mixins';
 
 export interface ListenersMixinComponent {
   addListener(eventName: string, callback: (...args: any) => void): void;

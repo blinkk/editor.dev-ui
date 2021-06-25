@@ -30,7 +30,6 @@ RUN cd website && yarn install --frozen-lockfile
 
 # Copy files needed for compilation.
 COPY ./webpack* ./
-COPY ./gulpfile.js ./
 COPY ./tsconfig.json ./
 COPY ./sass ./sass
 COPY ./src ./src

@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    example: './src/example/example.ts',
-    'server/editor': './src/server/editor.ts',
-    'server/gh.callback': './src/server/gh/githubCallback.ts',
+    example: './src/ts/example/example.ts',
+    'server/editor': './src/ts/server/editor.ts',
+    'server/gh.callback': './src/ts/server/gh/githubCallback.ts',
   },
   mode: 'development',
   module: {
@@ -17,7 +17,7 @@ module.exports = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, './dist/src/'),
+    path: path.resolve(__dirname, './dist/'),
     filename: '[name].min.js',
   },
   resolve: {

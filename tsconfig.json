@@ -7,7 +7,6 @@
     "outDir": "dist",
     "rootDir": "src/ts/",
     "target": "es2020",
-    "typeRoots" : ["./node_modules/@types", "./src/ts/typings"],
   },
   "declaration": true,
   "extends": "./node_modules/gts/tsconfig-google.json",

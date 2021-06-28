@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: {
     example: './src/ts/example/example.ts',
-    'server/server': './src/ts/server/server.ts',
+    'server/app': './src/ts/server/app.ts',
     'server/gh.callback': './src/ts/server/gh/githubCallback.ts',
   },
   mode: 'development',

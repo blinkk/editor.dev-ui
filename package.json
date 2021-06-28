@@ -33,7 +33,7 @@
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "npx typedoc",
     "fix": "npx eslint --fix src/ts/**/*.ts",
-    "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/app.ts\"",
+    "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/server.ts\"",
     "prepublishOnly": "npx tsc --skipLibCheck",
     "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed",
     "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed",

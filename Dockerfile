@@ -71,4 +71,4 @@ COPY ./api ./public/api
 
 EXPOSE 8080
 
-CMD [ "node", "dist/server/app.js" ]
+CMD [ "node", "dist/server/server.js" ]

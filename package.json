@@ -35,8 +35,8 @@
     "fix": "npx eslint --fix src/ts/**/*.ts",
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/server.ts\"",
     "prepublishOnly": "npx tsc --skipLibCheck",
-    "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed",
-    "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed",
+    "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
+    "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "test": "npx nyc ava",
     "test-ci": "npx nyc --reporter=lcov ava && codecov"

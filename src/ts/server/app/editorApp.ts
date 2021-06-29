@@ -37,7 +37,7 @@ export interface EditorAppComponent {
   container: HTMLElement;
   editor: LiveEditor;
   /**
-   * Initial the application.
+   * Initialize the application.
    *
    * This may be rendering a full editor interface or render information about
    * onboarding or other required details that it needs to render the editor.

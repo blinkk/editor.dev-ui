@@ -1,4 +1,4 @@
-import {EditorApp} from './editorApp';
+import {EditorAppComponent} from './editorApp';
 import {GithubEditorApp} from './githubApp';
 import {LocalEditorApp} from './localApp';
 
@@ -8,7 +8,7 @@ import {LocalEditorApp} from './localApp';
  * @param container Container for the application to render.
  * @returns App customized for the settings based on the container attributes.
  */
-export function appFromContainer(container: HTMLElement): EditorApp {
+export function appFromContainer(container: HTMLElement): EditorAppComponent {
   const localPort = parseInt(container.dataset.port || '');
   const isLocal = localPort > 0;
 

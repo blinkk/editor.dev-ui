@@ -46,8 +46,7 @@ export class LocalEditorApp extends EditorApp {
 
   async init() {
     // Test the local api to make sure that it is available before
-    // we start rendering the editor. Otherwise show instructions for
-    // starting the local server.
+    // we start rendering the editor.
     const pingApi = async () => {
       try {
         const pingResponse = await (this.api as LocalServerApi).ping();

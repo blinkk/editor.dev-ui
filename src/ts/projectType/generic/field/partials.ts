@@ -277,7 +277,7 @@ export class GenericPartialsField
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     // While waiting for the partials config show the loading indicator.
     if (!this.partials) {
-      return templateLoading(editor, {
+      return templateLoading({
         pad: true,
       });
     }

@@ -100,7 +100,7 @@ export abstract class EditorApp implements EditorAppComponent {
     this.options = options;
     this._state = null;
 
-    this.isDev = container.dataset.mode === 'dev';
+    this.isDev = container.dataset.mode === 'default';
     this.isUnstable = window.location.hostname.includes('beta');
   }
 

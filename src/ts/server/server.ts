@@ -1,10 +1,8 @@
 import express from 'express';
-import nunjucks from 'nunjucks';
 import path from 'path';
 
 const PORT = 8080;
 const MODE = process.env.MODE || 'dev';
-const PROJECT_ID = process.env.PROJECT_ID || '';
 const STACKDRIVER_KEY =
   process.env.STACKDRIVER_KEY || 'AIzaSyAvmyHYE91XvlFzPI5SA5LcRoIx-aOCGJU';
 
@@ -21,12 +19,6 @@ const websiteOptions = {
 
 // App
 const app = express();
-
-nunjucks.configure('views', {
-  noCache: MODE === 'dev',
-  autoescape: true,
-  express: app,
-});
 
 // Use local server page.
 app.get('/local/*', (req, res, next) => {
@@ -46,20 +38,22 @@ app.all('/gh/callback', (req, res, next) => {
 });
 
 // Use github connector.
-app.get('/gh/*', (req, res) => {
-  res.render('index.njk', {
-    service: 'gh',
-    mode: MODE,
-    projectId: PROJECT_ID,
-    stackdriverKey: MODE === 'dev' ? undefined : STACKDRIVER_KEY,
+app.get('/gh/*', (req, res, next) => {
+  res.sendFile('gh/index.html', websiteOptions, err => {
+    if (err) {
+      next(err);
+    }
   });
 });
 
 // Determine where to server static files from.
 if (MODE === 'dev') {
-  app.use(express.static('dist/server'));
+  // Need to show the latest versions of the js and css without rebuild.
+  app.use('/static', express.static('dist/server'));
+  app.use('/static', express.static('dist/css/server'));
+
+  // Use the website build output as static files for the server.
   app.use(express.static('website/build'));
-  app.use(express.static('website/build/static'));
 } else {
   app.use(express.static('public'));
 }

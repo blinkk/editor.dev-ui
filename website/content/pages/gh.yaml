@@ -18,7 +18,7 @@ partials:
 
 - partial: hero
   title: GitHub
-  body: Edit projects hosted on GitHub.
+  body: Directly edit projects hosted on GitHub.
 
 - partial: spacer
   options:

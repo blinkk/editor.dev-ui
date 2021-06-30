@@ -19,14 +19,16 @@ import bent from 'bent';
 
 const DEFAULT_LOCAL_PORT = 9090;
 
-const postJSON = bent('json', 'POST');
+export const postJSON = bent('json', 'POST');
 
 export interface ServerApiComponent {
   apiBaseUrl: string;
+  apiGenericBaseUrl: string;
   baseUrl: string;
   expandParams(params: Record<string, any>): Record<string, any>;
   remoteMediaProviders: Array<RemoteMediaConstructor>;
   resolveApiUrl(path: string): string;
+  resolveApiGenericUrl(path: string): string;
   resolveUrl(path: string): string;
 }
 
@@ -46,6 +48,10 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   }
 
   get apiBaseUrl() {
+    return `https://api.${window.location.hostname}/`;
+  }
+
+  get apiGenericBaseUrl() {
     return `https://api.${window.location.hostname}/`;
   }
 
@@ -191,6 +197,12 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     return `${this.apiBaseUrl}${path}`;
   }
 
+  resolveApiGenericUrl(path: string) {
+    // Strip off the preceding /.
+    path = path.replace(/\/*/, '');
+    return `${this.apiGenericBaseUrl}${path}`;
+  }
+
   resolveUrl(path: string) {
     // Strip off the preceding /.
     path = path.replace(/\/*/, '');
@@ -268,6 +280,10 @@ export class LocalServerApi extends ServerApi {
     return `http://localhost:${this.port}/`;
   }
 
+  get apiGenericBaseUrl() {
+    return `http://localhost:${this.port}/`;
+  }
+
   get baseUrl() {
     if (this.port === DEFAULT_LOCAL_PORT) {
       return '/local/';
@@ -313,14 +329,23 @@ export class ServiceServerApi extends ServerApi {
   }
 
   get apiBaseUrl() {
+    const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
+    return `${this.apiUrlHost}${path}`;
+  }
+
+  get apiGenericBaseUrl() {
+    const path = `/${this.service}/`;
+    return `${this.apiUrlHost}${path}`;
+  }
+
+  get apiUrlHost() {
     let domain = 'https://api.editor.dev';
     if (this.isDev) {
       domain = 'http://localhost:9090';
     } else if (this.isUnstable) {
       domain = 'https://api.beta.editor.dev';
     }
-    const path = `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
-    return `${domain}${path}`;
+    return domain;
   }
 
   get baseUrl() {

@@ -78,7 +78,7 @@ export class ContentHeaderPart extends BasePart implements Part {
         )}
       </div>
       <div class="le__part__content__header__actions">
-        ${currentSection?.isProcessing ? html`${templateLoading(editor)}` : ''}
+        ${currentSection?.isProcessing ? html`${templateLoading()}` : ''}
         ${currentSection?.templateStatus(editor) || html``}
         ${currentSection?.templateAction(editor) || html``}
       </div>

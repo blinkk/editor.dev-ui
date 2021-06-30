@@ -232,7 +232,7 @@ export class SitePart extends MenuSectionPart {
     }
 
     if (!project || files === undefined) {
-      return templateLoading(editor, {
+      return templateLoading({
         pad: true,
       });
     }

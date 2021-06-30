@@ -1,9 +1,4 @@
-import {
-  SelectiveEditor,
-  TemplateResult,
-  classMap,
-  html,
-} from '@blinkk/selective-edit';
+import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {LiveEditor} from './editor';
 
 export interface LiveTemplate {
@@ -16,10 +11,7 @@ export interface TemplateOptions {
   padVertical?: boolean;
 }
 
-export function templateLoading(
-  editor: LiveEditor | SelectiveEditor,
-  options?: TemplateOptions
-): TemplateResult {
+export function templateLoading(options?: TemplateOptions): TemplateResult {
   const classes = {
     le__loading: true,
     'le__loading--pad': options?.pad || false,

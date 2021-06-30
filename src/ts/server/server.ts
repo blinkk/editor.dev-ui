@@ -57,6 +57,7 @@ app.get('/gh/*', (req, res) => {
 
 // Determine where to server static files from.
 if (MODE === 'dev') {
+  app.use(express.static('dist/server'));
   app.use(express.static('website/build'));
   app.use(express.static('website/build/static'));
 } else {

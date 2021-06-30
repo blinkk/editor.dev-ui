@@ -96,8 +96,8 @@ export interface LiveEditorParts {
 export class LiveEditor {
   config: LiveEditorConfig;
   container: HTMLElement;
-  isPendingRender: boolean;
-  isRendering: boolean;
+  isPendingRender?: boolean;
+  isRendering?: boolean;
   parts: LiveEditorParts;
   projectType?: ProjectTypeComponent;
   state: EditorState;
@@ -106,8 +106,6 @@ export class LiveEditor {
   constructor(config: LiveEditorConfig, container: HTMLElement) {
     this.config = config;
     this.container = container;
-    this.isRendering = false;
-    this.isPendingRender = false;
     this.storage = new LocalDataStorage();
     this.state = this.config.state;
     this.parts = {

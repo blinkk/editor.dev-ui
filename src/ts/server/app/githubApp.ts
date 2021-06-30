@@ -5,6 +5,7 @@ import {GithubApi} from '../gh/githubApi';
 import {LiveEditorApiComponent} from '../../editor/api';
 import {RemoteMediaConstructor} from '../../remoteMedia';
 import {ServerApiComponent} from '../api';
+import {ServiceOnboarding} from './service';
 
 export interface GithubEditorAppOptions extends EditorAppOptions {
   organization?: string;
@@ -71,17 +72,28 @@ export class GithubEditorApp extends EditorApp {
       return;
     }
 
-    // TODO: Onboarding flow goes here.
+    // Check for information missing details needed for the editor.
     if (
       !this.options?.organization ||
       !this.options?.project ||
       !this.options?.branch
     ) {
-      throw new Error(
-        'Missing service, organization, project, or branch information.'
+      const onboarding = new GithubOnboarding(
+        this.container,
+        this.api as GithubApi
       );
+      onboarding.render();
+    } else {
+      this.editor.render();
     }
+  }
+}
 
-    this.editor.render();
+class GithubOnboarding extends ServiceOnboarding {
+  api: GithubApi;
+
+  constructor(container: HTMLElement, api: GithubApi) {
+    super(container, api);
+    this.api = api;
   }
 }

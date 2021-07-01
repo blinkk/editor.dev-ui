@@ -1,6 +1,8 @@
 import {
+  GithubBranchInfo,
   GithubInstallationInfo,
   GithubOrgInstallationInfo,
+  WorkspaceData,
 } from '../../editor/api';
 import {ServiceServerApi, postJSON} from '../api';
 
@@ -40,6 +42,19 @@ export class GithubApi extends ServiceServerApi {
     return params;
   }
 
+  async getBranches(
+    org: string,
+    repo: string
+  ): Promise<Array<GithubBranchInfo>> {
+    return postJSON(
+      this.resolveApiGenericUrl('/branches.get'),
+      this.expandParams({
+        org: org,
+        repo: repo,
+      })
+    ) as Promise<Array<GithubBranchInfo>>;
+  }
+
   async getOrganizations(): Promise<Array<GithubInstallationInfo>> {
     return postJSON(
       this.resolveApiGenericUrl('/organizations.get'),
@@ -56,6 +71,25 @@ export class GithubApi extends ServiceServerApi {
         installationId: installationId,
       })
     ) as Promise<Array<GithubOrgInstallationInfo>>;
+  }
+
+  async getWorkspaces(
+    org?: string,
+    repo?: string
+  ): Promise<Array<WorkspaceData>> {
+    if (org && repo) {
+      return postJSON(
+        this.resolveApiGenericUrl('/workspaces.get'),
+        this.expandParams({
+          org: org,
+          repo: repo,
+        })
+      ) as Promise<Array<WorkspaceData>>;
+    }
+    return postJSON(
+      this.resolveApiUrl('/workspaces.get'),
+      this.expandParams({})
+    ) as Promise<Array<WorkspaceData>>;
   }
 
   /**

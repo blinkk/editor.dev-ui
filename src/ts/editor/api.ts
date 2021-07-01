@@ -883,8 +883,17 @@ export interface GithubInstallationInfo {
  * Github service organization installation information.
  */
 export interface GithubOrgInstallationInfo {
-  name: string;
+  repo: string;
   org: string;
   description: string;
   url: string;
+}
+
+/**
+ * Github service branch information.
+ */
+export interface GithubBranchInfo {
+  branch: string;
+  repo: string;
+  org: string;
 }

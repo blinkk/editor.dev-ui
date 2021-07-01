@@ -1,8 +1,10 @@
 import {EditorApp, EditorAppOptions} from './editorApp';
 import {
+  GithubBranchInfo,
   GithubInstallationInfo,
   GithubOrgInstallationInfo,
   LiveEditorApiComponent,
+  WorkspaceData,
 } from '../../editor/api';
 import {TemplateResult, html, repeat} from '@blinkk/selective-edit';
 
@@ -108,11 +110,60 @@ class GithubOnboarding extends ServiceOnboarding {
   organizations?: Array<GithubInstallationInfo>;
   installation?: GithubInstallationInfo;
   repositories?: Array<GithubOrgInstallationInfo>;
+  /**
+   * Track the id that was used to load the repositories.
+   * Reset the loaded repositories when the id does not match.
+   * ex: on pop state.
+   */
+  repositoriesId?: number;
   service = 'GitHub';
+  workspaces?: Array<WorkspaceData>;
+  /**
+   * Track the id that was used to load the workspaces.
+   * Reset the loaded workspaces when the id does not match.
+   * ex: on pop state.
+   */
+  workspacesId?: string;
 
   constructor(container: HTMLElement, api: GithubApi) {
     super(container, api);
     this.api = api;
+
+    window.addEventListener('popstate', evt => {
+      this.api.organization = evt.state?.organization;
+      this.api.project = evt.state?.repository;
+      this.api.branch = evt.state?.workspace;
+
+      this.render();
+    });
+  }
+
+  generateUrl(
+    organization?: string,
+    repository?: string,
+    workspace?: string
+  ): string {
+    if (organization && repository && workspace) {
+      return `${BASE_URL}${organization}/${repository}/${workspace}/`;
+    } else if (organization && repository) {
+      return `${BASE_URL}${organization}/${repository}/`;
+    } else if (organization) {
+      return `${BASE_URL}${organization}/`;
+    }
+    return BASE_URL;
+  }
+
+  loadWorkspaces() {
+    this.api
+      .getWorkspaces(this.api.organization, this.api.project)
+      .then(workspaces => {
+        this.workspaces = workspaces;
+        this.workspacesId = this.api.project;
+        this.render();
+      })
+      .catch(() => {
+        console.error('Unable to retrieve the list of branches.');
+      });
   }
 
   loadOrganizations() {
@@ -159,10 +210,11 @@ class GithubOnboarding extends ServiceOnboarding {
       .getRepositories(this.installation.id)
       .then(repositories => {
         this.repositories = repositories;
+        this.repositoriesId = this.installation?.id;
         this.render();
       })
       .catch(() => {
-        console.error('Unable to retrieve the list of organizations.');
+        console.error('Unable to retrieve the list of repositories.');
       });
   }
 
@@ -176,9 +228,9 @@ class GithubOnboarding extends ServiceOnboarding {
     if (!this.api.organization) {
       return this.templateOrganizations(onboarding);
     } else if (!this.api.project) {
-      return this.templateProjects(onboarding);
+      return this.templateRepositories(onboarding);
     }
-    return this.templateBranches(onboarding);
+    return this.templateWorkspaces(onboarding);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -197,7 +249,7 @@ class GithubOnboarding extends ServiceOnboarding {
     }
 
     return html` <h2>Organizations</h2>
-      ${this.organizations ? html`<p>Select your organization:</p>` : ''}
+      ${this.organizations ? html`<p>Select an organization:</p>` : ''}
       <div class="le__list">
         ${repeat(
           this.organizations || [],
@@ -208,6 +260,16 @@ class GithubOnboarding extends ServiceOnboarding {
               @click=${() => {
                 this.api.organization = org.org;
                 this.installation = org;
+
+                history.pushState(
+                  {
+                    onboarding: true,
+                    organization: this.api.organization,
+                  },
+                  org.org,
+                  this.generateUrl(org.org)
+                );
+
                 this.render();
                 return false;
               }}
@@ -241,30 +303,50 @@ class GithubOnboarding extends ServiceOnboarding {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateProjects(onboarding: ServiceOnboarding): TemplateResult {
+  templateRepositories(onboarding: ServiceOnboarding): TemplateResult {
+    // When using popstate, the repository id can be different than the cached selection.
+    if (
+      this.repositories &&
+      this.repositoriesId &&
+      this.installation?.id !== this.repositoriesId
+    ) {
+      this.repositories = undefined;
+    }
+
     if (!this.repositories) {
       this.loadRepositories();
     }
 
     return html` <h2>Repositories in ${this.api.organization}</h2>
       <div class="le__list">
-        ${this.repositories ? html`<p>Select your repository:</p>` : ''}
+        ${this.repositories ? html`<p>Select a repository:</p>` : ''}
         ${repeat(
           this.repositories || [],
-          repo => repo.name,
+          repo => repo.repo,
           repo => {
             return html`<div
               class="le__list__item le__list__item--pad_small le__clickable"
               @click=${() => {
-                this.api.project = repo.name;
+                this.api.project = repo.repo;
+
+                history.pushState(
+                  {
+                    onboarding: true,
+                    organization: this.api.organization,
+                    repository: repo.repo,
+                  },
+                  repo.repo,
+                  this.generateUrl(this.api.organization, repo.repo)
+                );
+
                 this.render();
                 return false;
               }}
             >
               <a
-                href="${BASE_URL}${repo.org}/${repo.name}/"
+                href="${BASE_URL}${repo.org}/${repo.repo}/"
                 @click=${preventNormalLinks}
-                >${repo.org}/${repo.name}</a
+                >${repo.org}/${repo.repo}</a
               >
             </div>`;
           }
@@ -297,7 +379,76 @@ class GithubOnboarding extends ServiceOnboarding {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateBranches(onboarding: ServiceOnboarding): TemplateResult {
-    return html`<div class="onboarding__list">Branches</div>`;
+  templateWorkspaces(onboarding: ServiceOnboarding): TemplateResult {
+    // When using popstate, the repository id can be different than the cached selection.
+    if (
+      this.workspaces &&
+      this.workspacesId &&
+      this.api.project !== this.workspacesId
+    ) {
+      this.workspaces = undefined;
+    }
+
+    if (!this.workspaces) {
+      this.loadWorkspaces();
+    }
+
+    return html` <h2>
+        Workspaces in ${this.api.organization}/${this.api.project}
+      </h2>
+      <div class="le__list">
+        ${this.workspaces ? html`<p>Select a workspace:</p>` : ''}
+        ${repeat(
+          this.workspaces || [],
+          workspace => workspace.name,
+          workspace => {
+            return html`<div
+              class="le__list__item le__list__item--pad_small le__clickable"
+              @click=${(evt: MouseEvent) => {
+                // Links should already redirect.
+                if ((evt.target as HTMLElement).tagName === 'A') {
+                  return;
+                }
+                // Allow clicking off the link to also redirect.
+                window.location.href = this.generateUrl(
+                  this.api.organization,
+                  this.api.project,
+                  workspace.name
+                );
+              }}
+            >
+              <a
+                href=${this.generateUrl(
+                  this.api.organization,
+                  this.api.project,
+                  workspace.name
+                )}
+                >${workspace.name}</a
+              >
+            </div>`;
+          }
+        )}
+        ${!this.workspaces
+          ? html`<div class="le__list__item">
+              ${templateLoading({padHorizontal: true})} Finding
+              ${this.api.organization}/${this.api.project} workspaces…
+            </div>`
+          : ''}
+        ${this.workspaces && !this.workspaces.length
+          ? html`<div
+              class="le__list__item le__list__item--pad_small le__list__item--emphasis"
+            >
+              Unable to find workspaces.
+            </div>`
+          : ''}
+      </div>
+      <div class="onboarding__missing">
+        <span class="material-icons">info</span>
+        <div>
+          Workspaces are git branches that begin with
+          <code>workspace/</code> or special branches like <code>main</code>,
+          <code>staging</code>, or <code>master</code>.
+        </div>
+      </div>`;
   }
 }

@@ -100,7 +100,12 @@ export class GithubEditorApp extends EditorApp {
       );
       onboarding.render();
     } else {
-      this.editor.render();
+      // Check if the user is signed in before rendering the editor.
+      if (!this.api.checkAuth()) {
+        (this.api as GithubApi).triggerAuth();
+      } else {
+        this.editor.render();
+      }
     }
   }
 }

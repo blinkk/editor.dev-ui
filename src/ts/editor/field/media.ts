@@ -419,7 +419,7 @@ export class MediaField
               />
             </div>
             ${this.isProcessing
-              ? html`${templateLoading(editor, {padHorizontal: true})}`
+              ? html`${templateLoading({padHorizontal: true})}`
               : ''}
             <div class="selective__field__actions">${actions}</div>
           </div>

@@ -185,7 +185,7 @@ export class WorkspacesPart extends MenuSectionPart {
     }
 
     if (!this.config.state.workspaces) {
-      return templateLoading(editor, {
+      return templateLoading({
         pad: true,
       });
     }

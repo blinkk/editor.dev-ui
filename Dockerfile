@@ -53,7 +53,7 @@ RUN cp ./dist/css/server/editor.css ./website/static/ \
   && cp ./dist/server/editor.min.js ./website/static/ \
   && cp ./dist/server/gh.callback.min.js ./website/static/
 
-# Build website
+# Build website.
 RUN cd website && yarn run build:prod
 
 # Copy public files.

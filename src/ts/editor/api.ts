@@ -869,3 +869,31 @@ export interface GoogleMediaOptions extends MediaOptions {
  * Supported options for remote media provider options.
  */
 export type RemoteMediaOptions = GoogleMediaOptions;
+
+/**
+ * Github service installations information.
+ */
+export interface GithubInstallationInfo {
+  id: number;
+  org: string;
+  url: string;
+}
+
+/**
+ * Github service organization installation information.
+ */
+export interface GithubOrgInstallationInfo {
+  repo: string;
+  org: string;
+  description: string;
+  url: string;
+}
+
+/**
+ * Github service branch information.
+ */
+export interface GithubBranchInfo {
+  branch: string;
+  repo: string;
+  org: string;
+}

@@ -302,7 +302,7 @@ export class DialogModal extends Modal {
         )}
       </div>
       ${this.isProcessing
-        ? templateLoading(editor, {
+        ? templateLoading({
             padHorizontal: true,
           })
         : ''}

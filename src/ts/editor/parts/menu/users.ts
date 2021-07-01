@@ -26,7 +26,7 @@ export class UsersPart extends MenuSectionPart {
     // Lazy load the users information.
     if (this.users === undefined) {
       this.loadProject();
-      return templateLoading(editor, {
+      return templateLoading({
         pad: true,
       });
     }

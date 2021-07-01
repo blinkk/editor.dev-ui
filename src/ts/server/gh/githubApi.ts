@@ -1,4 +1,11 @@
-import {ServiceServerApi} from '../api';
+import {
+  GithubBranchInfo,
+  GithubInstallationInfo,
+  GithubOrgInstallationInfo,
+  WorkspaceData,
+} from '../../editor/api';
+import {ServiceServerApi, postJSON} from '../api';
+
 import {SessionDataStorage} from '../../utility/dataStorage';
 import {generateUUID} from '@blinkk/selective-edit/dist/utility/uuid';
 
@@ -15,28 +22,8 @@ export class GithubApi extends ServiceServerApi {
    * @returns True if the auth checks out.
    */
   checkAuth(): boolean {
-    let githubState = sessionStorage.getItem('github.state');
-    if (!githubState) {
-      githubState = generateUUID();
-      sessionStorage.setItem('github.state', githubState);
-    }
-
     const githubCode = sessionStorage.getItem('github.code');
     if (!githubCode) {
-      // Save the current url to redirect back to after auth.
-      sessionStorage.setItem('redirectUrl', window.location.href);
-
-      const loginUrl = new URL('/login/oauth/authorize', 'https://github.com');
-
-      const loginParams = new URLSearchParams();
-      loginParams.set('client_id', CLIENT_ID);
-      loginParams.set('redirect_uri', `${window.location.origin}/gh/callback/`);
-      loginParams.set('state', githubState);
-
-      loginUrl.search = loginParams.toString();
-      console.log('login URL: ', loginUrl.toString());
-
-      window.location.href = loginUrl.toString();
       return false;
     }
     return true;
@@ -53,5 +40,81 @@ export class GithubApi extends ServiceServerApi {
     params['githubState'] = sessionStorage.getItem('github.state');
     params['githubCode'] = sessionStorage.getItem('github.code');
     return params;
+  }
+
+  async getBranches(
+    org: string,
+    repo: string
+  ): Promise<Array<GithubBranchInfo>> {
+    return postJSON(
+      this.resolveApiGenericUrl('/branches.get'),
+      this.expandParams({
+        org: org,
+        repo: repo,
+      })
+    ) as Promise<Array<GithubBranchInfo>>;
+  }
+
+  async getOrganizations(): Promise<Array<GithubInstallationInfo>> {
+    return postJSON(
+      this.resolveApiGenericUrl('/organizations.get'),
+      this.expandParams({})
+    ) as Promise<Array<GithubInstallationInfo>>;
+  }
+
+  async getRepositories(
+    installationId: number
+  ): Promise<Array<GithubOrgInstallationInfo>> {
+    return postJSON(
+      this.resolveApiGenericUrl('/repositories.get'),
+      this.expandParams({
+        installationId: installationId,
+      })
+    ) as Promise<Array<GithubOrgInstallationInfo>>;
+  }
+
+  async getWorkspaces(
+    org?: string,
+    repo?: string
+  ): Promise<Array<WorkspaceData>> {
+    if (org && repo) {
+      return postJSON(
+        this.resolveApiGenericUrl('/workspaces.get'),
+        this.expandParams({
+          org: org,
+          repo: repo,
+        })
+      ) as Promise<Array<WorkspaceData>>;
+    }
+    return postJSON(
+      this.resolveApiUrl('/workspaces.get'),
+      this.expandParams({})
+    ) as Promise<Array<WorkspaceData>>;
+  }
+
+  /**
+   * Start the authentication process.
+   */
+  triggerAuth() {
+    // Save the current url to redirect back to after auth.
+    sessionStorage.setItem('redirectUrl', window.location.href);
+
+    let state = sessionStorage.getItem('github.state');
+    if (!state) {
+      state = generateUUID();
+      sessionStorage.setItem('github.state', state);
+    }
+
+    const loginUrl = new URL('/login/oauth/authorize', 'https://github.com');
+
+    const loginParams = new URLSearchParams();
+    loginParams.set('client_id', CLIENT_ID);
+    loginParams.set('redirect_uri', `${window.location.origin}/gh/callback/`);
+    loginParams.set('state', state);
+    loginUrl.search = loginParams.toString();
+
+    window.location.href = loginUrl.toString();
+
+    return false;
   }
 }

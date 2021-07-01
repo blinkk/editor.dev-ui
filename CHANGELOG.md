@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.0.0...v3.1.0) (2021-07-01)
+
+
+### Features
+
+* github onboarding flow ([#71](https://www.github.com/blinkk/editor.dev-ui/issues/71)) ([a7acf86](https://www.github.com/blinkk/editor.dev-ui/commit/a7acf86a147794a173c02d65acd8ae102b80f4e7))
+
 ## [3.0.0](https://www.github.com/blinkk/editor.dev-ui/compare/v2.0.0...v3.0.0) (2021-06-25)
 
 

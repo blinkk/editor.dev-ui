@@ -50,7 +50,7 @@ RUN yarn run compile
 
 # Having issues with git symlinks to generated files.
 RUN cp ./dist/css/server/editor.css ./website/static/ \
-  && cp ./dist/server/editor.min.js ./website/static/ \
+  && cp ./dist/server/app.* ./website/static/ \
   && cp ./dist/server/gh.callback.min.js ./website/static/
 
 # Build website.
@@ -59,8 +59,6 @@ RUN cd website && yarn run build:prod
 # Copy public files.
 RUN mkdir -p ./public/ \
   && cp -r ./website/build/* ./public/ \
-  && cp ./dist/css/server/editor.css ./public/ \
-  && cp ./dist/server/editor.* ./public/ \
   && cp static/example/* ./public/example/ \
   && cp dist/css/example/* ./public/example/ \
   && cp dist/example.* ./public/example/ \

@@ -107,15 +107,31 @@
     opacity: 0
     transition: opacity $le-speed-xfast
 
-  &.le__clickable:hover
-    background-color: var(--color-tertiary)
-    color: var(--color-on-tertiary)
+  &.le__clickable
+    position: relative
 
-    .le__part__menu &
-      box-shadow: -15vw 0 0 var(--color-tertiary)
+    & > *
+      position: relative
+      z-index: 1
+
+  &.le__clickable::after
+    bottom: 0
+    content: ''
+    display: block
+    left: -15vw
+    position: absolute
+    right: 0
+    top: 0
+    z-index: 0
+
+  &.le__clickable:hover
+    color: var(--color-on-tertiary)
 
     .le__actions
       opacity: 1
+
+    &::after
+      background-color: var(--color-tertiary)
 
   &--primary.le__clickable,
   &--primary.le__clickable:hover
@@ -127,11 +143,10 @@
 
   &--selected,
   &--selected.le__clickable:hover
-    background-color: var(--color-secondary)
     color: var(--color-on-secondary)
 
-    .le__part__menu &
-      box-shadow: -15vw 0 0 var(--color-secondary)
+    &::after
+      background-color: var(--color-secondary)
 
 .le__list__item__label
   flex-grow: 1

@@ -2,12 +2,14 @@ import {
   ApiProjectTypes,
   DeviceData,
   EditorFileData,
+  EditorPreviewSettings,
   EmptyData,
   FileData,
   LiveEditorApiComponent,
   MediaFileData,
   MediaOptions,
   PingResult,
+  PreviewSettings,
   ProjectData,
   PublishResult,
   WorkspaceData,
@@ -16,9 +18,12 @@ import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
 import {GrowApi} from '../projectType/grow/growApi';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
+import {interpolate} from '../utility/stringLiteral';
+import {shortenWorkspaceName} from '../editor/workspace';
 
 const DEFAULT_LOCAL_PORT = 9090;
 
+export const getJSON = bent('json', 'GET');
 export const postJSON = bent('json', 'POST');
 
 export interface ServerApiComponent {
@@ -35,7 +40,9 @@ export interface ServerApiComponent {
 /**
  * Api for connecting with the editor.dev api connector.
  */
-export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
+export abstract class ServerApi
+  implements LiveEditorApiComponent, ServerApiComponent
+{
   projectTypes: ApiProjectTypes;
   remoteMediaProviders: Array<RemoteMediaConstructor>;
 
@@ -153,6 +160,11 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     } as FileData);
   }
 
+  abstract getPreviewConfig(
+    settings: EditorPreviewSettings,
+    workspace: WorkspaceData
+  ): Promise<PreviewSettings>;
+
   async getProject(): Promise<ProjectData> {
     return postJSON(
       this.resolveApiUrl('/project.get'),
@@ -172,6 +184,31 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
       this.resolveApiUrl('/workspaces.get'),
       this.expandParams({})
     ) as Promise<Array<WorkspaceData>>;
+  }
+
+  interpolatePreviewUrl(
+    settings: EditorPreviewSettings,
+    workspace: WorkspaceData
+  ) {
+    const params = {
+      workspace: shortenWorkspaceName(workspace.name),
+      workspaceFull: workspace.name,
+    };
+    const baseUrl = interpolate(params, settings.baseUrl);
+
+    if (settings.configUrl) {
+      return interpolate(
+        Object.assign(
+          {
+            baseUrl: baseUrl,
+          },
+          params
+        ),
+        settings.configUrl
+      );
+    }
+
+    return baseUrl;
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
@@ -291,6 +328,13 @@ export class LocalServerApi extends ServerApi {
     return `/local/${this.port}/`;
   }
 
+  async getPreviewConfig(
+    settings: EditorPreviewSettings,
+    workspace: WorkspaceData
+  ): Promise<PreviewSettings> {
+    return await getJSON(settings.baseUrl);
+  }
+
   async ping() {
     return postJSON(
       this.resolveApiUrl('/ping'),
@@ -350,6 +394,13 @@ export class ServiceServerApi extends ServerApi {
 
   get baseUrl() {
     return `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
+  }
+
+  async getPreviewConfig(
+    settings: EditorPreviewSettings,
+    workspace: WorkspaceData
+  ): Promise<PreviewSettings> {
+    return await getJSON(this.interpolatePreviewUrl(settings, workspace));
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {

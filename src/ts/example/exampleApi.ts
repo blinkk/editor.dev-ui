@@ -4,11 +4,13 @@ import {
   ApiProjectTypes,
   DeviceData,
   EditorFileData,
+  EditorPreviewSettings,
   EmptyData,
   FileData,
   GrowProjectTypeApi,
   LiveEditorApiComponent,
   PartialData,
+  PreviewSettings,
   ProjectData,
   ProjectPublishConfig,
   PublishResult,
@@ -132,7 +134,6 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
       ).toISOString(),
     },
   ],
-  url: 'preview.html',
   urls: [
     {
       url: '#private',
@@ -1171,15 +1172,12 @@ const currentFileset: Array<FileData> = [
   },
   {
     path: '/static/img/landscape.png',
-    url: 'image-landscape.png',
   },
   {
     path: '/static/img/portrait.png',
-    url: 'image-portrait.png',
   },
   {
     path: '/static/img/square.png',
-    url: 'image-square.png',
   },
 ];
 
@@ -1457,6 +1455,48 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: file.path,
         url: 'image-landscape.png',
       } as FileData);
+    });
+  }
+
+  async getPreviewConfig(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    settings: EditorPreviewSettings,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    workspace: WorkspaceData
+  ): Promise<PreviewSettings> {
+    return new Promise<PreviewSettings>((resolve, reject) => {
+      const methodName = 'getPreviewConfig';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the preview settings.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      /**
+       * Map the paths to the serving urls.
+       */
+      simulateNetwork(resolve, {
+        routes: {
+          '/content/pages/index.yaml': {
+            en: {
+              path: '/preview.html',
+            },
+          },
+          '/static/img/landscape.png': {
+            path: '/image-landscape.png',
+          },
+          '/static/img/portrait.png': {
+            path: '/image-portrait.png',
+          },
+          '/static/img/square.png': {
+            path: '/image-square.png',
+          },
+        },
+      });
     });
   }
 

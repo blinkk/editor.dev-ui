@@ -2,9 +2,11 @@ import {
   ApiError,
   DeviceData,
   EditorFileData,
+  EditorPreviewSettings,
   FileData,
   LiveEditorApiComponent,
   MediaOptions,
+  PreviewSettings,
   ProjectData,
   PublishResult,
   SiteData,
@@ -52,6 +54,10 @@ export class EditorState extends ListenersMixin(Base) {
    */
   file?: EditorFileData;
   /**
+   * Preview server settings.
+   */
+  previewConfig?: PreviewSettings | null;
+  /**
    * Project information.
    */
   project?: ProjectData;
@@ -63,7 +69,7 @@ export class EditorState extends ListenersMixin(Base) {
    * Keep track of active promises to keep from requesting the same data
    * multiple times.
    */
-  protected promises: Record<string, Promise<any>>;
+  protected promises: Record<string, Promise<any> | boolean>;
   /**
    * Site configuration for the editor.
    */
@@ -278,6 +284,64 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(error => catchError(error, callbackError));
     return this.files;
+  }
+
+  getPreviewConfig(
+    callback?: (previewSettings: PreviewSettings | null) => void,
+    callbackError?: (error: ApiError) => void
+  ): PreviewSettings | null | undefined {
+    const promiseKey = 'getPreviewConfig';
+
+    // TODO: This promise may be delayed if the project or workspace
+    // is not loaded, so this may be requested multiple times in a row.
+    if (this.promises[promiseKey]) {
+      return;
+    }
+
+    const handleResponse = (data: PreviewSettings | null) => {
+      this.previewConfig = data;
+      delete this.promises[promiseKey];
+
+      if (callback) {
+        callback(data);
+      }
+      this.triggerListener(promiseKey);
+      this.render();
+    };
+
+    // Project needs to be loaded first.
+    if (!this.project) {
+      this.getProject((project: ProjectData) => {
+        // If there is no preview configuration, no preview
+        // server configured, so ignore the previewing config.
+        if (!project.preview) {
+          handleResponse(null);
+          return;
+        }
+
+        if (!this.workspace) {
+          this.getWorkspace((workspace: WorkspaceData) => {
+            this.promises[promiseKey] = this.api
+              .getPreviewConfig(
+                project.preview as EditorPreviewSettings,
+                workspace
+              )
+              .then(handleResponse)
+              .catch(error => catchError(error, callbackError));
+          });
+          this.promises[promiseKey] = true;
+          return;
+        }
+
+        this.promises[promiseKey] = this.api
+          .getPreviewConfig(project.preview, this.workspace)
+          .then(handleResponse)
+          .catch(error => catchError(error, callbackError));
+      });
+      this.promises[promiseKey] = true;
+    }
+
+    return this.previewConfig;
   }
 
   getProject(

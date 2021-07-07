@@ -1,4 +1,6 @@
 .le__list
+  cursor: default
+
   &:last-child
     margin-bottom: $le-space-medium
 
@@ -7,7 +9,7 @@
     overflow-y: auto
 
   &--indent
-    padding-left: $le-space-large
+    padding-left: $le-space-medium
 
   > .le__list
     padding-left: $le-space-medium
@@ -100,12 +102,15 @@
     color: var(--color-secondary-dark)
     font-weight: 700
 
+    // Prevent item immediately under the heading from indenting.
+    & + .le__list
+      padding-left: 0
+
   &--emphasis
     font-weight: 700
 
   .le__actions
     opacity: 0
-    transition: opacity $le-speed-xfast
 
   &.le__clickable
     position: relative
@@ -115,6 +120,7 @@
       z-index: 1
 
   &.le__clickable::after
+    background-color: var(--list-item-background-color)
     bottom: 0
     content: ''
     display: block
@@ -125,13 +131,11 @@
     z-index: 0
 
   &.le__clickable:hover
+    --list-item-background-color: var(--color-tertiary)
     color: var(--color-on-tertiary)
 
     .le__actions
       opacity: 1
-
-    &::after
-      background-color: var(--color-tertiary)
 
   &--primary.le__clickable,
   &--primary.le__clickable:hover
@@ -143,10 +147,8 @@
 
   &--selected,
   &--selected.le__clickable:hover
+    --list-item-background-color: var(--color-secondary)
     color: var(--color-on-secondary)
-
-    &::after
-      background-color: var(--color-secondary)
 
 .le__list__item__label
   flex-grow: 1
@@ -167,3 +169,14 @@
 
   .le__list__item--pad_vertical &
     margin: 0 $le-space-medium 0 0
+
+.le__list__item__icon
+  align-items: center
+  display: flex
+  justify-content: center
+  height: $le-font-size-icon-menu
+  width: $le-font-size-icon-menu
+
+  .material-icons
+    font-size: $le-font-size-icon-menu
+    padding: 0

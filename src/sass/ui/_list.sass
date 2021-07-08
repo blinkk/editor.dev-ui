@@ -145,7 +145,11 @@
   &--secondary.le__clickable:hover
     color: var(--color-secondary)
 
-  &--selected,
+  &--selected
+    --list-item-background-color: var(--color-secondary)
+    background-color: var(--color-secondary)
+    color: var(--color-on-secondary)
+
   &--selected.le__clickable:hover
     --list-item-background-color: var(--color-secondary)
     color: var(--color-on-secondary)

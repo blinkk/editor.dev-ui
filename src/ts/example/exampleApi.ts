@@ -151,7 +151,7 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
     },
     {
       url: 'https://github.com/blinkk/editor.dev-ui/',
-      label: 'View in Github',
+      label: 'View in GitHub',
       level: UrlLevel.Source,
     },
   ],

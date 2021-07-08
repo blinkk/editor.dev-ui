@@ -39,9 +39,7 @@ export interface ServerApiComponent {
 /**
  * Api for connecting with the editor.dev api connector.
  */
-export abstract class ServerApi
-  implements LiveEditorApiComponent, ServerApiComponent
-{
+export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   projectTypes: ApiProjectTypes;
   remoteMediaProviders: Array<RemoteMediaConstructor>;
 
@@ -159,10 +157,31 @@ export abstract class ServerApi
     } as FileData);
   }
 
-  abstract getPreviewConfig(
+  async getPreviewConfig(
     settings: EditorPreviewSettings,
     workspace: WorkspaceData
-  ): Promise<PreviewSettings>;
+  ): Promise<PreviewSettings> {
+    // return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
+
+    // TODO: Need to send credentials for IAP with fetch, how to do with bent?
+    // TODO: Make the credentials optional with setting?
+    const codes = new Set();
+    codes.add(200);
+
+    const response = await fetch(
+      interpolatePreviewConfigUrl(settings, workspace),
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
+
+    if (!codes.has(response.status)) {
+      throw new Error(await response.text());
+    }
+
+    return await response.json();
+  }
 
   async getProject(): Promise<ProjectData> {
     return postJSON(
@@ -302,31 +321,6 @@ export class LocalServerApi extends ServerApi {
     return `/local/${this.port}/`;
   }
 
-  async getPreviewConfig(
-    settings: EditorPreviewSettings,
-    workspace: WorkspaceData
-  ): Promise<PreviewSettings> {
-    // return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
-
-    // TODO: Need to send credentials with fetch, how to do with bent?
-    const codes = new Set();
-    codes.add(200);
-
-    const response = await fetch(
-      interpolatePreviewConfigUrl(settings, workspace),
-      {
-        method: 'GET',
-        credentials: 'include',
-      }
-    );
-
-    if (!codes.has(response.status)) {
-      throw new Error(await response.text());
-    }
-
-    return await response.json();
-  }
-
   async ping() {
     return postJSON(
       this.resolveApiUrl('/ping'),
@@ -386,13 +380,6 @@ export class ServiceServerApi extends ServerApi {
 
   get baseUrl() {
     return `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
-  }
-
-  async getPreviewConfig(
-    settings: EditorPreviewSettings,
-    workspace: WorkspaceData
-  ): Promise<PreviewSettings> {
-    return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {

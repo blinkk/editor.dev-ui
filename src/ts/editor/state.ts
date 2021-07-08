@@ -22,7 +22,7 @@ import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
-import {interpolatePreviewBaseUrl} from './workspace';
+import {interpolatePreviewBaseUrl} from './preview';
 
 /**
  * Track the references to the editor state.

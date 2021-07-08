@@ -18,7 +18,7 @@ import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
 import {GrowApi} from '../projectType/grow/growApi';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
-import {interpolatePreviewConfigUrl} from '../editor/workspace';
+import {interpolatePreviewConfigUrl} from '../editor/preview';
 
 const DEFAULT_LOCAL_PORT = 9090;
 

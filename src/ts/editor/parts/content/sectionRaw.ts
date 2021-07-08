@@ -62,7 +62,7 @@ export class RawPart extends ContentSectionPart {
   }
 
   get label() {
-    return 'Raw';
+    return 'Source';
   }
 
   loadEditorConfig() {

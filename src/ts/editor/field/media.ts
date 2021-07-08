@@ -306,7 +306,7 @@ export class MediaField
       return value.url;
     }
 
-    if (value && value.path) {
+    if (value && value.path && typeof value.path === 'string') {
       if (
         value.path.startsWith('http:') ||
         value.path.startsWith('https:') ||

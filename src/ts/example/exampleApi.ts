@@ -1480,6 +1480,7 @@ export class ExampleApi implements LiveEditorApiComponent {
        * Map the paths to the serving urls.
        */
       simulateNetwork(resolve, {
+        defaultLocale: 'en',
         routes: {
           '/content/pages/index.yaml': {
             en: {
@@ -1496,7 +1497,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             path: '/image-square.png',
           },
         },
-      });
+      } as PreviewSettings);
     });
   }
 

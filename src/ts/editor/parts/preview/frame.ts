@@ -132,8 +132,6 @@ export class PreviewFramePart extends BasePart implements Part {
   ): TemplateResult {
     const sizing = this.getIframeSize(device, isRotated);
 
-    console.log(this.config.state.project);
-
     return html`<div class=${classMap(this.classesForPart())}>
       <div
         class=${classMap({

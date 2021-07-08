@@ -18,8 +18,7 @@ import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
 import {GrowApi} from '../projectType/grow/growApi';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
-import {interpolate} from '../utility/stringLiteral';
-import {shortenWorkspaceName} from '../editor/workspace';
+import {interpolatePreviewConfigUrl} from '../editor/workspace';
 
 const DEFAULT_LOCAL_PORT = 9090;
 
@@ -186,31 +185,6 @@ export abstract class ServerApi
     ) as Promise<Array<WorkspaceData>>;
   }
 
-  interpolatePreviewUrl(
-    settings: EditorPreviewSettings,
-    workspace: WorkspaceData
-  ) {
-    const params = {
-      workspace: shortenWorkspaceName(workspace.name),
-      workspaceFull: workspace.name,
-    };
-    const baseUrl = interpolate(params, settings.baseUrl);
-
-    if (settings.configUrl) {
-      return interpolate(
-        Object.assign(
-          {
-            baseUrl: baseUrl,
-          },
-          params
-        ),
-        settings.configUrl
-      );
-    }
-
-    return baseUrl;
-  }
-
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {
     return Promise.resolve(workspace);
   }
@@ -332,7 +306,25 @@ export class LocalServerApi extends ServerApi {
     settings: EditorPreviewSettings,
     workspace: WorkspaceData
   ): Promise<PreviewSettings> {
-    return await getJSON(settings.baseUrl);
+    // return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
+
+    // TODO: Need to send credentials with fetch, how to do with bent?
+    const codes = new Set();
+    codes.add(200);
+
+    const response = await fetch(
+      interpolatePreviewConfigUrl(settings, workspace),
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
+
+    if (!codes.has(response.status)) {
+      throw new Error(await response.text());
+    }
+
+    return await response.json();
   }
 
   async ping() {
@@ -400,7 +392,7 @@ export class ServiceServerApi extends ServerApi {
     settings: EditorPreviewSettings,
     workspace: WorkspaceData
   ): Promise<PreviewSettings> {
-    return await getJSON(this.interpolatePreviewUrl(settings, workspace));
+    return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {

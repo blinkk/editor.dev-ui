@@ -6,6 +6,8 @@ import {
   FileData,
   LiveEditorApiComponent,
   MediaOptions,
+  PreviewRoutesLocaleData,
+  PreviewRoutesMetaData,
   PreviewSettings,
   ProjectData,
   PublishResult,
@@ -20,6 +22,7 @@ import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
+import {interpolatePreviewBaseUrl} from './workspace';
 
 /**
  * Track the references to the editor state.
@@ -255,6 +258,52 @@ export class EditorState extends ListenersMixin(Base) {
         if (callback) {
           callback(data);
         }
+
+        // If there is no url for the file, check if the preview server
+        // knows how to preview the file.
+        if (!this.file.url) {
+          const originalPath = this.file.file.path;
+
+          const updateFileUrl = (previewSettings: PreviewSettings | null) => {
+            // If the path has changed then we have moved on, nothing to see here.
+            if (originalPath !== this.file?.file.path) {
+              return;
+            }
+
+            if (
+              previewSettings &&
+              this.file?.file.path &&
+              this.file?.file.path in previewSettings.routes
+            ) {
+              const baseUrl = interpolatePreviewBaseUrl(
+                this.project?.preview as EditorPreviewSettings,
+                this.workspace as WorkspaceData
+              );
+              const route = previewSettings.routes[this.file?.file.path];
+
+              if ((route as PreviewRoutesMetaData).path) {
+                this.file.url = `${baseUrl}${
+                  (route as PreviewRoutesMetaData).path
+                }`;
+              } else {
+                this.file.url = `${baseUrl}${
+                  (route as PreviewRoutesLocaleData)[
+                    previewSettings.defaultLocale
+                  ].path
+                }`;
+              }
+
+              this.render();
+            }
+          };
+
+          if (this.previewConfig === undefined) {
+            this.getPreviewConfig(updateFileUrl);
+          } else {
+            updateFileUrl(this.previewConfig);
+          }
+        }
+
         this.triggerListener(promiseKey);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
@@ -298,7 +347,7 @@ export class EditorState extends ListenersMixin(Base) {
       return;
     }
 
-    const handleResponse = (data: PreviewSettings | null) => {
+    const handlePreviewSettings = (data: PreviewSettings | null) => {
       this.previewConfig = data;
       delete this.promises[promiseKey];
 
@@ -309,36 +358,43 @@ export class EditorState extends ListenersMixin(Base) {
       this.render();
     };
 
+    const handleWorkspace = (
+      project: ProjectData,
+      workspace: WorkspaceData
+    ) => {
+      this.promises[promiseKey] = this.api
+        .getPreviewConfig(project.preview as EditorPreviewSettings, workspace)
+        .then(handlePreviewSettings)
+        .catch(error => catchError(error, callbackError));
+    };
+
+    const handleProject = (project: ProjectData) => {
+      // If there is no preview configuration, no preview
+      // server configured, so ignore the previewing config.
+      if (!project.preview) {
+        handlePreviewSettings(null);
+        return;
+      }
+
+      if (!this.workspace) {
+        this.getWorkspace((workspace: WorkspaceData) => {
+          handleWorkspace(project, workspace);
+        });
+        return;
+      }
+
+      handleWorkspace(project, this.workspace);
+    };
+
+    // Mark that the process is in flight.
+    // Not a true promise until the actual request is made later.
+    this.promises[promiseKey] = true;
+
     // Project needs to be loaded first.
     if (!this.project) {
-      this.getProject((project: ProjectData) => {
-        // If there is no preview configuration, no preview
-        // server configured, so ignore the previewing config.
-        if (!project.preview) {
-          handleResponse(null);
-          return;
-        }
-
-        if (!this.workspace) {
-          this.getWorkspace((workspace: WorkspaceData) => {
-            this.promises[promiseKey] = this.api
-              .getPreviewConfig(
-                project.preview as EditorPreviewSettings,
-                workspace
-              )
-              .then(handleResponse)
-              .catch(error => catchError(error, callbackError));
-          });
-          this.promises[promiseKey] = true;
-          return;
-        }
-
-        this.promises[promiseKey] = this.api
-          .getPreviewConfig(project.preview, this.workspace)
-          .then(handleResponse)
-          .catch(error => catchError(error, callbackError));
-      });
-      this.promises[promiseKey] = true;
+      this.getProject(handleProject);
+    } else {
+      handleProject(this.project);
     }
 
     return this.previewConfig;

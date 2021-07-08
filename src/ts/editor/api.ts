@@ -283,6 +283,10 @@ export interface EditorUiSettings {
  */
 export interface PreviewSettings {
   /**
+   * Default locale used by the preview server.
+   */
+  defaultLocale: string;
+  /**
    * Route information for the preview server
    */
   routes: PreviewRoutesData;

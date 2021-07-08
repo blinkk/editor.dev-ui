@@ -84,6 +84,14 @@ export interface LiveEditorApiComponent {
   getFileUrl(file: FileData): Promise<FileData>;
 
   /**
+   * Retrieve configuration for the preview server.
+   */
+  getPreviewConfig(
+    settings: EditorPreviewSettings,
+    workspace: WorkspaceData
+  ): Promise<PreviewSettings>;
+
+  /**
    * Retrieve information about the project.
    */
   getProject(): Promise<ProjectData>;
@@ -208,6 +216,10 @@ export interface EditorFileSettings {
    */
   media?: ProjectMediaConfig;
   /**
+   * Settings for previewing the files.
+   */
+  preview?: EditorPreviewSettings;
+  /**
    * Configuration for the site display in the editor.
    */
   site?: SiteData;
@@ -221,11 +233,112 @@ export interface EditorFileSettings {
   ui?: EditorUiSettings;
 }
 
+export interface EditorPreviewSettings {
+  /**
+   * Base url for the preview iframe to use.
+   *
+   * All preview urls will use the base url for things like the preview
+   * iframe, non-remote media urls, etc.
+   */
+  baseUrl: string;
+  /**
+   * Url for preview server configuration for the site.
+   *
+   * If no route url is provided the editor will use the `baseUrl` and
+   * search for `${baseUrl}/preview.json`.
+   *
+   * Example `preview.json` format (Uses PreviewFileSettings interface):
+   *
+   * ```json
+   * {
+   *   "routes": {
+   *     "/content/pages/index.yaml": {
+   *       "en": {
+   *         "path": "/",
+   *         "title": "Coolest site evar!",
+   *       }
+   *     }
+   *   }
+   * }
+   * ```
+   */
+  configUrl?: string;
+}
+
 export interface EditorUiSettings {
   /**
    * Labels for customizing the editor UI.
    */
   labels?: LiveEditorLabels;
+}
+
+/**
+ * Interface for the structure of the preview server config.
+ *
+ * The editor reads the preview server's configuration to determine
+ * how to preview content.
+ *
+ * The url of the preview server configuration is defined in the
+ * `EditorFileSettings`.
+ */
+export interface PreviewSettings {
+  /**
+   * Default locale used by the preview server.
+   */
+  defaultLocale: string;
+  /**
+   * Route information for the preview server
+   */
+  routes: PreviewRoutesData;
+}
+
+/**
+ * Interface for the structure of the preview routes file.
+ *
+ * The editor reads the preview server's routes file to determine
+ * how to serve a file's preview.
+ */
+export interface PreviewRoutesData {
+  /**
+   * Mapping of path string to the localized or meta data for
+   * the path contents.
+   */
+  [path: string]: PreviewRoutesLocaleData | PreviewRoutesMetaData;
+}
+
+/**
+ * Interface for the preview server's route localized data.
+ *
+ * File contents
+ */
+export interface PreviewRoutesLocaleData {
+  /**
+   * Mapping of a locale to the meta data about the path contents.
+   */
+  [locale: string]: PreviewRoutesMetaData;
+}
+
+/**
+ * Interface for the preview server's route meta data.
+ *
+ * Every file in the routes provides information for the editor to use
+ * in previewing a servable path.
+ */
+export interface PreviewRoutesMetaData {
+  /**
+   * Title for the route resource.
+   *
+   * For example, the title of a page if the path is a document.
+   */
+  title?: string;
+  /**
+   * Serving path for the servable file.
+   *
+   * Should be a relative path from the preview server's `baseUrl` defined
+   * in the `editor.yaml` (ex: `/images/something.png`)
+   * or a fully qualified url for serving the file (ex: `https://...`).
+   */
+  path: string;
 }
 
 /**
@@ -411,6 +524,10 @@ export interface ProjectData {
    * to collect for providing to the `publish` method on the api.
    */
   publish?: ProjectPublishConfig;
+  /**
+   * Settings for previewing the project files.
+   */
+  preview?: EditorPreviewSettings;
   /**
    * Configuration for the site display.
    */

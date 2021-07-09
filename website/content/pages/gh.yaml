@@ -1,6 +1,6 @@
-title: Github
-navTitle: Github
-description: Github
+title: GitHub
+navTitle: GitHub
+description: Edit projects hosted on GitHub.
 
 css:
 - !pod.staticFile /static/editor.css

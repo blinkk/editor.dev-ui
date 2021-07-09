@@ -1,6 +1,8 @@
 .le__part__preview__container
   align-items: stretch
   background-color: var(--color-background)
+  background-image: $le-background-grid
+  background-size: $le-background-grid-size
   color: var(--color-on-background)
   display: flex
   flex-flow: column
@@ -12,14 +14,14 @@
     justify-content: center
 
 .le__part__preview__frame
+  background-color: var(--color-background)
+  color: var(--color-on-background)
   display: flex
   flex-flow: column
   flex-grow: 1
   overflow: hidden
 
   .le__part__preview--device_mode &
-    background-color: var(--color-background)
-    color: var(--color-on-background)
     box-shadow: $le_shadow_medium
     flex-grow: 0
     justify-content: center

@@ -274,50 +274,8 @@ export class EditorState extends ListenersMixin(Base) {
         this.file = data;
         delete this.promises[promiseKey];
 
-        // If there is no url for the file, check if the preview server
-        // knows how to preview the file.
-        if (!this.file.url) {
-          const originalPath = this.file.file.path;
-
-          const updateFileUrl = (previewSettings: PreviewSettings | null) => {
-            // If the path has changed then we have moved on, nothing to see here.
-            if (originalPath !== this.file?.file.path) {
-              return;
-            }
-
-            if (
-              previewSettings &&
-              this.file?.file.path &&
-              this.file?.file.path in previewSettings.routes
-            ) {
-              const baseUrl = interpolatePreviewBaseUrl(
-                this.project?.preview as EditorPreviewSettings,
-                this.workspace as WorkspaceData
-              );
-              const route = previewSettings.routes[this.file?.file.path];
-
-              if ((route as PreviewRoutesMetaData).path) {
-                this.file.url = `${baseUrl}${
-                  (route as PreviewRoutesMetaData).path
-                }`;
-              } else {
-                this.file.url = `${baseUrl}${
-                  (route as PreviewRoutesLocaleData)[
-                    previewSettings.defaultLocale
-                  ].path
-                }`;
-              }
-
-              this.render();
-            }
-          };
-
-          if (this.previewConfig === undefined) {
-            this.getPreviewConfig(updateFileUrl);
-          } else {
-            updateFileUrl(this.previewConfig);
-          }
-        }
+        // Update the file url is it is not defined.
+        this.useOrLoadFileUrl();
 
         // Loading is complete, remove the loading file information.
         this.loadingFilePath = undefined;
@@ -587,6 +545,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.file = data;
         delete this.promises[promiseKey];
 
+        // Update the file url is it is not defined.
+        this.useOrLoadFileUrl();
+
         // Reload the workspace from the api.
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
@@ -599,6 +560,51 @@ export class EditorState extends ListenersMixin(Base) {
         this.render();
       })
       .catch(error => catchError(error, callbackError));
+  }
+
+  protected useOrLoadFileUrl() {
+    // If there is no url for the file, check if the preview server
+    // knows how to preview the file.
+    if (this.file && !this.file.url) {
+      const originalPath = this.file.file.path;
+      const updateFileUrl = (previewSettings: PreviewSettings | null) => {
+        // If the path has changed then we have moved on, nothing to see here.
+        if (originalPath !== this.file?.file.path) {
+          return;
+        }
+
+        if (
+          previewSettings &&
+          this.file?.file.path &&
+          this.file?.file.path in previewSettings.routes
+        ) {
+          const baseUrl = interpolatePreviewBaseUrl(
+            this.project?.preview as EditorPreviewSettings,
+            this.workspace as WorkspaceData
+          );
+          const route = previewSettings.routes[this.file?.file.path];
+
+          if ((route as PreviewRoutesMetaData).path) {
+            this.file.url = `${baseUrl}${
+              (route as PreviewRoutesMetaData).path
+            }`;
+          } else {
+            this.file.url = `${baseUrl}${
+              (route as PreviewRoutesLocaleData)[previewSettings.defaultLocale]
+                .path
+            }`;
+          }
+
+          this.render();
+        }
+      };
+
+      if (this.previewConfig === undefined) {
+        this.getPreviewConfig(updateFileUrl);
+      } else {
+        updateFileUrl(this.previewConfig);
+      }
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 import {
+  DataType,
   DeepObject,
   DroppableMixin,
   DroppableUiComponent,
@@ -306,7 +307,7 @@ export class MediaField
       return value.url;
     }
 
-    if (value && value.path && typeof value.path === 'string') {
+    if (value && value.path && DataType.isString(value.path)) {
       if (
         value.path.startsWith('http:') ||
         value.path.startsWith('https:') ||

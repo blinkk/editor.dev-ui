@@ -52,13 +52,13 @@
       max-width: 100%
 
   &:not(.selective__list__item--simple):not(.selective__list__item--empty)
-    border: $le-border-size-medium solid $le-color-border
+    border: $le-border-size-medium solid var(--color-border)
     border-radius: $le-radius-small
     margin-bottom: $le-space-small
 
     &:hover
-      border-color: $le-color-border-hover
-      box-shadow: var(--color-elevation-hover)
+      border-color: var(--color-border)-hover
+      box-shadow: $le-shadow-small
 
     &:last-child
       margin-bottom: 0

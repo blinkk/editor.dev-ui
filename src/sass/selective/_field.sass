@@ -9,7 +9,7 @@
 
   &--invalid
     > .selective__field__header
-      color: $le-color-extreme
+      color: var(--color-extreme)
 
 .selective__field__help
   color: var(--color-secondary-light)
@@ -27,7 +27,7 @@
   margin-bottom: $le-space-small
 
   &--error
-    color: $le-color-extreme
+    color: var(--color-extreme)
 
   > .selective__field__invalid
     margin-right: $le-space-small
@@ -69,24 +69,24 @@
 
 =field-input--error
   color: inherit
-  box-shadow: 0 $le-border-size-large 0 0 $le-color-extreme
+  box-shadow: 0 $le-border-size-large 0 0 var(--color-extreme)
 
   &:focus
-    box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-extreme
+    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-extreme)
 
 =field-input--info
   color: inherit
-  box-shadow: 0 $le-border-size-large 0 0 $le-color-info
+  box-shadow: 0 $le-border-size-large 0 0 var(--color-info)
 
   &:focus
-    box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-info
+    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-info)
 
 =field-input--warning
   color: inherit
-  box-shadow: 0 $le-border-size-large 0 0 $le-color-warning
+  box-shadow: 0 $le-border-size-large 0 0 var(--color-warning)
 
   &:focus
-    box-shadow: 0 $le-border-size-xlarge 0 0 $le-color-warning
+    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-warning)
 
 =field-section-heading
   color: var(--color-secondary-light)
@@ -189,7 +189,7 @@ $le-svg-tertiary: #eeeeee !default
     flex-flow: row
 
   &--error
-    color: $le-color-extreme
+    color: var(--color-extreme)
 
     input[type=text],
     input[type=date],
@@ -201,7 +201,7 @@ $le-svg-tertiary: #eeeeee !default
       +field-input--error
 
   &--warning
-    color: $le-color-warning
+    color: var(--color-warning)
 
     input[type=text],
     input[type=date],
@@ -213,7 +213,7 @@ $le-svg-tertiary: #eeeeee !default
       +field-input--warning
 
   &--info
-    color: $le-color-info
+    color: var(--color-info)
 
     input[type=text],
     input[type=date],
@@ -225,7 +225,7 @@ $le-svg-tertiary: #eeeeee !default
       +field-input--info
 
 .selective__field__error
-  color: $le-color-extreme
+  color: var(--color-extreme)
 
 @import './field/checkbox'
 @import './field/color'

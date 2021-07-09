@@ -63,6 +63,7 @@ export class FieldsPart extends ContentSectionPart {
     return 'fields';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateContent(editor: LiveEditor): TemplateResult {
     const isValid = this.selective.isValid;
     try {

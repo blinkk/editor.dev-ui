@@ -1,8 +1,9 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+
 import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD_COMPLETE} from '../events';
+import {EVENT_FILE_LOAD} from '../events';
 import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {SitePart} from './menu/site';
@@ -63,8 +64,9 @@ export class MenuPart extends BasePart implements Part {
       this.modal = modal;
       editor.parts.modals.modals[MODAL_KEY] = modal;
 
-      document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
-        // When loading a file, close the menu modal.
+      // When loading a file, close the menu modal.
+      // Hides the menu when the file is starting to load.
+      document.addEventListener(EVENT_FILE_LOAD, () => {
         modal.hide();
       });
     }

@@ -16,7 +16,7 @@ import {
 import {LiveEditorApiComponent, ProjectTypes} from './api';
 import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
 import {ContentPart} from './parts/content';
-import {EditorState} from './state';
+import {EditorState, StatePromiseKeys} from './state';
 import {EmptyPart} from './parts/empty';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {MenuPart} from './parts/menu';
@@ -139,7 +139,7 @@ export class LiveEditor {
     }
 
     // Update the project type when the project changes.
-    this.state.addListener('getProject', () => {
+    this.state.addListener(StatePromiseKeys.GetProject, () => {
       if (this.state.project?.type === ProjectTypes.Grow) {
         this.updateProjectType(new GrowProjectType());
       } else if (this.state.project?.type === ProjectTypes.Amagaki) {

@@ -10,6 +10,7 @@ import {
 import {AutoCompleteUIItem} from '../../../mixin/autocomplete';
 import {FileData} from '../../../editor/api';
 import {LiveEditorGlobalConfig} from '../../../editor/editor';
+import {StatePromiseKeys} from '../../../editor/state';
 import {Types} from '@blinkk/selective-edit';
 
 const VALID_EXTS = ['yaml', 'yml'];
@@ -93,7 +94,7 @@ export class GrowYamlField extends AutocompleteConstructorField {
     this.updateItems(filteredFiles);
 
     // Listen for changes to the files.
-    this.globalConfig.state.addListener('getFiles', files => {
+    this.globalConfig.state.addListener(StatePromiseKeys.GetFiles, files => {
       const filteredFiles = (files || []).filter(this.filterFiles.bind(this));
       this.updateItems(filteredFiles);
       this.render();

@@ -64,11 +64,12 @@ export class ContentPart extends BasePart implements Part {
         isDefaultSection: true,
         storage: this.config.storage,
       }),
-      new MediaPart({
-        selectiveConfig: this.config.selectiveConfig,
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
+      // TODO: Media part does not do anything yet.
+      // new MediaPart({
+      //   selectiveConfig: this.config.selectiveConfig,
+      //   state: this.config.state,
+      //   storage: this.config.storage,
+      // }),
       new RawPart({
         selectiveConfig: this.config.selectiveConfig,
         state: this.config.state,
@@ -101,6 +102,7 @@ export class ContentPart extends BasePart implements Part {
     document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
       const customEvent: CustomEvent = evt as CustomEvent;
       this.config.state.getFile(customEvent.detail as FileData);
+      this.render();
     });
   }
 

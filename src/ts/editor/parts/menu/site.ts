@@ -16,6 +16,7 @@ import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
 import {LiveEditor} from '../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
+import {StatePromiseKeys} from '../../state';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
@@ -44,7 +45,7 @@ export class SitePart extends MenuSectionPart {
     super(config);
 
     // Recreate the file structure whenever the files are reloaded.
-    this.config.state.addListener('getFiles', () => {
+    this.config.state.addListener(StatePromiseKeys.GetFiles, () => {
       this.fileStructure = undefined;
       this.render();
     });
@@ -614,7 +615,8 @@ class DirectoryStructure {
             le__clickable: true,
             le__list__item: true,
             'le__list__item--selected':
-              editor.state.file?.file.path === file.path,
+              editor.state.file?.file.path === file.path ||
+              editor.state.loadingFilePath === file.path,
           })}
           @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file)}
         >

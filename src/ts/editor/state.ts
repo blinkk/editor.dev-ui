@@ -24,6 +24,17 @@ import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {interpolatePreviewBaseUrl} from './preview';
 
+export enum StatePromiseKeys {
+  GetDevices = 'GetDevices',
+  GetFile = 'GetFile',
+  GetFiles = 'GetFiles',
+  GetPreviewConfig = 'GetPreviewConfig',
+  GetProject = 'GetProject',
+  GetWorkspace = 'GetWorkspace',
+  GetWorkspaces = 'GetWorkspaces',
+  SaveFile = 'SaveFile',
+}
+
 /**
  * Track the references to the editor state.
  *
@@ -56,6 +67,12 @@ export class EditorState extends ListenersMixin(Base) {
    * Editor file loaded in the editor.
    */
   file?: EditorFileData;
+  /**
+   * Path being actively loaded.
+   *
+   * Only set when a file is being loaded.
+   */
+  loadingFilePath?: string;
   /**
    * Preview server settings.
    */
@@ -217,8 +234,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (devices: Array<DeviceData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<DeviceData> | undefined {
-    const promiseKey = 'getDevices';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetDevices;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api
@@ -246,18 +263,16 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (file: EditorFileData) => void,
     callbackError?: (error: ApiError) => void
   ): EditorFileData | undefined {
-    const promiseKey = 'getFile';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetFile;
+    if (this.inProgress(promiseKey)) {
       return;
     }
+
     this.promises[promiseKey] = this.api
       .getFile(file)
       .then(data => {
         this.file = data;
         delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
 
         // If there is no url for the file, check if the preview server
         // knows how to preview the file.
@@ -304,11 +319,25 @@ export class EditorState extends ListenersMixin(Base) {
           }
         }
 
+        // Loading is complete, remove the loading file information.
+        this.loadingFilePath = undefined;
+
+        if (callback) {
+          callback(this.file);
+        }
+
         this.triggerListener(promiseKey);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
       .catch(error => catchError(error, callbackError));
+
+    // Unset the existing file since it is 'unloaded'.
+    this.file = undefined;
+
+    // Mark the file path that is being loaded.
+    this.loadingFilePath = file.path;
+
     return this.file;
   }
 
@@ -316,8 +345,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (files: Array<FileData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<FileData> | undefined {
-    const promiseKey = 'getFiles';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetFiles;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api
@@ -339,11 +368,11 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (previewSettings: PreviewSettings | null) => void,
     callbackError?: (error: ApiError) => void
   ): PreviewSettings | null | undefined {
-    const promiseKey = 'getPreviewConfig';
+    const promiseKey = StatePromiseKeys.GetPreviewConfig;
 
     // TODO: This promise may be delayed if the project or workspace
     // is not loaded, so this may be requested multiple times in a row.
-    if (this.promises[promiseKey]) {
+    if (this.inProgress(promiseKey)) {
       return;
     }
 
@@ -404,8 +433,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (project: ProjectData) => void,
     callbackError?: (error: ApiError) => void
   ): ProjectData | undefined {
-    const promiseKey = 'getProject';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetProject;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api
@@ -442,8 +471,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (project: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
   ): WorkspaceData | undefined {
-    const promiseKey = 'getWorkspace';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetWorkspace;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api
@@ -465,8 +494,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (workspaces: Array<WorkspaceData>) => void,
     callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
-    const promiseKey = 'getWorkspaces';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.GetWorkspaces;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api
@@ -482,6 +511,15 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(error => catchError(error, callbackError));
     return this.workspaces;
+  }
+
+  /**
+   * Determines if there is an existing promise for a given key.
+   *
+   * @param key Key identifying the promise or loading status.
+   */
+  inProgress(key: string): boolean {
+    return key in this.promises;
   }
 
   loadWorkspace(
@@ -539,8 +577,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (file: EditorFileData) => void,
     callbackError?: (error: ApiError) => void
   ) {
-    const promiseKey = 'saveFile';
-    if (this.promises[promiseKey]) {
+    const promiseKey = StatePromiseKeys.SaveFile;
+    if (this.inProgress(promiseKey)) {
       return;
     }
     this.promises[promiseKey] = this.api

@@ -11,6 +11,18 @@ export const EVENT_FILE_LOAD = 'live.file.load';
 export const EVENT_FILE_LOAD_COMPLETE = 'live.file.load.complete';
 
 /**
+ * Custom event name for saveing a file in the editor.
+ *
+ * Expects a {@link FileData} as the event details.
+ */
+export const EVENT_FILE_SAVE = 'live.file.save';
+
+/**
+ * Custom event name for finished a file save in the editor.
+ */
+export const EVENT_FILE_SAVE_COMPLETE = 'live.file.save.complete';
+
+/**
  * Custom event name for adding a notification.
  *
  * Expects a {@link EditorNotification} as the event details.

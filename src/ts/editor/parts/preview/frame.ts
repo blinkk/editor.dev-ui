@@ -1,7 +1,9 @@
 import {BasePart, Part} from '..';
 import {TemplateResult, classMap, html, styleMap} from '@blinkk/selective-edit';
+
 import {DataStorage} from '../../../utility/dataStorage';
 import {DeviceData} from '../../api';
+import {EVENT_FILE_SAVE_COMPLETE} from '../../events';
 import {EditorState} from '../../state';
 import {LiveEditor} from '../../editor';
 
@@ -40,6 +42,18 @@ export class PreviewFramePart extends BasePart implements Part {
   constructor(config: PreviewFrameConfig) {
     super();
     this.config = config;
+
+    // Watch for a save file event and reload the iframe.
+    document.addEventListener(EVENT_FILE_SAVE_COMPLETE, () => {
+      // Find and reload the iframe if it is visible.
+      const iframe = document.querySelector('.le__part__preview__frame iframe');
+      if (iframe) {
+        // Needs to be manually set in JS since the html src does not change the
+        // value and will not trigger a refresh like it will in JS.
+        (iframe as HTMLIFrameElement).src =
+          this.config.state.file?.url || (iframe as HTMLIFrameElement).src;
+      }
+    });
   }
 
   classesForPart(): Record<string, boolean> {

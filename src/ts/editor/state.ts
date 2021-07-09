@@ -16,7 +16,11 @@ import {
   WorkspaceData,
   catchError,
 } from './api';
-import {EVENT_FILE_LOAD_COMPLETE, EVENT_RENDER} from './events';
+import {
+  EVENT_FILE_LOAD_COMPLETE,
+  EVENT_FILE_SAVE_COMPLETE,
+  EVENT_RENDER,
+} from './events';
 import {AmagakiState} from '../projectType/amagaki/amagakiState';
 import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
@@ -589,6 +593,7 @@ export class EditorState extends ListenersMixin(Base) {
     if (this.inProgress(promiseKey)) {
       return;
     }
+
     this.promises[promiseKey] = this.api
       .saveFile(file, isRawEdit)
       .then(data => {
@@ -607,6 +612,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
         this.triggerListener(promiseKey);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
+        document.dispatchEvent(new CustomEvent(EVENT_FILE_SAVE_COMPLETE));
         this.render();
       })
       .catch(error => catchError(error, callbackError));

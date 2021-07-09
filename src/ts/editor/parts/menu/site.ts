@@ -595,7 +595,7 @@ class DirectoryStructure {
       return html``;
     }
 
-    return html`<div class="le__list">
+    return html`<div class="le__list le__list--hide-actions">
       <div
         class="le__list__item le__list__item--primary le__clickable"
         @click=${(evt: Event) => this.eventHandlers.fileNew(evt, this.root)}

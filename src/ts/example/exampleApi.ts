@@ -1162,7 +1162,7 @@ const currentFileset: Array<FileData> = [
     path: '/content/pages/index.yaml',
   },
   {
-    path: '/content/pages/index.png',
+    path: '/content/pages/really-long-page-name-that-gets-truncated-in-ui.yaml',
   },
   {
     path: '/content/pages/about.md',

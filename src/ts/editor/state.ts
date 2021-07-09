@@ -324,7 +324,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.file = data;
         delete this.promises[promiseKey];
 
-        // Update the file url is it is not defined.
+        // Update the file url as it is not defined.
         this.ensureFileUrl();
 
         // Loading is complete, remove the loading file information.
@@ -595,7 +595,7 @@ export class EditorState extends ListenersMixin(Base) {
         this.file = data;
         delete this.promises[promiseKey];
 
-        // Update the file url is it is not defined.
+        // Update the file url as it is not defined.
         this.ensureFileUrl();
 
         // Reload the workspace from the api.

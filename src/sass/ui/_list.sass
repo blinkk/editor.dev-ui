@@ -11,6 +11,11 @@
   &--indent
     padding-left: $le-space-medium
 
+  &--hide-actions
+    .le__list__item
+      .le__actions
+        display: none
+
   > .le__list
     padding-left: $le-space-medium
 
@@ -109,9 +114,6 @@
   &--emphasis
     font-weight: 700
 
-  .le__actions
-    opacity: 0
-
   &.le__clickable
     position: relative
 
@@ -134,8 +136,9 @@
     --list-item-background-color: var(--color-tertiary)
     color: var(--color-on-tertiary)
 
-    .le__actions
-      opacity: 1
+    .le__list--hide-actions &
+      .le__actions
+        display: flex
 
   &--primary.le__clickable,
   &--primary.le__clickable:hover
@@ -156,6 +159,7 @@
 
 .le__list__item__label
   flex-grow: 1
+  flex-shrink: 1
   line-height: $le-line-height-paragraph
   margin: $le-space-small
   overflow: hidden

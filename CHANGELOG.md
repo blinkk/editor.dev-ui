@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.2.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.1.0...v3.2.0) (2021-07-09)
+
+
+### Features
+
+* ability to do arbitrary string literals ([#73](https://www.github.com/blinkk/editor.dev-ui/issues/73)) ([f6a1981](https://www.github.com/blinkk/editor.dev-ui/commit/f6a198128c8e6297b82d3be658df16c47bd0bd1f))
+* loading status for editor files ([04d23a6](https://www.github.com/blinkk/editor.dev-ui/commit/04d23a6e1f816517e6052dce8c9e3c7778d5e142)), closes [#78](https://www.github.com/blinkk/editor.dev-ui/issues/78)
+* preview server configuration and usage ([#77](https://www.github.com/blinkk/editor.dev-ui/issues/77)) ([231ea48](https://www.github.com/blinkk/editor.dev-ui/commit/231ea485a7fd1dab06d4b121c14e28c5f93c3cf3))
+
+
+### Bug Fixes
+
+* fix an issue when the media preview is not a string ([#81](https://www.github.com/blinkk/editor.dev-ui/issues/81)) ([5f40ad6](https://www.github.com/blinkk/editor.dev-ui/commit/5f40ad6e05d6e1718cc85c3766b54d7cdf43ae24))
+* fix issue with hover and selected list items ([#75](https://www.github.com/blinkk/editor.dev-ui/issues/75)) ([cf4f2ac](https://www.github.com/blinkk/editor.dev-ui/commit/cf4f2aca6e3f0c0d1f214b14964a48d89ae4636e))
+* hide menu modal when starting to load file ([d4143ca](https://www.github.com/blinkk/editor.dev-ui/commit/d4143ca055adc10c840bc5769955e326441f7a7b))
+* tighten up the menu to fit more content ([#76](https://www.github.com/blinkk/editor.dev-ui/issues/76)) ([dcca4f3](https://www.github.com/blinkk/editor.dev-ui/commit/dcca4f39ba837402fc70dacb8faa59f21f00aab2))
+
 ## [3.1.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.0.0...v3.1.0) (2021-07-01)
 
 

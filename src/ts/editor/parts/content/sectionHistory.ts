@@ -1,5 +1,6 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+
 import {LiveEditor} from '../../editor';
 import TimeAgo from 'javascript-time-ago';
 
@@ -57,16 +58,23 @@ export class HistoryPart extends ContentSectionPart {
             <span class="material-icons">notes</span>
             <div class="le__change__details">
               <div class="le__change__meta">
-                <strong>${change.hash.slice(0, 5)}</strong>
+                <strong>
+                  ${change?.url
+                    ? html`<a href="${change?.url}" target="_blank"
+                        >${change.hash.slice(0, 5)}</a
+                      >`
+                    : change.hash.slice(0, 5)}
+                </strong>
                 by
                 <strong>${change.author?.name}</strong>
                 (${this.timeAgo.format(
                   new Date(change.timestamp || new Date())
                 )})
               </div>
-              <div class="le__change__summary">
+              ${change.summary &&
+              html`<div class="le__change__summary">
                 ${this.trimSummary(change.summary)}
-              </div>
+              </div>`}
             </div>
           </div>`
         )}

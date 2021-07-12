@@ -209,9 +209,8 @@ export class EditorState extends ListenersMixin(Base) {
 
   /**
    * When a callback is specified for a state load it does not
-   * always have a promise to bind to. When the promise is not available
-   * store the callback to be manually be completed after the promise if
-   * defined.
+   * always have a promise to bind to. Store the callback to be
+   * manually be completed after the promise is complete.
    *
    * @param promiseKey Key to identify the stored promise.
    * @param callback Callback after the promise is completed.

@@ -409,9 +409,6 @@ export class EditorState extends ListenersMixin(Base) {
   ): PreviewSettings | null | undefined {
     const promiseKey = StatePromiseKeys.GetPreviewConfig;
     this.delayCallback(promiseKey, callback);
-
-    // TODO: This promise may be delayed if the project or workspace
-    // is not loaded, so this may be requested multiple times in a row.
     if (this.inProgress(promiseKey)) {
       return;
     }

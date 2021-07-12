@@ -1,5 +1,17 @@
 # Changelog
 
+### [3.2.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.0...v3.2.1) (2021-07-12)
+
+
+### Bug Fixes
+
+* move all colors into the scheme ([#89](https://www.github.com/blinkk/editor.dev-ui/issues/89)) ([f7ea0da](https://www.github.com/blinkk/editor.dev-ui/commit/f7ea0da7b63e066c81a99375fe74fcd080e7d333))
+* only truncate file names on hover for file list ([#92](https://www.github.com/blinkk/editor.dev-ui/issues/92)) ([ba051df](https://www.github.com/blinkk/editor.dev-ui/commit/ba051df1e10bcf9d8786a68d413a73ad177ba843))
+* promise callback queue and example api for preview server ([#96](https://www.github.com/blinkk/editor.dev-ui/issues/96)) ([7ffa5d1](https://www.github.com/blinkk/editor.dev-ui/commit/7ffa5d1b693cef9ab07e084f1ac642ea2049a01f))
+* reload iframe after file save ([#88](https://www.github.com/blinkk/editor.dev-ui/issues/88)) ([5234f40](https://www.github.com/blinkk/editor.dev-ui/commit/5234f403d5a6e6369a671b3b09e4428936670106)), closes [#87](https://www.github.com/blinkk/editor.dev-ui/issues/87)
+* saving a file updates the url after save ([#83](https://www.github.com/blinkk/editor.dev-ui/issues/83)) ([ca43785](https://www.github.com/blinkk/editor.dev-ui/commit/ca43785843307e434ff12e77db4c700d6f7b02aa)), closes [#82](https://www.github.com/blinkk/editor.dev-ui/issues/82)
+* show hover effect and actions on focus for list item ([3d5723b](https://www.github.com/blinkk/editor.dev-ui/commit/3d5723b2414d5c1659acb7f77c9b91d712c72116))
+
 ## [3.2.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.1.0...v3.2.0) (2021-07-09)
 
 

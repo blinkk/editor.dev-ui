@@ -29,6 +29,10 @@ import {ListenersMixin} from '../mixin/listeners';
 import {interpolatePreviewBaseUrl} from './preview';
 
 export enum StatePromiseKeys {
+  CopyFile = 'CopyFile',
+  CreateFile = 'CreateFile',
+  CreateWorkspace = 'CreateWorkspace',
+  DeleteFile = 'DeleteFile',
   GetDevices = 'GetDevices',
   GetFile = 'GetFile',
   GetFiles = 'GetFiles',
@@ -36,6 +40,8 @@ export enum StatePromiseKeys {
   GetProject = 'GetProject',
   GetWorkspace = 'GetWorkspace',
   GetWorkspaces = 'GetWorkspaces',
+  LoadWorkspace = 'LoadWorkspace',
+  Publish = 'Publish',
   SaveFile = 'SaveFile',
 }
 
@@ -97,6 +103,10 @@ export class EditorState extends ListenersMixin(Base) {
    */
   protected promises: Record<string, Promise<any> | boolean>;
   /**
+   * Keep track of backlogged callbacks.
+   */
+  protected callbacks: Record<string, Set<(...value: any) => void>>;
+  /**
    * Site configuration for the editor.
    */
   site?: SiteData;
@@ -117,6 +127,7 @@ export class EditorState extends ListenersMixin(Base) {
     super();
     this.api = api;
     this.promises = {};
+    this.callbacks = {};
 
     // Features are on by default.
     this.features = new FeatureManager({
@@ -140,6 +151,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (file: FileData) => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.CopyFile;
+    this.delayCallback(promiseKey, callback);
     this.api
       .copyFile(originalPath, path)
       .then(data => {
@@ -147,9 +160,8 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        if (callback) {
-          callback(data);
-        }
+        this.handleDataAndCleanup(promiseKey, data);
+
         // Reload the files.
         this.getFiles();
       })
@@ -161,6 +173,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (file: FileData) => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.CreateFile;
+    this.delayCallback(promiseKey, callback);
     this.api
       .createFile(path)
       .then(data => {
@@ -168,9 +182,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        if (callback) {
-          callback(data);
-        }
+        this.handleDataAndCleanup(promiseKey, data);
         // Reload the files.
         this.getFiles();
       })
@@ -183,16 +195,33 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (workspace: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.CreateWorkspace;
+    this.delayCallback(promiseKey, callback);
     this.api
       .createWorkspace(base, workspace)
       .then(data => {
-        if (callback) {
-          callback(data);
-        }
+        this.handleDataAndCleanup(promiseKey, data);
         // Reload the workspaces.
         this.getWorkspaces();
       })
       .catch(error => catchError(error, callbackError));
+  }
+
+  /**
+   * When a callback is specified for a state load it does not
+   * always have a promise to bind to. Store the callback to be
+   * manually be completed after the promise is complete.
+   *
+   * @param promiseKey Key to identify the stored promise.
+   * @param callback Callback after the promise is completed.
+   */
+  protected delayCallback(promiseKey: string, callback?: (value: any) => void) {
+    if (!callback) {
+      return;
+    }
+
+    this.callbacks[promiseKey] = this.callbacks[promiseKey] ?? new Set();
+    this.callbacks[promiseKey].add(callback);
   }
 
   deleteFile(
@@ -200,6 +229,9 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: () => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.DeleteFile;
+    this.delayCallback(promiseKey, callback);
+
     this.api
       .deleteFile(file)
       .then(() => {
@@ -207,9 +239,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        if (callback) {
-          callback();
-        }
+        this.handleDataAndCleanup(promiseKey, callback);
         // Reload the files.
         this.getFiles();
       })
@@ -290,8 +320,8 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<DeviceData> | undefined {
     const promiseKey = StatePromiseKeys.GetDevices;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -303,11 +333,7 @@ export class EditorState extends ListenersMixin(Base) {
           this.devices = data;
         }
 
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(this.devices);
-        }
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, this.devices);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -320,16 +346,21 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): EditorFileData | undefined {
     const promiseKey = StatePromiseKeys.GetFile;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
+    }
+
+    // Start the loading of the preview configuration before waiting
+    // for a full file load response.
+    if (this.previewConfig === undefined) {
+      this.getPreviewConfig();
     }
 
     this.promises[promiseKey] = this.api
       .getFile(file)
       .then(data => {
         this.file = data;
-        delete this.promises[promiseKey];
 
         // Update the file url as it may not be not defined.
         this.ensureFileUrl();
@@ -337,11 +368,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Loading is complete, remove the loading file information.
         this.loadingFilePath = undefined;
 
-        if (callback) {
-          callback(this.file);
-        }
-
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, this.file);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
@@ -361,19 +388,15 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<FileData> | undefined {
     const promiseKey = StatePromiseKeys.GetFiles;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
       .getFiles()
       .then(data => {
         this.files = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey, data);
+        this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -385,22 +408,14 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): PreviewSettings | null | undefined {
     const promiseKey = StatePromiseKeys.GetPreviewConfig;
-
-    // TODO: This promise may be delayed if the project or workspace
-    // is not loaded, so this may be requested multiple times in a row.
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
 
     const handlePreviewSettings = (data: PreviewSettings | null) => {
       this.previewConfig = data;
-      delete this.promises[promiseKey];
-
-      if (callback) {
-        callback(data);
-      }
-      this.triggerListener(promiseKey);
+      this.handleDataAndCleanup(promiseKey, data);
       this.render();
     };
 
@@ -451,15 +466,14 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): ProjectData | undefined {
     const promiseKey = StatePromiseKeys.GetProject;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
       .getProject()
       .then(data => {
         this.project = data;
-        delete this.promises[promiseKey];
 
         // Pull in the feature flags and settings.
         if (this.project.features) {
@@ -475,10 +489,7 @@ export class EditorState extends ListenersMixin(Base) {
           }
         }
 
-        if (callback) {
-          callback(this.project);
-        }
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, this.project);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -490,19 +501,15 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): WorkspaceData | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspace;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
       .getWorkspace()
       .then(data => {
         this.workspace = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -514,23 +521,37 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspaces;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
       .getWorkspaces()
       .then(data => {
         this.workspaces = data;
-        delete this.promises[promiseKey];
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
     return this.workspaces;
+  }
+
+  /**
+   * After a promise is completed handle the cleanup and trigger
+   * listeners and callbacks appropriately.
+   *
+   * @param promiseKey Key to identify the promise.
+   * @param callback Optional callback for when the process is completed.
+   * @param values Data to be passed along for the promise results.
+   */
+  protected handleDataAndCleanup(promiseKey: string, ...values: any) {
+    delete this.promises[promiseKey];
+    const callbacks = this.callbacks[promiseKey] ?? new Set();
+    delete this.callbacks[promiseKey];
+    for (const callback of callbacks) {
+      callback(...values);
+    }
+    this.triggerListener(promiseKey, ...values);
   }
 
   /**
@@ -547,6 +568,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (workspace: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.LoadWorkspace;
+    this.delayCallback(promiseKey, callback);
     this.api
       .loadWorkspace(workspace)
       .then((data: WorkspaceData) => {
@@ -555,9 +578,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the workspace from the api.
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
-        if (callback) {
-          callback(data);
-        }
+        this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -569,6 +590,8 @@ export class EditorState extends ListenersMixin(Base) {
     callback?: (result: PublishResult) => void,
     callbackError?: (error: ApiError) => void
   ) {
+    const promiseKey = StatePromiseKeys.Publish;
+    this.delayCallback(promiseKey, callback);
     this.api
       .publish(workspace, data)
       .then((result: PublishResult) => {
@@ -576,9 +599,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        if (callback) {
-          callback(result);
-        }
+        this.handleDataAndCleanup(promiseKey, result);
         this.render();
       })
       .catch(error => catchError(error, callbackError));
@@ -598,8 +619,8 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.SaveFile;
+    this.delayCallback(promiseKey, callback);
     if (this.inProgress(promiseKey)) {
-      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
 
@@ -607,7 +628,6 @@ export class EditorState extends ListenersMixin(Base) {
       .saveFile(file, isRawEdit)
       .then(data => {
         this.file = data;
-        delete this.promises[promiseKey];
 
         // Update the file url as it may not be not defined.
         this.ensureFileUrl();
@@ -616,10 +636,7 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        if (callback) {
-          callback(data);
-        }
-        this.triggerListener(promiseKey);
+        this.handleDataAndCleanup(promiseKey, data);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         document.dispatchEvent(new CustomEvent(EVENT_FILE_SAVE_COMPLETE));
         this.render();
@@ -651,14 +668,3 @@ export const DEFAULT_DEVICES = [
     width: 1440,
   } as DeviceData,
 ];
-
-function handleDelayedCallback<T>(
-  promise: Promise<T> | boolean,
-  callback?: (value: T) => void
-) {
-  if (callback && promise !== true && promise !== false) {
-    (promise as unknown as Promise<T>).then(data => {
-      callback(data);
-    });
-  }
-}

@@ -1544,6 +1544,11 @@ export class ExampleApi implements LiveEditorApiComponent {
       simulateNetwork(resolve, {
         title: 'Example project',
         publish: publish,
+        preview: {
+          // Use the current server for the preview for the example since it is
+          // referencing a static file for the example preview.
+          baseUrl: 'http://localhost:8888/',
+        },
         users: [
           {
             name: 'Example User',
@@ -1555,7 +1560,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             isGroup: true,
           },
         ],
-      });
+      } as ProjectData);
     });
   }
 

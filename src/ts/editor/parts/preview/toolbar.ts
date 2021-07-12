@@ -50,7 +50,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
     this.config.state.getDevices((devices: Array<DeviceData>) => {
       // Check for matching device labels to stored device info.
       const storedDevice = this.config.storage.getItem(STORAGE_DEVICE_KEY);
-      if (storedDevice) {
+      if (storedDevice && devices) {
         for (const device of devices) {
           if (device.label === storedDevice) {
             this.device = device;

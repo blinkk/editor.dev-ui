@@ -39,6 +39,8 @@ export enum StatePromiseKeys {
   SaveFile = 'SaveFile',
 }
 
+const REGEX_START_SLASH = /^\//i;
+
 /**
  * Track the references to the editor state.
  *
@@ -242,14 +244,13 @@ export class EditorState extends ListenersMixin(Base) {
           const route = previewSettings.routes[this.file?.file.path];
 
           if ((route as PreviewRoutesMetaData).path) {
-            this.file.url = `${baseUrl}${
-              (route as PreviewRoutesMetaData).path
-            }`;
+            this.file.url = `${baseUrl}${(
+              route as PreviewRoutesMetaData
+            ).path.replace(REGEX_START_SLASH, '')}`;
           } else {
-            this.file.url = `${baseUrl}${
-              (route as PreviewRoutesLocaleData)[previewSettings.defaultLocale]
-                .path
-            }`;
+            this.file.url = `${baseUrl}${(route as PreviewRoutesLocaleData)[
+              previewSettings.defaultLocale
+            ].path.replace(REGEX_START_SLASH, '')}`;
           }
 
           this.render();
@@ -290,6 +291,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): Array<DeviceData> | undefined {
     const promiseKey = StatePromiseKeys.GetDevices;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -319,6 +321,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): EditorFileData | undefined {
     const promiseKey = StatePromiseKeys.GetFile;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
 
@@ -359,6 +362,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): Array<FileData> | undefined {
     const promiseKey = StatePromiseKeys.GetFiles;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -385,6 +389,7 @@ export class EditorState extends ListenersMixin(Base) {
     // TODO: This promise may be delayed if the project or workspace
     // is not loaded, so this may be requested multiple times in a row.
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
 
@@ -447,6 +452,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): ProjectData | undefined {
     const promiseKey = StatePromiseKeys.GetProject;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -470,7 +476,7 @@ export class EditorState extends ListenersMixin(Base) {
         }
 
         if (callback) {
-          callback(data);
+          callback(this.project);
         }
         this.triggerListener(promiseKey);
         this.render();
@@ -485,6 +491,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): WorkspaceData | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspace;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -508,6 +515,7 @@ export class EditorState extends ListenersMixin(Base) {
   ): Array<WorkspaceData> | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspaces;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
     this.promises[promiseKey] = this.api
@@ -591,6 +599,7 @@ export class EditorState extends ListenersMixin(Base) {
   ) {
     const promiseKey = StatePromiseKeys.SaveFile;
     if (this.inProgress(promiseKey)) {
+      handleDelayedCallback(this.promises[promiseKey], callback);
       return;
     }
 
@@ -642,3 +651,14 @@ export const DEFAULT_DEVICES = [
     width: 1440,
   } as DeviceData,
 ];
+
+function handleDelayedCallback<T>(
+  promise: Promise<T> | boolean,
+  callback?: (value: T) => void
+) {
+  if (callback && promise !== true && promise !== false) {
+    (promise as unknown as Promise<T>).then(data => {
+      callback(data);
+    });
+  }
+}

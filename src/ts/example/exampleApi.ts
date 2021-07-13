@@ -1416,7 +1416,14 @@ export class ExampleApi implements LiveEditorApiComponent {
       url.searchParams.set('path', file.path);
       window.history.pushState({}, '', url.toString());
 
-      simulateNetwork(resolve, fullFiles[file.path] || DEFAULT_EDITOR_FILE);
+      // Use the default editor file with the current file path.
+      const defaultFile = Object.assign({}, DEFAULT_EDITOR_FILE, {
+        file: {
+          path: file.path,
+        },
+      });
+
+      simulateNetwork(resolve, fullFiles[file.path] || defaultFile);
     });
   }
 

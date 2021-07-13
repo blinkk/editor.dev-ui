@@ -35,7 +35,7 @@ export class AmagakiDocumentField extends AutocompleteConstructorField {
     super(types, config, globalConfig, fieldType);
     this.config = config;
     this.globalConfig = globalConfig;
-    this.type = 'pod.document';
+    this.type = 'pod.doc';
     this.filter = new IncludeExcludeFilter({});
 
     this.initFilter();

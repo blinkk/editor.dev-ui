@@ -63,6 +63,7 @@ export class SitePart extends MenuSectionPart {
       const modal = new FormDialogModal({
         title: 'Copy file',
         selectiveConfig: selectiveConfig,
+        state: this.config.state,
       });
       modal.templateModal = this.templateFileCopy.bind(this);
       modal.actions.push({
@@ -116,6 +117,7 @@ export class SitePart extends MenuSectionPart {
       const modal = new FormDialogModal({
         title: 'Delete file',
         selectiveConfig: selectiveConfig,
+        state: this.config.state,
       });
       modal.templateModal = this.templateFileDelete.bind(this);
       modal.actions.push({
@@ -161,6 +163,7 @@ export class SitePart extends MenuSectionPart {
       const modal = new FormDialogModal({
         title: 'New file',
         selectiveConfig: selectiveConfig,
+        state: this.config.state,
       });
       modal.templateModal = this.templateFileNew.bind(this);
       modal.actions.push({

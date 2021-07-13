@@ -44,11 +44,6 @@ export const EVENT_NOTIFICATION_READ = 'live.notification.read';
 export const EVENT_NOTIFICATION_SHOW = 'live.notification.show';
 
 /**
- * Custom event name for after updating the project type for the editor.
- */
-export const EVENT_PROJECT_TYPE_UPDATE = 'live.projectType.update';
-
-/**
  * Custom event name for triggering a render.
  */
 export const EVENT_RENDER = 'live.render';

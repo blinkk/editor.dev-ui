@@ -28,7 +28,7 @@ export class AmagakiStaticField extends AutocompleteConstructorField {
     types: Types,
     config: AmagakiStaticConfig,
     globalConfig: LiveEditorGlobalConfig,
-    fieldType = 'document'
+    fieldType = 'static'
   ) {
     super(types, config, globalConfig, fieldType);
     this.config = config;

@@ -13,10 +13,11 @@ import {
   html,
   render,
 } from '@blinkk/selective-edit';
+import {EditorState, Schemes, StatePromiseKeys} from './state';
 import {LiveEditorApiComponent, ProjectTypes} from './api';
+
 import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
 import {ContentPart} from './parts/content';
-import {EditorState, StatePromiseKeys} from './state';
 import {EmptyPart} from './parts/empty';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {MenuPart} from './parts/menu';
@@ -188,6 +189,8 @@ export class LiveEditor {
     return {
       le: true,
       'le--docked-menu': this.parts.menu.isDocked,
+      'scheme-dark': this.state.scheme === Schemes.Dark,
+      'scheme-light': this.state.scheme === Schemes.Light,
     };
   }
 

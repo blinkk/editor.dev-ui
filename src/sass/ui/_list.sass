@@ -20,7 +20,12 @@
     padding-left: $le-space-medium
 
 .le__list__item
+  --color-list-item-background: var(--color-background)
+  --color-on-list-item-background: var(--color-on-background)
+
   align-items: center
+  background: var(--color-list-item-background)
+  color: var(--color-on-list-item-background)
   display: flex
   font-weight: 300
   flex-flow: row
@@ -96,15 +101,18 @@
     padding-left: $le-space-xxlarge
 
   &--primary
-    color: var(--color-primary)
+    --color-list-item-background: var(--color-on-primary)
+    --color-on-list-item-background: var(--color-primary)
     font-weight: 700
 
   &--secondary
-    color: var(--color-secondary)
+    --color-list-item-background: var(--color-on-secondary)
+    --color-on-list-item-background: var(--color-secondary)
     font-weight: 700
 
   &--heading
-    color: var(--color-secondary-dark)
+    --color-list-item-background: var(--color-on-secondary-dark)
+    --color-on-list-item-background: var(--color-secondary-dark)
     font-weight: 700
 
     // Prevent item immediately under the heading from indenting.
@@ -117,49 +125,60 @@
   &.le__clickable
     position: relative
 
-    & > *
-      position: relative
-      z-index: 1
-
-  &.le__clickable::after
-    background-color: var(--list-item-background-color)
-    bottom: 0
-    content: ''
-    display: block
-    left: -15vw
-    position: absolute
-    right: 0
-    top: 0
-    z-index: 0
+    &::before
+      background: var(--color-list-item-background)
+      content: ''
+      margin-left: -100vw
+      top: 0
+      bottom: 0
+      position: absolute
+      width: 100vw
 
   &.le__clickable:focus,
   &.le__clickable:hover
-    --list-item-background-color: var(--color-tertiary)
-    color: var(--color-on-tertiary)
+    --color-list-item-background: var(--color-tertiary)
+    --color-on-list-item-background: var(--color-on-tertiary)
+    --color-action-background: var(--color-list-item-background)
+    --color-on-action-background: var(--color-on-list-item-background)
 
     .le__list--hide-actions &
       .le__actions
         display: flex
 
-  &--primary.le__clickable,
-  &--primary.le__clickable:hover
-    color: var(--color-primary)
+  &--primary.le__clickable
+    --color-list-item-background: var(--color-on-primary)
+    --color-on-list-item-background: var(--color-primary)
 
-  &--secondary.le__clickable,
+  &--primary.le__clickable:hover
+    --color-list-item-background: var(--color-primary)
+    --color-on-list-item-background: var(--color-on-primary)
+
+  &--secondary.le__clickable
+    --color-list-item-background: var(--color-on-secondary)
+    --color-on-list-item-background: var(--color-secondary)
+
   &--secondary.le__clickable:hover
-    color: var(--color-secondary)
+    --color-list-item-background: var(--color-secondary)
+    --color-on-list-item-background: var(--color-on-secondary)
+
+  &--heading.le__clickable
+    --color-list-item-background: var(--color-on-secondary-dark)
+    --color-on-list-item-background: var(--color-secondary-dark)
+
+  &--heading.le__clickable:hover
+    --color-list-item-background: var(--color-secondary-dark)
+    --color-on-list-item-background: var(--color-on-secondary-dark)
 
   &--selected
-    --list-item-background-color: var(--color-secondary)
-    background-color: var(--color-secondary)
-    color: var(--color-on-secondary)
+    --color-list-item-background: var(--color-secondary)
+    --color-on-list-item-background: var(--color-on-secondary)
 
     a
       color: inherit
 
   &--selected.le__clickable:hover
-    --list-item-background-color: var(--color-secondary)
-    color: var(--color-on-secondary)
+    --color-list-item-background: var(--color-secondary)
+    --color-on-list-item-background: var(--color-on-secondary)
 
 .le__list__item__label
   flex-grow: 1

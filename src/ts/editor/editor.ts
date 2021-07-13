@@ -117,6 +117,7 @@ export class LiveEditor {
       }),
       empty: new EmptyPart({
         state: this.state,
+        storage: this.storage,
       }),
       menu: new MenuPart({
         state: this.state,

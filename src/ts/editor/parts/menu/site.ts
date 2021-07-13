@@ -389,7 +389,7 @@ export class SitePart extends MenuSectionPart {
     }
 
     return html`<div class="le__part__menu__section__content">
-      <div class="le__list le__list--indent">
+      <div class="le__list le__list--indent le__list--menu">
         <div class="le__list__item le__list__item--heading">
           <div class="le__list__item__icon">
             <span class="material-icons">folder</span>

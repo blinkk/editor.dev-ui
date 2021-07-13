@@ -191,7 +191,9 @@ export class WorkspacesPart extends MenuSectionPart {
     }
 
     return html`<div class="le__part__menu__section__content">
-      <div class="le__list le__list--constrained le__list--indent">
+      <div
+        class="le__list le__list--menu le__list--constrained le__list--indent"
+      >
         ${this.templateCreateWorkspace(editor)}
         ${repeat(
           this.config.state.workspaces || [],

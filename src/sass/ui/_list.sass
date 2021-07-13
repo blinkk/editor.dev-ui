@@ -27,8 +27,10 @@
   background: var(--color-list-item-background)
   color: var(--color-on-list-item-background)
   display: flex
-  font-weight: 300
   flex-flow: row
+
+  .le__list--menu &
+    font-weight: 300
 
   &--constrained
     max-height: 20vh
@@ -123,16 +125,18 @@
     font-weight: 700
 
   &.le__clickable
-    position: relative
+    // Menu has the 'full width' effect for list items.
+    .le__list--menu &
+      position: relative
 
-    &::before
-      background: var(--color-list-item-background)
-      content: ''
-      margin-left: -100vw
-      top: 0
-      bottom: 0
-      position: absolute
-      width: 100vw
+      &::before
+        background: var(--color-list-item-background)
+        content: ''
+        margin-left: -100vw
+        top: 0
+        bottom: 0
+        position: absolute
+        width: 100vw
 
   &.le__clickable:focus,
   &.le__clickable:hover

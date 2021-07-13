@@ -210,8 +210,9 @@ export class OverviewPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="le__part__overview__menu le__clickable"
+      class="le__part__overview__menu le__clickable le__tooltip--bottom-right"
       @click=${handleMenuClick}
+      data-tip="Menu"
     >
       <span class="material-icons">menu</span>
     </div>`;

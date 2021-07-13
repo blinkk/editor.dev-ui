@@ -1,10 +1,10 @@
 import {BasePart, Part} from '.';
 import {DialogPriorityLevel, Modal} from '../ui/modal';
+import {EditorState, Schemes} from '../state';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../events';
-import {EditorState} from '../state';
 import {LiveEditor} from '../editor';
 import {SitePart} from './menu/site';
 import {UsersPart} from './menu/users';
@@ -122,6 +122,7 @@ export class MenuPart extends BasePart implements Part {
     return this.templateStructure(editor);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateActionDocking(editor: LiveEditor): TemplateResult {
     let icon = 'last_page';
     let tip = 'Dock menu';
@@ -139,7 +140,7 @@ export class MenuPart extends BasePart implements Part {
     }
 
     return html`<div
-      class="le__part__menu__action le__clickable le__tooltip--bottom-right"
+      class="le__part__menu__action le__clickable le__tooltip--bottom"
       @click=${handleClick}
       data-tip=${tip}
     >
@@ -147,6 +148,7 @@ export class MenuPart extends BasePart implements Part {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateActionClose(editor: LiveEditor): TemplateResult {
     if (this.isDocked) {
       return html``;
@@ -157,11 +159,40 @@ export class MenuPart extends BasePart implements Part {
     };
 
     return html`<div
-      class="le__part__menu__action le__clickable le__tooltip--bottom-right"
+      class="le__part__menu__action le__clickable le__tooltip--bottom"
       @click=${handleClick}
       data-tip="Close menu"
     >
       <span class="material-icons">close</span>
+    </div>`;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateActionScheme(editor: LiveEditor): TemplateResult {
+    let currentMode = this.config.state.prefersDarkScheme
+      ? Schemes.Dark
+      : Schemes.Light;
+
+    if (this.config.state.scheme === Schemes.Dark) {
+      currentMode = Schemes.Dark;
+    } else if (this.config.state.scheme === Schemes.Light) {
+      currentMode = Schemes.Light;
+    }
+
+    const toggleMode =
+      currentMode === Schemes.Light ? Schemes.Dark : Schemes.Light;
+    const icon = currentMode === Schemes.Dark ? 'light_mode' : 'dark_mode';
+    const tip = `${toggleMode} mode`;
+
+    return html`<div
+      class="le__part__menu__action le__clickable le__tooltip--bottom"
+      @click=${() => {
+        this.config.state.setScheme(toggleMode);
+        this.render();
+      }}
+      data-tip=${tip}
+    >
+      <span class="material-icons">${icon}</span>
     </div>`;
   }
 
@@ -185,6 +216,7 @@ export class MenuPart extends BasePart implements Part {
         ${project?.title || html`&nbsp;`}
       </div>
       <div class="le__actions">
+        ${this.templateActionScheme(editor)}
         ${this.templateActionDocking(editor)}
         ${this.templateActionClose(editor)}
       </div>

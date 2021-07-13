@@ -510,8 +510,8 @@ class DirectoryStructure {
   }
 
   baseFromFilePath(file: FileData) {
-    const pathParts = file.path.split('/');
-    const fileParts = pathParts[pathParts.length - 1].split('.');
+    const fileName = this.fileFromFilePath(file);
+    const fileParts = fileName.split('.');
     return fileParts.slice(0, -1).join('.');
   }
 
@@ -524,6 +524,11 @@ class DirectoryStructure {
         this.directories[key].expandToFile(file);
       }
     }
+  }
+
+  fileFromFilePath(file: FileData) {
+    const pathParts = file.path.split('/');
+    return pathParts[pathParts.length - 1];
   }
 
   handleExpandCollapse() {
@@ -623,7 +628,10 @@ class DirectoryStructure {
           <div class="le__list__item__icon">
             <span class="material-icons">notes</span>
           </div>
-          <div class="le__list__item__label">
+          <div
+            class="le__list__item__label"
+            title=${this.fileFromFilePath(file)}
+          >
             ${this.baseFromFilePath(file)}
           </div>
           <div class="le__actions le__actions--slim">

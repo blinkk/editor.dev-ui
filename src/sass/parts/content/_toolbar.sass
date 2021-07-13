@@ -2,6 +2,7 @@
   align-items: center
   background-color: var(--color-secondary)
   color: var(--color-on-secondary)
+  column-gap: $le-space-medium
   display: flex
   flex-flow: row
   justify-content: space-between
@@ -11,14 +12,18 @@
 
 
 .le__part__content__toolbar__label
-  margin: $le-space-medium
   font-family: $le-font-family-text
   font-size: $le-font-size-small
   font-weight: 300
+  margin: $le-space-medium 0 $le-space-medium $le-space-medium
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
   strong
     font-family: $le-font-family
     font-weight: 700
 
 .le__part__content__toolbar__icons
-  margin: 0 $le-space-medium
+  margin-right: $le-space-small
+  white-space: nowrap

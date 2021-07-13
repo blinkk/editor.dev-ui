@@ -417,7 +417,7 @@ export class EditorState extends ListenersMixin(Base) {
     const handleProject = (project: ProjectData) => {
       // If there is no preview configuration, no preview
       // server configured, so ignore the previewing config.
-      if (!project.preview) {
+      if (!project?.preview) {
         handlePreviewSettings(null);
         return;
       }

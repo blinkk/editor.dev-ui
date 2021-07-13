@@ -1,74 +1,82 @@
+@mixin perfersAndClass($scheme)
+  @media (prefers-color-scheme: $scheme)
+    @content
+
+  #{'.scheme-' + $scheme}
+    @content
+
 :root
-  --color-background: #ffffff
-  --color-on-background: #121212
+  +perfersAndClass('light')
+    --color-background: #ffffff
+    --color-on-background: #121212
 
-  --color-primary: #212121
-  --color-on-primary: #ffffff
+    --color-primary: #212121
+    --color-on-primary: #ffffff
 
-  --color-primary-light: #484848
-  --color-on-primary-light: #ffffff
+    --color-primary-light: #484848
+    --color-on-primary-light: #ffffff
 
-  --color-primary-dark: #000000
-  --color-on-primary-dark: #ffffff
+    --color-primary-dark: #000000
+    --color-on-primary-dark: #ffffff
 
-  --color-secondary: #00796b
-  --color-on-secondary: #ffffff
+    --color-secondary: #00796b
+    --color-on-secondary: #ffffff
 
-  --color-secondary-light: #48a999
-  --color-on-secondary-light: #ffffff
+    --color-secondary-light: #48a999
+    --color-on-secondary-light: #ffffff
 
-  --color-secondary-dark: #004c40
-  --color-on-secondary-dark: #ffffff
+    --color-secondary-dark: #004c40
+    --color-on-secondary-dark: #ffffff
 
-  --color-tertiary: #eeeeee
-  --color-on-tertiary: #000000
+    --color-tertiary: #eeeeee
+    --color-on-tertiary: #000000
 
-  --color-tertiary-light: #ffffff
-  --color-on-tertiary-light: #000000
+    --color-tertiary-light: #ffffff
+    --color-on-tertiary-light: #000000
 
-  --color-tertiary-dark: #bcbcbc
-  --color-on-tertiary-dark: #000000
+    --color-tertiary-dark: #bcbcbc
+    --color-on-tertiary-dark: #000000
 
-  --color-extreme: #C71F25
-  --color-on-extreme: #ffffff
+    --color-extreme: #C71F25
+    --color-on-extreme: #ffffff
 
-  --color-warning: #D78528
-  --color-on-warning: #000000
+    --color-warning: #D78528
+    --color-on-warning: #000000
 
-  --color-info: #4F9CD1
-  --color-on-info: #000000
+    --color-info: #4F9CD1
+    --color-on-info: #000000
 
-  --color-highlight: #e1fc8d
-  --color-on-highlight: #000000
+    --color-highlight: #e1fc8d
+    --color-on-highlight: #000000
 
-  --color-oclude: rgba(0, 0, 0, .25)
-  --color-on-oclude: #ffffff
+    --color-oclude: rgba(0, 0, 0, .25)
+    --color-on-oclude: #ffffff
 
-  --color-border: #e5e5e5
-  --color-border-hover: #cbd4db
-  --color-border-dark: #bdbdbd
-  --color-border-dark-hover: #ac9e9e
-  --color-border-light: #f2f2f2
-  --color-border-light-hover: #e7d5d5
+    --color-border: #e5e5e5
+    --color-border-hover: #cbd4db
+    --color-border-dark: #bdbdbd
+    --color-border-dark-hover: #ac9e9e
+    --color-border-light: #f2f2f2
+    --color-border-light-hover: #e7d5d5
 
-  --color-background-grid: rgba(220, 220, 220, .3)
+    --color-background-grid: rgba(220, 220, 220, .3)
 
-  --color-shadow-xsmall-a: rgba(0,0,0,0.12)
-  --color-shadow-xsmall-b: rgba(0,0,0,0.24)
+    --color-shadow-xsmall-a: rgba(0,0,0,0.12)
+    --color-shadow-xsmall-b: rgba(0,0,0,0.24)
 
-  --color-shadow-small-a: rgba(0,0,0,0.12)
-  --color-shadow-small-b: rgba(0,0,0,0.24)
+    --color-shadow-small-a: rgba(0,0,0,0.12)
+    --color-shadow-small-b: rgba(0,0,0,0.24)
 
-  --color-shadow-medium-a: rgba(0,0,0,0.19)
-  --color-shadow-medium-b: rgba(0,0,0,0.23)
+    --color-shadow-medium-a: rgba(0,0,0,0.19)
+    --color-shadow-medium-b: rgba(0,0,0,0.23)
 
-  --color-shadow-large-a: rgba(0,0,0,0.25)
-  --color-shadow-large-b: rgba(0,0,0,0.22)
+    --color-shadow-large-a: rgba(0,0,0,0.25)
+    --color-shadow-large-b: rgba(0,0,0,0.22)
 
-  --color-shadow-xlarge-a: rgba(0,0,0,0.30)
-  --color-shadow-xlarge-b: rgba(0,0,0,0.22)
+    --color-shadow-xlarge-a: rgba(0,0,0,0.30)
+    --color-shadow-xlarge-b: rgba(0,0,0,0.22)
 
-  @media (prefers-color-scheme: dark)
+  +perfersAndClass('dark')
     --color-background: #121212
     --color-on-background: #f2f2f2
 

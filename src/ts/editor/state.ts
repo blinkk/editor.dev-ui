@@ -16,11 +16,13 @@ import {
   WorkspaceData,
   catchError,
 } from './api';
+import {DataStorage, LocalDataStorage} from '../utility/dataStorage';
 import {
   EVENT_FILE_LOAD_COMPLETE,
   EVENT_FILE_SAVE_COMPLETE,
   EVENT_RENDER,
 } from './events';
+
 import {AmagakiState} from '../projectType/amagaki/amagakiState';
 import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
@@ -28,24 +30,8 @@ import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {interpolatePreviewBaseUrl} from './preview';
 
-export enum StatePromiseKeys {
-  CopyFile = 'CopyFile',
-  CreateFile = 'CreateFile',
-  CreateWorkspace = 'CreateWorkspace',
-  DeleteFile = 'DeleteFile',
-  GetDevices = 'GetDevices',
-  GetFile = 'GetFile',
-  GetFiles = 'GetFiles',
-  GetPreviewConfig = 'GetPreviewConfig',
-  GetProject = 'GetProject',
-  GetWorkspace = 'GetWorkspace',
-  GetWorkspaces = 'GetWorkspaces',
-  LoadWorkspace = 'LoadWorkspace',
-  Publish = 'Publish',
-  SaveFile = 'SaveFile',
-}
-
 const REGEX_START_SLASH = /^\//i;
+const STORAGE_SCHEME = 'live.scheme';
 
 /**
  * Track the references to the editor state.
@@ -107,9 +93,18 @@ export class EditorState extends ListenersMixin(Base) {
    */
   protected callbacks: Record<string, Set<(...value: any) => void>>;
   /**
+   * Whether the user prefers dark mode.
+   */
+  prefersDarkScheme: boolean;
+  /**
+   * Scheme for the UI.
+   */
+  scheme?: Schemes | string;
+  /**
    * Site configuration for the editor.
    */
   site?: SiteData;
+  protected storage: DataStorage;
   /**
    * Users in the project that have access to the editor.
    */
@@ -128,6 +123,7 @@ export class EditorState extends ListenersMixin(Base) {
     this.api = api;
     this.promises = {};
     this.callbacks = {};
+    this.storage = new LocalDataStorage();
 
     // Features are on by default.
     this.features = new FeatureManager({
@@ -143,6 +139,12 @@ export class EditorState extends ListenersMixin(Base) {
       amagaki: new AmagakiState(this),
       grow: new GrowState(this),
     };
+
+    // Load the preferred scheme.
+    this.prefersDarkScheme =
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.scheme = this.storage.getItem(STORAGE_SCHEME) || '';
   }
 
   copyFile(
@@ -643,6 +645,28 @@ export class EditorState extends ListenersMixin(Base) {
       })
       .catch(error => catchError(error, callbackError));
   }
+
+  /**
+   * Sets the color scheme to use for the UI.
+   *
+   * @param scheme Scheme to use for the UI.
+   */
+  setScheme(scheme: Schemes) {
+    this.scheme = scheme;
+
+    if (
+      (scheme === Schemes.Light && !this.prefersDarkScheme) ||
+      (scheme === Schemes.Dark && this.prefersDarkScheme)
+    ) {
+      // If the new scheme is the same as the preferred scheme
+      // remove the storage item so that changing the preferred
+      // scheme correctly changes the color scheme.
+      this.storage.removeItem(STORAGE_SCHEME);
+    } else {
+      // Store when using a scheme that is not the preferred.
+      this.storage.setItem(STORAGE_SCHEME, scheme);
+    }
+  }
 }
 
 export interface StateProjectTypes {
@@ -668,3 +692,31 @@ export const DEFAULT_DEVICES = [
     width: 1440,
   } as DeviceData,
 ];
+
+/**
+ * Schemes available for the editor UI.
+ */
+export enum Schemes {
+  Light = 'Light',
+  Dark = 'Dark',
+}
+
+/**
+ * Promise keys used for tracking in operation promises for the state.
+ */
+export enum StatePromiseKeys {
+  CopyFile = 'CopyFile',
+  CreateFile = 'CreateFile',
+  CreateWorkspace = 'CreateWorkspace',
+  DeleteFile = 'DeleteFile',
+  GetDevices = 'GetDevices',
+  GetFile = 'GetFile',
+  GetFiles = 'GetFiles',
+  GetPreviewConfig = 'GetPreviewConfig',
+  GetProject = 'GetProject',
+  GetWorkspace = 'GetWorkspace',
+  GetWorkspaces = 'GetWorkspaces',
+  LoadWorkspace = 'LoadWorkspace',
+  Publish = 'Publish',
+  SaveFile = 'SaveFile',
+}

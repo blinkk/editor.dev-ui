@@ -19,7 +19,7 @@ import {FileData} from '../api';
 import {HistoryPart} from './content/sectionHistory';
 import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
-import {MediaPart} from './content/sectionMedia';
+// import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
 
 const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
@@ -85,6 +85,7 @@ export class ContentPart extends BasePart implements Part {
     this.parts = {
       footer: new ContentFooterPart({
         contentSettings: this.contentSettings,
+        state: this.config.state,
         storage: this.config.storage,
       }),
       header: new ContentHeaderPart({

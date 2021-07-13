@@ -89,6 +89,7 @@ export class PreviewPart extends BasePart implements Part {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewNotAvailable(editor: LiveEditor): TemplateResult {
+    // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">
       <div>
         Unable to find a preview for

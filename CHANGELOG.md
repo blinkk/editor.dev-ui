@@ -1,5 +1,15 @@
 # Changelog
 
+### [3.2.2](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.1...v3.2.2) (2021-07-13)
+
+
+### Bug Fixes
+
+* cleanup the menu list item coloring and variables ([#101](https://www.github.com/blinkk/editor.dev-ui/issues/101)) ([3ca4816](https://www.github.com/blinkk/editor.dev-ui/commit/3ca4816a68a4a2f6cce8627439203fea3b344fb9))
+* constant preview pane and loading status ([#99](https://www.github.com/blinkk/editor.dev-ui/issues/99)) ([7b9a970](https://www.github.com/blinkk/editor.dev-ui/commit/7b9a970e8f674c54ff2d6bd5dbc054f51253f4fd))
+* separate messaging for missing preview config ([4013084](https://www.github.com/blinkk/editor.dev-ui/commit/40130848a7168ce7121b3573c7090b4a339b9e46))
+* title for truncated files in the site menu ([7860f13](https://www.github.com/blinkk/editor.dev-ui/commit/7860f1328b87b39ec44f3b282f501a6107b5f79e))
+
 ### [3.2.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.0...v3.2.1) (2021-07-12)
 
 

@@ -72,6 +72,8 @@ export class PreviewPart extends BasePart implements Part {
       );
     } else if (this.config.state.previewConfig === undefined) {
       pieces.push(this.templatePreviewConfigLoading(editor));
+    } else if (this.config.state.previewConfig === null) {
+      pieces.push(this.templatePreviewNotConfigured(editor));
     } else {
       pieces.push(this.templatePreviewNotAvailable(editor));
     }
@@ -89,12 +91,19 @@ export class PreviewPart extends BasePart implements Part {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewNotAvailable(editor: LiveEditor): TemplateResult {
-    // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">
       <div>
         Unable to find a preview for
         <code>${this.config.state.file?.file.path}</code>.
       </div>
+    </div>`;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templatePreviewNotConfigured(editor: LiveEditor): TemplateResult {
+    // TODO: Link to the documentation on setting up a preview server.
+    return html`<div class="le__part__preview__message">
+      <div>No preview server configured.</div>
     </div>`;
   }
 }

@@ -1,4 +1,5 @@
 import {FieldConstructor} from '@blinkk/selective-edit';
+import {GrowAutoFields} from './growAutoFields';
 import {GrowDocumentField} from './field/document';
 import {GrowPartialsField} from './field/partials';
 import {GrowStaticField} from './field/static';
@@ -7,6 +8,7 @@ import {ProjectTypeComponent} from '../projectType';
 
 export class GrowProjectType implements ProjectTypeComponent {
   type = 'grow';
+  AutoFieldsCls = GrowAutoFields;
 
   get fieldTypes(): Record<string, FieldConstructor> {
     return {

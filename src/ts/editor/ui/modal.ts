@@ -8,14 +8,19 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
+import {EditorState, StatePromiseKeys} from '../state';
 import {LiveTemplate, templateLoading} from '../template';
+import {
+  ProjectTypeComponent,
+  updateSelectiveForProjectType,
+} from '../../projectType/projectType';
+
 import {ApiError} from '../api';
 import {BaseUI} from '.';
 import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
 import {templateApiError} from './error';
-import {EVENT_PROJECT_TYPE_UPDATE} from '../events';
 
 /**
  * Priority of the modal.
@@ -54,6 +59,7 @@ export interface FormDialogModalConfig extends DialogModalConfig {
    * Configuration for creating the selective editor.
    */
   selectiveConfig: EditorConfig;
+  state: EditorState;
 }
 
 export enum DialogActionLevel {
@@ -323,6 +329,7 @@ export class DialogModal extends Modal {
     </div>`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateHeader(editor: LiveEditor): TemplateResult {
     if (!this.config.title) {
       return html``;
@@ -355,15 +362,14 @@ export class FormDialogModal extends DialogModal {
     this.data = new DeepObject({});
     this.selective = new SelectiveEditor(this.config.selectiveConfig);
 
-    // When the project type is updated the field types change.
-    // Update the field types on the selective editor which
-    // also reloads the fields on the selective editor.
-    document.addEventListener(EVENT_PROJECT_TYPE_UPDATE, () => {
-      this.selective.addFieldTypes(
-        this.config.selectiveConfig.fieldTypes || {}
-      );
-      this.render();
-    });
+    // When the project type is updated the selective editor changes.
+    this.config.state.addListener(
+      StatePromiseKeys.SetProjectType,
+      (projectType: ProjectTypeComponent) => {
+        updateSelectiveForProjectType(projectType, this.selective);
+        this.render();
+      }
+    );
   }
 
   handleKeyup(evt: KeyboardEvent) {

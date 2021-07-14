@@ -55,6 +55,7 @@ export class OverviewPart extends BasePart implements Part {
       const modal = new FormDialogModal({
         title: editor.config.labels?.publishModalTitle || 'Publish',
         selectiveConfig: selectiveConfig,
+        state: this.config.state,
       });
       modal.templateModal = this.templatePublishWorkspace.bind(this);
       modal.actions.push({

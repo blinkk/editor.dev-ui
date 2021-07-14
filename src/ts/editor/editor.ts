@@ -1,10 +1,5 @@
 import {DataStorage, LocalDataStorage} from '../utility/dataStorage';
-import {
-  EVENT_PROJECT_TYPE_UPDATE,
-  EVENT_RENDER,
-  EVENT_RENDER_COMPLETE,
-  EVENT_SAVE,
-} from './events';
+import {EVENT_RENDER, EVENT_RENDER_COMPLETE, EVENT_SAVE} from './events';
 import {
   EditorConfig,
   GlobalConfig,
@@ -100,7 +95,6 @@ export class LiveEditor {
   isPendingRender?: boolean;
   isRendering?: boolean;
   parts: LiveEditorParts;
-  projectType?: ProjectTypeComponent;
   state: EditorState;
   storage: DataStorage;
 
@@ -251,31 +245,7 @@ export class LiveEditor {
   }
 
   updateProjectType(projectType: ProjectTypeComponent) {
-    this.projectType = projectType;
-    this.config.selectiveConfig = this.config.selectiveConfig || {};
-
-    // Update selective fields available.
-    this.config.selectiveConfig.fieldTypes =
-      this.config.selectiveConfig.fieldTypes || {};
-
-    for (const [key, value] of Object.entries(
-      this.projectType.fieldTypes || {}
-    )) {
-      this.config.selectiveConfig.fieldTypes[key] = value;
-    }
-
-    // Update selective validation rules available.
-    this.config.selectiveConfig.ruleTypes =
-      this.config.selectiveConfig.ruleTypes || {};
-
-    for (const [key, value] of Object.entries(
-      this.projectType.ruleTypes || {}
-    )) {
-      this.config.selectiveConfig.ruleTypes[key] = value;
-    }
-
-    // Event to allow existing selective editors to reset.
-    document.dispatchEvent(new CustomEvent(EVENT_PROJECT_TYPE_UPDATE));
+    this.state.setProjectType(projectType);
   }
 }
 

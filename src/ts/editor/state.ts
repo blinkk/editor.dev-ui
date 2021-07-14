@@ -29,6 +29,7 @@ import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {interpolatePreviewBaseUrl} from './preview';
+import {ProjectTypeComponent} from '../projectType/projectType';
 
 const REGEX_START_SLASH = /^\//i;
 const STORAGE_SCHEME = 'live.scheme';
@@ -75,6 +76,10 @@ export class EditorState extends ListenersMixin(Base) {
    * Preview server settings.
    */
   previewConfig?: PreviewSettings | null;
+  /**
+   * Project type in use.
+   */
+  projectType?: ProjectTypeComponent;
   /**
    * Project information.
    */
@@ -653,6 +658,7 @@ export class EditorState extends ListenersMixin(Base) {
    */
   setScheme(scheme: Schemes) {
     this.scheme = scheme;
+    this.triggerListener(StatePromiseKeys.SetScheme, this.scheme);
 
     if (
       (scheme === Schemes.Light && !this.prefersDarkScheme) ||
@@ -666,6 +672,11 @@ export class EditorState extends ListenersMixin(Base) {
       // Store when using a scheme that is not the preferred.
       this.storage.setItem(STORAGE_SCHEME, scheme);
     }
+  }
+
+  setProjectType(projectType: ProjectTypeComponent) {
+    this.projectType = projectType;
+    this.triggerListener(StatePromiseKeys.SetProjectType, this.projectType);
   }
 }
 
@@ -719,4 +730,6 @@ export enum StatePromiseKeys {
   LoadWorkspace = 'LoadWorkspace',
   Publish = 'Publish',
   SaveFile = 'SaveFile',
+  SetScheme = 'SetScheme',
+  SetProjectType = 'SetProjectType',
 }

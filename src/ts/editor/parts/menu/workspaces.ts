@@ -101,6 +101,7 @@ export class WorkspacesPart extends MenuSectionPart {
       const modal = new FormDialogModal({
         title: 'New workspace',
         selectiveConfig: selectiveConfig,
+        state: this.config.state,
       });
       modal.templateModal = this.templateNewWorkspace.bind(this);
       modal.actions.push({

@@ -6,9 +6,13 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
+import {EditorState, StatePromiseKeys} from '../../../editor/state';
+import {
+  ProjectTypeComponent,
+  updateSelectiveForProjectType,
+} from '../../../projectType/projectType';
+
 import {DataStorage} from '../../../utility/dataStorage';
-import {EVENT_PROJECT_TYPE_UPDATE} from '../../events';
-import {EditorState} from '../../../editor/state';
 import {LiveEditor} from '../../editor';
 import {LiveEditorAutoFields} from '../../autoFields';
 
@@ -47,6 +51,15 @@ export class ContentSectionPart extends BasePart implements Part {
     // Override the autofields class.
     this.selective.types.globals.AutoFieldsCls = LiveEditorAutoFields;
 
+    // When the project type is updated the selective editor changes.
+    this.config.state.addListener(
+      StatePromiseKeys.SetProjectType,
+      (projectType: ProjectTypeComponent) => {
+        updateSelectiveForProjectType(projectType, this.selective);
+        this.render();
+      }
+    );
+
     if (this.isVisible === undefined) {
       const currentSection = this.config.storage.getItem(
         STORAGE_CONTENT_SECTION
@@ -57,16 +70,6 @@ export class ContentSectionPart extends BasePart implements Part {
         this.isVisible = this.section === currentSection;
       }
     }
-
-    // When the project type is updated the field types change.
-    // Update the field types on the selective editor which
-    // also reloads the fields on the selective editor.
-    document.addEventListener(EVENT_PROJECT_TYPE_UPDATE, () => {
-      this.selective.addFieldTypes(
-        this.config.selectiveConfig.fieldTypes || {}
-      );
-      this.render();
-    });
 
     // Show a message when there are pending changes and navigating.
     window.addEventListener('beforeunload', (evt: BeforeUnloadEvent) => {
@@ -98,6 +101,7 @@ export class ContentSectionPart extends BasePart implements Part {
     return classes;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAction(evt: Event) {
     console.log('missing action handler.');
   }

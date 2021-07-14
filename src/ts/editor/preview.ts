@@ -41,13 +41,19 @@ export function interpolatePreviewConfigUrl(
   };
 
   params.baseUrl = interpolatePreviewBaseUrl(settings, workspace, params);
+  params.baseUrl = `${params.baseUrl}${
+    params.baseUrl.endsWith('/') ? '' : '/'
+  }`;
 
   if (settings.configUrl) {
-    return interpolate(params, settings.configUrl);
+    let configUrl = settings.configUrl;
+    // If the config URL is a absolute path, prepend with base url.
+    if (configUrl.startsWith('/')) {
+      configUrl = `${params.baseUrl}${configUrl.slice(1)}`;
+    }
+    return interpolate(params, configUrl);
   }
 
   // Default to the `preview.json` file.
-  return `${params.baseUrl}${
-    params.baseUrl.endsWith('/') ? '' : '/'
-  }preview.json`;
+  return `${params.baseUrl}preview.json`;
 }

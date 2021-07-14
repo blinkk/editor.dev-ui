@@ -8,7 +8,7 @@ See the [docs][docs], [typescript docs][tsdocs], or [example][example] of the UI
 [example]: https://editor.dev/example/
 [tsdocs]: https://editor.dev/api/ui/
 
-![Main build](https://github.com/blinkk/editor.dev/actions/workflows/push_main/badge.svg)
+![Main build](https://github.com/blinkk/editor.dev/actions/workflows/push_main.yaml/badge.svg)
 
 ## Usage
 

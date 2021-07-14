@@ -5,9 +5,6 @@ import {
   MediaOptions,
   RemoteMediaProviders,
 } from '../editor/api';
-import bent from 'bent';
-
-const postJSON = bent('json', 'POST');
 
 export class GCSRemoteMedia
   extends BaseRemoteMediaProvider

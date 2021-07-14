@@ -3,8 +3,6 @@ import path from 'path';
 
 const PORT = 8080;
 const MODE = process.env.MODE || 'dev';
-const STACKDRIVER_KEY =
-  process.env.STACKDRIVER_KEY || 'AIzaSyAvmyHYE91XvlFzPI5SA5LcRoIx-aOCGJU';
 
 // Determine base for website files.
 let websiteRoot = path.join(process.cwd(), 'public');

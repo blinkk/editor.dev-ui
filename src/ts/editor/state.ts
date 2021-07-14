@@ -28,8 +28,8 @@ import {Base} from '@blinkk/selective-edit/dist/mixins';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
-import {interpolatePreviewBaseUrl} from './preview';
 import {ProjectTypeComponent} from '../projectType/projectType';
+import {interpolatePreviewBaseUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;
 const STORAGE_SCHEME = 'live.scheme';

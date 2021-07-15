@@ -13,7 +13,7 @@ import {LiveEditorApiComponent, ProjectTypes} from './api';
 
 import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
 import {ContentPart} from './parts/content';
-import {EmptyPart} from './parts/empty';
+import {DashboardPart} from './parts/dashboard';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {MenuPart} from './parts/menu';
 import {ModalsPart} from './parts/modals';
@@ -80,7 +80,7 @@ export interface LiveEditorConfig {
 
 export interface LiveEditorParts {
   content: ContentPart;
-  empty: EmptyPart;
+  dashboard: DashboardPart;
   menu: MenuPart;
   modals: ModalsPart;
   notifications: NotificationsPart;
@@ -109,7 +109,7 @@ export class LiveEditor {
         state: this.state,
         storage: this.storage,
       }),
-      empty: new EmptyPart({
+      dashboard: new DashboardPart({
         state: this.state,
         storage: this.storage,
       }),
@@ -223,7 +223,7 @@ export class LiveEditor {
 
   templateContentStructure(editor: LiveEditor): TemplateResult {
     if (!this.state.file) {
-      return this.parts.empty.template(editor);
+      return this.parts.dashboard.template(editor);
     }
 
     if (this.parts.content.isExpanded) {

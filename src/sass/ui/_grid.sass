@@ -1,0 +1,101 @@
+
+.le__grid
+  --grid_columns: 1fr 1fr
+
+  column-gap: $le-space-medium
+  display: grid
+  grid-template-columns: var(--grid_columns)
+  row-gap: $le-space-medium
+
+  &--col-3
+    --grid_columns: 1fr 1fr 1fr
+
+  &--col-4
+    --grid_columns: 1fr 1fr 1fr 1fr
+
+
+.le__grid__item
+  --color-grid-item-background: var(--color-background)
+  --color-on-grid-item-background: var(--color-on-background)
+
+  background: var(--color-grid-item-background)
+  color: var(--color-on-grid-item-background)
+
+  .le__grid--3-2 &
+      aspect-ratio: 3 / 2
+
+  &--box
+    border: $le-border-size-medium solid var(--color-border)
+    border-radius: $le-radius-medium
+
+    &.le__grid__item--selected
+      font-weight: 700
+
+  &--box-centered
+    align-items: center
+    display: flex
+    flex-flow: column
+    justify-content: center
+
+  &.le__clickable:focus,
+  &.le__clickable:hover
+    --color-grid-item-background: var(--color-tertiary)
+    --color-on-grid-item-background: var(--color-on-tertiary)
+    --color-action-background: var(--color-grid-item-background)
+    --color-on-action-background: var(--color-on-grid-item-background)
+
+  &--selected
+    --color-grid-item-background: var(--color-secondary)
+    --color-on-grid-item-background: var(--color-on-secondary)
+
+    a
+      color: inherit
+
+  &--selected.le__clickable:hover
+    --color-grid-item-background: var(--color-secondary)
+    --color-on-grid-item-background: var(--color-on-secondary)
+
+  &--pad_xsmall
+    padding: $le-space-xsmall
+
+  &--pad_small
+    padding: $le-space-small
+
+  &--pad
+    padding: $le-space-medium
+
+  &--pad_large
+    padding: $le-space-large
+
+  &--pad_xlarge
+    padding: $le-space-xlarge
+
+  &--pad_horizontal_xsmall
+    padding: 0 $le-space-xsmall
+
+  &--pad_horizontal_small
+    padding: 0 $le-space-small
+
+  &--pad_horizontal
+    padding: 0 $le-space-medium
+
+  &--pad_horizontal_large
+    padding: 0 $le-space-large
+
+  &--pad_horizontal_xlarge
+    padding: 0 $le-space-xlarge
+
+  &--pad_vertical_xsmall
+    padding: $le-space-xsmall 0
+
+  &--pad_vertical_small
+    padding: $le-space-small 0
+
+  &--pad_vertical
+    padding: $le-space-medium 0
+
+  &--pad_vertical_large
+    padding: $le-space-large 0
+
+  &--pad_vertical_xlarge
+    padding: $le-space-xlarge 0

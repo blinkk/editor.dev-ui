@@ -433,7 +433,14 @@ export class EditorState extends ListenersMixin(Base) {
       this.promises[promiseKey] = this.api
         .getPreviewConfig(project.preview as EditorPreviewSettings, workspace)
         .then(handlePreviewSettings)
-        .catch(() => {
+        .catch((err: Error) => {
+          if (callbackError) {
+            callbackError({
+              message: err.toString(),
+              details: err,
+            });
+          }
+
           console.error('Unable to load preview server config');
           this.previewConfig = null;
           this.render();

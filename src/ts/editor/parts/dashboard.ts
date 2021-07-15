@@ -191,15 +191,13 @@ export class DashboardPart extends BasePart implements Part {
     } else {
       subParts.push(html`<p>Select a file from the menu to begin editing.</p>`);
     }
-    return html`<div class=${classMap(this.classesForPart())}>
-      ${subParts}
-    </div>`;
+    return html`${subParts}`;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateRecentWorkspaces(editor: LiveEditor): TemplateResult {
     const subParts: Array<TemplateResult> = [];
-    if (this.recentWorkspaces.length) {
+    if (this.recentWorkspaces.length > 1) {
       subParts.push(html`<div class="le__part__dashboard__recent">
         <h2>Recent Workspaces</h2>
         <div class="le__grid le__grid--3-2 le__grid--col-4">
@@ -239,9 +237,7 @@ export class DashboardPart extends BasePart implements Part {
         </div>
       </div>`);
     }
-    return html`<div class=${classMap(this.classesForPart())}>
-      ${subParts}
-    </div>`;
+    return html`${subParts}`;
   }
 
   updateRecentFile(path: string) {

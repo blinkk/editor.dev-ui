@@ -47,6 +47,10 @@ export class EditorState extends ListenersMixin(Base) {
    */
   api: LiveEditorApiComponent;
   /**
+   * Keep track of backlogged callbacks.
+   */
+  protected callbacks: Record<string, Set<(...value: any) => void>>;
+  /**
    * Array of devices supported for previews.
    */
   devices?: Array<DeviceData>;
@@ -93,10 +97,6 @@ export class EditorState extends ListenersMixin(Base) {
    * multiple times.
    */
   protected promises: Record<string, Promise<any> | boolean>;
-  /**
-   * Keep track of backlogged callbacks.
-   */
-  protected callbacks: Record<string, Set<(...value: any) => void>>;
   /**
    * Whether the user prefers dark mode.
    */
@@ -433,7 +433,18 @@ export class EditorState extends ListenersMixin(Base) {
       this.promises[promiseKey] = this.api
         .getPreviewConfig(project.preview as EditorPreviewSettings, workspace)
         .then(handlePreviewSettings)
-        .catch(error => catchError(error, callbackError));
+        .catch((err: Error) => {
+          if (callbackError) {
+            callbackError({
+              message: err.toString(),
+              details: err,
+            });
+          }
+
+          console.error('Unable to load preview server config');
+          this.previewConfig = null;
+          this.render();
+        });
     };
 
     const handleProject = (project: ProjectData) => {

@@ -103,7 +103,9 @@ export class PreviewPart extends BasePart implements Part {
   templatePreviewNotConfigured(editor: LiveEditor): TemplateResult {
     // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">
-      <div>No preview server configured.</div>
+      <div>
+        No preview server configured or unable to load preview configuration.
+      </div>
     </div>`;
   }
 }

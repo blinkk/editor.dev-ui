@@ -161,10 +161,10 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     settings: EditorPreviewSettings,
     workspace: WorkspaceData
   ): Promise<PreviewSettings> {
+    // TODO: Make the credentials optional with setting?
+    // TODO: Need to send credentials for IAP with fetch, how to do with bent?
     // return await getJSON(interpolatePreviewConfigUrl(settings, workspace));
 
-    // TODO: Need to send credentials for IAP with fetch, how to do with bent?
-    // TODO: Make the credentials optional with setting?
     const codes = new Set();
     codes.add(200);
 

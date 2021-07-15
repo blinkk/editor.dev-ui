@@ -230,12 +230,16 @@ class GithubOnboarding extends ServiceOnboarding {
     }
 
     // Determine which part of the selection is missing.
+    let result = html``;
     if (!this.api.organization) {
-      return this.templateOrganizations(onboarding);
+      result = this.templateOrganizations(onboarding);
     } else if (!this.api.project) {
-      return this.templateRepositories(onboarding);
+      result = this.templateRepositories(onboarding);
+    } else {
+      result = this.templateWorkspaces(onboarding);
     }
-    return this.templateWorkspaces(onboarding);
+
+    return html`<div class="server-github__onboarding">${result}</div>`;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -253,15 +257,22 @@ class GithubOnboarding extends ServiceOnboarding {
       this.loadOrganizations();
     }
 
-    return html` <h2>Organizations</h2>
-      ${this.organizations ? html`<p>Select an organization:</p>` : ''}
-      <div class="le__list">
+    return html`<div class="server-github__header">
+        <h2>Organizations</h2>
+        <div class="server-github__selection">
+          ${this.organizations
+            ? html`Select an organization`
+            : html`${templateLoading({padHorizontal: true, size: 'small'})}
+              Finding organizations…`}
+        </div>
+      </div>
+      <div class="le__grid le__grid--col-4 le__grid--3-2">
         ${repeat(
           this.organizations || [],
           org => org.id,
           org => {
             return html`<div
-              class="le__list__item le__list__item--pad_small le__clickable"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
               @click=${() => {
                 this.api.organization = org.org;
                 this.installation = org;
@@ -285,14 +296,9 @@ class GithubOnboarding extends ServiceOnboarding {
             </div>`;
           }
         )}
-        ${!this.organizations
-          ? html`<div class="le__list__item">
-              ${templateLoading({padHorizontal: true})} Finding organizations…
-            </div>`
-          : ''}
         ${this.organizations && !this.organizations.length
           ? html`<div
-              class="le__list__item le__list__item--pad_small le__list__item--emphasis"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
             >
               No organization access found.
             </div>`
@@ -322,15 +328,22 @@ class GithubOnboarding extends ServiceOnboarding {
       this.loadRepositories();
     }
 
-    return html` <h2>Repositories in ${this.api.organization}</h2>
-      <div class="le__list">
-        ${this.repositories ? html`<p>Select a repository:</p>` : ''}
+    return html`<div class="server-github__header">
+        <h2>Repositories in ${this.api.organization}</h2>
+        <div class="server-github__selection">
+          ${this.repositories
+            ? html`Select a repository`
+            : html`${templateLoading({padHorizontal: true, size: 'small'})}
+              Finding ${this.api.organization} repositories…`}
+        </div>
+      </div>
+      <div class="le__grid le__grid--col-4 le__grid--3-2">
         ${repeat(
           this.repositories || [],
           repo => repo.repo,
           repo => {
             return html`<div
-              class="le__list__item le__list__item--pad_small le__clickable"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
               @click=${() => {
                 this.api.project = repo.repo;
 
@@ -356,15 +369,9 @@ class GithubOnboarding extends ServiceOnboarding {
             </div>`;
           }
         )}
-        ${!this.repositories
-          ? html`<div class="le__list__item">
-              ${templateLoading({padHorizontal: true})} Finding
-              ${this.api.organization} repositories…
-            </div>`
-          : ''}
         ${this.repositories && !this.repositories.length
           ? html`<div
-              class="le__list__item le__list__item--pad_small le__list__item--emphasis"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
             >
               No repository access found.
             </div>`
@@ -398,17 +405,22 @@ class GithubOnboarding extends ServiceOnboarding {
       this.loadWorkspaces();
     }
 
-    return html` <h2>
-        Workspaces in ${this.api.organization}/${this.api.project}
-      </h2>
-      <div class="le__list">
-        ${this.workspaces ? html`<p>Select a workspace:</p>` : ''}
+    return html`<div class="server-github__header">
+        <h2>Workspaces in ${this.api.organization}/${this.api.project}</h2>
+        <div class="server-github__selection">
+          ${this.workspaces
+            ? html`Select a workspace`
+            : html`${templateLoading({padHorizontal: true, size: 'small'})}
+              Finding ${this.api.organization}/${this.api.project} workspaces…`}
+        </div>
+      </div>
+      <div class="le__grid le__grid--col-4 le__grid--3-2">
         ${repeat(
           this.workspaces || [],
           workspace => workspace.name,
           workspace => {
             return html`<div
-              class="le__list__item le__list__item--pad_small le__clickable"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
               @click=${(evt: MouseEvent) => {
                 // Links should already redirect.
                 if ((evt.target as HTMLElement).tagName === 'A') {
@@ -433,15 +445,9 @@ class GithubOnboarding extends ServiceOnboarding {
             </div>`;
           }
         )}
-        ${!this.workspaces
-          ? html`<div class="le__list__item">
-              ${templateLoading({padHorizontal: true})} Finding
-              ${this.api.organization}/${this.api.project} workspaces…
-            </div>`
-          : ''}
         ${this.workspaces && !this.workspaces.length
           ? html`<div
-              class="le__list__item le__list__item--pad_small le__list__item--emphasis"
+              class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
             >
               Unable to find workspaces.
             </div>`

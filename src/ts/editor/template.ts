@@ -9,6 +9,7 @@ export interface TemplateOptions {
   pad?: boolean;
   padHorizontal?: boolean;
   padVertical?: boolean;
+  size?: 'small' | 'medium' | 'large';
 }
 
 export function templateLoading(options?: TemplateOptions): TemplateResult {
@@ -17,6 +18,8 @@ export function templateLoading(options?: TemplateOptions): TemplateResult {
     'le__loading--pad': options?.pad || false,
     'le__loading--pad-horizontal': options?.padHorizontal || false,
     'le__loading--pad-vertical': options?.padVertical || false,
+    'le__loading--small': options?.size === 'small',
+    'le__loading--large': options?.size === 'large',
   };
 
   return html`<div class=${classMap(classes)}></div>`;

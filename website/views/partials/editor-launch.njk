@@ -1,0 +1,26 @@
+{% import "/views/macros/asset.njk" as asset %}
+
+<div class="{{partial.partial}} {{partial.class}}">
+  <div class="{{partial.partial}}__content">
+    {% if partial.title %}
+      <div class="{{partial.partial}}__content__title">
+        {{partial.title}}
+      </div>
+    {% endif %}
+    {% if partial.body %}
+      <div class="{{partial.partial}}__content__body">
+        {{partial.body}}
+      </div>
+    {% endif %}
+    {% if partial.buttons %}
+      <div class="{{partial.partial}}__options">
+        {% for button in partial.buttons %}
+          <a class="{{partial.partial}}__option" href="{{button.doc.url.path or button.url}}">
+            <div class="{{partial.partial}}__option__img">{{pod.readFile(button.media.static.podPath) | safe}}</div>
+            <div>{{button.label}}</div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>

@@ -1,10 +1,10 @@
 @import '../utils/grid'
-@import '../utils/spacing'
+@import '../utils/config'
 @import '../utils/type'
 
 .promo-banner
     background: #efefef
-    padding: $spacing-20
+    padding: $le-space-medium
 
 .promo-banner__wrap
     +grid-container
@@ -23,7 +23,7 @@
 
 .promo-banner__wrap__content__body
     & + .promo-banner__wrap__content__buttons
-        margin-top: $spacing-10
+        margin-top: $le-space-small
 
 .promo-banner__wrap__content__assets
-    margin-top: $spacing-60
+    margin-top: $le-space-xlarge

@@ -1,0 +1,60 @@
+@import '../utils/config'
+@import '../utils/type'
+
+.editor-launch
+  text-align: center
+
+.editor-launch__content
+  margin: 0 auto
+  max-width: 1440px
+
+.editor-launch__content__title
+  +type-heading-1
+  max-width: $le-space-max-heading-width
+  margin-left: auto
+  margin-right: auto
+
+  & + .editor-launch__content__body
+    +type-body-large
+    margin-top: $le-space-large
+
+.editor-launch__content__body
+  margin-left: auto
+  margin-right: auto
+  max-width: $le-space-max-body-width
+
+  & + .editor-launch__options
+    margin-top: $le-space-large
+
+.editor-launch__options
+  column-gap: $le-space-medium
+  display: grid
+  grid-template-columns: 1fr 1fr
+  max-width: $le-space-max-body-width
+  margin-left: auto
+  margin-right: auto
+
+.editor-launch__option
+  align-items: center
+  aspect-ratio: 3 / 2
+  border: 1px solid var(--color-border)
+  border-radius: 4px
+  display: flex
+  flex-flow: column
+  justify-content: center
+  text-decoration: none
+
+  &:hover
+    border: 1px solid var(--color-border-hover)
+    box-shadow: $le-shadow-medium
+
+.editor-launch__option__img
+  height: 20vh
+  max-height: 150px
+  max-width: 150px
+  width: 20vw
+  margin-bottom: $le-space-medium
+
+  svg
+    path
+      fill: currentColor

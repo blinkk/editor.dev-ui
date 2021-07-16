@@ -1,11 +1,11 @@
-@import '../utils/spacing'
+@import '../utils/config'
 @import '../utils/type'
 
 .header__beta
   background: var(--color-secondary-dark)
   color: var(--color-on-secondary-dark)
   display: none
-  padding: $spacing-20
+  padding: $le-space-medium
   text-align: center
 
   .beta &
@@ -19,7 +19,7 @@
   align-items: center
   display: flex
   justify-content: space-between
-  padding: $spacing-20
+  padding: $le-space-medium
 
 .header__logo a
   +type-heading-2
@@ -37,4 +37,4 @@
   display: flex
   flex-flow: row
   flex-wrap: wrap
-  column-gap: $spacing-20
+  column-gap: $le-space-medium

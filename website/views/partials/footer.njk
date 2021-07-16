@@ -1,8 +1,11 @@
 <div class="{{partial.partial}} {% for option in partial.options %}{{partial.partial}}--{{option}}{% endfor %}">
   <div class="footer__content">
     <div class="footer__content__links">
+      <a href="#" class="footer__links__link scheme__toggle" title="Toggle dark mode">
+        <span class="material-icons">dark_mode</span>
+      </a>
       {% for item in partial.nav %}
-        <a href="{{item.url.path or item.url}}" class="header__links__link">
+        <a href="{{item.url.path or item.url}}" class="footer__links__link">
           {{item.fields.navTitle or item.fields.title or item.title}}
         </a>
       {% endfor %}

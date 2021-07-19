@@ -48,9 +48,9 @@ COPY ./website/tsconfig.json ./website/tsconfig.json
 RUN yarn run compile
 
 # Having issues with git symlinks to generated files.
-RUN cp ./dist/css/server/editor.css ./website/static/ \
-  && cp ./dist/server/app.* ./website/static/ \
-  && cp ./dist/server/gh.callback.min.js ./website/static/
+# RUN cp ./dist/css/server/editor.css ./website/static/ \
+#   && cp ./dist/server/app.* ./website/static/ \
+#   && cp ./dist/server/gh.callback.min.js ./website/static/
 
 # Build website.
 RUN cd website && yarn run build:prod

@@ -1,0 +1,30 @@
+# Define the screenshots for using in the website.
+browser:
+  params:
+    noNetworkSimulation: true
+
+screenshots:
+  example:
+    path: /?path=%2Fcontent%2Fpages%2Findex.yaml
+    actions:
+    - action: waitForSelector
+      selector: .le__part__preview__frame iframe
+    - action: waitForFunction
+      pageFunction: |
+        document.querySelector('.le__part__preview__frame iframe') !== null
+        && document.querySelector('.le__part__preview__frame iframe').src !== ''
+        && document.querySelector('.le__part__preview__frame iframe').contentDocument.readyState === 'complete'
+  overview:
+    actions:
+    - action: waitForSelector
+      selector: .le__part__overview__title
+    - action: waitForFunction
+      pageFunction: |
+        document.querySelector('.le__part__overview__title').innerText.includes('Example')
+    - action: waitForSelector
+      selector: .le__part__overview__workspace
+    - action: waitForFunction
+      pageFunction: |
+        document.querySelector('.le__part__overview__workspace').innerText.includes('main')
+    - action: screenshot
+      selector: .le__part__overview

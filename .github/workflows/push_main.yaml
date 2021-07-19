@@ -22,6 +22,8 @@ jobs:
       with:
         working-directory: connector
     - run: yarn run docs
+    - name: Documentation screenshots
+      run: yarn run screenshot:docs
     - run: cd connector && yarn run docs && mv api/connector ../api/
     - name: Setup Cloud SDK
       uses: google-github-actions/setup-gcloud@v0.2.0

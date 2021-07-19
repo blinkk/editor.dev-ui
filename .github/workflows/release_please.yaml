@@ -50,6 +50,8 @@ jobs:
       if: ${{ steps.release.outputs.release_created }}
     - run: cd connector && yarn run docs && mv api/connector ../api/
       if: ${{ steps.release.outputs.release_created }}
+    - run: yarn run screenshot:docs
+      if: ${{ steps.release.outputs.release_created }}
     - name: Deploy to prod
       run: make build-and-deploy-prod-tag tag=${{ steps.release.outputs.tag_name }}
       if: ${{ steps.release.outputs.release_created }}

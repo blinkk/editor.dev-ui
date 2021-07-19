@@ -36,8 +36,10 @@
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/server.ts\"",
     "lint": "npx eslint src/ts/**/*.ts",
     "prepublishOnly": "npx tsc --skipLibCheck",
+    "prescreenshot:docs": "concurrently \"yarn run sass:build\" \"npx tsc --skipLibCheck src/ts/screenshot-docs.ts --outDir dist --target es2020 --moduleResolution node --esModuleInterop true --module commonjs\" \"webpack --config webpack.example.js\"",
     "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
     "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
+    "screenshot:docs": "node dist/screenshot-docs.js",
     "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "test": "npx nyc ava",
     "test-ci": "npx nyc --reporter=lcov ava && codecov"
@@ -79,6 +81,7 @@
     "nunjucks": "^3.2.3",
     "nyc": "^15.1.0",
     "prettier": "^2.3.2",
+    "puppeteer": "^10.1.0",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "typedoc": "^0.21.2",

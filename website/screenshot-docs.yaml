@@ -1,0 +1,12 @@
+# Define the screenshots for using in the website.
+screenshots:
+  example:
+    path: ?path=%2Fcontent%2Fpages%2Findex.yaml
+    actions:
+    - action: waitForFunction
+      pageFunction: |
+        document.querySelector('.le__part__preview__frame iframe') !== null && document.querySelector('.le__part__preview__frame iframe').contentDocument.readyState === 'complete'
+  overview:
+    actions:
+    - action: screenshot
+      selector: .le__part__overview

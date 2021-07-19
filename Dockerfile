@@ -33,7 +33,6 @@ COPY ./webpack* ./
 COPY ./tsconfig.json ./
 COPY ./src ./src
 COPY ./static ./static
-COPY ./views ./views
 
 # Copy website files.
 COPY ./website/content ./website/content

@@ -103,7 +103,18 @@ export class Screenshotter implements ScreenshotterComponent {
 
   urlForScreenshot(path?: string) {
     path = path?.replace(/\/*/g, '') || '';
-    return `${this.config.baseUrl}${path}`;
+    const url = new URL(`${this.config.baseUrl}${path}`);
+
+    // If your expected result is "http://foo.bar/?x=1&y=2&x=42"
+    if (this.screenshotsConfig.browser?.params) {
+      for (const [param, value] of Object.entries(
+        this.screenshotsConfig.browser?.params
+      )) {
+        url.searchParams.append(param, value);
+      }
+    }
+
+    return url.toString();
   }
 }
 
@@ -143,6 +154,10 @@ export interface ScreenshotFileConfig {
 
 export interface BrowserConfig {
   viewport?: ViewportConfig;
+  /**
+   * Params to add to every URL.
+   */
+  params?: Record<string, string>;
 }
 
 export interface ViewportConfig {

@@ -39,8 +39,17 @@ import {MediaField} from '../editor/field/media';
 import {MediaListField} from '../editor/field/mediaList';
 import {RuleConstructor} from '@blinkk/selective-edit';
 
+// For screenshotting, do not want to simulate network delays or show tools.
+const currentUrl = new URL(window.location.href);
+let noNetworkSimulation = false;
+if (currentUrl.searchParams.has('noNetworkSimulation')) {
+  noNetworkSimulation = true;
+}
+
 const container = document.querySelector('.container');
-const exampleApi = new ExampleApi();
+const exampleApi = new ExampleApi({
+  noNetworkSimulation: noNetworkSimulation,
+});
 const exampleState = new EditorState(exampleApi);
 const exampleEditor = new LiveEditor(
   {
@@ -101,15 +110,20 @@ if (url.searchParams.get('path')) {
 }
 
 /**
- * Tool for working with the api through the UI.
+ * When not simulating the network (ex: screenshotting) do not use tools.
  */
-const toolContainer = document.querySelector('.example_tool');
-const tool = new ExampleTool(
-  exampleEditor.config.api as ExampleApi,
-  exampleEditor.storage,
-  toolContainer as HTMLElement
-);
-tool.render();
+if (!noNetworkSimulation) {
+  /**
+   * Tool for working with the api through the UI.
+   */
+  const toolContainer = document.querySelector('.example_tool');
+  const tool = new ExampleTool(
+    exampleEditor.config.api as ExampleApi,
+    exampleEditor.storage,
+    toolContainer as HTMLElement
+  );
+  tool.render();
+}
 
 // Render the editor after the tool is created so that stored
 // error states can be loaded before the editor calls them.

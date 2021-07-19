@@ -9,7 +9,7 @@
 import {Screenshotter} from './screenshotter/screenshotter';
 import express from 'express';
 
-// Start the local server for serving the example.
+// Crazy port number for serving the example locally.
 const PORT = 7689;
 
 const screenshotter = new Screenshotter({

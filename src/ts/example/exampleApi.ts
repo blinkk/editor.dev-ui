@@ -57,7 +57,16 @@ const MIN_RESPONSE_MS = 250;
  * @param callback Callback after 'network' lag complete.
  * @param response Response for the callback.
  */
-function simulateNetwork(callback: Function, response: any) {
+function simulateNetwork(
+  callback: Function,
+  response: any,
+  noNetworkSimulation?: boolean
+) {
+  if (noNetworkSimulation) {
+    callback(response);
+    return;
+  }
+
   setTimeout(() => {
     callback(response);
   }, Math.random() * (MAX_RESPONSE_MS - MIN_RESPONSE_MS) + MIN_RESPONSE_MS);
@@ -1240,20 +1249,26 @@ const currentWorkspaces: Array<WorkspaceData> = [
   },
 ];
 
+export interface ExampleApiOptions {
+  noNetworkSimulation?: boolean;
+}
+
 /**
  * Example api that returns data through a 'simulated' network.
  */
 export class ExampleApi implements LiveEditorApiComponent {
   errorController: ErrorController;
   workflow: WorkspaceWorkflow;
+  options?: ExampleApiOptions;
   projectTypes: ApiProjectTypes;
 
-  constructor() {
+  constructor(options?: ExampleApiOptions) {
+    this.options = options;
     this.errorController = new ErrorController();
     this.workflow = WorkspaceWorkflow.Success;
     this.projectTypes = {
-      amagaki: new ExampleAmagakiApi(this.errorController),
-      grow: new ExampleGrowApi(this.errorController),
+      amagaki: new ExampleAmagakiApi(this.errorController, this.options),
+      grow: new ExampleGrowApi(this.errorController, this.options),
     };
   }
 
@@ -1278,7 +1293,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: path,
       };
       currentFileset.push(newFile);
-      simulateNetwork(resolve, newFile);
+      simulateNetwork(resolve, newFile, this.options?.noNetworkSimulation);
     });
   }
 
@@ -1299,7 +1314,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: path,
       };
       currentFileset.push(newFile);
-      simulateNetwork(resolve, newFile);
+      simulateNetwork(resolve, newFile, this.options?.noNetworkSimulation);
     });
   }
 
@@ -1333,7 +1348,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         name: workspace,
       };
       currentWorkspaces.push(newWorkspace);
-      simulateNetwork(resolve, newWorkspace);
+      simulateNetwork(resolve, newWorkspace, this.options?.noNetworkSimulation);
     });
   }
 
@@ -1357,7 +1372,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(resolve, {});
+      simulateNetwork(resolve, {}, this.options?.noNetworkSimulation);
     });
   }
 
@@ -1374,28 +1389,32 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, [
-        {
-          label: 'Mobile',
-          width: 411,
-          height: 731,
-          canRotate: true,
-        } as DeviceData,
-        {
-          label: 'Tablet',
-          width: 1024,
-          height: 768,
-          canRotate: true,
-        } as DeviceData,
-        {
-          label: 'Desktop',
-          width: 1440,
-        } as DeviceData,
-        {
-          label: 'Desktop (Large)',
-          width: 2200,
-        } as DeviceData,
-      ]);
+      simulateNetwork(
+        resolve,
+        [
+          {
+            label: 'Mobile',
+            width: 411,
+            height: 731,
+            canRotate: true,
+          } as DeviceData,
+          {
+            label: 'Tablet',
+            width: 1024,
+            height: 768,
+            canRotate: true,
+          } as DeviceData,
+          {
+            label: 'Desktop',
+            width: 1440,
+          } as DeviceData,
+          {
+            label: 'Desktop (Large)',
+            width: 2200,
+          } as DeviceData,
+        ],
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1423,7 +1442,11 @@ export class ExampleApi implements LiveEditorApiComponent {
         },
       });
 
-      simulateNetwork(resolve, fullFiles[file.path] || defaultFile);
+      simulateNetwork(
+        resolve,
+        fullFiles[file.path] || defaultFile,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1440,7 +1463,11 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, [...currentFileset]);
+      simulateNetwork(
+        resolve,
+        [...currentFileset],
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1458,10 +1485,14 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       // TODO: Use some logic to determine what url to return.
-      simulateNetwork(resolve, {
-        path: file.path,
-        url: 'image-landscape.png',
-      } as FileData);
+      simulateNetwork(
+        resolve,
+        {
+          path: file.path,
+          url: 'image-landscape.png',
+        } as FileData,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1486,25 +1517,29 @@ export class ExampleApi implements LiveEditorApiComponent {
       /**
        * Map the paths to the serving urls.
        */
-      simulateNetwork(resolve, {
-        defaultLocale: 'en',
-        routes: {
-          '/content/pages/index.yaml': {
-            en: {
-              path: '/preview.html',
+      simulateNetwork(
+        resolve,
+        {
+          defaultLocale: 'en',
+          routes: {
+            '/content/pages/index.yaml': {
+              en: {
+                path: '/preview.html',
+              },
+            },
+            '/static/img/landscape.png': {
+              path: '/image-landscape.png',
+            },
+            '/static/img/portrait.png': {
+              path: '/image-portrait.png',
+            },
+            '/static/img/square.png': {
+              path: '/image-square.png',
             },
           },
-          '/static/img/landscape.png': {
-            path: '/image-landscape.png',
-          },
-          '/static/img/portrait.png': {
-            path: '/image-portrait.png',
-          },
-          '/static/img/square.png': {
-            path: '/image-square.png',
-          },
-        },
-      } as PreviewSettings);
+        } as PreviewSettings,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1548,26 +1583,30 @@ export class ExampleApi implements LiveEditorApiComponent {
         publish = {};
       }
 
-      simulateNetwork(resolve, {
-        title: 'Example project',
-        publish: publish,
-        preview: {
-          // Use the current server for the preview for the example since it is
-          // referencing a static file for the example preview.
-          baseUrl: 'http://localhost:8888/',
-        },
-        users: [
-          {
-            name: 'Example User',
-            email: 'example@example.com',
+      simulateNetwork(
+        resolve,
+        {
+          title: 'Example project',
+          publish: publish,
+          preview: {
+            // Use the current server for the preview for the example since it is
+            // referencing a static file for the example preview.
+            baseUrl: `http://${window.location.host}/`,
           },
-          {
-            name: 'Domain users',
-            email: '@domain.com',
-            isGroup: true,
-          },
-        ],
-      } as ProjectData);
+          users: [
+            {
+              name: 'Example User',
+              email: 'example@example.com',
+            },
+            {
+              name: 'Domain users',
+              email: '@domain.com',
+              isGroup: true,
+            },
+          ],
+        } as ProjectData,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1614,7 +1653,11 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(resolve, currentWorkspace);
+      simulateNetwork(
+        resolve,
+        currentWorkspace,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1631,7 +1674,11 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, [...currentWorkspaces]);
+      simulateNetwork(
+        resolve,
+        [...currentWorkspaces],
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1650,7 +1697,11 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       currentWorkspace = workspace;
 
-      simulateNetwork(resolve, currentWorkspace);
+      simulateNetwork(
+        resolve,
+        currentWorkspace,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1690,10 +1741,14 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(resolve, {
-        status: status,
-        workspace: responseWorkspace,
-      });
+      simulateNetwork(
+        resolve,
+        {
+          status: status,
+          workspace: responseWorkspace,
+        },
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1718,7 +1773,8 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       simulateNetwork(
         resolve,
-        fullFiles[file.file.path] || DEFAULT_EDITOR_FILE
+        fullFiles[file.file.path] || DEFAULT_EDITOR_FILE,
+        this.options?.noNetworkSimulation
       );
     });
   }
@@ -1736,19 +1792,25 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(resolve, {
-        path: '/static/img/portrait.png',
-        url: 'image-portrait.png',
-      } as FileData);
+      simulateNetwork(
+        resolve,
+        {
+          path: '/static/img/portrait.png',
+          url: 'image-portrait.png',
+        } as FileData,
+        this.options?.noNetworkSimulation
+      );
     });
   }
 }
 
 export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
   errorController: ErrorController;
+  options?: ExampleApiOptions;
 
-  constructor(errorController: ErrorController) {
+  constructor(errorController: ErrorController, options?: ExampleApiOptions) {
     this.errorController = errorController;
+    this.options = options;
   }
 
   async getPartials(): Promise<Record<string, PartialData>> {
@@ -1764,23 +1826,29 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
         return;
       }
 
-      simulateNetwork(resolve, {
-        example: {
-          partial: 'example',
-          editor: {
-            fields: [],
-          },
-        } as PartialData,
-      });
+      simulateNetwork(
+        resolve,
+        {
+          example: {
+            partial: 'example',
+            editor: {
+              fields: [],
+            },
+          } as PartialData,
+        },
+        this.options?.noNetworkSimulation
+      );
     });
   }
 }
 
 export class ExampleGrowApi implements GrowProjectTypeApi {
   errorController: ErrorController;
+  options?: ExampleApiOptions;
 
-  constructor(errorController: ErrorController) {
+  constructor(errorController: ErrorController, options?: ExampleApiOptions) {
     this.errorController = errorController;
+    this.options = options;
   }
 
   async getPartials(): Promise<Record<string, PartialData>> {
@@ -1796,14 +1864,18 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
         return;
       }
 
-      simulateNetwork(resolve, {
-        example: {
-          partial: 'example',
-          editor: {
-            fields: [],
-          },
-        } as PartialData,
-      });
+      simulateNetwork(
+        resolve,
+        {
+          example: {
+            partial: 'example',
+            editor: {
+              fields: [],
+            },
+          } as PartialData,
+        },
+        this.options?.noNetworkSimulation
+      );
     });
   }
 
@@ -1820,21 +1892,25 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
         return;
       }
 
-      simulateNetwork(resolve, {
-        '/content/strings/example.yaml': {
-          title: 'example',
-          foo: {
-            bar: '42',
+      simulateNetwork(
+        resolve,
+        {
+          '/content/strings/example.yaml': {
+            title: 'example',
+            foo: {
+              bar: '42',
+            },
           },
-        },
-        '/content/strings/foobar.yaml': {
-          title: 'foobar',
-          bar: 'anything',
-          lorem: `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          '/content/strings/foobar.yaml': {
+            title: 'foobar',
+            bar: 'anything',
+            lorem: `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
             doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
             veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+          },
         },
-      });
+        this.options?.noNetworkSimulation
+      );
     });
   }
 }

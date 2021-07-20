@@ -48,7 +48,7 @@ COPY ./website/tsconfig.json ./website/tsconfig.json
 RUN yarn run compile
 
 # Having issues with git symlinks to generated files.
-RUN echo "" \
+RUN echo "Copying symlinked files that do not register correctly." \
   # && cp ./dist/css/server/editor.css ./website/static/ \
   && cp ./dist/server/app.* ./website/static/ \
   && cp ./dist/server/gh.callback.min.js ./website/static/

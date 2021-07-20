@@ -1,5 +1,32 @@
 # Changelog
 
+## [3.3.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.1...v3.3.0) (2021-07-20)
+
+
+### Features
+
+* dark/light mode toggle ([#102](https://www.github.com/blinkk/editor.dev-ui/issues/102)) ([79812bb](https://www.github.com/blinkk/editor.dev-ui/commit/79812bb1f3be1f13956a8be5b4eb2c3edba80d4b))
+* recent file list for the empty editor state. ([#104](https://www.github.com/blinkk/editor.dev-ui/issues/104)) ([19bc23a](https://www.github.com/blinkk/editor.dev-ui/commit/19bc23aed9b25862a0a465135481964898b94408))
+* recent workspaces list on dashboard ([#107](https://www.github.com/blinkk/editor.dev-ui/issues/107)) ([5d7116a](https://www.github.com/blinkk/editor.dev-ui/commit/5d7116a39dc7da94e174c9463e8623fbc1b24a22))
+* screenshot generation for docs ([#113](https://www.github.com/blinkk/editor.dev-ui/issues/113)) ([79f5f0b](https://www.github.com/blinkk/editor.dev-ui/commit/79f5f0b43dd8b881a486472d24be66487f193625))
+* website dark mode ([ffbf4b5](https://www.github.com/blinkk/editor.dev-ui/commit/ffbf4b51765c81f15592a08abb6a94d5b6ad0948))
+
+
+### Bug Fixes
+
+* absolute paths for preview server config ([0a8a755](https://www.github.com/blinkk/editor.dev-ui/commit/0a8a7550c71f65f69b5c3569ae43a909f42c14e2))
+* auto field guessing for specific project types ([#105](https://www.github.com/blinkk/editor.dev-ui/issues/105)) ([5e0a7bb](https://www.github.com/blinkk/editor.dev-ui/commit/5e0a7bb2564fb48e9a872c63cf2122ca6f4af398)), closes [#95](https://www.github.com/blinkk/editor.dev-ui/issues/95)
+* cleanup the menu list item coloring and variables ([#101](https://www.github.com/blinkk/editor.dev-ui/issues/101)) ([3ca4816](https://www.github.com/blinkk/editor.dev-ui/commit/3ca4816a68a4a2f6cce8627439203fea3b344fb9))
+* constant preview pane and loading status ([#99](https://www.github.com/blinkk/editor.dev-ui/issues/99)) ([7b9a970](https://www.github.com/blinkk/editor.dev-ui/commit/7b9a970e8f674c54ff2d6bd5dbc054f51253f4fd))
+* fix font issue with website ([0da8700](https://www.github.com/blinkk/editor.dev-ui/commit/0da8700f5307e94ea01ec72c8ab69703e0979f90))
+* fix issue with cursor style and nested labels ([4800424](https://www.github.com/blinkk/editor.dev-ui/commit/4800424396d7e3786e0f514d2af0eeffe3c9b56d))
+* fix the font stack [#114](https://www.github.com/blinkk/editor.dev-ui/issues/114) ([9279b6d](https://www.github.com/blinkk/editor.dev-ui/commit/9279b6de5ea4159e65a39298ef949bb312b3b6a6))
+* improve legibility of ui type ([6ae951b](https://www.github.com/blinkk/editor.dev-ui/commit/6ae951b888fe1946358540e2b5397290b36312af))
+* improved styling for onboarding to use grid boxes ([bc5535b](https://www.github.com/blinkk/editor.dev-ui/commit/bc5535b86490c215ba028b9bb66fbe2e691a518a))
+* missing preview config handled outside default handler ([#109](https://www.github.com/blinkk/editor.dev-ui/issues/109)) ([f261161](https://www.github.com/blinkk/editor.dev-ui/commit/f261161b21a220c26f4a1cd41617103ed43fbaf3)), closes [#106](https://www.github.com/blinkk/editor.dev-ui/issues/106)
+* separate messaging for missing preview config ([4013084](https://www.github.com/blinkk/editor.dev-ui/commit/40130848a7168ce7121b3573c7090b4a339b9e46))
+* title for truncated files in the site menu ([7860f13](https://www.github.com/blinkk/editor.dev-ui/commit/7860f1328b87b39ec44f3b282f501a6107b5f79e))
+
 ### [3.2.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.0...v3.2.1) (2021-07-12)
 
 

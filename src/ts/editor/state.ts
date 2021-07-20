@@ -442,6 +442,7 @@ export class EditorState extends ListenersMixin(Base) {
           }
 
           console.error('Unable to load preview server config');
+          console.error(err);
           this.previewConfig = null;
           this.render();
         });

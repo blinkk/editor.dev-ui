@@ -647,6 +647,17 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the workspace from the api.
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
+
+        // Reload the files if loaded.
+        if (this.files) {
+          this.getFiles();
+        }
+
+        // Reload the open file after the workspace switch.
+        if (this.file?.file) {
+          this.getFile(this.file.file);
+        }
+
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })

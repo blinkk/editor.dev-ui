@@ -96,13 +96,6 @@ export class ContentPart extends BasePart implements Part {
         storage: this.config.storage,
       }),
     };
-
-    // Watch for a load file event and load the file.
-    document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
-      const customEvent: CustomEvent = evt as CustomEvent;
-      this.config.state.getFile(customEvent.detail as FileData);
-      this.render();
-    });
   }
 
   classesForPart(): Record<string, boolean> {

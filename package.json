@@ -64,7 +64,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/marked": "^2.0.4",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^16.4.0",
+    "@types/node": "^16.4.1",
     "@types/nunjucks": "^3.1.5",
     "@types/quill": "^2.0.9",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
@@ -92,7 +92,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^2.0.1",
+    "@blinkk/selective-edit": "^2.0.3",
     "@toast-ui/editor": "^2.5.3",
     "bent": "^7.3.12",
     "codemirror": "^5.62.2",

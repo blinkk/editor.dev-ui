@@ -46,12 +46,9 @@ export class OverviewPart extends BasePart implements Part {
     fields: Array<FieldConfig>
   ): FormDialogModal {
     if (!editor.parts.modals.modals[MODAL_KEY_PUBLISH]) {
-      const selectiveConfig = merge(
-        {
-          fields: fields,
-        },
-        editor.config.selectiveConfig
-      );
+      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
+        fields: fields,
+      });
       const modal = new FormDialogModal({
         title: editor.config.labels?.publishModalTitle || 'Publish',
         selectiveConfig: selectiveConfig,

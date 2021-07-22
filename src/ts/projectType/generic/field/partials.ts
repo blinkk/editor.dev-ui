@@ -159,27 +159,24 @@ export class GenericPartialsField
         });
       }
 
-      const selectiveConfig = merge(
-        {
-          fields: [
-            {
-              type: 'radio',
-              key: 'partial',
-              label: this.config.partialLabel || 'Partial',
-              help: this.config.partialHelpLabel || 'Choose a partial to add.',
-              options: options,
-              validation: [
-                {
-                  type: 'require',
-                  message:
-                    this.config.partialRequireLabel || 'Partial is required.',
-                },
-              ],
-            },
-          ],
-        },
-        editor.config.selectiveConfig
-      );
+      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
+        fields: [
+          {
+            type: 'radio',
+            key: 'partial',
+            label: this.config.partialLabel || 'Partial',
+            help: this.config.partialHelpLabel || 'Choose a partial to add.',
+            options: options,
+            validation: [
+              {
+                type: 'require',
+                message:
+                  this.config.partialRequireLabel || 'Partial is required.',
+              },
+            ],
+          },
+        ],
+      });
       const modal = new FormDialogModal({
         title: this.config.addLabel || 'Add partial',
         selectiveConfig: selectiveConfig,

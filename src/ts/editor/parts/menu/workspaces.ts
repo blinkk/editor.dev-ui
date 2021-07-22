@@ -52,52 +52,49 @@ export class WorkspacesPart extends MenuSectionPart {
         });
       }
 
-      const selectiveConfig = merge(
-        {
-          fields: [
-            {
-              type: 'radio',
-              key: 'base',
-              label: 'Parent workspace',
-              help: 'Workspace to start the new workspace from.',
-              options: options,
-              validation: [
-                {
-                  type: 'require',
-                  message: 'Parent workspace is required.',
-                },
-              ],
-            },
-            {
-              type: 'text',
-              key: 'workspace',
-              label: 'New workspace name',
-              help: 'Used for the workspace url and the git branch.',
-              validation: [
-                {
-                  type: 'require',
-                  message: 'Workspace name is required.',
-                },
-                {
-                  type: 'pattern',
-                  pattern: '^[a-z0-9-]*$',
+      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
+        fields: [
+          {
+            type: 'radio',
+            key: 'base',
+            label: 'Parent workspace',
+            help: 'Workspace to start the new workspace from.',
+            options: options,
+            validation: [
+              {
+                type: 'require',
+                message: 'Parent workspace is required.',
+              },
+            ],
+          },
+          {
+            type: 'text',
+            key: 'workspace',
+            label: 'New workspace name',
+            help: 'Used for the workspace url and the git branch.',
+            validation: [
+              {
+                type: 'require',
+                message: 'Workspace name is required.',
+              },
+              {
+                type: 'pattern',
+                pattern: '^[a-z0-9-]*$',
+                message:
+                  'Workspace name can only contain lowercase alpha-numeric characters and - (dash).',
+              },
+              {
+                type: 'match',
+                excluded: {
+                  values: ['main', 'master', 'staging'],
                   message:
-                    'Workspace name can only contain lowercase alpha-numeric characters and - (dash).',
+                    'Workspace name cannot be "main", "master", or "staging".',
                 },
-                {
-                  type: 'match',
-                  excluded: {
-                    values: ['main', 'master', 'staging'],
-                    message:
-                      'Workspace name cannot be "main", "master", or "staging".',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        editor.config.selectiveConfig
-      );
+              },
+            ],
+          },
+        ],
+      });
       const modal = new FormDialogModal({
         title: 'New workspace',
         selectiveConfig: selectiveConfig,

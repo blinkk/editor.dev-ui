@@ -20,6 +20,7 @@ import {
   VariantField,
 } from '@blinkk/selective-edit';
 import {AmagakiDocumentField} from '../projectType/amagaki/field/document';
+import {AmagakiPartialsField} from '../projectType/amagaki/field/partials';
 import {AmagakiStaticField} from '../projectType/amagaki/field/static';
 import {AmagakiStringField} from '../projectType/amagaki/field/string';
 import {AmagakiYamlField} from '../projectType/amagaki/field/yaml';
@@ -29,6 +30,7 @@ import {ExampleApi} from './exampleApi';
 import {ExampleFieldField} from './field/exampleField';
 import {ExampleTool} from './exampleTool';
 import {GrowDocumentField} from '../projectType/grow/field/document';
+import {GrowPartialsField} from '../projectType/grow/field/partials';
 import {GrowStaticField} from '../projectType/grow/field/static';
 import {GrowStringField} from '../projectType/grow/field/string';
 import {GrowYamlField} from '../projectType/grow/field/yaml';
@@ -57,6 +59,7 @@ const exampleEditor = new LiveEditor(
     selectiveConfig: {
       fieldTypes: {
         amagakiDocument: AmagakiDocumentField as unknown as FieldConstructor,
+        amagakiPartials: AmagakiPartialsField as unknown as FieldConstructor,
         amagakiStatic: AmagakiStaticField as unknown as FieldConstructor,
         amagakiString: AmagakiStringField as unknown as FieldConstructor,
         amagakiYaml: AmagakiYamlField as unknown as FieldConstructor,
@@ -69,6 +72,7 @@ const exampleEditor = new LiveEditor(
         exampleField: ExampleFieldField as unknown as FieldConstructor,
         group: GroupField as unknown as FieldConstructor,
         growDocument: GrowDocumentField as unknown as FieldConstructor,
+        growPartials: GrowPartialsField as unknown as FieldConstructor,
         growStatic: GrowStaticField as unknown as FieldConstructor,
         growString: GrowStringField as unknown as FieldConstructor,
         growYaml: GrowYamlField as unknown as FieldConstructor,

@@ -1,5 +1,6 @@
 import {
   ApiError,
+  ApiErrorCode,
   DeviceData,
   EditorFileData,
   EditorPreviewSettings,
@@ -47,13 +48,13 @@ export class EditorState extends ListenersMixin(Base) {
    */
   api: LiveEditorApiComponent;
   /**
-   * Keep track of backlogged callbacks.
-   */
-  protected callbacks: Record<string, Set<(...value: any) => void>>;
-  /**
    * Array of devices supported for previews.
    */
   devices?: Array<DeviceData>;
+  /**
+   * Keep track of backlogged error callbacks.
+   */
+  protected errorCallbacks: Record<string, Set<(...value: any) => void>>;
   /**
    * Editor experiments mangager.
    */
@@ -68,8 +69,10 @@ export class EditorState extends ListenersMixin(Base) {
   files?: Array<FileData>;
   /**
    * Editor file loaded in the editor.
+   *
+   * Value is null when the file is not found.
    */
-  file?: EditorFileData;
+  file?: EditorFileData | null;
   /**
    * Path being actively loaded.
    *
@@ -111,6 +114,10 @@ export class EditorState extends ListenersMixin(Base) {
   site?: SiteData;
   protected storage: DataStorage;
   /**
+   * Keep track of backlogged success callbacks.
+   */
+  protected successCallbacks: Record<string, Set<(...value: any) => void>>;
+  /**
    * Users in the project that have access to the editor.
    */
   users?: Array<UserData>;
@@ -127,7 +134,8 @@ export class EditorState extends ListenersMixin(Base) {
     super();
     this.api = api;
     this.promises = {};
-    this.callbacks = {};
+    this.errorCallbacks = {};
+    this.successCallbacks = {};
     this.storage = new LocalDataStorage();
 
     // Features are on by default.
@@ -159,7 +167,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.CopyFile;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     this.api
       .copyFile(originalPath, path)
       .then(data => {
@@ -172,7 +180,9 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   createFile(
@@ -181,7 +191,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.CreateFile;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     this.api
       .createFile(path)
       .then(data => {
@@ -193,7 +203,9 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   createWorkspace(
@@ -203,7 +215,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.CreateWorkspace;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     this.api
       .createWorkspace(base, workspace)
       .then(data => {
@@ -211,7 +223,9 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the workspaces.
         this.getWorkspaces();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   /**
@@ -222,13 +236,21 @@ export class EditorState extends ListenersMixin(Base) {
    * @param promiseKey Key to identify the stored promise.
    * @param callback Callback after the promise is completed.
    */
-  protected delayCallback(promiseKey: string, callback?: (value: any) => void) {
-    if (!callback) {
-      return;
+  protected delayCallbacks(
+    promiseKey: string,
+    callback?: (value: any) => void,
+    errorCallback?: (value: any) => void
+  ) {
+    if (callback) {
+      this.successCallbacks[promiseKey] =
+        this.successCallbacks[promiseKey] ?? new Set();
+      this.successCallbacks[promiseKey].add(callback);
     }
-
-    this.callbacks[promiseKey] = this.callbacks[promiseKey] ?? new Set();
-    this.callbacks[promiseKey].add(callback);
+    if (errorCallback) {
+      this.errorCallbacks[promiseKey] =
+        this.errorCallbacks[promiseKey] ?? new Set();
+      this.errorCallbacks[promiseKey].add(errorCallback);
+    }
   }
 
   deleteFile(
@@ -237,7 +259,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.DeleteFile;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
 
     this.api
       .deleteFile(file)
@@ -250,7 +272,9 @@ export class EditorState extends ListenersMixin(Base) {
         // Reload the files.
         this.getFiles();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   /**
@@ -327,7 +351,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<DeviceData> | undefined {
     const promiseKey = StatePromiseKeys.GetDevices;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -343,7 +367,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, this.devices);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
     return this.devices;
   }
 
@@ -353,7 +379,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): EditorFileData | undefined {
     const promiseKey = StatePromiseKeys.GetFile;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -379,7 +405,14 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) => {
+        if (error.errorCode === ApiErrorCode.FileNotFound) {
+          this.file = null;
+          this.handleErrorAndCleanup(promiseKey, error, true);
+        } else {
+          this.handleErrorAndCleanup(promiseKey, error);
+        }
+      });
 
     // Unset the existing file since it is 'unloaded'.
     this.file = undefined;
@@ -395,7 +428,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<FileData> | undefined {
     const promiseKey = StatePromiseKeys.GetFiles;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -406,7 +439,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
     return this.files;
   }
 
@@ -415,7 +450,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): PreviewSettings | null | undefined {
     const promiseKey = StatePromiseKeys.GetPreviewConfig;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -433,17 +468,10 @@ export class EditorState extends ListenersMixin(Base) {
       this.promises[promiseKey] = this.api
         .getPreviewConfig(project.preview as EditorPreviewSettings, workspace)
         .then(handlePreviewSettings)
-        .catch((err: Error) => {
-          if (callbackError) {
-            callbackError({
-              message: err.toString(),
-              details: err,
-            });
-          }
-
+        .catch((error: ApiError) => {
           console.error('Unable to load preview server config');
-          console.error(err);
           this.previewConfig = null;
+          this.handleErrorAndCleanup(promiseKey, error, true);
           this.render();
         });
     };
@@ -485,7 +513,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): ProjectData | undefined {
     const promiseKey = StatePromiseKeys.GetProject;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -511,7 +539,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, this.project);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
     return this.project;
   }
 
@@ -520,7 +550,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): WorkspaceData | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspace;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -531,7 +561,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
     return this.workspace;
   }
 
@@ -540,7 +572,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ): Array<WorkspaceData> | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspaces;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -551,26 +583,44 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
     return this.workspaces;
   }
 
   /**
    * After a promise is completed handle the cleanup and trigger
    * listeners and callbacks appropriately.
-   *
-   * @param promiseKey Key to identify the promise.
-   * @param callback Optional callback for when the process is completed.
-   * @param values Data to be passed along for the promise results.
    */
   protected handleDataAndCleanup(promiseKey: string, ...values: any) {
     delete this.promises[promiseKey];
-    const callbacks = this.callbacks[promiseKey] ?? new Set();
-    delete this.callbacks[promiseKey];
+    const callbacks = this.successCallbacks[promiseKey] ?? new Set();
+    delete this.successCallbacks[promiseKey];
     for (const callback of callbacks) {
       callback(...values);
     }
     this.triggerListener(promiseKey, ...values);
+  }
+
+  /**
+   * After a promise fails handle the cleanup and trigger
+   * listeners and callbacks appropriately.
+   */
+  protected handleErrorAndCleanup(
+    promiseKey: string,
+    error: ApiError,
+    preventDefaultHandling?: boolean
+  ) {
+    delete this.promises[promiseKey];
+    const callbacks = this.errorCallbacks[promiseKey] ?? new Set();
+    delete this.errorCallbacks[promiseKey];
+    for (const callback of callbacks) {
+      callback(error);
+    }
+    if (!preventDefaultHandling) {
+      catchError(error);
+    }
   }
 
   /**
@@ -588,7 +638,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.LoadWorkspace;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     this.api
       .loadWorkspace(workspace)
       .then((data: WorkspaceData) => {
@@ -600,7 +650,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   publish(
@@ -610,7 +662,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.Publish;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     this.api
       .publish(workspace, data)
       .then((result: PublishResult) => {
@@ -621,7 +673,9 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, result);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   /**
@@ -638,7 +692,7 @@ export class EditorState extends ListenersMixin(Base) {
     callbackError?: (error: ApiError) => void
   ) {
     const promiseKey = StatePromiseKeys.SaveFile;
-    this.delayCallback(promiseKey, callback);
+    this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
       return;
     }
@@ -660,7 +714,9 @@ export class EditorState extends ListenersMixin(Base) {
         document.dispatchEvent(new CustomEvent(EVENT_FILE_SAVE_COMPLETE));
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   /**

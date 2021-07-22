@@ -645,6 +645,15 @@ export interface ApiError extends EditorNotification {
    * or debugging of the error.
    */
   details?: any;
+  /**
+   * Code for what error is being returned.
+   */
+  errorCode?: ApiErrorCode;
+}
+
+export enum ApiErrorCode {
+  FileNotFound = 'FileNotFound',
+  WorkspaceNotFound = 'WorkspaceNotFound',
 }
 
 /**

@@ -1,6 +1,7 @@
 import {
   AmagakiProjectTypeApi,
   ApiError,
+  ApiErrorCode,
   ApiProjectTypes,
   DeviceData,
   EditorFileData,
@@ -1513,6 +1514,23 @@ export class ExampleApi implements LiveEditorApiComponent {
         reject({
           message: 'Failed to load the file.',
           description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // If file does not 'exist', return error for missing file.
+      let fileExists = false;
+      for (const currentFile of currentFileset) {
+        if (currentFile.path === file.path) {
+          fileExists = true;
+          break;
+        }
+      }
+      if (!fileExists) {
+        reject({
+          message: `File not found: ${file.path}.`,
+          description: 'Example does not have information about the file.',
+          errorCode: ApiErrorCode.FileNotFound,
         } as ApiError);
         return;
       }

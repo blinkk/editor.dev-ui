@@ -122,11 +122,27 @@ export class DashboardPart extends BasePart implements Part {
         <code>${editor.state.loadingFilePath || 'file'}</code>...
       </div>`);
     } else {
+      subParts.push(this.templateFileNotFound(editor));
       subParts.push(this.templateRecentFiles(editor));
       subParts.push(this.templateRecentWorkspaces(editor));
     }
     return html`<div class=${classMap(this.classesForPart())}>
       ${subParts}
+    </div>`;
+  }
+
+  templateFileNotFound(editor: LiveEditor): TemplateResult {
+    if (editor.state.file !== null) {
+      return html``;
+    }
+
+    const message = editor.state.loadingFilePath
+      ? html`Unable to load the file:
+          <code>${editor.state.loadingFilePath}</code>`
+      : 'Unable to load the file, it was not found.';
+    return html` <div class="le__part__dashboard__not_found">
+      <div><span class="material-icons">warning</span></div>
+      <div>${message}</div>
     </div>`;
   }
 

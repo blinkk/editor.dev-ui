@@ -1,8 +1,9 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
-import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
+import {EVENT_SAVE} from '../../events';
 import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
+import {StatePromiseKeys} from '../../state';
 import merge from 'lodash.merge';
 
 export class FieldsPart extends ContentSectionPart {
@@ -14,9 +15,15 @@ export class FieldsPart extends ContentSectionPart {
 
     this.loadEditorConfig();
 
-    document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
-      this.loadEditorConfig();
-    });
+    this.config.state.addListener(
+      StatePromiseKeys.GetFile,
+      (file?: EditorFileData) => {
+        if (file) {
+          this.selective.data = file.data || {};
+          this.loadEditorConfig();
+        }
+      }
+    );
 
     document.addEventListener(EVENT_SAVE, (evt: Event) => {
       // If the section is not visible, then disregard the event.
@@ -52,10 +59,16 @@ export class FieldsPart extends ContentSectionPart {
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file?.data || {});
     this.selective.resetFields();
-    // TODO: Auto guess fields if not field configuration is defined.
-    for (const fieldConfig of this.config.state.file?.editor?.fields || []) {
-      this.selective.fields.addField(fieldConfig);
+
+    const fields = this.config.state.file?.editor?.fields || [];
+    if (!fields.length) {
+      this.selective.guessFields();
+    } else {
+      for (const fieldConfig of fields) {
+        this.selective.fields.addField(fieldConfig);
+      }
     }
+
     this.render();
   }
 

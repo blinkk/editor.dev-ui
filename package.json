@@ -92,7 +92,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^2.0.0",
+    "@blinkk/selective-edit": "^2.0.1",
     "@toast-ui/editor": "^2.5.3",
     "bent": "^7.3.12",
     "codemirror": "^5.62.2",

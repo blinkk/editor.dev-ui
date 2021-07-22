@@ -169,6 +169,15 @@ const DEFAULT_EDITOR_FILE: EditorFileData = {
 };
 
 const fullFiles: Record<string, EditorFileData> = {
+  '/content/pages/auto-guess.yaml': {
+    data: {
+      title: 'Testing',
+    },
+    dataRaw: 'title: Testing',
+    file: {
+      path: '/content/pages/auto-guess.yaml',
+    },
+  },
   '/example/html.yaml': {
     editor: {
       fields: [

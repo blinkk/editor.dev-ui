@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.4.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.3.0...v3.4.0) (2021-07-22)
+
+
+### Features
+
+* api error codes for common errors that the UI can handle ([bfd4eb9](https://www.github.com/blinkk/editor.dev-ui/commit/bfd4eb975f159e3e1ce849d5b05f024810e44c16)), closes [#108](https://www.github.com/blinkk/editor.dev-ui/issues/108)
+* auto guess fields when no editor config available ([#121](https://www.github.com/blinkk/editor.dev-ui/issues/121)) ([50f0666](https://www.github.com/blinkk/editor.dev-ui/commit/50f06660605e6f307f53447b9e3c712b9ab8b3e3))
+
+
+### Bug Fixes
+
+* add partial not being passed correct state ([#117](https://www.github.com/blinkk/editor.dev-ui/issues/117)) ([cab0cf7](https://www.github.com/blinkk/editor.dev-ui/commit/cab0cf7449e298396aeff47b441816f5e0e427f5)), closes [#116](https://www.github.com/blinkk/editor.dev-ui/issues/116)
+* reload files and file on workspace change ([#123](https://www.github.com/blinkk/editor.dev-ui/issues/123)) ([a1c5331](https://www.github.com/blinkk/editor.dev-ui/commit/a1c53318ee232cec7a982e808f9cf38b7598693d)), closes [#111](https://www.github.com/blinkk/editor.dev-ui/issues/111)
+
 ## [3.3.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.1...v3.3.0) (2021-07-20)
 
 

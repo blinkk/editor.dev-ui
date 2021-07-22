@@ -7,6 +7,7 @@ import {
 import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
 import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
+import {StatePromiseKeys} from '../../state';
 
 const EXTENSIONS_DATA_ONLY: Array<string> = ['yaml', 'yml'];
 const RAW_FIELD_CONTENT: TextAreaFieldConfig = {
@@ -31,9 +32,15 @@ export class RawPart extends ContentSectionPart {
 
     this.loadEditorConfig();
 
-    document.addEventListener(EVENT_FILE_LOAD_COMPLETE, () => {
-      this.loadEditorConfig();
-    });
+    this.config.state.addListener(
+      StatePromiseKeys.GetFile,
+      (file?: EditorFileData) => {
+        if (file) {
+          this.selective.data = file.data || {};
+          this.loadEditorConfig();
+        }
+      }
+    );
 
     document.addEventListener(EVENT_SAVE, (evt: Event) => {
       // If the section is not visible, then disregard the event.
@@ -68,7 +75,6 @@ export class RawPart extends ContentSectionPart {
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file || {});
     this.selective.data = this.data;
-    this.selective.resetFields();
 
     const extension = this.config.state.file?.file.path.split('.').pop() || '';
     if (EXTENSIONS_DATA_ONLY.includes(extension)) {

@@ -12,14 +12,12 @@ export class FieldsPart extends ContentSectionPart {
   constructor(config: ContentSectionPartConfig) {
     super(config);
     this.data = new DeepObject();
-
     this.loadEditorConfig();
 
     this.config.state.addListener(
       StatePromiseKeys.GetFile,
       (file?: EditorFileData) => {
         if (file) {
-          this.selective.data = file.data || {};
           this.loadEditorConfig();
         }
       }
@@ -58,6 +56,7 @@ export class FieldsPart extends ContentSectionPart {
 
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file?.data || {});
+    this.selective.data = this.data;
 
     const fields = this.config.state.file?.editor?.fields || [];
     if (!fields.length) {

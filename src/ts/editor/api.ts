@@ -648,7 +648,7 @@ export interface ApiError extends EditorNotification {
   /**
    * Code for what error is being returned.
    */
-  errorCode?: ApiErrorCode;
+  errorCode?: ApiErrorCode | string;
 }
 
 export enum ApiErrorCode {

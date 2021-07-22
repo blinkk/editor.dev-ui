@@ -40,6 +40,7 @@ import {AmagakiStringConfig} from '../projectType/amagaki/field/string';
 import {AmagakiYamlConfig} from '../projectType/amagaki/field/yaml';
 import {AsideFieldConfig} from '../editor/field/aside';
 import {ExampleFieldConfig} from './field/exampleField';
+import {GenericPartialsFieldConfig} from '../projectType/generic/field/partials';
 import {GrowDocumentConfig} from '../projectType/grow/field/document';
 import {GrowStaticConfig} from '../projectType/grow/field/static';
 import {GrowStringConfig} from '../projectType/grow/field/string';
@@ -178,7 +179,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -198,7 +199,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -218,7 +219,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_html.htmlfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_html.htmlfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -359,7 +360,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -379,7 +380,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -399,7 +400,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_markdown.markdownfieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -430,7 +431,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -465,7 +466,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -529,7 +530,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -548,7 +549,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_media.mediafieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_media.mediafieldconfig.html',
             },
             {
               label: 'Generic config interface',
@@ -913,7 +914,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/editor_field_aside.asidefieldconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/editor_field_aside.asidefieldconfig.html',
             },
           ],
           field: {
@@ -940,7 +941,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_amagaki_field_document.amagakidocumentconfig.html',
             },
           ],
           field: {
@@ -963,6 +964,44 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/amagaki/partials.yaml': {
+    data: {
+      partials: [],
+    },
+    editor: {
+      fields: [
+        // Amagaki partials examples.
+        {
+          type: 'exampleField',
+          key: 'partials',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_generic_field_partials.genericpartialsfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'amagakiPartials',
+            key: 'partials',
+            label: 'Amagaki partials',
+            validation: [
+              {
+                type: 'length',
+                min: {
+                  value: 1,
+                },
+                max: {value: 5},
+              } as LengthRuleConfig,
+            ],
+          } as GenericPartialsFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/amagaki/partials.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/amagaki/static.yaml': {
     editor: {
       fields: [
@@ -973,7 +1012,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_amagaki_field_static.amagakistaticconfig.html',
             },
           ],
           field: {
@@ -1000,7 +1039,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_amagaki_field_string.amagakistringconfig.html',
             },
           ],
           field: {
@@ -1027,7 +1066,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_amagaki_field_yaml.amagakiyamlconfig.html',
             },
           ],
           field: {
@@ -1054,7 +1093,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_grow_field_document.growdocumentconfig.html',
             },
           ],
           field: {
@@ -1077,6 +1116,44 @@ const fullFiles: Record<string, EditorFileData> = {
     },
     url: 'preview.html',
   },
+  '/example/grow/partials.yaml': {
+    data: {
+      partials: [],
+    },
+    editor: {
+      fields: [
+        // Grow partials examples.
+        {
+          type: 'exampleField',
+          key: 'partials',
+          docUrls: [
+            {
+              label: 'Config interface',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_generic_field_partials.genericpartialsfieldconfig.html',
+            },
+          ],
+          field: {
+            type: 'growPartials',
+            key: 'partials',
+            label: 'Grow partials',
+            validation: [
+              {
+                type: 'length',
+                min: {
+                  value: 1,
+                },
+                max: {value: 5},
+              } as LengthRuleConfig,
+            ],
+          } as GenericPartialsFieldConfig,
+        } as ExampleFieldConfig,
+      ],
+    },
+    file: {
+      path: '/example/grow/partials.yaml',
+    },
+    url: 'preview.html',
+  },
   '/example/grow/static.yaml': {
     editor: {
       fields: [
@@ -1087,7 +1164,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_static.growstaticconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_grow_field_static.growstaticconfig.html',
             },
           ],
           field: {
@@ -1120,7 +1197,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_string.growstringconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_grow_field_string.growstringconfig.html',
             },
           ],
           field: {
@@ -1147,7 +1224,7 @@ const fullFiles: Record<string, EditorFileData> = {
           docUrls: [
             {
               label: 'Config interface',
-              url: 'https://blinkk.github.io/editor.dev-ui/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
+              url: 'https://editor.dev/api/ui/interfaces/projecttype_grow_field_yaml.growyamlconfig.html',
             },
           ],
           field: {
@@ -1832,7 +1909,19 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
           example: {
             partial: 'example',
             editor: {
-              fields: [],
+              fields: [
+                {
+                  type: 'text',
+                  key: 'text',
+                  label: 'Title',
+                  validation: [
+                    {
+                      type: 'require',
+                      message: 'Title is required.',
+                    },
+                  ],
+                } as TextFieldConfig,
+              ],
             },
           } as PartialData,
         },
@@ -1870,7 +1959,19 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
           example: {
             partial: 'example',
             editor: {
-              fields: [],
+              fields: [
+                {
+                  type: 'text',
+                  key: 'text',
+                  label: 'Title',
+                  validation: [
+                    {
+                      type: 'require',
+                      message: 'Title is required.',
+                    },
+                  ],
+                } as TextFieldConfig,
+              ],
             },
           } as PartialData,
         },

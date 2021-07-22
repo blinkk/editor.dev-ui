@@ -18,7 +18,6 @@ import {
 } from '@blinkk/selective-edit/dist/selective/field/list';
 import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
-import {EditorState} from '../../../editor/state';
 import {PartialData} from '../../../editor/api';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 import merge from 'lodash.merge';
@@ -47,7 +46,6 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
    * Required message when adding a partial.
    */
   partialRequireLabel?: string;
-  state: EditorState;
 }
 
 export interface GenericPartialsFieldComponent {
@@ -185,7 +183,7 @@ export class GenericPartialsField
       const modal = new FormDialogModal({
         title: this.config.addLabel || 'Add partial',
         selectiveConfig: selectiveConfig,
-        state: this.config.state,
+        state: this.globalConfig.state,
       });
 
       // Show an error when there are no partial configs for the editor.

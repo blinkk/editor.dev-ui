@@ -58,12 +58,12 @@ export class FieldsPart extends ContentSectionPart {
 
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file?.data || {});
-    this.selective.resetFields();
 
     const fields = this.config.state.file?.editor?.fields || [];
     if (!fields.length) {
       this.selective.guessFields();
     } else {
+      this.selective.fields.reset();
       for (const fieldConfig of fields) {
         this.selective.fields.addField(fieldConfig);
       }

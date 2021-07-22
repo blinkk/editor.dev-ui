@@ -19,6 +19,8 @@ import {
 } from './api';
 import {DataStorage, LocalDataStorage} from '../utility/dataStorage';
 import {
+  EVENT_FILE_CREATE,
+  EVENT_FILE_LOAD,
   EVENT_FILE_LOAD_COMPLETE,
   EVENT_FILE_SAVE_COMPLETE,
   EVENT_RENDER,
@@ -30,6 +32,7 @@ import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {ProjectTypeComponent} from '../projectType/projectType';
+import {announceNotification} from './parts/notifications';
 import {interpolatePreviewBaseUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;
@@ -158,6 +161,20 @@ export class EditorState extends ListenersMixin(Base) {
       window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.scheme = this.storage.getItem(STORAGE_SCHEME) || '';
+
+    // Listen for file creation events.
+    document.addEventListener(EVENT_FILE_CREATE, (evt: Event) => {
+      const customEvent: CustomEvent = evt as CustomEvent;
+      this.createFile(customEvent.detail.path);
+      this.render();
+    });
+
+    // Listen for a load file event and load the file.
+    document.addEventListener(EVENT_FILE_LOAD, (evt: Event) => {
+      const customEvent: CustomEvent = evt as CustomEvent;
+      this.getFile(customEvent.detail as FileData);
+      this.render();
+    });
   }
 
   copyFile(
@@ -408,6 +425,17 @@ export class EditorState extends ListenersMixin(Base) {
       .catch((error: ApiError) => {
         if (error.errorCode === ApiErrorCode.FileNotFound) {
           this.file = null;
+
+          if (this.loadingFilePath) {
+            error.actions = error.actions ?? [];
+
+            error.actions.push({
+              label: 'Create as new file',
+              customEvent: EVENT_FILE_CREATE,
+              details: file,
+            });
+          }
+
           this.handleErrorAndCleanup(promiseKey, error, true);
         } else {
           this.handleErrorAndCleanup(promiseKey, error);
@@ -620,6 +648,8 @@ export class EditorState extends ListenersMixin(Base) {
     }
     if (!preventDefaultHandling) {
       catchError(error);
+    } else {
+      announceNotification(error);
     }
   }
 

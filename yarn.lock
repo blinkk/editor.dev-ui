@@ -208,10 +208,10 @@
     "@babel/helper-validator-identifier" "^7.14.8"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-2.0.1.tgz#53ecb3c7ff843654962b90198d86dc84f35bb7cb"
-  integrity sha512-m69WUfuS92fwTfoSNzIqzXp+Hn2N32li3LoiqGIAbWAL4jvnYBSo4zxLK22Hn8TtI5rCFwDkrX6fwsNR5o+gZA==
+"@blinkk/selective-edit@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-2.0.3.tgz#d3db522a2e1ea1549b193bc3da95aefae236b7e5"
+  integrity sha512-20DhOtL1RS83c/O28DJ5YwkK3RFbs+JWf8i4pIGo9qqG/65FchaxQIImwtx3AHirGqRfmjWW4eh71lDIK7ifaw==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.4.1"
@@ -474,10 +474,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
-"@types/node@*", "@types/node@^16.4.0":
-  version "16.4.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.0.tgz#2c219eaa3b8d1e4d04f4dd6e40bc68c7467d5272"
-  integrity sha512-HrJuE7Mlqcjj+00JqMWpZ3tY8w7EUd+S0U3L1+PQSWiXZbOgyQDvi+ogoUxaHApPJq5diKxYBQwA3iIlNcPqOg==
+"@types/node@*", "@types/node@^16.4.1":
+  version "16.4.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.1.tgz#9fad171a5b701613ee8a6f4ece3c88b1034b1b03"
+  integrity sha512-UW7cbLqf/Wu5XH2RKKY1cHwUNLicIDRLMraYKz+HHAerJ0ZffUEk+fMnd8qU2JaS6cAy0r8tsaf7yqHASf/Y0Q==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2078,9 +2078,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.723:
-  version "1.3.784"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.784.tgz#c370be79374b02b7f13e8a8fb0d7a02641161dac"
-  integrity sha512-JTPxdUibkefeomWNaYs8lI/x/Zb4cOhZWX+d7kpzsNKzUd07pNuo/AcHeNJ/qgEchxM1IAxda9aaGUhKN/poOg==
+  version "1.3.785"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.785.tgz#79f546c69a6be4f30913aaace361bc746f26df48"
+  integrity sha512-WmCgAeURsMFiyoJ646eUaJQ7GNfvMRLXo+GamUyKVNEM4MqTAsXyC0f38JEB4N3BtbD0tlAKozGP5E2T9K3YGg==
 
 emittery@^0.8.0:
   version "0.8.1"

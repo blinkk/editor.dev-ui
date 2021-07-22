@@ -11,6 +11,13 @@ export const EVENT_FILE_LOAD = 'live.file.load';
 export const EVENT_FILE_LOAD_COMPLETE = 'live.file.load.complete';
 
 /**
+ * Custom event name for creating a new file in the editor.
+ *
+ * Expects a {@link FileData} as the event details.
+ */
+export const EVENT_FILE_CREATE = 'live.file.create';
+
+/**
  * Custom event name for saveing a file in the editor.
  *
  * Expects a {@link FileData} as the event details.

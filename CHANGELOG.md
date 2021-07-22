@@ -1,5 +1,14 @@
 # Changelog
 
+### [3.4.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.0...v3.4.1) (2021-07-22)
+
+
+### Bug Fixes
+
+* action for creating missing file ([#126](https://www.github.com/blinkk/editor.dev-ui/issues/126)) ([1762d8c](https://www.github.com/blinkk/editor.dev-ui/commit/1762d8c53451b077b58a671c6e75c467c9b44048))
+* data contamination with fields and raw selective editors. ([8b8abee](https://www.github.com/blinkk/editor.dev-ui/commit/8b8abee0fb020076f1d469730229f598c2a9cccd)), closes [#125](https://www.github.com/blinkk/editor.dev-ui/issues/125)
+* refining how the selective fields are auto guessed. ([1762d8c](https://www.github.com/blinkk/editor.dev-ui/commit/1762d8c53451b077b58a671c6e75c467c9b44048))
+
 ## [3.4.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.3.0...v3.4.0) (2021-07-22)
 
 

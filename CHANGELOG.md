@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.3.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.3.0...v3.3.1) (2021-07-22)
+
+
+### Bug Fixes
+
+* add partial not being passed correct state ([#117](https://www.github.com/blinkk/editor.dev-ui/issues/117)) ([cab0cf7](https://www.github.com/blinkk/editor.dev-ui/commit/cab0cf7449e298396aeff47b441816f5e0e427f5)), closes [#116](https://www.github.com/blinkk/editor.dev-ui/issues/116)
+
 ## [3.3.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.2.1...v3.3.0) (2021-07-20)
 
 

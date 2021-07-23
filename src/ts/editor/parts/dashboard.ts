@@ -116,16 +116,11 @@ export class DashboardPart extends BasePart implements Part {
 
   template(editor: LiveEditor): TemplateResult {
     const subParts: Array<TemplateResult> = [];
-    if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
-      subParts.push(html`<div class="le__part__dashboard__loading">
-        ${templateLoading()} Loading
-        <code>${editor.state.loadingFilePath || 'file'}</code>...
-      </div>`);
-    } else {
-      subParts.push(this.templateFileNotFound(editor));
-      subParts.push(this.templateRecentFiles(editor));
-      subParts.push(this.templateRecentWorkspaces(editor));
-    }
+
+    subParts.push(this.templateFileNotFound(editor));
+    subParts.push(this.templateRecentFiles(editor));
+    subParts.push(this.templateRecentWorkspaces(editor));
+
     return html`<div class=${classMap(this.classesForPart())}>
       ${subParts}
     </div>`;

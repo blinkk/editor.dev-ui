@@ -12,15 +12,14 @@ import {ContentHeaderPart} from './content/header';
 import {ContentSectionPart} from './content/section';
 import {ContentToolbarPart} from './content/toolbar';
 import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../events';
-import {EditorState} from '../state';
+import {EditorState, StatePromiseKeys} from '../state';
 import {FieldsPart} from './content/sectionFields';
-import {FileData} from '../api';
 import {HistoryPart} from './content/sectionHistory';
 import {ListenersMixin} from '../../mixin/listeners';
 import {LiveEditor} from '../editor';
 // import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
+import {templateLoading} from '../template';
 
 const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
 const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';
@@ -109,10 +108,29 @@ export class ContentPart extends BasePart implements Part {
   }
 
   template(editor: LiveEditor): TemplateResult {
+    const subParts: Array<TemplateResult> = [];
+
+    subParts.push(this.parts.toolbar.template(editor));
+
+    if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
+      subParts.push(html`<div class="le__part__content__loading">
+        ${templateLoading(
+          {},
+          html`<div class="le__part__content__loading__status">
+            Loading
+            <code>${editor.state.loadingFilePath || 'file'}</code>
+          </div>`
+        )}
+      </div>`);
+    } else {
+      subParts.push(this.parts.header.template(editor));
+      subParts.push(this.templateSections(editor));
+    }
+
+    subParts.push(this.parts.footer.template(editor));
+
     return html`<div class=${classMap(this.classesForPart())}>
-      ${this.parts.toolbar.template(editor)}
-      ${this.parts.header.template(editor)} ${this.templateSections(editor)}
-      ${this.parts.footer.template(editor)}
+      ${subParts}
     </div>`;
   }
 

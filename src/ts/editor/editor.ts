@@ -222,7 +222,7 @@ export class LiveEditor {
   }
 
   templateContentStructure(editor: LiveEditor): TemplateResult {
-    if (!this.state.file) {
+    if (!this.state.file && !this.state.inProgress(StatePromiseKeys.GetFile)) {
       return this.parts.dashboard.template(editor);
     }
 

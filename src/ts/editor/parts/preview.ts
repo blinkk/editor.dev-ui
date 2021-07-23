@@ -2,7 +2,7 @@ import {BasePart, Part} from '.';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {DataStorage} from '../../utility/dataStorage';
 import {DeviceData} from '../api';
-import {EditorState} from '../state';
+import {EditorState, StatePromiseKeys} from '../state';
 import {LiveEditor} from '../editor';
 import {PreviewFramePart} from './preview/frame';
 import {PreviewToolbarPart} from './preview/toolbar';
@@ -61,8 +61,9 @@ export class PreviewPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
     const pieces: Array<TemplateResult> = [];
 
+    pieces.push(this.parts.toolbar.template(editor));
+
     if (this.config.state.file?.url) {
-      pieces.push(this.parts.toolbar.template(editor));
       pieces.push(
         this.parts.frame.template(
           editor,
@@ -83,14 +84,17 @@ export class PreviewPart extends BasePart implements Part {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewConfigLoading(editor: LiveEditor): TemplateResult {
-    return html`<div class="le__part__preview__message">
-      ${templateLoading()}
-      <div>Searching for file preview.</div>
-    </div>`;
+    return templateLoading({}, html`<div>Searching for file preview.</div>`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewNotAvailable(editor: LiveEditor): TemplateResult {
+    // When waiting for the file to load do not show anything
+    // since the file load is already showing.
+    if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
+      return html``;
+    }
+
     return html`<div class="le__part__preview__message">
       <div>
         Unable to find a preview for

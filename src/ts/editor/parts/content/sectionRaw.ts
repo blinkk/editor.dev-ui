@@ -4,7 +4,8 @@ import {
   TemplateResult,
   TextAreaFieldConfig,
 } from '@blinkk/selective-edit';
-import {EVENT_FILE_LOAD_COMPLETE, EVENT_SAVE} from '../../events';
+
+import {EVENT_SAVE} from '../../events';
 import {EditorFileData} from '../../api';
 import {LiveEditor} from '../../editor';
 import {StatePromiseKeys} from '../../state';
@@ -75,6 +76,7 @@ export class RawPart extends ContentSectionPart {
   loadEditorConfig() {
     this.data = new DeepObject(this.config.state.file || {});
     this.selective.data = this.data;
+    this.selective.fields.reset();
 
     const extension = this.config.state.file?.file.path.split('.').pop() || '';
     if (EXTENSIONS_DATA_ONLY.includes(extension)) {

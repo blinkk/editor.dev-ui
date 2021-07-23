@@ -55,7 +55,9 @@ export class ContentToolbarPart extends BasePart implements Part {
         ${findPreviewValue(
           this.config.state?.file?.data || {},
           [],
-          this.config.state.file?.file.path || ''
+          this.config.state.file?.file.path ||
+            this.config.state.loadingFilePath ||
+            'Loading…'
         )}
       </div>
       <div class="le__part__content__toolbar__icons">
@@ -81,11 +83,6 @@ export class ContentToolbarPart extends BasePart implements Part {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateExpanded(editor: LiveEditor): TemplateResult {
-    // If there is nothing to preview, do not need an expand button.
-    if (!editor.state.file?.url) {
-      return html``;
-    }
-
     return html`<div
       class="le__clickable le__tooltip--top"
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}

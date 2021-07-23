@@ -11,8 +11,8 @@ export class FieldsPart extends ContentSectionPart {
 
   constructor(config: ContentSectionPartConfig) {
     super(config);
-    this.loadEditorConfig();
     this.data = new DeepObject();
+    this.loadEditorConfig();
 
     this.config.state.addListener(
       StatePromiseKeys.GetFile,

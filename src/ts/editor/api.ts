@@ -479,6 +479,13 @@ export interface PartialEditorConfig {
    */
   fields: Array<FieldConfig>;
   /**
+   * Preview field key.
+   *
+   * When showing a preview of the partial, use this field key to determine
+   * the value to show for the preview.
+   */
+  previewField?: string;
+  /**
    * Preview field keys.
    *
    * When showing a preview of the partial, use these field keys to determine

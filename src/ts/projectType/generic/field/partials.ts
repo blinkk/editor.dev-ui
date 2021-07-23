@@ -17,9 +17,13 @@ import {
   ListFieldItem,
 } from '@blinkk/selective-edit/dist/selective/field/list';
 import {LiveEditor, LiveEditorGlobalConfig} from '../../../editor/editor';
+import {
+  combinePreviewKeys,
+  findPreviewValue,
+} from '@blinkk/selective-edit/dist/utility/preview';
+
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
-import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 
@@ -316,7 +320,10 @@ class GenericPartialListFieldItem extends ListFieldItem {
       const partial = this.listField.partials[partialKey];
       const previewValue = findPreviewValue(
         this.fields.value,
-        partial.editor?.previewFields || [],
+        combinePreviewKeys(
+          partial.editor?.previewFields,
+          partial.editor?.previewField
+        ),
         ''
       );
 

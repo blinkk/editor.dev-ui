@@ -810,6 +810,7 @@ export const DEFAULT_DEVICES = [
   {
     label: 'Desktop',
     width: 1440,
+    height: 900,
   } as DeviceData,
 ];
 

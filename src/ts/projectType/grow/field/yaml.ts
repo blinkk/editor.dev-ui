@@ -75,10 +75,7 @@ export class GrowYamlField extends AutocompleteConstructorField {
 
     // Default filtering for the field.
     this.filter = new IncludeExcludeFilter({
-      includes: [
-        // Needs to be in `/content/` directory with a valid ext.
-        `^/content/.*(${VALID_EXTS.join('|')})$`,
-      ],
+      includes: [`.*(${VALID_EXTS.join('|')})$`],
       excludes: [
         // Ignore files starting with a period or underscore.
         /\/[._][^/]+$/,

@@ -976,7 +976,12 @@ const fullFiles: Record<string, EditorFileData> = {
   },
   '/example/amagaki/partials.yaml': {
     data: {
-      partials: [],
+      partials: [
+        {
+          partial: 'example',
+          title: 'Partial example',
+        },
+      ],
     },
     editor: {
       fields: [
@@ -1128,7 +1133,12 @@ const fullFiles: Record<string, EditorFileData> = {
   },
   '/example/grow/partials.yaml': {
     data: {
-      partials: [],
+      partials: [
+        {
+          partial: 'example',
+          title: 'Partial example',
+        },
+      ],
     },
     editor: {
       fields: [
@@ -1934,12 +1944,13 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
         resolve,
         {
           example: {
-            partial: 'example',
             editor: {
+              label: 'Example',
+              previewFields: ['title'],
               fields: [
                 {
                   type: 'text',
-                  key: 'text',
+                  key: 'title',
                   label: 'Title',
                   validation: [
                     {
@@ -1984,8 +1995,9 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
         resolve,
         {
           example: {
-            partial: 'example',
             editor: {
+              label: 'Example',
+              previewFields: ['title'],
               fields: [
                 {
                   type: 'text',

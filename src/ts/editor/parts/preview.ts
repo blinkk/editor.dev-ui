@@ -84,10 +84,7 @@ export class PreviewPart extends BasePart implements Part {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewConfigLoading(editor: LiveEditor): TemplateResult {
-    return html`<div class="le__part__preview__message">
-      ${templateLoading()}
-      <div>Searching for file preview.</div>
-    </div>`;
+    return templateLoading({}, html`<div>Searching for file preview.</div>`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

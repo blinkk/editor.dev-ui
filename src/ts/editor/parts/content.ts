@@ -114,10 +114,13 @@ export class ContentPart extends BasePart implements Part {
 
     if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
       subParts.push(html`<div class="le__part__content__loading">
-        <div class="le__part__content__loading__status">
-          ${templateLoading()} Loading
-          <code>${editor.state.loadingFilePath || 'file'}</code>
-        </div>
+        ${templateLoading(
+          {},
+          html`<div class="le__part__content__loading__status">
+            Loading
+            <code>${editor.state.loadingFilePath || 'file'}</code>
+          </div>`
+        )}
       </div>`);
     } else {
       subParts.push(this.parts.header.template(editor));

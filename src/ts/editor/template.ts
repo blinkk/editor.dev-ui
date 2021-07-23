@@ -12,7 +12,10 @@ export interface TemplateOptions {
   size?: 'small' | 'medium' | 'large';
 }
 
-export function templateLoading(options?: TemplateOptions): TemplateResult {
+export function templateLoading(
+  options?: TemplateOptions,
+  message?: TemplateResult
+): TemplateResult {
   const classes = {
     le__loading: true,
     'le__loading--pad': options?.pad || false,
@@ -22,5 +25,11 @@ export function templateLoading(options?: TemplateOptions): TemplateResult {
     'le__loading--large': options?.size === 'large',
   };
 
+  if (message) {
+    return html`<div class="le__loading__container">
+      <div class=${classMap(classes)}></div>
+      ${message}
+    </div>`;
+  }
   return html`<div class=${classMap(classes)}></div>`;
 }

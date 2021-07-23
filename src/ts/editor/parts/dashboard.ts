@@ -6,7 +6,6 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {DataStorage} from '../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../events';
 import {LiveEditor} from '../editor';
-import {templateLoading} from '../template';
 
 const STORAGE_RECENT = 'live.dashboard.recent';
 const RECENT_MAX_COUNT = 8;

@@ -55,7 +55,9 @@ export class ContentToolbarPart extends BasePart implements Part {
         ${findPreviewValue(
           this.config.state?.file?.data || {},
           [],
-          this.config.state.file?.file.path || ''
+          this.config.state.file?.file.path ||
+            this.config.state.loadingFilePath ||
+            'Loading…'
         )}
       </div>
       <div class="le__part__content__toolbar__icons">

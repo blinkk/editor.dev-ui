@@ -2,8 +2,9 @@
 @import 'scheme'
 
 .le
-  background: var(--color-background)
-  color: var(--color-on-background)
+  // Uses tertiary background to provide the 'gap' color for panels.
+  background-color: var(--color-tertiary)
+  color: var(--color-on-tertiary)
   display: grid
   font-family: var(--font-family-default)
   font-size: $le-font-size
@@ -30,6 +31,10 @@
   .material-icons
     font-size: $le-font-size-icon
     vertical-align: middle
+
+.le__panel
+  background: var(--color-background)
+  color: var(--color-on-background)
 
 .le__structure__content
   display: flex

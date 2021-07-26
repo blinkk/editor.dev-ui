@@ -80,6 +80,7 @@ export class DashboardPart extends BasePart implements Part {
 
   classesForPart(): Record<string, boolean> {
     return {
+      le__panel: true,
       le__part__dashboard: true,
       'le__part__dashboard--loading': this.config.state.inProgress(
         StatePromiseKeys.GetFile

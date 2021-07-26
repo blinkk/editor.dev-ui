@@ -208,10 +208,10 @@
     "@babel/helper-validator-identifier" "^7.14.8"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-2.1.0.tgz#70175d5319e5683b6cfa36d10cf178d048f1d0fb"
-  integrity sha512-Bvml65Nb7Fp13c/fsPCjnAdjhs/pBVFYfrANs1NhnTgt1dBI7Ho7TMPwwRNet7YLk6wtytvaLsp1qJQlH7mqdg==
+"@blinkk/selective-edit@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-2.1.1.tgz#8250341a0c85e7ad6bf0b848836a4ba96e71849a"
+  integrity sha512-FpldpIjjbREE5WxK5uwQgvA60XZaXi1mUtyJJOy0veq3Vsf1aVgQqpzmiOOn5LpXQp9pI64YVzus2G/oVqEP7Q==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.4.1"

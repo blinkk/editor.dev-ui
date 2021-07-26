@@ -40,16 +40,22 @@
 
 =button
   background: transparent
-  border: none
   border-radius: $le-radius-small
+  border: none
   cursor: pointer
-  font-weight: 700
+  font-family: var(--font-family-default)
+  font-size: $le-font-size
+  line-height: $le-font-size
   padding: $le-space-small
   transition: opacity $le-speed-xslow
 
   &:disabled
     cursor: default
     opacity: $le-opacity-disabled
+
+  &:focus
+    box-shadow: $le-shadow-outline
+    outline: none
 
   &--primary
     +button-primary

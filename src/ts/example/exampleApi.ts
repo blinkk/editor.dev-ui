@@ -879,6 +879,7 @@ const fullFiles: Record<string, EditorFileData> = {
             type: 'variant',
             key: 'variant',
             label: 'Variant',
+            help: 'Allows the user to choose between different sets of fields to edit.',
             variants: {
               hero: {
                 label: 'Hero',

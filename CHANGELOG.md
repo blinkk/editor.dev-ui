@@ -1,5 +1,18 @@
 # Changelog
 
+### [3.4.2](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.1...v3.4.2) (2021-07-26)
+
+
+### Bug Fixes
+
+* adjust default for desktop to have a height ([#130](https://www.github.com/blinkk/editor.dev-ui/issues/130)) ([724dbce](https://www.github.com/blinkk/editor.dev-ui/commit/724dbce276c691b9186fd58598bc079815e5d0c2))
+* adjust filter to not filter only content yamls ([#142](https://www.github.com/blinkk/editor.dev-ui/issues/142)) ([02d0b60](https://www.github.com/blinkk/editor.dev-ui/commit/02d0b60d88ab86b4e2cf1ee5352dc7698dc75614)), closes [#110](https://www.github.com/blinkk/editor.dev-ui/issues/110)
+* border color between panels of UI ([#146](https://www.github.com/blinkk/editor.dev-ui/issues/146)) ([112ca07](https://www.github.com/blinkk/editor.dev-ui/commit/112ca07910fc6f9deb64c177dff8420215816ed4))
+* guess field label from key if no field present ([3ff3861](https://www.github.com/blinkk/editor.dev-ui/commit/3ff3861be9a3125a7d205c373e485ab7fab76b57)), closes [#129](https://www.github.com/blinkk/editor.dev-ui/issues/129)
+* reload preview server config after creating or copying file ([#145](https://www.github.com/blinkk/editor.dev-ui/issues/145)) ([cdb6599](https://www.github.com/blinkk/editor.dev-ui/commit/cdb65992b520af3cd3ae335fe0b328e0fdadf083)), closes [#132](https://www.github.com/blinkk/editor.dev-ui/issues/132)
+* support both `previewField` and `previewFields` for partials ([991d83b](https://www.github.com/blinkk/editor.dev-ui/commit/991d83b6b4a3f356d738f1ad9083ee5c0e168566))
+* ui improvements for content and preview panes ([#140](https://www.github.com/blinkk/editor.dev-ui/issues/140)) ([9a87491](https://www.github.com/blinkk/editor.dev-ui/commit/9a874919cde00dd184642da3453a69aedcdfb443)), closes [#97](https://www.github.com/blinkk/editor.dev-ui/issues/97)
+
 ### [3.4.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.0...v3.4.1) (2021-07-22)
 
 

@@ -1,6 +1,7 @@
 import {ConstructorConfig} from '../generic/field/constructor';
 import {DataType} from '@blinkk/selective-edit';
 import {LiveEditorAutoFields} from '../../editor/autoFields';
+import {guessLabel} from '@blinkk/selective-edit/dist/selective/autoFields';
 
 export class GrowAutoFields extends LiveEditorAutoFields {
   protected deepGuessObject(
@@ -27,7 +28,7 @@ export class GrowAutoFields extends LiveEditorAutoFields {
           {
             key: key,
             type: type,
-            label: this.guessLabel(key),
+            label: guessLabel(key),
           } as ConstructorConfig,
         ];
       }

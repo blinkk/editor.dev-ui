@@ -1,5 +1,9 @@
+import {
+  AutoFields,
+  guessLabel,
+} from '@blinkk/selective-edit/dist/selective/autoFields';
 import {EXT_TO_MIME_TYPE, MediaFieldConfig} from './field/media';
-import {AutoFields} from '@blinkk/selective-edit/dist/selective/autoFields';
+
 import {DataType} from '@blinkk/selective-edit/dist/utility/dataType';
 
 export class LiveEditorAutoFields extends AutoFields {
@@ -17,7 +21,7 @@ export class LiveEditorAutoFields extends AutoFields {
           {
             key: key,
             type: 'media',
-            label: this.guessLabel(key),
+            label: guessLabel(key),
           } as MediaFieldConfig,
         ];
       }

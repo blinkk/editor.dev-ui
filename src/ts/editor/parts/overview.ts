@@ -37,6 +37,7 @@ export class OverviewPart extends BasePart implements Part {
 
   classesForPart(): Record<string, boolean> {
     return {
+      le__panel: true,
       le__part__overview: true,
     };
   }

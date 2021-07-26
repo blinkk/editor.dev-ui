@@ -47,6 +47,7 @@ export class PreviewPart extends BasePart implements Part {
 
   classesForPart(): Record<string, boolean> {
     return {
+      le__panel: true,
       le__part__preview: true,
       'le__part__preview--device_mode':
         (this.parts.toolbar.isDeviceMode || false) &&

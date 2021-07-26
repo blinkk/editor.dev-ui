@@ -540,6 +540,13 @@ export interface ProjectData {
    */
   site?: SiteData;
   /**
+   * Information about the source of the project.
+   *
+   * This information provides information for the editor on where the
+   * project data is coming from (ex: local project or a service).
+   */
+  source?: SourceData;
+  /**
    * Project type for the editor to use.
    */
   type?: ProjectTypes | string;
@@ -594,6 +601,20 @@ export interface SiteData {
    * Site files configuration.
    */
   files?: SiteFilesConfig;
+}
+
+/**
+ * Information on the source of the project data.
+ */
+export interface SourceData {
+  /**
+   * Source identifier.
+   */
+  source: ProjectSource | string;
+  /**
+   * Label shown to the user for identifying the source.
+   */
+  label: string;
 }
 
 /**
@@ -1029,4 +1050,10 @@ export interface GithubBranchInfo {
   branch: string;
   repo: string;
   org: string;
+}
+
+export enum ProjectSource {
+  Example = 'Example',
+  Local = 'Local',
+  GitHub = 'GitHub',
 }

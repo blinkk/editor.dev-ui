@@ -1,12 +1,15 @@
-import {ApiError, PublishResult, PublishStatus} from '../api';
+import {ApiError, ProjectSource, PublishResult, PublishStatus} from '../api';
 import {BasePart, Part} from '.';
 import {
   DeepObject,
   TemplateResult,
   classMap,
   html,
+  ifDefined,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../ui/modal';
+import {exampleIcon, githubIcon, localIcon} from '../ui/icons';
+
 import {EVENT_WORKSPACE_LOAD} from '../events';
 import {EditorState} from '../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
@@ -194,7 +197,8 @@ export class OverviewPart extends BasePart implements Part {
   template(editor: LiveEditor): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateMenu(editor)} ${this.templateProject(editor)}
-      ${this.templateWorkspace(editor)} ${this.templatePublish(editor)}
+      ${this.templateIcon(editor)} ${this.templateWorkspace(editor)}
+      ${this.templatePublish(editor)}
       ${editor.parts.notifications.template(editor)}
     </div>`;
   }
@@ -317,6 +321,7 @@ export class OverviewPart extends BasePart implements Part {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateWorkspace(editor: LiveEditor): TemplateResult {
     const workspace = this.config.state.workspace;
 
@@ -354,6 +359,34 @@ export class OverviewPart extends BasePart implements Part {
             new Date(workspace?.branch?.commit.timestamp || new Date())
           )
         : '...'})
+    </div>`;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateIcon(editor: LiveEditor): TemplateResult {
+    let icon = html``;
+    if (editor.state.project?.source?.source === ProjectSource.GitHub) {
+      icon = githubIcon;
+    } else if (editor.state.project?.source?.source === ProjectSource.Local) {
+      icon = localIcon;
+    } else if (editor.state.project?.source?.source === ProjectSource.Example) {
+      icon = exampleIcon;
+    } else {
+      return html``;
+    }
+    const workspace = this.config.state.workspace;
+
+    return html`<div
+      class="le__part__overview__icon le__tooltip le__tooltip--bottom"
+      data-tip=${ifDefined(
+        editor.state.project?.source?.label
+          ? editor.state.project?.source?.label
+          : undefined
+      )}
+    >
+      ${workspace?.branch.url
+        ? html`<a href="${workspace?.branch.url}" target="_blank">${icon}</a>`
+        : icon}
     </div>`;
   }
 }

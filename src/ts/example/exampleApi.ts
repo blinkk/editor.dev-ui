@@ -14,6 +14,7 @@ import {
   PreviewSettings,
   ProjectData,
   ProjectPublishConfig,
+  ProjectSource,
   PublishResult,
   PublishStatus,
   UrlLevel,
@@ -1706,6 +1707,10 @@ export class ExampleApi implements LiveEditorApiComponent {
             // Use the current server for the preview for the example since it is
             // referencing a static file for the example preview.
             baseUrl: `http://${window.location.host}/`,
+          },
+          source: {
+            source: ProjectSource.Example,
+            label: 'Example source',
           },
           users: [
             {

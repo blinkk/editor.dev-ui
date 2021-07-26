@@ -192,10 +192,13 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        this.handleDataAndCleanup(promiseKey, data);
+        // Reload the preview server config.
+        this.getPreviewConfig();
 
         // Reload the files.
         this.getFiles();
+
+        this.handleDataAndCleanup(promiseKey, data);
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -216,9 +219,13 @@ export class EditorState extends ListenersMixin(Base) {
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
 
-        this.handleDataAndCleanup(promiseKey, data);
+        // Reload the preview server config.
+        this.getPreviewConfig();
+
         // Reload the files.
         this.getFiles();
+
+        this.handleDataAndCleanup(promiseKey, data);
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)

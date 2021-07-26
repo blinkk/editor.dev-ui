@@ -321,6 +321,7 @@ export class OverviewPart extends BasePart implements Part {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateWorkspace(editor: LiveEditor): TemplateResult {
     const workspace = this.config.state.workspace;
 
@@ -373,6 +374,8 @@ export class OverviewPart extends BasePart implements Part {
     } else {
       return html``;
     }
+    const workspace = this.config.state.workspace;
+
     return html`<div
       class="le__part__overview__icon le__tooltip le__tooltip--bottom"
       data-tip=${ifDefined(
@@ -381,7 +384,9 @@ export class OverviewPart extends BasePart implements Part {
           : undefined
       )}
     >
-      ${icon}
+      ${workspace?.branch.url
+        ? html`<a href="${workspace?.branch.url}" target="_blank">${icon}</a>`
+        : icon}
     </div>`;
   }
 }

@@ -425,6 +425,9 @@ export class EditorState extends ListenersMixin(Base) {
         // Loading is complete, remove the loading file information.
         this.loadingFilePath = undefined;
 
+        // Update document title.
+        this.updateTitle();
+
         this.handleDataAndCleanup(promiseKey, this.file);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         this.render();
@@ -571,6 +574,9 @@ export class EditorState extends ListenersMixin(Base) {
           }
         }
 
+        // Update document title.
+        this.updateTitle();
+
         this.handleDataAndCleanup(promiseKey, this.project);
         this.render();
       })
@@ -593,6 +599,10 @@ export class EditorState extends ListenersMixin(Base) {
       .getWorkspace()
       .then(data => {
         this.workspace = data;
+
+        // Update document title.
+        this.updateTitle();
+
         this.handleDataAndCleanup(promiseKey, data);
         this.render();
       })
@@ -793,6 +803,24 @@ export class EditorState extends ListenersMixin(Base) {
   setProjectType(projectType: ProjectTypeComponent) {
     this.projectType = projectType;
     this.triggerListener(StatePromiseKeys.SetProjectType, this.projectType);
+  }
+
+  protected updateTitle() {
+    const parts = [];
+
+    if (this.file?.file) {
+      parts.unshift(this.file.file.path);
+    }
+
+    if (this.project?.source?.label) {
+      parts.unshift(this.project?.source?.label);
+    } else if (this.project?.source?.source) {
+      parts.unshift(this.project?.source?.source);
+    }
+
+    parts.push('editor.dev');
+
+    document.title = parts.join(' - ');
   }
 }
 

@@ -1,11 +1,10 @@
-import {BasePart, Part} from '..';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, styleMap} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData} from '../../api';
-import {EVENT_FILE_SAVE_COMPLETE} from '../../events';
-import {EditorState} from '../../state';
-import {LiveEditor} from '../../editor';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {DeviceData} from '../../../api';
+import {EVENT_FILE_SAVE_COMPLETE} from '../../../events';
+import {EditorState} from '../../../state';
 
 /**
  * Size of buffer to place around the preview frame so it does not
@@ -13,7 +12,7 @@ import {LiveEditor} from '../../editor';
  */
 const BUFFER_SIZE = 20;
 
-export interface PreviewFrameConfig {
+export interface PreviewFramePartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -35,11 +34,11 @@ interface FrameSize {
   scale: number;
 }
 
-export class PreviewFramePart extends BasePart implements Part {
-  config: PreviewFrameConfig;
+export class PreviewFramePart extends BasePart implements UiPartComponent {
+  config: PreviewFramePartConfig;
   container?: HTMLElement;
 
-  constructor(config: PreviewFrameConfig) {
+  constructor(config: PreviewFramePartConfig) {
     super();
     this.config = config;
 
@@ -139,11 +138,7 @@ export class PreviewFramePart extends BasePart implements Part {
     };
   }
 
-  template(
-    editor: LiveEditor,
-    device?: DeviceData,
-    isRotated?: boolean
-  ): TemplateResult {
+  template(device?: DeviceData, isRotated?: boolean): TemplateResult {
     const sizing = this.getIframeSize(device, isRotated);
 
     return html`<div class=${classMap(this.classesForPart())}>

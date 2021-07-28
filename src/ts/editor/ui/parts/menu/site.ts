@@ -1,25 +1,25 @@
-import {ApiError, EditorFileData, FileData} from '../../api';
+import {ApiError, EditorFileData, FileData} from '../../../api';
 import {
   DeepObject,
   TemplateResult,
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {DialogActionLevel, FormDialogModal} from '../../modal';
 import {
   IncludeExcludeFilter,
   IncludeExcludeFilterConfig,
-} from '../../../utility/filter';
+} from '../../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../../events';
-import {LiveEditor} from '../../editor';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../../events';
+import {LiveEditor} from '../../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
-import {StatePromiseKeys} from '../../state';
+import {StatePromiseKeys} from '../../../state';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
-import {templateLoading} from '../../template';
+import {templateLoading} from '../../../template';
 
 const DEFAULT_SITE_FILTER: IncludeExcludeFilterConfig = {
   includes: [/\.(yaml|yml|html|md)$/],
@@ -29,6 +29,8 @@ const MODAL_KEY_COPY = 'menu_file_copy';
 const MODAL_KEY_DELETE = 'menu_file_delete';
 const MODAL_KEY_NEW = 'menu_file_new';
 const STORAGE_FILE_EXPANDED = 'live.menu.site.expandedDirs';
+
+export type SiteMenuPartConfig = MenuSectionPartConfig;
 
 interface DirectoryEventHandlers {
   fileCopy: (evt: Event, file: FileData) => void;
@@ -57,9 +59,12 @@ export class SitePart extends MenuSectionPart {
     return classes;
   }
 
-  protected getOrCreateModalCopy(editor: LiveEditor): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_COPY]) {
-      const selectiveConfig = merge({}, editor.config.selectiveConfig);
+  protected getOrCreateModalCopy(): FormDialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_COPY]) {
+      const selectiveConfig = merge(
+        {},
+        this.config.editor.config.selectiveConfig
+      );
       const modal = new FormDialogModal({
         title: 'Copy file',
         selectiveConfig: selectiveConfig,
@@ -82,7 +87,7 @@ export class SitePart extends MenuSectionPart {
             value.path,
             (newFile: FileData) => {
               // Log the success to the notifications.
-              editor.parts.notifications.addInfo({
+              this.config.editor.ui.partNotifications.addInfo({
                 message: `New '${newFile.path}' file successfully created.`,
                 actions: [
                   {
@@ -98,7 +103,7 @@ export class SitePart extends MenuSectionPart {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error, true);
+              this.config.editor.ui.partNotifications.addError(error, true);
               modal.error = error;
               modal.stopProcessing();
             }
@@ -106,14 +111,19 @@ export class SitePart extends MenuSectionPart {
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_COPY] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_COPY] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_COPY] as FormDialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_COPY
+    ] as FormDialogModal;
   }
 
-  protected getOrCreateModalDelete(editor: LiveEditor): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_DELETE]) {
-      const selectiveConfig = merge({}, editor.config.selectiveConfig);
+  protected getOrCreateModalDelete(): FormDialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_DELETE]) {
+      const selectiveConfig = merge(
+        {},
+        this.config.editor.config.selectiveConfig
+      );
       const modal = new FormDialogModal({
         title: 'Delete file',
         selectiveConfig: selectiveConfig,
@@ -135,7 +145,7 @@ export class SitePart extends MenuSectionPart {
             },
             () => {
               // Log the success to the notifications.
-              editor.parts.notifications.addInfo({
+              this.config.editor.ui.partNotifications.addInfo({
                 message: `Deleted '${path}' file successfully.`,
               });
               // Reset the data for the next time the form is shown.
@@ -144,7 +154,7 @@ export class SitePart extends MenuSectionPart {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error, true);
+              this.config.editor.ui.partNotifications.addError(error, true);
               modal.error = error;
               modal.stopProcessing();
             }
@@ -152,14 +162,19 @@ export class SitePart extends MenuSectionPart {
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_DELETE] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_DELETE] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_DELETE] as FormDialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_DELETE
+    ] as FormDialogModal;
   }
 
-  protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
-      const selectiveConfig = merge({}, editor.config.selectiveConfig);
+  protected getOrCreateModalNew(): FormDialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NEW]) {
+      const selectiveConfig = merge(
+        {},
+        this.config.editor.config.selectiveConfig
+      );
       const modal = new FormDialogModal({
         title: 'New file',
         selectiveConfig: selectiveConfig,
@@ -181,7 +196,7 @@ export class SitePart extends MenuSectionPart {
             `${value.directory}${value.path}`,
             (newFile: FileData) => {
               // Log the success to the notifications.
-              editor.parts.notifications.addInfo({
+              this.config.editor.ui.partNotifications.addInfo({
                 message: `New '${newFile.path}' file successfully created.`,
                 actions: [
                   {
@@ -197,7 +212,7 @@ export class SitePart extends MenuSectionPart {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error, true);
+              this.config.editor.ui.partNotifications.addError(error, true);
               modal.error = error;
               modal.stopProcessing();
             }
@@ -205,9 +220,11 @@ export class SitePart extends MenuSectionPart {
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_NEW
+    ] as FormDialogModal;
   }
 
   loadFiles() {
@@ -221,7 +238,7 @@ export class SitePart extends MenuSectionPart {
     this.config.state.getProject();
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     const project = this.config.state.project;
     const files = this.config.state.files;
 
@@ -255,7 +272,7 @@ export class SitePart extends MenuSectionPart {
       const eventHandlers: DirectoryEventHandlers = {
         fileCopy: (evt: Event, file: FileData) => {
           evt.stopPropagation();
-          const modal = this.getOrCreateModalCopy(editor);
+          const modal = this.getOrCreateModalCopy();
           modal.data.set('originalPath', file.path);
 
           // TODO: Modify the new path so it is not automatically an error.
@@ -321,7 +338,7 @@ export class SitePart extends MenuSectionPart {
         },
         fileDelete: (evt: Event, file: FileData) => {
           evt.stopPropagation();
-          const modal = this.getOrCreateModalDelete(editor);
+          const modal = this.getOrCreateModalDelete();
           modal.data.set('path', file.path);
           modal.show();
         },
@@ -335,7 +352,7 @@ export class SitePart extends MenuSectionPart {
         },
         fileNew: (evt: Event, directory: string) => {
           evt.stopPropagation();
-          const modal = this.getOrCreateModalNew(editor);
+          const modal = this.getOrCreateModalNew();
           modal.data.set('directory', directory);
 
           modal.selective.resetFields();
@@ -380,6 +397,7 @@ export class SitePart extends MenuSectionPart {
 
       // Create the directory structure using the filtered files.
       this.fileStructure = new DirectoryStructure(
+        this.config.editor,
         files.filter(file => filesFilter.matches(file.path)),
         eventHandlers,
         this.config.storage
@@ -398,16 +416,16 @@ export class SitePart extends MenuSectionPart {
             <span class="material-icons">folder</span>
           </div>
           <div class="le__list__item__label">
-            ${editor.config.labels?.files || 'Files'}
+            ${this.config.editor.config.labels?.files || 'Files'}
           </div>
         </div>
-        ${this.fileStructure.template(editor)}
+        ${this.fileStructure.template()}
       </div>
     </div>`;
   }
 
-  templateFileCopy(editor: LiveEditor): TemplateResult {
-    const modal = this.getOrCreateModalCopy(editor);
+  templateFileCopy(): TemplateResult {
+    const modal = this.getOrCreateModalCopy();
     const isValid = modal.selective.isValid;
     try {
       return modal.selective.template(modal.selective, modal.data);
@@ -418,15 +436,15 @@ export class SitePart extends MenuSectionPart {
     }
   }
 
-  templateFileDelete(editor: LiveEditor): TemplateResult {
-    const modal = this.getOrCreateModalDelete(editor);
+  templateFileDelete(): TemplateResult {
+    const modal = this.getOrCreateModalDelete();
     return html`<div class="le__modal__content__template__padded">
       Do you want to delete the <code>${modal.data.get('path')}</code> file?
     </div>`;
   }
 
-  templateFileNew(editor: LiveEditor): TemplateResult {
-    const modal = this.getOrCreateModalNew(editor);
+  templateFileNew(): TemplateResult {
+    const modal = this.getOrCreateModalNew();
     const isValid = modal.selective.isValid;
     try {
       return modal.selective.template(modal.selective, modal.data);
@@ -437,9 +455,9 @@ export class SitePart extends MenuSectionPart {
     }
   }
 
-  templateTitle(editor: LiveEditor): TemplateResult {
+  templateTitle(): TemplateResult {
     return html`<div class="le__part__menu__section__title">
-      ${editor.config.labels?.menuSite || this.title}
+      ${this.config.editor.config.labels?.menuSite || this.title}
     </div>`;
   }
 
@@ -449,6 +467,7 @@ export class SitePart extends MenuSectionPart {
 }
 
 class DirectoryStructure {
+  editor: LiveEditor;
   rootFiles: Array<FileData>;
   root: string;
   directories: Record<string, DirectoryStructure>;
@@ -458,11 +477,13 @@ class DirectoryStructure {
   storage: DataStorage;
 
   constructor(
+    editor: LiveEditor,
     rootFiles: Array<FileData>,
     eventHandlers: DirectoryEventHandlers,
     storage: DataStorage,
     root = '/'
   ) {
+    this.editor = editor;
     this.rootFiles = rootFiles;
     this.root = root;
     this.storage = storage;
@@ -494,6 +515,7 @@ class DirectoryStructure {
             return fileData.path.startsWith(subDirectoryRoot);
           });
           this.directories[directoryName] = new DirectoryStructure(
+            this.editor,
             subFiles,
             this.eventHandlers,
             this.storage,
@@ -557,16 +579,15 @@ class DirectoryStructure {
     this.eventHandlers.render();
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     if (!this.isExpanded) {
       return html``;
     }
 
-    return html`${this.templateDirectories(editor)}
-    ${this.templateFiles(editor)}`;
+    return html`${this.templateDirectories()} ${this.templateFiles()}`;
   }
 
-  templateDirectories(editor: LiveEditor): TemplateResult {
+  templateDirectories(): TemplateResult {
     if (!this.directories) {
       return html``;
     }
@@ -592,13 +613,12 @@ class DirectoryStructure {
               ${this.directories[key].base}
             </div>
           </div>
-          ${this.directories[key].template(editor)}`
+          ${this.directories[key].template()}`
       )}
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateFiles(editor: LiveEditor): TemplateResult {
+  templateFiles(): TemplateResult {
     if (!this.files || !this.files.length) {
       return html``;
     }
@@ -612,7 +632,7 @@ class DirectoryStructure {
           <span class="material-icons">add_circle</span>
         </div>
         <div class="le__list__item__label">
-          ${editor.config.labels?.fileNew || 'New file'}
+          ${this.editor.config.labels?.fileNew || 'New file'}
         </div>
       </div>
       ${repeat(
@@ -623,8 +643,8 @@ class DirectoryStructure {
             le__clickable: true,
             le__list__item: true,
             'le__list__item--selected':
-              editor.state.file?.file.path === file.path ||
-              editor.state.loadingFilePath === file.path,
+              this.editor.state.file?.file.path === file.path ||
+              this.editor.state.loadingFilePath === file.path,
           })}
           @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file)}
         >

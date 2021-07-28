@@ -1,6 +1,5 @@
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {ApiError} from '../api';
-import {LiveEditor} from '../editor';
 
 export interface ErrorUiOptions {
   /**
@@ -10,7 +9,6 @@ export interface ErrorUiOptions {
 }
 
 export function templateApiError(
-  editor: LiveEditor,
   error?: ApiError,
   options?: ErrorUiOptions
 ): TemplateResult {

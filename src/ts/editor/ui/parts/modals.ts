@@ -1,8 +1,9 @@
-import {BasePart, Part} from '.';
+import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {LiveEditor} from '../editor';
-import {Modal} from '../ui/modal';
+import {Modal} from '../modal';
 import {repeat} from '@blinkk/selective-edit';
+
+export type ModalsPartConfig = UiPartConfig;
 
 /**
  * Modals are centralized in the display to be outside of other
@@ -15,7 +16,7 @@ import {repeat} from '@blinkk/selective-edit';
  *
  * This also allows reuse of modals across parts of the editor.
  */
-export class ModalsPart extends BasePart implements Part {
+export class ModalsPart extends BasePart implements UiPartComponent {
   modals: Record<string, Modal>;
 
   constructor() {
@@ -23,12 +24,12 @@ export class ModalsPart extends BasePart implements Part {
     this.modals = {};
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     const keys = Object.keys(this.modals).sort();
     return html`${repeat(
       keys,
       (key: string) => key,
-      (key: string) => this.modals[key].template(editor)
+      (key: string) => this.modals[key].template()
     )}`;
   }
 }

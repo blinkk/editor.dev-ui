@@ -1,9 +1,9 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
-import {EVENT_SAVE} from '../../events';
-import {EditorFileData} from '../../api';
-import {LiveEditor} from '../../editor';
-import {StatePromiseKeys} from '../../state';
+
+import {EVENT_SAVE} from '../../../events';
+import {EditorFileData} from '../../../api';
+import {StatePromiseKeys} from '../../../state';
 import merge from 'lodash.merge';
 
 export class FieldsPart extends ContentSectionPart {
@@ -75,8 +75,7 @@ export class FieldsPart extends ContentSectionPart {
     return 'fields';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     const isValid = this.selective.isValid;
     try {
       return this.selective.template(this.selective, this.data);

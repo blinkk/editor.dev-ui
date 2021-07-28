@@ -5,10 +5,9 @@ import {
   TextAreaFieldConfig,
 } from '@blinkk/selective-edit';
 
-import {EVENT_SAVE} from '../../events';
-import {EditorFileData} from '../../api';
-import {LiveEditor} from '../../editor';
-import {StatePromiseKeys} from '../../state';
+import {EVENT_SAVE} from '../../../events';
+import {EditorFileData} from '../../../api';
+import {StatePromiseKeys} from '../../../state';
 
 const EXTENSIONS_DATA_ONLY: Array<string> = ['yaml', 'yml'];
 const RAW_FIELD_CONTENT: TextAreaFieldConfig = {
@@ -92,8 +91,7 @@ export class RawPart extends ContentSectionPart {
     return 'raw';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     const isValid = this.selective.isValid;
     try {
       return this.selective.template(this.selective, this.data);

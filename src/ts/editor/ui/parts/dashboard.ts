@@ -1,16 +1,15 @@
-import {BasePart, Part} from '.';
-import {EditorFileData, WorkspaceData} from '../api';
-import {EditorState, StatePromiseKeys} from '../state';
+import {BasePart, UiPartComponent, UiPartConfig} from '.';
+import {EditorFileData, WorkspaceData} from '../../api';
+import {EditorState, StatePromiseKeys} from '../../state';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../events';
-import {LiveEditor} from '../editor';
+import {DataStorage} from '../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../events';
 
 const STORAGE_RECENT = 'live.dashboard.recent';
 const RECENT_MAX_COUNT = 8;
 
-export interface DashboardPartConfig {
+export interface DashboardPartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -32,7 +31,7 @@ export interface DashboardRecent {
   workspaces?: Record<string, Array<string>>;
 }
 
-export class DashboardPart extends BasePart implements Part {
+export class DashboardPart extends BasePart implements UiPartComponent {
   config: DashboardPartConfig;
   recent: DashboardRecent;
 
@@ -114,26 +113,26 @@ export class DashboardPart extends BasePart implements Part {
     return `${this.projectId}-${this.config.state.workspace?.branch.name}`;
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
 
-    subParts.push(this.templateFileNotFound(editor));
-    subParts.push(this.templateRecentFiles(editor));
-    subParts.push(this.templateRecentWorkspaces(editor));
+    subParts.push(this.templateFileNotFound());
+    subParts.push(this.templateRecentFiles());
+    subParts.push(this.templateRecentWorkspaces());
 
     return html`<div class=${classMap(this.classesForPart())}>
       ${subParts}
     </div>`;
   }
 
-  templateFileNotFound(editor: LiveEditor): TemplateResult {
-    if (editor.state.file !== null) {
+  templateFileNotFound(): TemplateResult {
+    if (this.config.editor.state.file !== null) {
       return html``;
     }
 
-    const message = editor.state.loadingFilePath
+    const message = this.config.editor.state.loadingFilePath
       ? html`Unable to load the file:
-          <code>${editor.state.loadingFilePath}</code>`
+          <code>${this.config.editor.state.loadingFilePath}</code>`
       : 'Unable to load the file, it was not found.';
     return html` <div class="le__part__dashboard__not_found">
       <div><span class="material-icons">warning</span></div>
@@ -141,7 +140,7 @@ export class DashboardPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateFileParts(editor: LiveEditor, path: string): TemplateResult {
+  templateFileParts(path: string): TemplateResult {
     const parts = path.split('/').slice(1);
     const pathFile = parts[parts.length - 1].split('.').slice(0, -1).join('.');
     const pathParts = parts.slice(0, -1);
@@ -160,8 +159,7 @@ export class DashboardPart extends BasePart implements Part {
       </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateRecentFiles(editor: LiveEditor): TemplateResult {
+  templateRecentFiles(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
 
     if (this.recentFiles.length) {
@@ -193,7 +191,7 @@ export class DashboardPart extends BasePart implements Part {
                   );
                 }}
               >
-                ${this.templateFileParts(editor, path)}
+                ${this.templateFileParts(path)}
               </div>`;
             }
           )}
@@ -205,8 +203,7 @@ export class DashboardPart extends BasePart implements Part {
     return html`${subParts}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateRecentWorkspaces(editor: LiveEditor): TemplateResult {
+  templateRecentWorkspaces(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
     if (this.recentWorkspaces.length > 1) {
       subParts.push(html`<div class="le__part__dashboard__recent">

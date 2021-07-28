@@ -1,19 +1,18 @@
-import {BasePart, Part} from '.';
-import {DialogPriorityLevel, Modal} from '../ui/modal';
-import {EditorState, Schemes} from '../state';
+import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
+import {DialogPriorityLevel, Modal} from '../../ui/modal';
+import {EditorState, Schemes} from '../../state';
+import {SiteMenuPartConfig, SitePart} from './menu/site';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {UsersMenuPartConfig, UsersPart} from './menu/users';
+import {WorkspacesMenuPartConfig, WorkspacesPart} from './menu/workspaces';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../events';
-import {LiveEditor} from '../editor';
-import {SitePart} from './menu/site';
-import {UsersPart} from './menu/users';
-import {WorkspacesPart} from './menu/workspaces';
+import {DataStorage} from '../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../events';
 
 const MODAL_KEY = 'menu';
 const STORAGE_DOCKED_KEY = 'live.menu.isDocked';
 
-export interface MenuPartConfig {
+export interface MenuPartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -21,48 +20,54 @@ export interface MenuPartConfig {
   storage: DataStorage;
 }
 
-export interface MenuParts {
-  site: SitePart;
-  users: UsersPart;
-  workspaces: WorkspacesPart;
-}
-
-export class MenuPart extends BasePart implements Part {
+/**
+ * Ui part for displaying the menu.
+ *
+ * The menu can be displayed in a docked state or as a floating menu.
+ *
+ * When it is docked the template renders normally, but when it is
+ * not docked it is rendered using a modal overlay.
+ */
+export class MenuPart extends BasePart implements UiPartComponent {
   config: MenuPartConfig;
   isDocked: boolean;
   modal?: Modal;
-  parts: MenuParts;
+  parts: LazyUiParts;
 
   constructor(config: MenuPartConfig) {
     super();
     this.config = config;
     this.isDocked = this.config.storage.getItemBoolean(STORAGE_DOCKED_KEY);
-    this.parts = {
-      site: new SitePart({
-        isExpandedByDefault: true,
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-      users: new UsersPart({
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-      workspaces: new WorkspacesPart({
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-    };
+
+    this.parts = new LazyUiParts();
+
+    this.parts.register('site', SitePart, {
+      editor: this.config.editor,
+      isExpandedByDefault: true,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as SiteMenuPartConfig);
+    this.parts.register('users', UsersPart, {
+      editor: this.config.editor,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as UsersMenuPartConfig);
+    this.parts.register('workspaces', WorkspacesPart, {
+      editor: this.config.editor,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as WorkspacesMenuPartConfig);
   }
 
-  protected createModal(editor: LiveEditor): Modal {
-    if (!editor.parts.modals.modals[MODAL_KEY]) {
+  protected createModal(): Modal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY]) {
       const modal = new Modal({
         classes: ['le__modal--docked', 'le__modal--docked-left'],
         priority: DialogPriorityLevel.Low,
       });
       modal.templateModal = this.templateStructure.bind(this);
       this.modal = modal;
-      editor.parts.modals.modals[MODAL_KEY] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY] = modal;
 
       // When loading a file, close the menu modal.
       // Hides the menu when the file is starting to load.
@@ -70,7 +75,7 @@ export class MenuPart extends BasePart implements Part {
         modal.hide();
       });
     }
-    return editor.parts.modals.modals[MODAL_KEY];
+    return this.config.editor.ui.partModals.modals[MODAL_KEY];
   }
 
   classesForPart(): Record<string, boolean> {
@@ -113,18 +118,29 @@ export class MenuPart extends BasePart implements Part {
     this.modal?.show();
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  get partSite(): SitePart {
+    return this.parts.get('site') as SitePart;
+  }
+
+  get partUsers(): UsersPart {
+    return this.parts.get('users') as UsersPart;
+  }
+
+  get partWorkspaces(): WorkspacesPart {
+    return this.parts.get('workspaces') as WorkspacesPart;
+  }
+
+  template(): TemplateResult {
     if (!this.isDocked) {
       // Let the modal handle the display of the menu.
-      this.createModal(editor);
+      this.createModal();
       return html``;
     }
 
-    return this.templateStructure(editor);
+    return this.templateStructure();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateActionDocking(editor: LiveEditor): TemplateResult {
+  templateActionDocking(): TemplateResult {
     let icon = 'last_page';
     let tip = 'Dock menu';
     let handleClick = () => {
@@ -149,8 +165,7 @@ export class MenuPart extends BasePart implements Part {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateActionClose(editor: LiveEditor): TemplateResult {
+  templateActionClose(): TemplateResult {
     if (this.isDocked) {
       return html``;
     }
@@ -169,7 +184,7 @@ export class MenuPart extends BasePart implements Part {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateActionScheme(editor: LiveEditor): TemplateResult {
+  templateActionScheme(): TemplateResult {
     let currentMode = this.config.state.prefersDarkScheme
       ? Schemes.Dark
       : Schemes.Light;
@@ -197,14 +212,14 @@ export class MenuPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`<div class="le__part__menu__content">
-      ${this.parts.workspaces.template(editor)}
-      ${this.parts.site.template(editor)} ${this.parts.users.template(editor)}
+      ${this.partWorkspaces.template()} ${this.partSite.template()}
+      ${this.partUsers.template()}
     </div>`;
   }
 
-  templateMenu(editor: LiveEditor): TemplateResult {
+  templateMenu(): TemplateResult {
     const project = this.config.state.project;
 
     // Lazy load the project.
@@ -217,16 +232,15 @@ export class MenuPart extends BasePart implements Part {
         ${project?.title || html`&nbsp;`}
       </div>
       <div class="le__actions">
-        ${this.templateActionScheme(editor)}
-        ${this.templateActionDocking(editor)}
-        ${this.templateActionClose(editor)}
+        ${this.templateActionScheme()} ${this.templateActionDocking()}
+        ${this.templateActionClose()}
       </div>
     </div>`;
   }
 
-  templateStructure(editor: LiveEditor): TemplateResult {
+  templateStructure(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
-      ${this.templateMenu(editor)} ${this.templateContent(editor)}
+      ${this.templateMenu()} ${this.templateContent()}
     </div>`;
   }
 

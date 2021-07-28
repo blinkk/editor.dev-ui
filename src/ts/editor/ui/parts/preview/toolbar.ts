@@ -1,16 +1,16 @@
-import {BasePart, Part} from '..';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
-import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData} from '../../api';
-import {EditorState} from '../../state';
-import {LiveEditor} from '../../editor';
+
+import {DataStorage} from '../../../../utility/dataStorage';
+import {DeviceData} from '../../../api';
+import {EditorState} from '../../../state';
 
 const STORAGE_DEVICE_KEY = 'live.preview.device';
 const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';
 const STORAGE_DEVICE_ROTATED_KEY = 'live.preview.isRotated';
 const STORAGE_EXPANDED_KEY = 'live.preview.isExpanded';
 
-export interface PreviewToolbarConfig {
+export interface PreviewToolbarPartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -21,14 +21,14 @@ export interface PreviewToolbarConfig {
   storage: DataStorage;
 }
 
-export class PreviewToolbarPart extends BasePart implements Part {
-  config: PreviewToolbarConfig;
+export class PreviewToolbarPart extends BasePart implements UiPartComponent {
+  config: PreviewToolbarPartConfig;
   device?: DeviceData;
   isDeviceMode?: boolean;
   isExpanded?: boolean;
   isRotated?: boolean;
 
-  constructor(config: PreviewToolbarConfig) {
+  constructor(config: PreviewToolbarPartConfig) {
     super();
     this.config = config;
     this.isDeviceMode = this.config.storage.getItemBoolean(
@@ -62,7 +62,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
     });
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     // Lazy load the devices.
     const devices = this.config.state.devices;
     if (this.isDeviceMode && !devices) {
@@ -71,7 +71,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
 
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__preview__toolbar__icons">
-        ${this.templateIconExpanded(editor)}
+        ${this.templateIconExpanded()}
       </div>
       ${this.isDeviceMode && (devices || []).length
         ? html`<div class="le__part__preview__toolbar__devices">
@@ -106,14 +106,13 @@ export class PreviewToolbarPart extends BasePart implements Part {
           </div>`
         : html`<div class="le__part__preview__toolbar__label">Preview</div>`}
       <div class="le__part__preview__toolbar__icons">
-        ${this.templateIconDeviceRotate(editor)}
-        ${this.templateIconDeviceMode(editor)}
-        ${this.templateIconBreakout(editor)}
+        ${this.templateIconDeviceRotate()} ${this.templateIconDeviceMode()}
+        ${this.templateIconBreakout()}
       </div>
     </div>`;
   }
 
-  templateIconBreakout(editor: LiveEditor): TemplateResult {
+  templateIconBreakout(): TemplateResult {
     if (!this.config.state.file?.url) {
       return html``;
     }
@@ -130,7 +129,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateIconExpanded(editor: LiveEditor): TemplateResult {
+  templateIconExpanded(): TemplateResult {
     return html`<div
       class="le__part__preview__toolbar__icon le__clickable le__tooltip--top"
       data-tip=${this.isExpanded ? 'Content and preview' : 'Preview only'}
@@ -149,7 +148,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateIconDeviceMode(editor: LiveEditor): TemplateResult {
+  templateIconDeviceMode(): TemplateResult {
     return html`<div
       class=${classMap({
         le__part__preview__toolbar__icon: true,
@@ -178,7 +177,7 @@ export class PreviewToolbarPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateIconDeviceRotate(editor: LiveEditor): TemplateResult {
+  templateIconDeviceRotate(): TemplateResult {
     const blockRotate = Boolean(
       !this.isDeviceMode || (this.device && !this.device.canRotate)
     );

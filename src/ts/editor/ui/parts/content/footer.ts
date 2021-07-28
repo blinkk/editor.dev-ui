@@ -1,14 +1,13 @@
-import {BasePart, Part} from '..';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
 import {ContentSettings} from '../content';
-import {LiveEditor} from '../../editor';
 
-export interface ContentFooterConfig {
+export interface ContentFooterConfig extends UiPartConfig {
   contentSettings: ContentSettings;
 }
 
-export class ContentFooterPart extends BasePart implements Part {
+export class ContentFooterPart extends BasePart implements UiPartComponent {
   config: ContentFooterConfig;
 
   constructor(config: ContentFooterConfig) {
@@ -22,8 +21,7 @@ export class ContentFooterPart extends BasePart implements Part {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__logo"></div>
       <div class="le__part__content__dev_tools">Developer tools:</div>

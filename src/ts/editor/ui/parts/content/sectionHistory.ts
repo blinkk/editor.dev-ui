@@ -1,7 +1,6 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
-import {LiveEditor} from '../../editor';
 import TimeAgo from 'javascript-time-ago';
 
 export class HistoryPart extends ContentSectionPart {
@@ -24,12 +23,12 @@ export class HistoryPart extends ContentSectionPart {
     return 'history';
   }
 
-  templateAction(editor: LiveEditor): TemplateResult {
+  templateAction(): TemplateResult {
     return html``;
   }
 
-  templateChanges(editor: LiveEditor): TemplateResult {
-    if (!editor.state.file?.history) {
+  templateChanges(): TemplateResult {
+    if (!this.config.editor.state.file?.history) {
       return html`<div class="le__part__content__history__title">
           Change history
         </div>
@@ -45,7 +44,7 @@ export class HistoryPart extends ContentSectionPart {
       </div>
       <div class="le__list">
         ${repeat(
-          editor.state.file.history,
+          this.config.editor.state.file.history,
           change => change.hash,
           (change, index) => html`<div
             class=${classMap({
@@ -81,7 +80,7 @@ export class HistoryPart extends ContentSectionPart {
       </div>`;
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`<div class="le__part__content__history__title">
         Current workspace
       </div>
@@ -90,10 +89,10 @@ export class HistoryPart extends ContentSectionPart {
           class="le__list__item le__list__item--pad le__list__item--emphasis"
         >
           <span class="material-icons">dashboard</span>
-          ${editor.state.workspace?.name}
+          ${this.config.editor.state.workspace?.name}
         </div>
       </div>
-      ${this.templateChanges(editor)}`;
+      ${this.templateChanges()}`;
   }
 
   trimSummary(summary?: string): string {

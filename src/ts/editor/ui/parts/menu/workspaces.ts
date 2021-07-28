@@ -1,24 +1,28 @@
-import {ApiError, WorkspaceData} from '../../api';
+import {ApiError, WorkspaceData} from '../../../api';
 import {
   DeepObject,
   TemplateResult,
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {DialogActionLevel, FormDialogModal} from '../../modal';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
-import {EVENT_WORKSPACE_LOAD} from '../../events';
-import {FeatureFlags} from '../../features';
-import {LiveEditor} from '../../editor';
+import {EVENT_WORKSPACE_LOAD} from '../../../events';
+import {FeatureFlags} from '../../../features';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
-import {templateLoading} from '../../template';
+import {templateLoading} from '../../../template';
 
 const MODAL_KEY_NEW = 'menu_workspace_new';
 
+export type WorkspacesMenuPartConfig = MenuSectionPartConfig;
+
 export class WorkspacesPart extends MenuSectionPart {
-  constructor(config: MenuSectionPartConfig) {
+  config: WorkspacesMenuPartConfig;
+
+  constructor(config: WorkspacesMenuPartConfig) {
     super(config);
+    this.config = config;
 
     document.addEventListener(EVENT_WORKSPACE_LOAD, (evt: Event) => {
       const customEvent: CustomEvent = evt as CustomEvent;
@@ -41,9 +45,8 @@ export class WorkspacesPart extends MenuSectionPart {
     };
   }
 
-  protected getOrCreateModalNew(editor: LiveEditor): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
-      // Setup the editor.
+  protected getOrCreateModalNew(): FormDialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NEW]) {
       const options = [];
       for (const workspace of this.config.state.workspaces || []) {
         options.push({
@@ -52,49 +55,53 @@ export class WorkspacesPart extends MenuSectionPart {
         });
       }
 
-      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
-        fields: [
-          {
-            type: 'radio',
-            key: 'base',
-            label: 'Parent workspace',
-            help: 'Workspace to start the new workspace from.',
-            options: options,
-            validation: [
-              {
-                type: 'require',
-                message: 'Parent workspace is required.',
-              },
-            ],
-          },
-          {
-            type: 'text',
-            key: 'workspace',
-            label: 'New workspace name',
-            help: 'Used for the workspace url and the git branch.',
-            validation: [
-              {
-                type: 'require',
-                message: 'Workspace name is required.',
-              },
-              {
-                type: 'pattern',
-                pattern: '^[a-z0-9-]*$',
-                message:
-                  'Workspace name can only contain lowercase alpha-numeric characters and - (dash).',
-              },
-              {
-                type: 'match',
-                excluded: {
-                  values: ['main', 'master', 'staging'],
-                  message:
-                    'Workspace name cannot be "main", "master", or "staging".',
+      const selectiveConfig = merge(
+        {},
+        this.config.editor.config.selectiveConfig,
+        {
+          fields: [
+            {
+              type: 'radio',
+              key: 'base',
+              label: 'Parent workspace',
+              help: 'Workspace to start the new workspace from.',
+              options: options,
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Parent workspace is required.',
                 },
-              },
-            ],
-          },
-        ],
-      });
+              ],
+            },
+            {
+              type: 'text',
+              key: 'workspace',
+              label: 'New workspace name',
+              help: 'Used for the workspace url and the git branch.',
+              validation: [
+                {
+                  type: 'require',
+                  message: 'Workspace name is required.',
+                },
+                {
+                  type: 'pattern',
+                  pattern: '^[a-z0-9-]*$',
+                  message:
+                    'Workspace name can only contain lowercase alpha-numeric characters and - (dash).',
+                },
+                {
+                  type: 'match',
+                  excluded: {
+                    values: ['main', 'master', 'staging'],
+                    message:
+                      'Workspace name cannot be "main", "master", or "staging".',
+                  },
+                },
+              ],
+            },
+          ],
+        }
+      );
       const modal = new FormDialogModal({
         title: 'New workspace',
         selectiveConfig: selectiveConfig,
@@ -133,7 +140,7 @@ export class WorkspacesPart extends MenuSectionPart {
             value.workspace,
             (workspace: WorkspaceData) => {
               // Log the success to the notifications.
-              editor.parts.notifications.showNotification({
+              this.config.editor.ui.partNotifications.showNotification({
                 message: `New '${workspace.name}' workspace successfully created.`,
                 actions: [
                   {
@@ -150,7 +157,7 @@ export class WorkspacesPart extends MenuSectionPart {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error, true);
+              this.config.editor.ui.partNotifications.addError(error, true);
               modal.error = error;
               modal.stopProcessing();
             }
@@ -158,9 +165,11 @@ export class WorkspacesPart extends MenuSectionPart {
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_NEW
+    ] as FormDialogModal;
   }
 
   loadWorkspace() {
@@ -171,7 +180,7 @@ export class WorkspacesPart extends MenuSectionPart {
     this.config.state.getWorkspaces();
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     // Lazy load the workspace information.
     if (!this.config.state.workspace) {
       this.loadWorkspace();
@@ -192,7 +201,7 @@ export class WorkspacesPart extends MenuSectionPart {
       <div
         class="le__list le__list--menu le__list--constrained le__list--indent"
       >
-        ${this.templateCreateWorkspace(editor)}
+        ${this.templateCreateWorkspace()}
         ${repeat(
           this.config.state.workspaces || [],
           workspace => workspace.name,
@@ -212,13 +221,13 @@ export class WorkspacesPart extends MenuSectionPart {
     </div>`;
   }
 
-  templateCreateWorkspace(editor: LiveEditor): TemplateResult {
+  templateCreateWorkspace(): TemplateResult {
     if (this.config.state.features.isOff(FeatureFlags.WorkspaceCreate)) {
       return html``;
     }
 
     const handleNewClick = () => {
-      const modal = this.getOrCreateModalNew(editor);
+      const modal = this.getOrCreateModalNew();
       modal.show();
     };
 
@@ -230,13 +239,13 @@ export class WorkspacesPart extends MenuSectionPart {
         <span class="material-icons">add_circle</span>
       </div>
       <div class="le__list__item__label">
-        ${editor.config.labels?.workspaceNew || 'Add workspace'}
+        ${this.config.editor.config.labels?.workspaceNew || 'Add workspace'}
       </div>
     </div>`;
   }
 
-  templateNewWorkspace(editor: LiveEditor): TemplateResult {
-    const modal = this.getOrCreateModalNew(editor);
+  templateNewWorkspace(): TemplateResult {
+    const modal = this.getOrCreateModalNew();
     const isValid = modal.selective.isValid;
     try {
       return modal.selective.template(modal.selective, modal.data);
@@ -247,9 +256,9 @@ export class WorkspacesPart extends MenuSectionPart {
     }
   }
 
-  templateTitle(editor: LiveEditor): TemplateResult {
+  templateTitle(): TemplateResult {
     return html`<div class="le__part__menu__section__title">
-      ${editor.config.labels?.menuWorkspaces || this.title}
+      ${this.config.editor.config.labels?.menuWorkspaces || this.title}
     </div>`;
   }
 

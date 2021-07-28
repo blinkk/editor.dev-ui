@@ -1,20 +1,24 @@
-import {BasePart, Part} from '.';
+import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {Toast, ToastConfig} from '../ui/toast';
-import {EVENT_TOAST_SHOW} from '../events';
-import {LiveEditor} from '../editor';
+import {Toast, ToastConfig} from '../toast';
+
+import {EVENT_TOAST_SHOW} from '../../events';
 import {repeat} from '@blinkk/selective-edit';
+
+export type ToastsPartConfig = UiPartConfig;
 
 /**
  * Toasts are centralized in the display to be outside of other
  * modals and structures. Toast elements live as siblings in the
  * DOM.
  */
-export class ToastsPart extends BasePart implements Part {
+export class ToastsPart extends BasePart implements UiPartComponent {
+  config: ToastsPartConfig;
   toasts: Array<Toast>;
 
-  constructor() {
+  constructor(config: ToastsPartConfig) {
     super();
+    this.config = config;
     this.toasts = [];
 
     document.addEventListener(EVENT_TOAST_SHOW, (evt: Event) => {
@@ -24,12 +28,12 @@ export class ToastsPart extends BasePart implements Part {
     });
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     return html`<div class="le__part__toasts">
       ${repeat(
         this.toasts,
         toast => toast.uid,
-        toast => toast.template(editor)
+        toast => toast.template()
       )}
     </div>`;
   }

@@ -1,5 +1,5 @@
-import {ApiError, ProjectSource, PublishResult, PublishStatus} from '../api';
-import {BasePart, Part} from '.';
+import {ApiError, ProjectSource, PublishResult, PublishStatus} from '../../api';
+import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {
   DeepObject,
   TemplateResult,
@@ -7,27 +7,26 @@ import {
   html,
   ifDefined,
 } from '@blinkk/selective-edit';
-import {DialogActionLevel, FormDialogModal} from '../ui/modal';
-import {exampleIcon, githubIcon, localIcon} from '../ui/icons';
+import {DialogActionLevel, FormDialogModal} from '../modal';
+import {exampleIcon, githubIcon, localIcon} from '../icons';
 
-import {EVENT_WORKSPACE_LOAD} from '../events';
-import {EditorState} from '../state';
+import {EVENT_WORKSPACE_LOAD} from '../../events';
+import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
-import {LiveEditor} from '../editor';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
 import merge from 'lodash.merge';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
 
-export interface OverviewPartConfig {
+export interface OverviewPartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
   state: EditorState;
 }
 
-export class OverviewPart extends BasePart implements Part {
+export class OverviewPart extends BasePart implements UiPartComponent {
   config: OverviewPartConfig;
   isPendingPublish?: boolean;
   timeAgo: TimeAgo;
@@ -46,21 +45,25 @@ export class OverviewPart extends BasePart implements Part {
   }
 
   protected getOrCreateModalPublish(
-    editor: LiveEditor,
     fields: Array<FieldConfig>
   ): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_PUBLISH]) {
-      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
-        fields: fields,
-      });
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_PUBLISH]) {
+      const selectiveConfig = merge(
+        {},
+        this.config.editor.config.selectiveConfig,
+        {
+          fields: fields,
+        }
+      );
       const modal = new FormDialogModal({
-        title: editor.config.labels?.publishModalTitle || 'Publish',
+        title: this.config.editor.config.labels?.publishModalTitle || 'Publish',
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
       modal.templateModal = this.templatePublishWorkspace.bind(this);
       modal.actions.push({
-        label: editor.config.labels?.publishModalSubmit || 'Publish',
+        label:
+          this.config.editor.config.labels?.publishModalSubmit || 'Publish',
         level: DialogActionLevel.Primary,
         isDisabledFunc: () => {
           return modal.isProcessing || !modal.selective.isValid;
@@ -80,7 +83,7 @@ export class OverviewPart extends BasePart implements Part {
             workspace,
             value,
             (result: PublishResult) => {
-              this.showPublishResult(editor, result);
+              this.showPublishResult(result);
 
               // Reset the data for the next time the form is shown.
               modal.data = new DeepObject();
@@ -89,7 +92,7 @@ export class OverviewPart extends BasePart implements Part {
             },
             (error: ApiError) => {
               // Log the error to the notifications.
-              editor.parts.notifications.addError(error, true);
+              this.config.editor.ui.partNotifications.addError(error, true);
               modal.error = error;
               this.isPendingPublish = false;
               modal.stopProcessing();
@@ -98,12 +101,15 @@ export class OverviewPart extends BasePart implements Part {
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_PUBLISH] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_PUBLISH] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_PUBLISH] as FormDialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_PUBLISH
+    ] as FormDialogModal;
   }
 
-  handlePublishClick(evt: Event, editor: LiveEditor) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  handlePublishClick(evt: Event) {
     const project = this.config.state.project;
     const workspace = this.config.state.workspace;
 
@@ -141,16 +147,13 @@ export class OverviewPart extends BasePart implements Part {
 
       this.config.state.publish(workspace, {}, (result: PublishResult) => {
         this.isPendingPublish = false;
-        this.showPublishResult(editor, result);
+        this.showPublishResult(result);
       });
       return;
     }
 
     // Need to collect additional data, show the modal for the form.
-    const modal = this.getOrCreateModalPublish(
-      editor,
-      project.publish?.fields || []
-    );
+    const modal = this.getOrCreateModalPublish(project.publish?.fields || []);
     modal.show();
   }
 
@@ -162,7 +165,7 @@ export class OverviewPart extends BasePart implements Part {
     this.config.state.getWorkspace();
   }
 
-  showPublishResult(editor: LiveEditor, result: PublishResult) {
+  showPublishResult(result: PublishResult) {
     console.log('publish result', result);
 
     const actions: Array<NotificationAction> = [];
@@ -185,7 +188,7 @@ export class OverviewPart extends BasePart implements Part {
         });
       }
 
-      editor.parts.notifications.showNotification({
+      this.config.editor.ui.partNotifications.showNotification({
         actions: actions,
         message: message,
         title: 'Workspace published',
@@ -194,22 +197,21 @@ export class OverviewPart extends BasePart implements Part {
     this.render();
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
-      ${this.templateMenu(editor)} ${this.templateProject(editor)}
-      ${this.templateIcon(editor)} ${this.templateWorkspace(editor)}
-      ${this.templatePublish(editor)}
-      ${editor.parts.notifications.template(editor)}
+      ${this.templateMenu()} ${this.templateProject()} ${this.templateIcon()}
+      ${this.templateWorkspace()} ${this.templatePublish()}
+      ${this.config.editor.ui.partNotifications.template()}
     </div>`;
   }
 
-  templateMenu(editor: LiveEditor): TemplateResult {
-    if (editor.parts.menu.isDocked) {
+  templateMenu(): TemplateResult {
+    if (this.config.editor.ui.partMenu.isDocked) {
       return html``;
     }
 
     const handleMenuClick = () => {
-      editor.parts.menu.toggle();
+      this.config.editor.ui.partMenu.toggle();
     };
 
     return html`<div
@@ -221,7 +223,7 @@ export class OverviewPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateProject(editor: LiveEditor): TemplateResult {
+  templateProject(): TemplateResult {
     const project = this.config.state.project;
 
     // Lazy load the project.
@@ -232,14 +234,14 @@ export class OverviewPart extends BasePart implements Part {
     let projectName = project?.title || html`&nbsp;`;
 
     // Menu shows the project name when it is docked.
-    if (editor.parts.menu.isDocked) {
+    if (this.config.editor.ui.partMenu.isDocked) {
       projectName = html`&nbsp;`;
     }
 
     return html`<div class="le__part__overview__title">${projectName}</div>`;
   }
 
-  templatePublish(editor: LiveEditor): TemplateResult {
+  templatePublish(): TemplateResult {
     const project = this.config.state.project;
     const workspace = this.config.state.workspace;
 
@@ -272,15 +274,18 @@ export class OverviewPart extends BasePart implements Part {
       return html``;
     }
 
-    let label = editor.config.labels?.publishNotStarted || 'Publish';
+    let label =
+      this.config.editor.config.labels?.publishNotStarted || 'Publish';
     if (this.isPendingPublish || status === PublishStatus.Pending) {
-      label = editor.config.labels?.publishPending || 'Pending';
+      label = this.config.editor.config.labels?.publishPending || 'Pending';
     } else if (status === PublishStatus.NoChanges) {
-      label = editor.config.labels?.publishNoChanges || 'No changes';
+      label =
+        this.config.editor.config.labels?.publishNoChanges || 'No changes';
     } else if (status === PublishStatus.Complete) {
-      label = editor.config.labels?.publishComplete || 'Published';
+      label = this.config.editor.config.labels?.publishComplete || 'Published';
     } else if (status === PublishStatus.Failure) {
-      label = editor.config.labels?.publishFailure || 'Publish error';
+      label =
+        this.config.editor.config.labels?.publishFailure || 'Publish error';
     }
 
     return html`<div class="le__part__overview__publish">
@@ -297,7 +302,7 @@ export class OverviewPart extends BasePart implements Part {
           'le__button--extreme': [PublishStatus.Failure].includes(status),
         })}
         @click=${(evt: Event) => {
-          this.handlePublishClick(evt, editor);
+          this.handlePublishClick(evt);
         }}
         ?disabled=${[
           PublishStatus.NoChanges,
@@ -309,8 +314,8 @@ export class OverviewPart extends BasePart implements Part {
     </div>`;
   }
 
-  templatePublishWorkspace(editor: LiveEditor): TemplateResult {
-    const modal = this.getOrCreateModalPublish(editor, []);
+  templatePublishWorkspace(): TemplateResult {
+    const modal = this.getOrCreateModalPublish([]);
     const isValid = modal.selective.isValid;
     try {
       return modal.selective.template(modal.selective, modal.data);
@@ -321,8 +326,7 @@ export class OverviewPart extends BasePart implements Part {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateWorkspace(editor: LiveEditor): TemplateResult {
+  templateWorkspace(): TemplateResult {
     const workspace = this.config.state.workspace;
 
     // Lazy load the workspace.
@@ -362,14 +366,19 @@ export class OverviewPart extends BasePart implements Part {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateIcon(editor: LiveEditor): TemplateResult {
+  templateIcon(): TemplateResult {
     let icon = html``;
-    if (editor.state.project?.source?.source === ProjectSource.GitHub) {
+    if (
+      this.config.editor.state.project?.source?.source === ProjectSource.GitHub
+    ) {
       icon = githubIcon;
-    } else if (editor.state.project?.source?.source === ProjectSource.Local) {
+    } else if (
+      this.config.editor.state.project?.source?.source === ProjectSource.Local
+    ) {
       icon = localIcon;
-    } else if (editor.state.project?.source?.source === ProjectSource.Example) {
+    } else if (
+      this.config.editor.state.project?.source?.source === ProjectSource.Example
+    ) {
       icon = exampleIcon;
     } else {
       return html``;
@@ -379,8 +388,8 @@ export class OverviewPart extends BasePart implements Part {
     return html`<div
       class="le__part__overview__icon le__tooltip le__tooltip--bottom"
       data-tip=${ifDefined(
-        editor.state.project?.source?.label
-          ? editor.state.project?.source?.label
+        this.config.editor.state.project?.source?.label
+          ? this.config.editor.state.project?.source?.label
           : undefined
       )}
     >

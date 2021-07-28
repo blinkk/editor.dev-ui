@@ -16,9 +16,8 @@ import {
 } from '../../projectType/projectType';
 
 import {ApiError} from '../api';
-import {BaseUI} from '.';
+import {BaseUI} from './index';
 import {ListenersMixin} from '../../mixin/listeners';
-import {LiveEditor} from '../editor';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
 import {templateApiError} from './error';
 
@@ -158,7 +157,7 @@ export class Modal extends ListenersMixin(UuidMixin(BaseUI)) {
     this.render();
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     if (!this.isVisible) {
       return html``;
     }
@@ -171,19 +170,17 @@ export class Modal extends ListenersMixin(UuidMixin(BaseUI)) {
         class="le__modal__container"
         @click=${this.handleOffClick.bind(this)}
       >
-        ${this.templateContent(editor)}
+        ${this.templateContent()}
       </div>
     </div>`;
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     if (!this.templateModal) {
       return html`Modal missing template.`;
     }
 
-    return html`<div class="le__modal__content">
-      ${this.templateModal(editor)}
-    </div>`;
+    return html`<div class="le__modal__content">${this.templateModal()}</div>`;
   }
 
   toggle() {
@@ -259,14 +256,14 @@ export class DialogModal extends Modal {
     this.render();
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`<div class="le__modal__content">
-      ${this.templateHeader(editor)} ${this.templateTemplate(editor)}
-      ${this.templateFooter(editor)}
+      ${this.templateHeader()} ${this.templateTemplate()}
+      ${this.templateFooter()}
     </div>`;
   }
 
-  templateFooter(editor: LiveEditor): TemplateResult {
+  templateFooter(): TemplateResult {
     if (!this.actions.length) {
       return html``;
     }
@@ -329,8 +326,7 @@ export class DialogModal extends Modal {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateHeader(editor: LiveEditor): TemplateResult {
+  templateHeader(): TemplateResult {
     if (!this.config.title) {
       return html``;
     }
@@ -339,13 +335,13 @@ export class DialogModal extends Modal {
     </div>`;
   }
 
-  templateTemplate(editor: LiveEditor): TemplateResult {
+  templateTemplate(): TemplateResult {
     if (!this.templateModal) {
       return html`Modal missing template.`;
     }
 
     return html` <div class="le__modal__content__template">
-      ${this.templateModal(editor)}
+      ${this.templateModal()}
     </div>`;
   }
 }
@@ -393,11 +389,10 @@ export class FormDialogModal extends DialogModal {
     }
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`<div class="le__modal__content">
-      ${this.templateHeader(editor)} ${this.templateTemplate(editor)}
-      ${templateApiError(editor, this.error, {pad: true})}
-      ${this.templateFooter(editor)}
+      ${this.templateHeader()} ${this.templateTemplate()}
+      ${templateApiError(this.error, {pad: true})} ${this.templateFooter()}
     </div>`;
   }
 }

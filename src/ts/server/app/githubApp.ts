@@ -1,6 +1,5 @@
 import {EditorApp, EditorAppOptions} from './editorApp';
 import {
-  GithubBranchInfo,
   GithubInstallationInfo,
   GithubOrgInstallationInfo,
   LiveEditorApiComponent,

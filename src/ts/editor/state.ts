@@ -32,7 +32,7 @@ import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {ProjectTypeComponent} from '../projectType/projectType';
-import {announceNotification} from './parts/notifications';
+import {announceNotification} from './ui/parts/notifications';
 import {interpolatePreviewBaseUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;

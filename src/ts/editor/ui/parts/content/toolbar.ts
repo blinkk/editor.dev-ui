@@ -1,8 +1,8 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
-import {UrlConfig, UrlLevel} from '../../api';
-import {DataStorage} from '../../../utility/dataStorage';
-import {EditorState} from '../../state';
+import {UrlConfig, UrlLevel} from '../../../api';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {EditorState} from '../../../state';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 
 const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';

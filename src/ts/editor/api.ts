@@ -2,7 +2,7 @@ import {
   EditorNotification,
   NotificationLevel,
   announceNotification,
-} from './parts/notifications';
+} from './ui/parts/notifications';
 import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';

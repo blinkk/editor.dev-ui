@@ -5,9 +5,9 @@ import {
   TextAreaFieldConfig,
 } from '@blinkk/selective-edit';
 
-import {EVENT_SAVE} from '../../events';
-import {EditorFileData} from '../../api';
-import {StatePromiseKeys} from '../../state';
+import {EVENT_SAVE} from '../../../events';
+import {EditorFileData} from '../../../api';
+import {StatePromiseKeys} from '../../../state';
 
 const EXTENSIONS_DATA_ONLY: Array<string> = ['yaml', 'yml'];
 const RAW_FIELD_CONTENT: TextAreaFieldConfig = {

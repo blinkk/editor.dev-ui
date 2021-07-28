@@ -1,9 +1,9 @@
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
-import {ProjectData, UserData} from '../../api';
+import {ProjectData, UserData} from '../../../api';
 import {TemplateResult, html} from '@blinkk/selective-edit';
 
 import {repeat} from '@blinkk/selective-edit';
-import {templateLoading} from '../../template';
+import {templateLoading} from '../../../template';
 
 export type UsersMenuPartConfig = MenuSectionPartConfig;
 

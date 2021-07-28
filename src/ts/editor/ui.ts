@@ -1,21 +1,21 @@
-import {ContentPart, ContentPartConfig} from './parts/content';
-import {DashboardPart, DashboardPartConfig} from './parts/dashboard';
+import {ContentPart, ContentPartConfig} from './ui/parts/content';
+import {DashboardPart, DashboardPartConfig} from './ui/parts/dashboard';
 import {EVENT_RENDER, EVENT_RENDER_COMPLETE} from './events';
 import {EditorState, Schemes, StatePromiseKeys} from './state';
 import {LiveEditor, LiveEditorSelectiveEditorConfig} from './editor';
-import {MenuPart, MenuPartConfig} from './parts/menu';
-import {ModalsPart, ModalsPartConfig} from './parts/modals';
+import {MenuPart, MenuPartConfig} from './ui/parts/menu';
+import {ModalsPart, ModalsPartConfig} from './ui/parts/modals';
 import {
   NotificationsPart,
   NotificationsPartConfig,
-} from './parts/notifications';
-import {OverviewPart, OverviewPartConfig} from './parts/overview';
-import {PreviewPart, PreviewPartConfig} from './parts/preview';
+} from './ui/parts/notifications';
+import {OverviewPart, OverviewPartConfig} from './ui/parts/overview';
+import {PreviewPart, PreviewPartConfig} from './ui/parts/preview';
 import {TemplateResult, classMap, html, render} from '@blinkk/selective-edit';
-import {ToastsPart, ToastsPartConfig} from './parts/toasts';
+import {ToastsPart, ToastsPartConfig} from './ui/parts/toasts';
 
 import {DataStorage} from '../utility/dataStorage';
-import {LazyUiParts} from './parts';
+import {LazyUiParts} from './ui/parts';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';

@@ -1,9 +1,9 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData} from '../../api';
-import {EditorState} from '../../state';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {DeviceData} from '../../../api';
+import {EditorState} from '../../../state';
 
 const STORAGE_DEVICE_KEY = 'live.preview.device';
 const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';

@@ -1,8 +1,8 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {TemplateResult, html} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {EditorState} from '../state';
+import {DataStorage} from '../../../utility/dataStorage';
+import {EditorState} from '../../state';
 
 export interface OnboardingPartConfig extends UiPartConfig {
   /**

@@ -1,13 +1,13 @@
 import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
-import {DialogPriorityLevel, Modal} from '../ui/modal';
-import {EditorState, Schemes} from '../state';
+import {DialogPriorityLevel, Modal} from '../../ui/modal';
+import {EditorState, Schemes} from '../../state';
 import {SiteMenuPartConfig, SitePart} from './menu/site';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {UsersMenuPartConfig, UsersPart} from './menu/users';
 import {WorkspacesMenuPartConfig, WorkspacesPart} from './menu/workspaces';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../events';
+import {DataStorage} from '../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../events';
 
 const MODAL_KEY = 'menu';
 const STORAGE_DOCKED_KEY = 'live.menu.isDocked';

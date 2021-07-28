@@ -1,10 +1,10 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
-import {EditorFileData, WorkspaceData} from '../api';
-import {EditorState, StatePromiseKeys} from '../state';
+import {EditorFileData, WorkspaceData} from '../../api';
+import {EditorState, StatePromiseKeys} from '../../state';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../events';
+import {DataStorage} from '../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../events';
 
 const STORAGE_RECENT = 'live.dashboard.recent';
 const RECENT_MAX_COUNT = 8;

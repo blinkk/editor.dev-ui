@@ -10,16 +10,16 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {EditorState, StatePromiseKeys} from '../state';
+import {EditorState, StatePromiseKeys} from '../../state';
 
 import {Base} from '@blinkk/selective-edit/dist/mixins';
-import {DataStorage} from '../../utility/dataStorage';
+import {DataStorage} from '../../../utility/dataStorage';
 import {FieldsPart} from './content/sectionFields';
 import {HistoryPart} from './content/sectionHistory';
-import {ListenersMixin} from '../../mixin/listeners';
+import {ListenersMixin} from '../../../mixin/listeners';
 import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
-import {templateLoading} from '../template';
+import {templateLoading} from '../../template';
 
 const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
 const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';

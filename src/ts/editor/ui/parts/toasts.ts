@@ -1,8 +1,8 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {Toast, ToastConfig} from '../ui/toast';
+import {Toast, ToastConfig} from '../toast';
 
-import {EVENT_TOAST_SHOW} from '../events';
+import {EVENT_TOAST_SHOW} from '../../events';
 import {repeat} from '@blinkk/selective-edit';
 
 export type ToastsPartConfig = UiPartConfig;

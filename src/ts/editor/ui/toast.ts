@@ -2,7 +2,7 @@ import {
   EditorNotification,
   readNotification,
   showNotification,
-} from '../parts/notifications';
+} from './parts/notifications';
 import {
   TemplateResult,
   classMap,
@@ -10,7 +10,7 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {UiPartComponent, UiPartConfig} from '../parts';
+import {UiPartComponent, UiPartConfig} from './parts';
 
 import {BaseUI} from './index';
 import {ListenersMixin} from '../../mixin/listeners';

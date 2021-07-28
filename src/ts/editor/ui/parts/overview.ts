@@ -1,4 +1,4 @@
-import {ApiError, ProjectSource, PublishResult, PublishStatus} from '../api';
+import {ApiError, ProjectSource, PublishResult, PublishStatus} from '../../api';
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {
   DeepObject,
@@ -7,11 +7,11 @@ import {
   html,
   ifDefined,
 } from '@blinkk/selective-edit';
-import {DialogActionLevel, FormDialogModal} from '../ui/modal';
-import {exampleIcon, githubIcon, localIcon} from '../ui/icons';
+import {DialogActionLevel, FormDialogModal} from '../modal';
+import {exampleIcon, githubIcon, localIcon} from '../icons';
 
-import {EVENT_WORKSPACE_LOAD} from '../events';
-import {EditorState} from '../state';
+import {EVENT_WORKSPACE_LOAD} from '../../events';
+import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';

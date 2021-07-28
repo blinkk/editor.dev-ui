@@ -1,6 +1,6 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {Modal} from '../ui/modal';
+import {Modal} from '../modal';
 import {repeat} from '@blinkk/selective-edit';
 
 export type ModalsPartConfig = UiPartConfig;

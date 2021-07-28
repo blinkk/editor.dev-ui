@@ -3,9 +3,9 @@ import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
 import {CONTENT_SECTION_ORDER} from '../content';
-import {DataStorage} from '../../../utility/dataStorage';
-import {EditorState} from '../../state';
-import {templateLoading} from '../../template';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {EditorState} from '../../../state';
+import {templateLoading} from '../../../template';
 
 export interface ContentHeaderConfig extends UiPartConfig {
   sections: LazyUiParts;

@@ -1,9 +1,9 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {EditorState} from '../../state';
-import {slugify} from '../../../utility/slugify';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {EditorState} from '../../../state';
+import {slugify} from '../../../../utility/slugify';
 
 export interface MenuSectionPartConfig extends UiPartConfig {
   isExpandedByDefault?: boolean;

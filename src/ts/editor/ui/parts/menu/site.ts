@@ -1,25 +1,25 @@
-import {ApiError, EditorFileData, FileData} from '../../api';
+import {ApiError, EditorFileData, FileData} from '../../../api';
 import {
   DeepObject,
   TemplateResult,
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {DialogActionLevel, FormDialogModal} from '../../ui/modal';
+import {DialogActionLevel, FormDialogModal} from '../../modal';
 import {
   IncludeExcludeFilter,
   IncludeExcludeFilterConfig,
-} from '../../../utility/filter';
+} from '../../../../utility/filter';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../../events';
-import {LiveEditor} from '../../editor';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {EVENT_FILE_LOAD} from '../../../events';
+import {LiveEditor} from '../../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
-import {StatePromiseKeys} from '../../state';
+import {StatePromiseKeys} from '../../../state';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
-import {templateLoading} from '../../template';
+import {templateLoading} from '../../../template';
 
 const DEFAULT_SITE_FILTER: IncludeExcludeFilterConfig = {
   includes: [/\.(yaml|yml|html|md)$/],

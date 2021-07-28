@@ -1,10 +1,10 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
-import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../ui/modal';
+import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../modal';
 import {
   EVENT_NOTIFICATION_ADD,
   EVENT_NOTIFICATION_READ,
   EVENT_NOTIFICATION_SHOW,
-} from '../events';
+} from '../../events';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {showToast} from './toasts';
 

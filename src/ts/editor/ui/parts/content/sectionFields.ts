@@ -1,9 +1,9 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
 
-import {EVENT_SAVE} from '../../events';
-import {EditorFileData} from '../../api';
-import {StatePromiseKeys} from '../../state';
+import {EVENT_SAVE} from '../../../events';
+import {EditorFileData} from '../../../api';
+import {StatePromiseKeys} from '../../../state';
 import merge from 'lodash.merge';
 
 export class FieldsPart extends ContentSectionPart {

@@ -1,10 +1,10 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, styleMap} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData} from '../../api';
-import {EVENT_FILE_SAVE_COMPLETE} from '../../events';
-import {EditorState} from '../../state';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {DeviceData} from '../../../api';
+import {EVENT_FILE_SAVE_COMPLETE} from '../../../events';
+import {EditorState} from '../../../state';
 
 /**
  * Size of buffer to place around the preview frame so it does not

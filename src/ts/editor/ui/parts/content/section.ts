@@ -6,14 +6,14 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
-import {EditorState, StatePromiseKeys} from '../../../editor/state';
+import {EditorState, StatePromiseKeys} from '../../../../editor/state';
 import {
   ProjectTypeComponent,
   updateSelectiveForProjectType,
-} from '../../../projectType/projectType';
+} from '../../../../projectType/projectType';
 
-import {DataStorage} from '../../../utility/dataStorage';
-import {LiveEditorAutoFields} from '../../autoFields';
+import {DataStorage} from '../../../../utility/dataStorage';
+import {LiveEditorAutoFields} from '../../../autoFields';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 

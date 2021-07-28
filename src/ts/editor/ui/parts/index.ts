@@ -1,6 +1,6 @@
-import {EVENT_RENDER} from '../events';
-import {LiveEditor} from '../editor';
-import {LiveTemplate} from '../template';
+import {EVENT_RENDER} from '../../events';
+import {LiveEditor} from '../../editor';
+import {LiveTemplate} from '../../template';
 
 export abstract class BasePart {
   /**

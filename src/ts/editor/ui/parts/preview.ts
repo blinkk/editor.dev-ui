@@ -1,12 +1,12 @@
 import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
-import {EditorState, StatePromiseKeys} from '../state';
+import {EditorState, StatePromiseKeys} from '../../state';
 import {PreviewFramePart, PreviewFramePartConfig} from './preview/frame';
 import {PreviewToolbarPart, PreviewToolbarPartConfig} from './preview/toolbar';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
-import {DataStorage} from '../../utility/dataStorage';
-import {DeviceData} from '../api';
-import {templateLoading} from '../template';
+import {DataStorage} from '../../../utility/dataStorage';
+import {DeviceData} from '../../api';
+import {templateLoading} from '../../template';
 
 export interface PreviewPartConfig extends UiPartConfig {
   /**

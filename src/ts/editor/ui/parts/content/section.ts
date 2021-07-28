@@ -59,6 +59,14 @@ export class ContentSectionPart extends BasePart implements UiPartComponent {
       }
     );
 
+    if (this.config.state.projectType) {
+      updateSelectiveForProjectType(
+        this.config.state.projectType,
+        this.selective
+      );
+      this.render();
+    }
+
     if (this.isVisible === undefined) {
       const currentSection = this.config.storage.getItem(
         STORAGE_CONTENT_SECTION

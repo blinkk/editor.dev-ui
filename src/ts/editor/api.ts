@@ -6,8 +6,8 @@ import {
 import {FeatureManagerSettings} from '../utility/featureManager';
 import {FieldConfig} from '@blinkk/selective-edit';
 import {IncludeExcludeFilterConfig} from '../utility/filter';
-import bent from 'bent';
 import {LiveEditorLabels} from './template';
+import bent from 'bent';
 
 /**
  * Interface for the live editor api.

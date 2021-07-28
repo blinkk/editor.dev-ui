@@ -20,6 +20,14 @@ export interface MenuPartConfig extends UiPartConfig {
   storage: DataStorage;
 }
 
+/**
+ * Ui part for displaying the menu.
+ *
+ * The menu can be displayed in a docked state or as a floating menu.
+ *
+ * When it is docked the template renders normally, but when it is
+ * not docked it is rendered using a modal overlay.
+ */
 export class MenuPart extends BasePart implements UiPartComponent {
   config: MenuPartConfig;
   isDocked: boolean;
@@ -30,7 +38,9 @@ export class MenuPart extends BasePart implements UiPartComponent {
     super();
     this.config = config;
     this.isDocked = this.config.storage.getItemBoolean(STORAGE_DOCKED_KEY);
+
     this.parts = new LazyUiParts();
+
     this.parts.register('site', SitePart, {
       editor: this.config.editor,
       isExpandedByDefault: true,

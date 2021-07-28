@@ -15,7 +15,7 @@ import {TemplateResult, classMap, html, render} from '@blinkk/selective-edit';
 import {ToastsPart, ToastsPartConfig} from './parts/toasts';
 
 import {DataStorage} from '../utility/dataStorage';
-import {LazyUiParts, UiPartComponent} from './parts';
+import {LazyUiParts} from './parts';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';

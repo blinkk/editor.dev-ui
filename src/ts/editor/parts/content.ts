@@ -28,7 +28,7 @@ const STORAGE_SETTING_SHOW_DEEP_LINKS = 'live.content.dev.showDeepLinks';
 const CONTENT_SECTION_ORDER = [
   'fields',
   // TODO: Media part does not do anything yet.
-  'media',
+  // 'media',
   'raw',
   'history',
 ];
@@ -45,6 +45,12 @@ export interface ContentPartConfig extends UiPartConfig {
   storage: DataStorage;
 }
 
+/**
+ * Ui part for displaying the content of a file.
+ *
+ * The content is broken up into sections which are displayed individually.
+ * For example, the fields editor, raw editor, or content history.
+ */
 export class ContentPart extends BasePart implements UiPartComponent {
   config: ContentPartConfig;
   contentSettings: ContentSettings;

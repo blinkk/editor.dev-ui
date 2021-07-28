@@ -117,12 +117,18 @@ export class AppUi {
 
     // Make sure that the menu is in use before checking for docked menu.
     if (this.parts.has('menu')) {
-      classes['le--docked-menu'] = (
-        this.parts.get('menu') as MenuPart
-      ).isDocked;
+      classes['le--docked-menu'] = this.partMenu.isDocked;
     }
 
     return classes;
+  }
+
+  get partContent(): ContentPart {
+    return this.parts.get('content') as ContentPart;
+  }
+
+  get partDashboard(): DashboardPart {
+    return this.parts.get('dashboard') as DashboardPart;
   }
 
   get partMenu(): MenuPart {
@@ -135,6 +141,18 @@ export class AppUi {
 
   get partNotifications(): NotificationsPart {
     return this.parts.get('notifications') as NotificationsPart;
+  }
+
+  get partOverview(): OverviewPart {
+    return this.parts.get('overview') as OverviewPart;
+  }
+
+  get partPreview(): PreviewPart {
+    return this.parts.get('preview') as PreviewPart;
+  }
+
+  get partToasts(): ToastsPart {
+    return this.parts.get('toasts') as ToastsPart;
   }
 
   render() {
@@ -158,10 +176,10 @@ export class AppUi {
   template(): TemplateResult {
     const parts: Array<TemplateResult> = [];
 
-    parts.push(this.parts.get('menu').template());
+    parts.push(this.partMenu.template());
     parts.push(this.templateContentStructure());
-    parts.push(this.parts.get('modals').template());
-    parts.push(this.parts.get('toasts').template());
+    parts.push(this.partModals.template());
+    parts.push(this.partToasts.template());
 
     return html`<div class=${classMap(this.classesForApp())}>${parts}</div>`;
   }
@@ -173,25 +191,24 @@ export class AppUi {
       !this.config.state.file &&
       !this.config.state.inProgress(StatePromiseKeys.GetFile)
     ) {
-      parts.push(this.parts.get('dashboard').template());
-    } else if ((this.parts.get('content') as ContentPart).isExpanded) {
+      parts.push(this.partDashboard.template());
+    } else if (this.partContent.isExpanded) {
       parts.push(html`<div class="le__structure__content_only">
-        ${this.parts.get('content').template()}
+        ${this.partContent.template()}
       </div>`);
-    } else if ((this.parts.get('preview') as PreviewPart).isExpanded) {
+    } else if (this.partPreview.isExpanded) {
       parts.push(html`<div class="le__structure__preview_only">
-        ${this.parts.get('preview').template()}
+        ${this.partPreview.template()}
       </div>`);
     } else {
       parts.push(html`<div class="le__structure__content_panes">
-        ${this.parts.get('content').template()}
-        ${this.parts.get('preview').template()}
+        ${this.partContent.template()} ${this.partPreview.template()}
       </div>`);
     }
 
     return html`<div class="le__structure__content">
       <div class="le__structure__content_header">
-        ${this.parts.get('overview').template()}
+        ${this.partOverview.template()}
       </div>
       ${parts}
     </div>`;

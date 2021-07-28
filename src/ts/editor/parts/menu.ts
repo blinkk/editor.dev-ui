@@ -118,6 +118,18 @@ export class MenuPart extends BasePart implements UiPartComponent {
     this.modal?.show();
   }
 
+  get partSite(): SitePart {
+    return this.parts.get('site') as SitePart;
+  }
+
+  get partUsers(): UsersPart {
+    return this.parts.get('users') as UsersPart;
+  }
+
+  get partWorkspaces(): WorkspacesPart {
+    return this.parts.get('workspaces') as WorkspacesPart;
+  }
+
   template(): TemplateResult {
     if (!this.isDocked) {
       // Let the modal handle the display of the menu.
@@ -202,9 +214,8 @@ export class MenuPart extends BasePart implements UiPartComponent {
 
   templateContent(): TemplateResult {
     return html`<div class="le__part__menu__content">
-      ${(this.parts.get('workspaces') as WorkspacesPart).template()}
-      ${(this.parts.get('site') as SitePart).template()}
-      ${(this.parts.get('users') as UsersPart).template()}
+      ${this.partWorkspaces.template()} ${this.partSite.template()}
+      ${this.partUsers.template()}
     </div>`;
   }
 

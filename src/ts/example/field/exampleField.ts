@@ -130,7 +130,6 @@ export class ExampleFieldField extends Field {
    * @param editor Selective editor used to render the template.
    * @param data Data provided to render the template.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateStructure(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     if (!this.field) {
       this.field = this.types.fields.newFromKey(

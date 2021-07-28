@@ -16,7 +16,6 @@ export interface UiPartComponent {
   template: LiveTemplate;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UiPartConfig {
   /**
    * Editor.

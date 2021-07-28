@@ -326,7 +326,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateWorkspace(): TemplateResult {
     const workspace = this.config.state.workspace;
 
@@ -367,7 +366,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateIcon(): TemplateResult {
     let icon = html``;
     if (

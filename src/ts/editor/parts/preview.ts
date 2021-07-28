@@ -85,12 +85,10 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     return html`<div class=${classMap(this.classesForPart())}>${pieces}</div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewConfigLoading(): TemplateResult {
     return templateLoading({}, html`<div>Searching for file preview.</div>`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewNotAvailable(): TemplateResult {
     // When waiting for the file to load do not show anything
     // since the file load is already showing.
@@ -106,7 +104,6 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewNotConfigured(): TemplateResult {
     // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">

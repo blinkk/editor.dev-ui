@@ -326,7 +326,6 @@ export class DialogModal extends Modal {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateHeader(): TemplateResult {
     if (!this.config.title) {
       return html``;

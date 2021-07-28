@@ -2,13 +2,13 @@ import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '..';
 import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
+import {CONTENT_SECTION_ORDER} from '../content';
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
 import {templateLoading} from '../../template';
 
 export interface ContentHeaderConfig extends UiPartConfig {
   sections: LazyUiParts;
-  sectionOrder: Array<string>;
   /**
    * State class for working with editor state.
    */
@@ -31,7 +31,7 @@ export class ContentHeaderPart extends BasePart implements UiPartComponent {
   }
 
   handleSectionClick(evt: Event, section: ContentSectionPart) {
-    for (const sectionKey of this.config.sectionOrder) {
+    for (const sectionKey of CONTENT_SECTION_ORDER) {
       (this.config.sections.get(sectionKey) as ContentSectionPart).isVisible =
         false;
     }
@@ -43,7 +43,7 @@ export class ContentHeaderPart extends BasePart implements UiPartComponent {
   template(): TemplateResult {
     let currentSection: ContentSectionPart | undefined = undefined;
     const visibleSections: Array<ContentSectionPart> = [];
-    for (const sectionKey of this.config.sectionOrder) {
+    for (const sectionKey of CONTENT_SECTION_ORDER) {
       const section: ContentSectionPart = this.config.sections.get(
         sectionKey
       ) as ContentSectionPart;

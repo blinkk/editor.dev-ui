@@ -25,7 +25,7 @@ const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
 const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';
 const STORAGE_SETTING_SHOW_DEEP_LINKS = 'live.content.dev.showDeepLinks';
 
-const CONTENT_SECTION_ORDER = [
+export const CONTENT_SECTION_ORDER = [
   'fields',
   // TODO: Media part does not do anything yet.
   // 'media',
@@ -100,7 +100,6 @@ export class ContentPart extends BasePart implements UiPartComponent {
     this.parts.register('header', ContentHeaderPart, {
       editor: this.config.editor,
       sections: this.sections,
-      sectionOrder: CONTENT_SECTION_ORDER,
       state: this.config.state,
       storage: this.config.storage,
     } as ContentHeaderConfig);

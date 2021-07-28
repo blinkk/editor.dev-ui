@@ -4,7 +4,7 @@ import {EditorState, StatePromiseKeys} from './state';
 import {LiveEditorApiComponent, ProjectTypes} from './api';
 
 import {AmagakiProjectType} from '../projectType/amagaki/amagakiProjectType';
-import {AppUi} from './ui';
+import {AppUi} from './ui/app';
 import {EVENT_SAVE} from './events';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {LiveEditorLabels} from './template';

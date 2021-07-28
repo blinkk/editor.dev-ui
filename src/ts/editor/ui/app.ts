@@ -24,7 +24,7 @@ import en from 'javascript-time-ago/locale/en';
 TimeAgo.addDefaultLocale(en);
 
 /**
- * Configuration for the live editor.
+ * Configuration for the editor UI.
  */
 export interface AppUiConfig {
   /**
@@ -45,6 +45,11 @@ export interface AppUiConfig {
   storage: DataStorage;
 }
 
+/**
+ * UI for the editor app.
+ *
+ * All UI output for the editor is handled from this class.
+ */
 export class AppUi {
   config: AppUiConfig;
   container: HTMLElement;
@@ -155,7 +160,13 @@ export class AppUi {
     return this.parts.get('toasts') as ToastsPart;
   }
 
-  render() {
+  /**
+   * Renders the app into the container.
+   *
+   * If a render is already in process other renders are
+   * debounced and rerendered after the current render is complete.
+   */
+  render(): void {
     if (this.isRendering) {
       this.isPendingRender = true;
       return;
@@ -173,6 +184,13 @@ export class AppUi {
     }
   }
 
+  /**
+   * Template that is rendered for the app.
+   *
+   * This template is 'root' template for the entire app UI.
+   * In other words, the entire app UI structure starts from
+   * this template.
+   */
   template(): TemplateResult {
     const parts: Array<TemplateResult> = [];
 

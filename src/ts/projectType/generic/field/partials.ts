@@ -145,10 +145,10 @@ export class GenericPartialsField
   }
 
   protected getOrCreateModalNew(
-    editor: LiveEditor,
     selectiveEditor: SelectiveEditor
   ): FormDialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_NEW]) {
+    const editor = this.globalConfig.editor as LiveEditor;
+    if (!editor.ui.partModals.modals[MODAL_KEY_NEW]) {
       // Setup the editor.
       const options = [];
       for (const [partialKey, partial] of Object.entries(this.partials || {})) {
@@ -194,8 +194,7 @@ export class GenericPartialsField
         };
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      modal.templateModal = (editor: LiveEditor): TemplateResult => {
+      modal.templateModal = (): TemplateResult => {
         const isValid = modal.selective.isValid;
         try {
           return modal.selective.template(modal.selective, modal.data);
@@ -259,16 +258,14 @@ export class GenericPartialsField
         },
       });
       modal.addCancelAction();
-      editor.parts.modals.modals[MODAL_KEY_NEW] = modal;
+      editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NEW] as FormDialogModal;
+    return editor.ui.partModals.modals[MODAL_KEY_NEW] as FormDialogModal;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAddItem(evt: Event, editor: SelectiveEditor, data: DeepObject) {
-    const modal = this.getOrCreateModalNew(
-      this.globalConfig.editor as LiveEditor,
-      editor
-    );
+    const modal = this.getOrCreateModalNew(editor);
     modal.show();
   }
 

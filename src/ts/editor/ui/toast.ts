@@ -10,12 +10,13 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {BaseUI} from '.';
+import {UiPartComponent, UiPartConfig} from '../parts';
+
+import {BaseUI} from './index';
 import {ListenersMixin} from '../../mixin/listeners';
-import {LiveEditor} from '../editor';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
 
-export interface ToastConfig {
+export interface ToastConfig extends UiPartConfig {
   classes?: Array<string>;
   notification: EditorNotification;
   noAutoClose?: boolean;
@@ -23,7 +24,10 @@ export interface ToastConfig {
   noPauseOnHover?: boolean;
 }
 
-export class Toast extends ListenersMixin(UuidMixin(BaseUI)) {
+export class Toast
+  extends ListenersMixin(UuidMixin(BaseUI))
+  implements UiPartComponent
+{
   config: ToastConfig;
   element?: HTMLElement;
   isClosed: boolean;
@@ -103,8 +107,7 @@ export class Toast extends ListenersMixin(UuidMixin(BaseUI)) {
     this.render();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     if (!this.isVisible) {
       return html``;
     }

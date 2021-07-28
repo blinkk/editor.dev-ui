@@ -1,14 +1,13 @@
-import {BasePart, Part} from '..';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {UrlConfig, UrlLevel} from '../../api';
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
-import {LiveEditor} from '../../editor';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 
 const STORAGE_EXPANDED_KEY = 'live.content.isExpanded';
 
-export interface ContentToolbarConfig {
+export interface ContentToolbarConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -19,7 +18,7 @@ export interface ContentToolbarConfig {
   storage: DataStorage;
 }
 
-export class ContentToolbarPart extends BasePart implements Part {
+export class ContentToolbarPart extends BasePart implements UiPartComponent {
   config: ContentToolbarConfig;
   isExpanded?: boolean;
 
@@ -48,10 +47,10 @@ export class ContentToolbarPart extends BasePart implements Part {
     return 'lock';
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__toolbar__label">
-        <strong>${editor.config.labels?.file || 'File'}:</strong>
+        <strong>${this.config.editor.config.labels?.file || 'File'}:</strong>
         ${findPreviewValue(
           this.config.state?.file?.data || {},
           [],
@@ -76,13 +75,12 @@ export class ContentToolbarPart extends BasePart implements Part {
             >`;
           }
         )}
-        ${this.templateExpanded(editor)}
+        ${this.templateExpanded()}
       </div>
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateExpanded(editor: LiveEditor): TemplateResult {
+  templateExpanded(): TemplateResult {
     return html`<div
       class="le__clickable le__tooltip--top"
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}

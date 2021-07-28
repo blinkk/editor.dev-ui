@@ -1,4 +1,8 @@
-import {BasePart, Part} from '.';
+import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
+import {ContentFooterConfig, ContentFooterPart} from './content/footer';
+import {ContentHeaderConfig, ContentHeaderPart} from './content/header';
+import {ContentSectionPart, ContentSectionPartConfig} from './content/section';
+import {ContentToolbarConfig, ContentToolbarPart} from './content/toolbar';
 import {
   EditorConfig,
   TemplateResult,
@@ -6,18 +10,14 @@ import {
   html,
   repeat,
 } from '@blinkk/selective-edit';
-import {Base} from '@blinkk/selective-edit/dist/mixins';
-import {ContentFooterPart} from './content/footer';
-import {ContentHeaderPart} from './content/header';
-import {ContentSectionPart} from './content/section';
-import {ContentToolbarPart} from './content/toolbar';
-import {DataStorage} from '../../utility/dataStorage';
 import {EditorState, StatePromiseKeys} from '../state';
+
+import {Base} from '@blinkk/selective-edit/dist/mixins';
+import {DataStorage} from '../../utility/dataStorage';
 import {FieldsPart} from './content/sectionFields';
 import {HistoryPart} from './content/sectionHistory';
 import {ListenersMixin} from '../../mixin/listeners';
-import {LiveEditor} from '../editor';
-// import {MediaPart} from './content/sectionMedia';
+import {MediaPart} from './content/sectionMedia';
 import {RawPart} from './content/sectionRaw';
 import {templateLoading} from '../template';
 
@@ -25,7 +25,15 @@ const STORAGE_SETTING_HIGHLIGHT_AUTO = 'live.content.dev.hightlightAuto';
 const STORAGE_SETTING_HIGHLIGHT_DIRTY = 'live.content.dev.hightlightDirty';
 const STORAGE_SETTING_SHOW_DEEP_LINKS = 'live.content.dev.showDeepLinks';
 
-export interface ContentPartConfig {
+const CONTENT_SECTION_ORDER = [
+  'fields',
+  // TODO: Media part does not do anything yet.
+  'media',
+  'raw',
+  'history',
+];
+
+export interface ContentPartConfig extends UiPartConfig {
   /**
    * Configuration for creating the selective editor.
    */
@@ -37,17 +45,11 @@ export interface ContentPartConfig {
   storage: DataStorage;
 }
 
-export interface ContentParts {
-  footer: ContentFooterPart;
-  header: ContentHeaderPart;
-  toolbar: ContentToolbarPart;
-}
-
-export class ContentPart extends BasePart implements Part {
+export class ContentPart extends BasePart implements UiPartComponent {
   config: ContentPartConfig;
   contentSettings: ContentSettings;
-  parts: ContentParts;
-  sections: Array<ContentSectionPart>;
+  parts: LazyUiParts;
+  sections: LazyUiParts;
 
   constructor(config: ContentPartConfig) {
     super();
@@ -55,46 +57,52 @@ export class ContentPart extends BasePart implements Part {
     this.config = config;
     this.contentSettings = new ContentSettings(this.config.storage);
 
-    // Order of appearance.
-    this.sections = [
-      new FieldsPart({
-        selectiveConfig: this.config.selectiveConfig,
-        state: this.config.state,
-        isDefaultSection: true,
-        storage: this.config.storage,
-      }),
-      // TODO: Media part does not do anything yet.
-      // new MediaPart({
-      //   selectiveConfig: this.config.selectiveConfig,
-      //   state: this.config.state,
-      //   storage: this.config.storage,
-      // }),
-      new RawPart({
-        selectiveConfig: this.config.selectiveConfig,
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-      new HistoryPart({
-        selectiveConfig: this.config.selectiveConfig,
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-    ];
+    this.sections = new LazyUiParts();
 
-    this.parts = {
-      footer: new ContentFooterPart({
-        contentSettings: this.contentSettings,
-      }),
-      header: new ContentHeaderPart({
-        sections: this.sections,
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-      toolbar: new ContentToolbarPart({
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-    };
+    this.sections.register('fields', FieldsPart, {
+      editor: this.config.editor,
+      selectiveConfig: this.config.selectiveConfig,
+      state: this.config.state,
+      isDefaultSection: true,
+      storage: this.config.storage,
+    } as ContentSectionPartConfig);
+    this.sections.register('media', MediaPart, {
+      editor: this.config.editor,
+      selectiveConfig: this.config.selectiveConfig,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as ContentSectionPartConfig);
+    this.sections.register('raw', RawPart, {
+      editor: this.config.editor,
+      selectiveConfig: this.config.selectiveConfig,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as ContentSectionPartConfig);
+    this.sections.register('history', HistoryPart, {
+      editor: this.config.editor,
+      selectiveConfig: this.config.selectiveConfig,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as ContentSectionPartConfig);
+
+    this.parts = new LazyUiParts();
+
+    this.parts.register('footer', ContentFooterPart, {
+      editor: this.config.editor,
+      contentSettings: this.contentSettings,
+    } as ContentFooterConfig);
+    this.parts.register('header', ContentHeaderPart, {
+      editor: this.config.editor,
+      sections: this.sections,
+      sectionOrder: CONTENT_SECTION_ORDER,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as ContentHeaderConfig);
+    this.parts.register('toolbar', ContentToolbarPart, {
+      editor: this.config.editor,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as ContentToolbarConfig);
   }
 
   classesForPart(): Record<string, boolean> {
@@ -105,42 +113,62 @@ export class ContentPart extends BasePart implements Part {
   }
 
   get isExpanded(): boolean {
-    return this.parts.toolbar.isExpanded || false;
+    return this.partToolbar.isExpanded || false;
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  get partFooter(): ContentFooterPart {
+    return this.parts.get('footer') as ContentFooterPart;
+  }
+
+  get partHeader(): ContentHeaderPart {
+    return this.parts.get('header') as ContentHeaderPart;
+  }
+
+  get partToolbar(): ContentToolbarPart {
+    return this.parts.get('toolbar') as ContentToolbarPart;
+  }
+
+  template(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
 
-    subParts.push(this.parts.toolbar.template(editor));
+    subParts.push(this.partToolbar.template());
 
-    if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
+    if (this.config.editor.state.inProgress(StatePromiseKeys.GetFile)) {
       subParts.push(html`<div class="le__part__content__loading">
         ${templateLoading(
           {},
           html`<div class="le__part__content__loading__status">
             Loading
-            <code>${editor.state.loadingFilePath || 'file'}</code>
+            <code>${this.config.editor.state.loadingFilePath || 'file'}</code>
           </div>`
         )}
       </div>`);
     } else {
-      subParts.push(this.parts.header.template(editor));
-      subParts.push(this.templateSections(editor));
+      subParts.push(this.partHeader.template());
+      subParts.push(this.templateSections());
     }
 
-    subParts.push(this.parts.footer.template(editor));
+    subParts.push(this.partFooter.template());
 
     return html`<div class=${classMap(this.classesForPart())}>
       ${subParts}
     </div>`;
   }
 
-  templateSections(editor: LiveEditor): TemplateResult {
+  templateSections(): TemplateResult {
+    const visibleSections: Array<ContentSectionPart> = [];
+    for (const sectionKey of CONTENT_SECTION_ORDER) {
+      const section: ContentSectionPart = this.sections.get(
+        sectionKey
+      ) as ContentSectionPart;
+      visibleSections.push(section);
+    }
+
     return html`<div class="le__part__content__sections">
       ${repeat(
-        this.sections,
-        part => part.section,
-        part => part.template(editor)
+        visibleSections,
+        section => section.section,
+        section => section.template()
       )}
     </div>`;
   }

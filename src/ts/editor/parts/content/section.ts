@@ -1,4 +1,4 @@
-import {BasePart, Part} from '..';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {
   EditorConfig,
   SelectiveEditor,
@@ -13,12 +13,11 @@ import {
 } from '../../../projectType/projectType';
 
 import {DataStorage} from '../../../utility/dataStorage';
-import {LiveEditor} from '../../editor';
 import {LiveEditorAutoFields} from '../../autoFields';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
-export interface ContentSectionPartConfig {
+export interface ContentSectionPartConfig extends UiPartConfig {
   /**
    * Is this section the default visible?
    */
@@ -37,7 +36,7 @@ export interface ContentSectionPartConfig {
   storage: DataStorage;
 }
 
-export class ContentSectionPart extends BasePart implements Part {
+export class ContentSectionPart extends BasePart implements UiPartComponent {
   config: ContentSectionPartConfig;
   isProcessing?: boolean;
   isVisible?: boolean;
@@ -116,49 +115,51 @@ export class ContentSectionPart extends BasePart implements Part {
     return 'Section';
   }
 
-  labelForAction(editor: LiveEditor): string {
+  labelForAction(): string {
     if (this.isProcessing) {
-      return editor.config.labels?.contentSaveProcessing || 'Saving';
+      return (
+        this.config.editor.config.labels?.contentSaveProcessing || 'Saving'
+      );
     } else if (!this.selective.isValid) {
-      return editor.config.labels?.contentSaveErrors || 'Form errors';
+      return (
+        this.config.editor.config.labels?.contentSaveErrors || 'Form errors'
+      );
     } else if (this.selective.isClean) {
-      return editor.config.labels?.contentSaveClean || 'No changes';
+      return this.config.editor.config.labels?.contentSaveClean || 'No changes';
     }
 
-    return editor.config.labels?.contentSave || 'Save';
+    return this.config.editor.config.labels?.contentSave || 'Save';
   }
 
   get section(): string {
     return 'section';
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     if (!this.isVisible) {
       return html``;
     }
 
     return html`<div class=${classMap(this.classesForPart())}>
-      ${this.templateContent(editor)}
+      ${this.templateContent()}
     </div>`;
   }
 
-  templateAction(editor: LiveEditor): TemplateResult {
+  templateAction(): TemplateResult {
     return html`<button
       class=${classMap(this.classesForAction())}
       @click=${this.handleAction.bind(this)}
       ?disabled=${this.isActionDisabled}
     >
-      ${this.labelForAction(editor)}
+      ${this.labelForAction()}
     </button>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`section content`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateStatus(editor: LiveEditor): TemplateResult {
+  templateStatus(): TemplateResult {
     if (!this.selective.isValid) {
       return html`<div
         class=${classMap({

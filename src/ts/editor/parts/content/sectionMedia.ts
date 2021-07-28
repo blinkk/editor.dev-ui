@@ -1,6 +1,5 @@
 import {TemplateResult, html} from '@blinkk/selective-edit';
 import {ContentSectionPart} from './section';
-import {LiveEditor} from '../../editor';
 
 export class MediaPart extends ContentSectionPart {
   get label() {
@@ -11,7 +10,7 @@ export class MediaPart extends ContentSectionPart {
     return 'media';
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     return html`Media...`;
   }
 }

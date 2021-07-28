@@ -1,4 +1,4 @@
-import {BasePart, Part} from '.';
+import {BasePart, UiPartComponent, UiPartConfig} from '.';
 import {DialogActionLevel, DialogModal, DialogPriorityLevel} from '../ui/modal';
 import {
   EVENT_NOTIFICATION_ADD,
@@ -6,11 +6,12 @@ import {
   EVENT_NOTIFICATION_SHOW,
 } from '../events';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
-import {LiveEditor} from '../editor';
 import {showToast} from './toasts';
 
 const MODAL_KEY_NOTIFICATION = 'notification';
 const MODAL_KEY_NOTIFICATIONS = 'notifications';
+
+export type NotificationsPartConfig = UiPartConfig;
 
 export enum NotificationLevel {
   Debug,
@@ -111,13 +112,15 @@ interface InternalNotification extends EditorNotification {
  *
  * This also allows reuse of modals across parts of the editor.
  */
-export class NotificationsPart extends BasePart implements Part {
+export class NotificationsPart extends BasePart implements UiPartComponent {
+  config: NotificationsPartConfig;
   protected notifications: Set<InternalNotification>;
   protected hasNewError: boolean;
   protected currentNotification?: InternalNotification;
 
-  constructor() {
+  constructor(config: NotificationsPartConfig) {
     super();
+    this.config = config;
     this.notifications = new Set();
     this.hasNewError = false;
 
@@ -162,6 +165,7 @@ export class NotificationsPart extends BasePart implements Part {
       this.hasNewError = true;
     } else {
       showToast({
+        editor: this.config.editor,
         notification: notification,
       });
     }
@@ -194,10 +198,8 @@ export class NotificationsPart extends BasePart implements Part {
     };
   }
 
-  protected getOrCreateModalNotificationSingle(
-    editor: LiveEditor
-  ): DialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_NOTIFICATION]) {
+  protected getOrCreateModalNotificationSingle(): DialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NOTIFICATION]) {
       const modal = new DialogModal({
         title: 'Notification',
         priority: DialogPriorityLevel.High,
@@ -211,13 +213,15 @@ export class NotificationsPart extends BasePart implements Part {
         this.render();
       });
 
-      editor.parts.modals.modals[MODAL_KEY_NOTIFICATION] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_NOTIFICATION] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NOTIFICATION] as DialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_NOTIFICATION
+    ] as DialogModal;
   }
 
-  protected getOrCreateModalNotifications(editor: LiveEditor): DialogModal {
-    if (!editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS]) {
+  protected getOrCreateModalNotifications(): DialogModal {
+    if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NOTIFICATIONS]) {
       const modal = new DialogModal({
         title: 'Notifications',
         priority: DialogPriorityLevel.High,
@@ -233,9 +237,11 @@ export class NotificationsPart extends BasePart implements Part {
         },
       });
       modal.addCancelAction('Close');
-      editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] = modal;
+      this.config.editor.ui.partModals.modals[MODAL_KEY_NOTIFICATIONS] = modal;
     }
-    return editor.parts.modals.modals[MODAL_KEY_NOTIFICATIONS] as DialogModal;
+    return this.config.editor.ui.partModals.modals[
+      MODAL_KEY_NOTIFICATIONS
+    ] as DialogModal;
   }
 
   getIconForNotificationLevel(level: NotificationLevel, isRead: boolean) {
@@ -314,7 +320,7 @@ export class NotificationsPart extends BasePart implements Part {
     this.currentNotification = newNotification;
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     let icon = 'notifications';
 
     if (this.hasUnreadNotificationsAtLevel(NotificationLevel.Error)) {
@@ -324,7 +330,7 @@ export class NotificationsPart extends BasePart implements Part {
       // Just shows the first time it has a new error, can close
       // without needing to mark the notification as read.
       if (this.hasNewError) {
-        const modal = this.getOrCreateModalNotifications(editor);
+        const modal = this.getOrCreateModalNotifications();
         modal.isVisible = true;
         this.hasNewError = false;
       }
@@ -334,7 +340,7 @@ export class NotificationsPart extends BasePart implements Part {
 
     if (this.currentNotification) {
       this.currentNotification.isRead = true;
-      const modal = this.getOrCreateModalNotificationSingle(editor);
+      const modal = this.getOrCreateModalNotificationSingle();
       modal.config.title = this.currentNotification.title || modal.config.title;
 
       // Reset the actions to match the notification.
@@ -362,7 +368,7 @@ export class NotificationsPart extends BasePart implements Part {
     }
 
     const handleOpenNotifications = () => {
-      const modal = this.getOrCreateModalNotifications(editor);
+      const modal = this.getOrCreateModalNotifications();
       modal.show();
     };
 
@@ -375,10 +381,7 @@ export class NotificationsPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateNotification(
-    editor: LiveEditor,
-    notification: InternalNotification
-  ): TemplateResult {
+  templateNotification(notification: InternalNotification): TemplateResult {
     let markReadButton = html``;
     if (!notification.isRead) {
       markReadButton = html`<div
@@ -431,19 +434,18 @@ export class NotificationsPart extends BasePart implements Part {
       </div>
       ${markReadButton}
       ${notification.isExpanded
-        ? this.templateNotificationDescription(editor, notification)
+        ? this.templateNotificationDescription(notification)
         : ''}
       ${notification.isExpanded
-        ? this.templateNotificationMeta(editor, notification)
+        ? this.templateNotificationMeta(notification)
         : ''}
       <div class="ls__part__notifications__notification__actions">
-        ${this.templateNotificationActions(editor, notification)}
+        ${this.templateNotificationActions(notification)}
       </div>
     </div>`;
   }
 
   templateNotificationActions(
-    editor: LiveEditor,
     notification: InternalNotification
   ): TemplateResult {
     let additionalDetails = html``;
@@ -461,7 +463,7 @@ export class NotificationsPart extends BasePart implements Part {
               })
             );
 
-            const modal = this.getOrCreateModalNotifications(editor);
+            const modal = this.getOrCreateModalNotifications();
             modal.hide();
           };
           return html`<button
@@ -478,7 +480,6 @@ export class NotificationsPart extends BasePart implements Part {
   }
 
   templateNotificationDescription(
-    editor: LiveEditor,
     notification: InternalNotification
   ): TemplateResult {
     if (!notification.description) {
@@ -490,10 +491,7 @@ export class NotificationsPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateNotificationMeta(
-    editor: LiveEditor,
-    notification: InternalNotification
-  ): TemplateResult {
+  templateNotificationMeta(notification: InternalNotification): TemplateResult {
     if (!notification.meta) {
       return html``;
     }
@@ -503,7 +501,7 @@ export class NotificationsPart extends BasePart implements Part {
     </div>`;
   }
 
-  templateNotificationSingle(editor: LiveEditor): TemplateResult {
+  templateNotificationSingle(): TemplateResult {
     if (!this.currentNotification) {
       return html``;
     }
@@ -530,18 +528,15 @@ export class NotificationsPart extends BasePart implements Part {
         <div class="ls__part__notifications__notification__label">
           ${this.currentNotification?.message}
         </div>
-        ${this.templateNotificationDescription(
-          editor,
-          this.currentNotification
-        )}
+        ${this.templateNotificationDescription(this.currentNotification)}
         ${this.currentNotification.isExpanded
-          ? this.templateNotificationMeta(editor, this.currentNotification)
+          ? this.templateNotificationMeta(this.currentNotification)
           : expandMeta}
       </div>
     </div>`;
   }
 
-  templateNotifications(editor: LiveEditor): TemplateResult {
+  templateNotifications(): TemplateResult {
     if (!this.notifications.size) {
       return html`<div class="le__part__notifications__modal">
         <div class="le__list">
@@ -569,7 +564,7 @@ export class NotificationsPart extends BasePart implements Part {
           notifications,
           notification => notification.addedOn?.getUTCDate(),
           (notification: InternalNotification) =>
-            this.templateNotification(editor, notification)
+            this.templateNotification(notification)
         )}
       </div>
     </div>`;

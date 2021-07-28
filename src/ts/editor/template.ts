@@ -1,8 +1,7 @@
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
-import {LiveEditor} from './editor';
 
 export interface LiveTemplate {
-  (editor: LiveEditor): TemplateResult;
+  (): TemplateResult;
 }
 
 export interface TemplateOptions {
@@ -32,4 +31,114 @@ export function templateLoading(
     </div>`;
   }
   return html`<div class=${classMap(classes)}></div>`;
+}
+
+/**
+ * Custom labels for the editor UI.
+ */
+export interface LiveEditorLabels {
+  /**
+   * Label for content save action.
+   */
+  contentSave?: string;
+  /**
+   * Label for content save action clean state.
+   */
+  contentSaveClean?: string;
+  /**
+   * Label for content save action processing.
+   */
+  contentSaveErrors?: string;
+  /**
+   * Label for content save action processing.
+   */
+  contentSaveProcessing?: string;
+  /**
+   * Label for media field extra fields.
+   */
+  fieldMediaExtra?: string;
+  /**
+   * Label for media field sub fields.
+   */
+  fieldMediaFields?: string;
+  /**
+   * Label for media field label.
+   */
+  fieldMediaLabel?: string;
+  /**
+   * Label for media field path.
+   */
+  fieldMediaPath?: string;
+  /**
+   * Label for media field preview.
+   */
+  fieldMediaPreview?: string;
+  /**
+   * Label for the file.
+   */
+  file?: string;
+  /**
+   * Label for action to create new file.
+   */
+  fileNew?: string;
+  /**
+   * Label for the files structure.
+   */
+  files?: string;
+  /**
+   * Label for the site section of the menu.
+   */
+  menuSite?: string;
+  /**
+   * Label for the users section of the menu.
+   */
+  menuUsers?: string;
+  /**
+   * Label for the workspaces section of the menu.
+   */
+  menuWorkspaces?: string;
+  /**
+   * Label for publishing when a publish has been completed.
+   */
+  publishComplete?: string;
+  /**
+   * Label for publishing when a publish has failed.
+   */
+  publishFailure?: string;
+  /**
+   * Submit button label for the publish modal window.
+   */
+  publishModalSubmit?: string;
+  /**
+   * Title for the publish modal window.
+   */
+  publishModalTitle?: string;
+  /**
+   * Label for publishing when there are not changes to publish.
+   */
+  publishNoChanges?: string;
+  /**
+   * Label for publishing when a publish is not allowed.
+   */
+  publishNotAllowed?: string;
+  /**
+   * Label for publishing when a publish has not been started.
+   */
+  publishNotStarted?: string;
+  /**
+   * Label for publishing when a publish is in progress.
+   */
+  publishPending?: string;
+  /**
+   * Label for the workspace.
+   */
+  workspace?: string;
+  /**
+   * Label for the action to create a new workspace.
+   */
+  workspaceNew?: string;
+  /**
+   * Label for the workspace.
+   */
+  workspaces?: string;
 }

@@ -1,12 +1,21 @@
+import {MenuSectionPart, MenuSectionPartConfig} from './index';
 import {ProjectData, UserData} from '../../api';
 import {TemplateResult, html} from '@blinkk/selective-edit';
-import {LiveEditor} from '../../editor';
-import {MenuSectionPart} from './index';
+
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../template';
 
+export type UsersMenuPartConfig = MenuSectionPartConfig;
+
 export class UsersPart extends MenuSectionPart {
+  config: UsersMenuPartConfig;
   users?: Array<UserData>;
+
+  constructor(config: UsersMenuPartConfig) {
+    super(config);
+
+    this.config = config;
+  }
 
   classesForPart(): Record<string, boolean> {
     const classes = super.classesForPart();
@@ -22,7 +31,7 @@ export class UsersPart extends MenuSectionPart {
     })?.users;
   }
 
-  templateContent(editor: LiveEditor): TemplateResult {
+  templateContent(): TemplateResult {
     // Lazy load the users information.
     if (this.users === undefined) {
       this.loadProject();
@@ -65,9 +74,9 @@ export class UsersPart extends MenuSectionPart {
     </div>`;
   }
 
-  templateTitle(editor: LiveEditor): TemplateResult {
+  templateTitle(): TemplateResult {
     return html`<div class="le__part__menu__section__title">
-      ${editor.config.labels?.menuUsers || this.title}
+      ${this.config.editor.config.labels?.menuUsers || this.title}
     </div>`;
   }
 

@@ -1,14 +1,14 @@
-import {BasePart, Part} from '.';
+import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
+import {EditorState, StatePromiseKeys} from '../state';
+import {PreviewFramePart, PreviewFramePartConfig} from './preview/frame';
+import {PreviewToolbarPart, PreviewToolbarPartConfig} from './preview/toolbar';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+
 import {DataStorage} from '../../utility/dataStorage';
 import {DeviceData} from '../api';
-import {EditorState, StatePromiseKeys} from '../state';
-import {LiveEditor} from '../editor';
-import {PreviewFramePart} from './preview/frame';
-import {PreviewToolbarPart} from './preview/toolbar';
 import {templateLoading} from '../template';
 
-export interface PreviewPartConfig {
+export interface PreviewPartConfig extends UiPartConfig {
   /**
    * State class for working with editor state.
    */
@@ -19,30 +19,25 @@ export interface PreviewPartConfig {
   storage: DataStorage;
 }
 
-export interface PreviewParts {
-  frame: PreviewFramePart;
-  toolbar: PreviewToolbarPart;
-}
-
-export class PreviewPart extends BasePart implements Part {
+export class PreviewPart extends BasePart implements UiPartComponent {
   config: PreviewPartConfig;
   device?: DeviceData;
-  parts: PreviewParts;
+  parts: LazyUiParts;
 
   constructor(config: PreviewPartConfig) {
     super();
     this.config = config;
 
-    this.parts = {
-      frame: new PreviewFramePart({
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-      toolbar: new PreviewToolbarPart({
-        state: this.config.state,
-        storage: this.config.storage,
-      }),
-    };
+    this.parts = new LazyUiParts();
+
+    this.parts.register('frame', PreviewFramePart, {
+      state: this.config.state,
+      storage: this.config.storage,
+    } as PreviewToolbarPartConfig);
+    this.parts.register('toolbar', PreviewToolbarPart, {
+      state: this.config.state,
+      storage: this.config.storage,
+    } as PreviewFramePartConfig);
   }
 
   classesForPart(): Record<string, boolean> {
@@ -50,49 +45,56 @@ export class PreviewPart extends BasePart implements Part {
       le__panel: true,
       le__part__preview: true,
       'le__part__preview--device_mode':
-        (this.parts.toolbar.isDeviceMode || false) &&
-        Boolean(this.parts.toolbar.device),
+        (this.partToolbar.isDeviceMode || false) &&
+        Boolean(this.partToolbar.device),
     };
   }
 
   get isExpanded(): boolean {
-    return this.parts.toolbar.isExpanded || false;
+    return this.partToolbar.isExpanded || false;
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  get partFrame(): PreviewFramePart {
+    return this.parts.get('frame') as PreviewFramePart;
+  }
+
+  get partToolbar(): PreviewToolbarPart {
+    return this.parts.get('toolbar') as PreviewToolbarPart;
+  }
+
+  template(): TemplateResult {
     const pieces: Array<TemplateResult> = [];
 
-    pieces.push(this.parts.toolbar.template(editor));
+    pieces.push(this.partToolbar.template());
 
     if (this.config.state.file?.url) {
       pieces.push(
-        this.parts.frame.template(
-          editor,
-          this.parts.toolbar.device,
-          this.parts.toolbar.isRotated
+        this.partFrame.template(
+          this.partToolbar.device,
+          this.partToolbar.isRotated
         )
       );
     } else if (this.config.state.previewConfig === undefined) {
-      pieces.push(this.templatePreviewConfigLoading(editor));
+      pieces.push(this.templatePreviewConfigLoading());
     } else if (this.config.state.previewConfig === null) {
-      pieces.push(this.templatePreviewNotConfigured(editor));
+      pieces.push(this.templatePreviewNotConfigured());
     } else {
-      pieces.push(this.templatePreviewNotAvailable(editor));
+      pieces.push(this.templatePreviewNotAvailable());
     }
 
     return html`<div class=${classMap(this.classesForPart())}>${pieces}</div>`;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templatePreviewConfigLoading(editor: LiveEditor): TemplateResult {
+  templatePreviewConfigLoading(): TemplateResult {
     return templateLoading({}, html`<div>Searching for file preview.</div>`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templatePreviewNotAvailable(editor: LiveEditor): TemplateResult {
+  templatePreviewNotAvailable(): TemplateResult {
     // When waiting for the file to load do not show anything
     // since the file load is already showing.
-    if (editor.state.inProgress(StatePromiseKeys.GetFile)) {
+    if (this.config.editor.state.inProgress(StatePromiseKeys.GetFile)) {
       return html``;
     }
 
@@ -105,7 +107,7 @@ export class PreviewPart extends BasePart implements Part {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templatePreviewNotConfigured(editor: LiveEditor): TemplateResult {
+  templatePreviewNotConfigured(): TemplateResult {
     // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">
       <div>

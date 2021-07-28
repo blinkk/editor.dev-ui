@@ -1,13 +1,14 @@
-import {BasePart, Part} from '..';
+import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '..';
 import {ContentSectionPart, STORAGE_CONTENT_SECTION} from './section';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
-import {LiveEditor} from '../../editor';
 import {templateLoading} from '../../template';
 
-export interface ContentHeaderConfig {
-  sections: Array<ContentSectionPart>;
+export interface ContentHeaderConfig extends UiPartConfig {
+  sections: LazyUiParts;
+  sectionOrder: Array<string>;
   /**
    * State class for working with editor state.
    */
@@ -15,7 +16,7 @@ export interface ContentHeaderConfig {
   storage: DataStorage;
 }
 
-export class ContentHeaderPart extends BasePart implements Part {
+export class ContentHeaderPart extends BasePart implements UiPartComponent {
   config: ContentHeaderConfig;
 
   constructor(config: ContentHeaderConfig) {
@@ -30,27 +31,32 @@ export class ContentHeaderPart extends BasePart implements Part {
   }
 
   handleSectionClick(evt: Event, section: ContentSectionPart) {
-    for (const sectionPart of this.config.sections) {
-      sectionPart.isVisible = false;
+    for (const sectionKey of this.config.sectionOrder) {
+      (this.config.sections.get(sectionKey) as ContentSectionPart).isVisible =
+        false;
     }
     this.config.storage.setItem(STORAGE_CONTENT_SECTION, section.section);
     section.isVisible = true;
     this.render();
   }
 
-  template(editor: LiveEditor): TemplateResult {
+  template(): TemplateResult {
     let currentSection: ContentSectionPart | undefined = undefined;
-    for (const sectionPart of this.config.sections) {
-      if (sectionPart.isVisible) {
-        currentSection = sectionPart;
-        break;
+    const visibleSections: Array<ContentSectionPart> = [];
+    for (const sectionKey of this.config.sectionOrder) {
+      const section: ContentSectionPart = this.config.sections.get(
+        sectionKey
+      ) as ContentSectionPart;
+      visibleSections.push(section);
+      if (section.isVisible) {
+        currentSection = section;
       }
     }
 
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__content__header__sections">
         ${repeat(
-          this.config.sections,
+          visibleSections,
           section => section.section,
           section =>
             html`<div
@@ -79,8 +85,8 @@ export class ContentHeaderPart extends BasePart implements Part {
       </div>
       <div class="le__part__content__header__actions">
         ${currentSection?.isProcessing ? html`${templateLoading()}` : ''}
-        ${currentSection?.templateStatus(editor) || html``}
-        ${currentSection?.templateAction(editor) || html``}
+        ${currentSection?.templateStatus() || html``}
+        ${currentSection?.templateAction() || html``}
       </div>
     </div>`;
   }

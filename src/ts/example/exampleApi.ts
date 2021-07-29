@@ -1411,7 +1411,7 @@ export class ExampleApi implements LiveEditorApiComponent {
       simulateNetwork(
         resolve,
         {
-          status: OnboardingStatus.Missing,
+          status: OnboardingStatus.Valid,
           flow: OnboardingFlow.Local,
         } as OnboardingInfo,
         {

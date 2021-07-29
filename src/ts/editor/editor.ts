@@ -118,6 +118,10 @@ export class LiveEditor {
     });
   }
 
+  get api(): LiveEditorApiComponent {
+    return this.config.api;
+  }
+
   render() {
     this.ui.render();
   }

@@ -1,36 +1,7 @@
 title: Local Development
 navTitle: Local
 description: Develop projects using a local set of project files.
-
-css:
-- !pod.staticFile /static/editor.css
-
-js:
-- !pod.staticFile /static/app.min.js
+$view: /views/editor.njk
 
 config:
   port: 9090
-
-partials:
-- partial: spacer
-  options:
-  - large
-
-- partial: hero
-  title: Local development
-  body: Edit project in a local project.
-
-- partial: spacer
-  options:
-  - medium
-
-- partial: local
-  title: Searching for local project...
-  body: "Run the following command in the main directory of your local project:"
-  instructions:
-    version: 14
-    command: npx @blinkk/editor.dev
-
-- partial: spacer
-  options:
-  - large

@@ -1,0 +1,11 @@
+{% extends "/views/base.njk" %}
+
+{% block coreCss %}
+  <link rel="stylesheet" href="{{pod.staticFile('/static/editor.css')|url}}">
+{% endblock %}
+
+{% block coreScript %}
+  <script src="{{pod.staticFile('/static/app.min.js')|url}}"></script>
+{% endblock %}
+
+{% block main %}{% endblock %}

@@ -10,6 +10,9 @@ import {
   FileData,
   GrowProjectTypeApi,
   LiveEditorApiComponent,
+  OnboardingFlow,
+  OnboardingInfo,
+  OnboardingStatus,
   PartialData,
   PreviewSettings,
   ProjectData,
@@ -54,6 +57,21 @@ import {MediaFieldConfig} from '../editor/field/media';
 const MAX_RESPONSE_MS = 1200;
 const MIN_RESPONSE_MS = 250;
 
+interface SimulateNetworkOptions {
+  /**
+   * Maximum time a simulated request should take.
+   */
+  maxResponseMs?: number;
+  /**
+   * Minimum time a simulated request should take.
+   */
+  minResponseMs?: number;
+  /**
+   * When true the network simulation is skipped and response instantly.
+   */
+  noNetworkSimulation?: boolean;
+}
+
 /**
  * Simulate having the request be slowed down by a network.
  *
@@ -63,16 +81,19 @@ const MIN_RESPONSE_MS = 250;
 function simulateNetwork(
   callback: Function,
   response: any,
-  noNetworkSimulation?: boolean
+  options?: SimulateNetworkOptions
 ) {
-  if (noNetworkSimulation) {
+  if (options?.noNetworkSimulation) {
     callback(response);
     return;
   }
 
+  const maxReponse = options?.maxResponseMs || MAX_RESPONSE_MS;
+  const minReponse = options?.minResponseMs || MIN_RESPONSE_MS;
+
   setTimeout(() => {
     callback(response);
-  }, Math.random() * (MAX_RESPONSE_MS - MIN_RESPONSE_MS) + MIN_RESPONSE_MS);
+  }, Math.random() * (maxReponse - minReponse) + minReponse);
 }
 
 const DEFAULT_EDITOR_FILE: EditorFileData = {
@@ -1348,9 +1369,7 @@ const currentWorkspaces: Array<WorkspaceData> = [
   },
 ];
 
-export interface ExampleApiOptions {
-  noNetworkSimulation?: boolean;
-}
+export type ExampleApiOptions = SimulateNetworkOptions;
 
 /**
  * Example api that returns data through a 'simulated' network.
@@ -1375,6 +1394,35 @@ export class ExampleApi implements LiveEditorApiComponent {
     return true;
   }
 
+  async checkOnboarding(): Promise<OnboardingInfo> {
+    return new Promise<OnboardingInfo>((resolve, reject) => {
+      const methodName = 'checkOnboarding';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to check onboarding.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Allow the tool to give different onboarding info.
+      simulateNetwork(
+        resolve,
+        {
+          status: OnboardingStatus.Missing,
+          flow: OnboardingFlow.Local,
+        } as OnboardingInfo,
+        {
+          // Do not need to slow down the normal example loading.
+          // But may be useful later?
+          noNetworkSimulation: true,
+        }
+      );
+    });
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
       const methodName = 'copyFile';
@@ -1392,7 +1440,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: path,
       };
       currentFileset.push(newFile);
-      simulateNetwork(resolve, newFile, this.options?.noNetworkSimulation);
+      simulateNetwork(resolve, newFile, this.options);
     });
   }
 
@@ -1413,7 +1461,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         path: path,
       };
       currentFileset.push(newFile);
-      simulateNetwork(resolve, newFile, this.options?.noNetworkSimulation);
+      simulateNetwork(resolve, newFile, this.options);
     });
   }
 
@@ -1447,7 +1495,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         name: workspace,
       };
       currentWorkspaces.push(newWorkspace);
-      simulateNetwork(resolve, newWorkspace, this.options?.noNetworkSimulation);
+      simulateNetwork(resolve, newWorkspace, this.options);
     });
   }
 
@@ -1471,7 +1519,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(resolve, {}, this.options?.noNetworkSimulation);
+      simulateNetwork(resolve, {}, this.options);
     });
   }
 
@@ -1512,7 +1560,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             width: 2200,
           } as DeviceData,
         ],
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1561,7 +1609,7 @@ export class ExampleApi implements LiveEditorApiComponent {
       simulateNetwork(
         resolve,
         fullFiles[file.path] || defaultFile,
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1579,11 +1627,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(
-        resolve,
-        [...currentFileset],
-        this.options?.noNetworkSimulation
-      );
+      simulateNetwork(resolve, [...currentFileset], this.options);
     });
   }
 
@@ -1607,7 +1651,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           path: file.path,
           url: 'image-landscape.png',
         } as FileData,
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1654,7 +1698,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             },
           },
         } as PreviewSettings,
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1725,7 +1769,7 @@ export class ExampleApi implements LiveEditorApiComponent {
             },
           ],
         } as ProjectData,
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1773,11 +1817,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         }
       }
 
-      simulateNetwork(
-        resolve,
-        currentWorkspace,
-        this.options?.noNetworkSimulation
-      );
+      simulateNetwork(resolve, currentWorkspace, this.options);
     });
   }
 
@@ -1794,11 +1834,7 @@ export class ExampleApi implements LiveEditorApiComponent {
         return;
       }
 
-      simulateNetwork(
-        resolve,
-        [...currentWorkspaces],
-        this.options?.noNetworkSimulation
-      );
+      simulateNetwork(resolve, [...currentWorkspaces], this.options);
     });
   }
 
@@ -1817,11 +1853,7 @@ export class ExampleApi implements LiveEditorApiComponent {
 
       currentWorkspace = workspace;
 
-      simulateNetwork(
-        resolve,
-        currentWorkspace,
-        this.options?.noNetworkSimulation
-      );
+      simulateNetwork(resolve, currentWorkspace, this.options);
     });
   }
 
@@ -1867,7 +1899,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           status: status,
           workspace: responseWorkspace,
         },
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1894,8 +1926,30 @@ export class ExampleApi implements LiveEditorApiComponent {
       simulateNetwork(
         resolve,
         fullFiles[file.file.path] || DEFAULT_EDITOR_FILE,
-        this.options?.noNetworkSimulation
+        this.options
       );
+    });
+  }
+
+  async updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo> {
+    return new Promise<OnboardingInfo>((resolve, reject) => {
+      const methodName = 'updateOnboarding';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to update onboarding.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      // TODO: Allow the tool to give different onboarding info.
+      simulateNetwork(resolve, info, {
+        // Do not need to slow down the normal example loading.
+        // But may be useful later?
+        noNetworkSimulation: true,
+      });
     });
   }
 
@@ -1918,7 +1972,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           path: '/static/img/portrait.png',
           url: 'image-portrait.png',
         } as FileData,
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -1969,7 +2023,7 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
             },
           } as PartialData,
         },
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -2020,7 +2074,7 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
             },
           } as PartialData,
         },
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }
@@ -2055,7 +2109,7 @@ export class ExampleGrowApi implements GrowProjectTypeApi {
             veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
           },
         },
-        this.options?.noNetworkSimulation
+        this.options
       );
     });
   }

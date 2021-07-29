@@ -1,14 +1,14 @@
 import {EditorApp, EditorAppOptions} from './editorApp';
 import {
-  GithubInstallationInfo,
-  GithubOrgInstallationInfo,
+  GitHubInstallationInfo,
+  GitHubOrgInstallationInfo,
   LiveEditorApiComponent,
   WorkspaceData,
 } from '../../editor/api';
 import {TemplateResult, html, repeat} from '@blinkk/selective-edit';
 
 import {GCSRemoteMedia} from '../../remoteMedia/GCSRemoteMedia';
-import {GithubApi} from '../gh/githubApi';
+import {GitHubApi} from '../gh/githubApi';
 import {RemoteMediaConstructor} from '../../remoteMedia';
 import {ServerApiComponent} from '../api';
 import {ServiceOnboarding} from './service';
@@ -30,17 +30,17 @@ const preventNormalLinks = (evt: KeyboardEvent) => {
   evt.preventDefault();
 };
 
-export interface GithubEditorAppOptions extends EditorAppOptions {
+export interface GitHubEditorAppOptions extends EditorAppOptions {
   organization?: string;
   project?: string;
   branch?: string;
 }
 
-export class GithubEditorApp extends EditorApp {
-  options?: GithubEditorAppOptions;
+export class GitHubEditorApp extends EditorApp {
+  options?: GitHubEditorAppOptions;
   protected _api: (LiveEditorApiComponent & ServerApiComponent) | null;
 
-  constructor(container: HTMLElement, options?: GithubEditorAppOptions) {
+  constructor(container: HTMLElement, options?: GitHubEditorAppOptions) {
     super(container, options);
     this.options = options || {};
     this._api = null;
@@ -70,7 +70,7 @@ export class GithubEditorApp extends EditorApp {
       return this._api;
     }
 
-    this._api = new GithubApi(
+    this._api = new GitHubApi(
       'gh',
       this.options?.organization,
       this.options?.project,
@@ -85,35 +85,13 @@ export class GithubEditorApp extends EditorApp {
 
     return this._api;
   }
-
-  async init() {
-    // Check for information missing details needed for the editor.
-    if (
-      !this.options?.organization ||
-      !this.options?.project ||
-      !this.options?.branch
-    ) {
-      const onboarding = new GithubOnboarding(
-        this.container,
-        this.api as GithubApi
-      );
-      onboarding.render();
-    } else {
-      // Check if the user is signed in before rendering the editor.
-      if (!this.api.checkAuth()) {
-        (this.api as GithubApi).triggerAuth();
-      } else {
-        this.editor.render();
-      }
-    }
-  }
 }
 
-class GithubOnboarding extends ServiceOnboarding {
-  api: GithubApi;
-  organizations?: Array<GithubInstallationInfo>;
-  installation?: GithubInstallationInfo;
-  repositories?: Array<GithubOrgInstallationInfo>;
+class GitHubOnboarding extends ServiceOnboarding {
+  api: GitHubApi;
+  organizations?: Array<GitHubInstallationInfo>;
+  installation?: GitHubInstallationInfo;
+  repositories?: Array<GitHubOrgInstallationInfo>;
   /**
    * Track the id that was used to load the repositories.
    * Reset the loaded repositories when the id does not match.
@@ -129,7 +107,7 @@ class GithubOnboarding extends ServiceOnboarding {
    */
   workspacesId?: string;
 
-  constructor(container: HTMLElement, api: GithubApi) {
+  constructor(container: HTMLElement, api: GitHubApi) {
     super(container, api);
     this.api = api;
 

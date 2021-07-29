@@ -8,7 +8,14 @@ import {
   LiveEditorApiComponent,
   MediaFileData,
   MediaOptions,
+  OnboardingData,
+  OnboardingDataGitHub,
+  OnboardingDataLocal,
+  OnboardingFlow,
+  OnboardingInfo,
+  OnboardingStatus,
   PingResult,
+  PingStatus,
   PreviewSettings,
   ProjectData,
   PublishResult,
@@ -19,6 +26,8 @@ import {GrowApi} from '../projectType/grow/growApi';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
 import {interpolatePreviewConfigUrl} from '../editor/preview';
+import {rafTimeout} from '../utility/rafTimeout';
+import {EVENT_ONBOARDING_UPDATE, EVENT_RENDER} from '../editor/events';
 
 const DEFAULT_LOCAL_PORT = 9090;
 
@@ -70,6 +79,13 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
    */
   checkAuth(): boolean {
     return true;
+  }
+
+  async checkOnboarding(): Promise<OnboardingInfo> {
+    // TODO: Use the api to determine if missing information.
+    return {
+      status: OnboardingStatus.Missing,
+    };
   }
 
   /**
@@ -252,6 +268,13 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
     ) as Promise<EditorFileData>;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo> {
+    return {
+      status: OnboardingStatus.Valid,
+    };
+  }
+
   async uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData> {
     // Providers can upload the file to different services.
     for (const provider of this.remoteMediaProviders) {
@@ -300,10 +323,41 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
  */
 export class LocalServerApi extends ServerApi {
   port: number;
+  onboardingStatus: OnboardingStatus;
 
-  constructor(port: number) {
+  constructor(port?: number) {
     super();
-    this.port = port;
+    this.port = port || DEFAULT_LOCAL_PORT;
+
+    // Local projects start out as missing until a successful ping
+    // is accomplished.
+    this.onboardingStatus = OnboardingStatus.Missing;
+
+    // Test the local api to make sure that it is available before
+    // we start rendering the editor.
+    const pingApi = async () => {
+      try {
+        const pingResponse = await this.ping();
+
+        if (pingResponse.status === PingStatus.Ok) {
+          // Found the local server, onboarding finished.
+          this.onboardingStatus = OnboardingStatus.Valid;
+
+          document.dispatchEvent(new CustomEvent(EVENT_ONBOARDING_UPDATE));
+        } else {
+          console.error('Ping response not expected: ', pingResponse);
+        }
+      } catch (err) {
+        console.error('Unable to ping the api.', err);
+        rafTimeout(pingApi, 2500);
+      }
+    };
+
+    try {
+      pingApi();
+    } catch (err) {
+      // Ignore error
+    }
   }
 
   get apiBaseUrl() {
@@ -321,6 +375,26 @@ export class LocalServerApi extends ServerApi {
     return `/local/${this.port}/`;
   }
 
+  async checkOnboarding(): Promise<OnboardingInfo> {
+    return this.onboardingInfo;
+  }
+
+  protected get onboardingInfo(): OnboardingInfo {
+    return {
+      status: this.onboardingStatus,
+      flow: OnboardingFlow.Local,
+      data: {
+        port: this.port,
+      },
+    };
+  }
+
+  async updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo> {
+    this.port = (info.data as OnboardingDataLocal).port || this.port;
+
+    return this.onboardingInfo;
+  }
+
   async ping() {
     return postJSON(
       this.resolveApiUrl('/ping'),
@@ -334,11 +408,11 @@ export class LocalServerApi extends ServerApi {
  * api for the request urls.
  */
 export class ServiceServerApi extends ServerApi {
-  branch: string;
+  branch?: string;
   isDev: boolean;
   isUnstable: boolean;
-  organization: string;
-  project: string;
+  organization?: string;
+  project?: string;
   service: string;
 
   constructor(
@@ -351,9 +425,9 @@ export class ServiceServerApi extends ServerApi {
   ) {
     super();
     this.service = service;
-    this.organization = organization || '';
-    this.project = project || '';
-    this.branch = branch || 'main';
+    this.organization = organization;
+    this.project = project;
+    this.branch = branch;
     this.isUnstable = isUnstable || false;
     this.isDev = isDev || false;
   }
@@ -380,6 +454,50 @@ export class ServiceServerApi extends ServerApi {
 
   get baseUrl() {
     return `/${this.service}/${this.organization}/${this.project}/${this.branch}/`;
+  }
+
+  async checkOnboarding(): Promise<OnboardingInfo> {
+    return {
+      status: this.onboardingStatus,
+      flow: OnboardingFlow.GitHub,
+      data: {
+        organization: this.organization,
+        project: this.project,
+        branch: this.branch,
+      } as OnboardingDataGitHub,
+    };
+  }
+
+  protected get onboardingStatus(): OnboardingStatus {
+    // Only valid when all required information is set.
+    if (
+      this.organization !== undefined &&
+      this.project !== undefined &&
+      this.branch !== undefined
+    ) {
+      return OnboardingStatus.Valid;
+    }
+
+    return OnboardingStatus.Missing;
+  }
+
+  async updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo> {
+    if (info.data) {
+      const infoData: OnboardingDataGitHub = info.data as OnboardingDataGitHub;
+      this.organization = infoData.organization;
+      this.project = infoData.project;
+      this.branch = infoData.branch;
+    }
+
+    return {
+      status: this.onboardingStatus,
+      flow: OnboardingFlow.GitHub,
+      data: {
+        organization: this.organization,
+        project: this.project,
+        branch: this.branch,
+      } as OnboardingDataGitHub,
+    };
   }
 
   async loadWorkspace(workspace: WorkspaceData): Promise<WorkspaceData> {

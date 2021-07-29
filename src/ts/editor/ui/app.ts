@@ -9,6 +9,7 @@ import {
   NotificationsPart,
   NotificationsPartConfig,
 } from './parts/notifications';
+import {OnboardingPart, OnboardingPartConfig} from './parts/onboarding';
 import {OverviewPart, OverviewPartConfig} from './parts/overview';
 import {PreviewPart, PreviewPartConfig} from './parts/preview';
 import {TemplateResult, classMap, html, render} from '@blinkk/selective-edit';
@@ -19,6 +20,8 @@ import {LazyUiParts} from './parts';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import {OnboardingStatus} from '../api';
+import {templateLoading} from '../template';
 
 // Set the default locale for the time ago globally.
 TimeAgo.addDefaultLocale(en);
@@ -84,6 +87,10 @@ export class AppUi {
     this.parts.register('notifications', NotificationsPart, {
       editor: this.config.editor,
     } as NotificationsPartConfig);
+    this.parts.register('onboarding', OnboardingPart, {
+      editor: this.config.editor,
+      state: this.config.state,
+    } as OnboardingPartConfig);
     this.parts.register('overview', OverviewPart, {
       editor: this.config.editor,
       state: this.config.state,
@@ -148,6 +155,10 @@ export class AppUi {
     return this.parts.get('notifications') as NotificationsPart;
   }
 
+  get partOnboarding(): OnboardingPart {
+    return this.parts.get('onboarding') as OnboardingPart;
+  }
+
   get partOverview(): OverviewPart {
     return this.parts.get('overview') as OverviewPart;
   }
@@ -194,10 +205,18 @@ export class AppUi {
   template(): TemplateResult {
     const parts: Array<TemplateResult> = [];
 
-    parts.push(this.partMenu.template());
-    parts.push(this.templateContentStructure());
-    parts.push(this.partModals.template());
-    parts.push(this.partToasts.template());
+    // Check if we need to onboard the user.
+    if (this.config.state.onboardingInfo?.status === OnboardingStatus.Valid) {
+      parts.push(this.partMenu.template());
+      parts.push(this.templateContentStructure());
+      parts.push(this.partModals.template());
+      parts.push(this.partToasts.template());
+    } else if (this.config.state.onboardingInfo === undefined) {
+      this.config.state.checkOnboarding();
+      parts.push(templateLoading());
+    } else {
+      parts.push(this.partOnboarding.template());
+    }
 
     return html`<div class=${classMap(this.classesForApp())}>${parts}</div>`;
   }

@@ -12,7 +12,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="{{pod.staticFile('/dist/css/main.css')|url}}">
+  {% block coreCss %}
+    <link rel="stylesheet" href="{{pod.staticFile('/dist/css/main.css')|url}}">
+  {% endblock %}
   {% if doc.fields.css -%}
     {% for file in doc.fields.css -%}
       <link rel="stylesheet" href="{{file|url}}">
@@ -36,25 +38,29 @@
       data-mode="{{pod.env.name}}"
       data-port="{{doc.fields.config.port}}"
       data-service="{{doc.fields.config.service}}">
-    <div class="main">
-      {% set partial = pod.doc('/content/partials/header.yaml').fields %}
-      {{renderPartial.renderPartial(partial)}}
-      <content class="partials">
-        {% if doc.fields.partials %}
-          {% for partial in doc.fields.partials %}
-            {{renderPartial.renderPartial(partial)}}
-          {% endfor %}
-        {% else %}
-          <div class="main__body">
-            {{doc.body|markdown|safe}}
-          </div>
-        {% endif %}
-      </content>
-      {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
-      {{renderPartial.renderPartial(partial)}}
-    </div>
+    {% block main %}
+      <div class="main">
+        {% set partial = pod.doc('/content/partials/header.yaml').fields %}
+        {{renderPartial.renderPartial(partial)}}
+        <content class="partials">
+          {% if doc.fields.partials %}
+            {% for partial in doc.fields.partials %}
+              {{renderPartial.renderPartial(partial)}}
+            {% endfor %}
+          {% else %}
+            <div class="main__body">
+              {{doc.body|markdown|safe}}
+            </div>
+          {% endif %}
+        </content>
+        {% set partial = pod.doc('/content/partials/footer.yaml').fields %}
+        {{renderPartial.renderPartial(partial)}}
+      </div>
+    {% endblock %}
   </div>
-  <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
+  {% block coreScript %}
+    <script src="{{pod.staticFile('/dist/js/main.min.js')|url}}"></script>
+  {% endblock %}
   {% if doc.fields.js -%}
     {% for file in doc.fields.js -%}
       <script src="{{file|url}}"></script>

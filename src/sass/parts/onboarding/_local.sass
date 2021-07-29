@@ -1,0 +1,49 @@
+.le__part__onboarding__local
+  margin: $le-space-large auto
+  max-width: $le-space-max-body-width
+
+.le__part__onboarding__local__title
+  font-size: $le-font-size-xlarge
+
+  & + .le__part__onboarding__local__body
+    font-size: $le-font-size-large
+    line-height: $le-line-height-paragraph
+    margin-top: $le-space-large
+
+.le__part__onboarding__local__instruction
+  border: 1px dashed var(--color-primary-light)
+  padding: $le-space-medium
+  margin-top: $le-space-medium
+
+  a
+    font-weight: 700
+
+  pre
+    margin: 0
+    padding: 0
+
+.le__part__onboarding__local__instruction__version
+  font-size: $le-font-size-small
+
+.le__part__onboarding__local__instruction__command
+  &::after
+    font-size: $le-font-size-small
+    content: " copied"
+    opacity: 0
+    transition: opacity 500ms
+
+  &--copied
+    &::after
+      opacity: 1
+
+  input
+    font-size: $le-font-size-large
+    background: transparent
+    border: none
+    color: var(--color-on-background)
+    font-weight: 700
+    padding: 0
+    width: auto
+
+    &:focus
+      outline: none

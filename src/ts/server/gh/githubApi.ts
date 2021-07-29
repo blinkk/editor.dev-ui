@@ -1,7 +1,7 @@
 import {
-  GithubBranchInfo,
-  GithubInstallationInfo,
-  GithubOrgInstallationInfo,
+  GitHubBranchInfo,
+  GitHubInstallationInfo,
+  GitHubOrgInstallationInfo,
   WorkspaceData,
 } from '../../editor/api';
 import {ServiceServerApi, postJSON} from '../api';
@@ -15,11 +15,11 @@ const sessionStorage = new SessionDataStorage();
 /**
  * Example api that returns data through a 'simulated' network.
  */
-export class GithubApi extends ServiceServerApi {
+export class GitHubApi extends ServiceServerApi {
   /**
    * Verify that the authentication for services that require auth.
    *
-   * @returns True if the auth checks out.
+   * @returns True if the auth is valid.
    */
   checkAuth(): boolean {
     const githubCode = sessionStorage.getItem('github.code');
@@ -45,32 +45,32 @@ export class GithubApi extends ServiceServerApi {
   async getBranches(
     org: string,
     repo: string
-  ): Promise<Array<GithubBranchInfo>> {
+  ): Promise<Array<GitHubBranchInfo>> {
     return postJSON(
       this.resolveApiGenericUrl('/branches.get'),
       this.expandParams({
         org: org,
         repo: repo,
       })
-    ) as Promise<Array<GithubBranchInfo>>;
+    ) as Promise<Array<GitHubBranchInfo>>;
   }
 
-  async getOrganizations(): Promise<Array<GithubInstallationInfo>> {
+  async getOrganizations(): Promise<Array<GitHubInstallationInfo>> {
     return postJSON(
       this.resolveApiGenericUrl('/organizations.get'),
       this.expandParams({})
-    ) as Promise<Array<GithubInstallationInfo>>;
+    ) as Promise<Array<GitHubInstallationInfo>>;
   }
 
   async getRepositories(
     installationId: number
-  ): Promise<Array<GithubOrgInstallationInfo>> {
+  ): Promise<Array<GitHubOrgInstallationInfo>> {
     return postJSON(
       this.resolveApiGenericUrl('/repositories.get'),
       this.expandParams({
         installationId: installationId,
       })
-    ) as Promise<Array<GithubOrgInstallationInfo>>;
+    ) as Promise<Array<GitHubOrgInstallationInfo>>;
   }
 
   async getWorkspaces(

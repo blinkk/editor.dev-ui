@@ -1,12 +1,12 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
-export type HeaderOnboardingPartConfig = UiPartConfig;
+export type ToolbarOnboardingPartConfig = UiPartConfig;
 
-export class HeaderOnboardingPart extends BasePart implements UiPartComponent {
-  config: HeaderOnboardingPartConfig;
+export class ToolbarOnboardingPart extends BasePart implements UiPartComponent {
+  config: ToolbarOnboardingPartConfig;
 
-  constructor(config: HeaderOnboardingPartConfig) {
+  constructor(config: ToolbarOnboardingPartConfig) {
     super();
     this.config = config;
   }
@@ -14,13 +14,13 @@ export class HeaderOnboardingPart extends BasePart implements UiPartComponent {
   classesForPart(): Record<string, boolean> {
     return {
       le__panel: true,
-      le__part__onboarding__header: true,
+      le__part__onboarding__toolbar: true,
     };
   }
 
   template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
-      <div class="le__part__onboarding__header__title">
+      <div class="le__part__onboarding__toolbar__title">
         <a href="/">editor.dev</a>
       </div>
       ${this.config.editor.ui.partNotifications.template()}

@@ -1,4 +1,5 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
+import {DashboardRecent, STORAGE_RECENT} from '../dashboard';
 import {
   GitHubInstallationInfo,
   GitHubOrgInstallationInfo,
@@ -11,6 +12,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_ONBOARDING_UPDATE} from '../../../events';
 import {EditorState} from '../../../state';
 import {GitHubApi} from '../../../../server/gh/githubApi';
+import TimeAgo from 'javascript-time-ago';
 import {githubIcon} from '../../icons';
 import {templateLoading} from '../../../template';
 
@@ -36,6 +38,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
    */
   repositoriesId?: number;
   service = 'GitHub';
+  timeAgo: TimeAgo;
   users?: Array<UserData>;
   workspaces?: Array<WorkspaceData>;
   /**
@@ -48,6 +51,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   constructor(config: GitHubOnboardingPartConfig) {
     super();
     this.config = config;
+    this.timeAgo = new TimeAgo('en-US');
   }
 
   get api(): GitHubApi {
@@ -165,8 +169,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   templateHeader(title: string): TemplateResult {
-    return html`<div class="le__part__onboarding__github__header">
-      <div class="le__part__onboarding__github__icon">${githubIcon}</div>
+    return html`<div class="le__part__onboarding__header">
+      <div class="le__part__onboarding__icon">${githubIcon}</div>
       <h1>GitHub</h1>
       <h2>${title}</h2>
     </div>`;
@@ -182,12 +186,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   templateLoadingStatus(message: TemplateResult): TemplateResult {
     return html`<div class="le__part__onboarding__loading">
       ${templateLoading({padHorizontal: true})} ${message}
-    </div>`;
-  }
-
-  templateSectionHeader(title: string): TemplateResult {
-    return html`<div class="le__part__onboarding__github__header">
-      <h3>${title}</h3>
     </div>`;
   }
 
@@ -217,7 +215,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       ${this.organizations
         ? ''
         : this.templateLoadingStatus(html`Finding organizations…`)}
-      <div class="le__part__onboarding__github__options">
+      <div class="le__part__onboarding__options">
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
             this.organizations || [],
@@ -259,6 +257,61 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       </div>`;
   }
 
+  templateRecentProjects(): TemplateResult {
+    const recent: DashboardRecent =
+      this.config.editor.storage.getItemRecord(STORAGE_RECENT) ?? {};
+
+    // Filter down all the recent to just ones that belong to the current
+    // organization.
+    const recentProjects = (recent.projects ?? []).filter(project =>
+      project.startsWith(`${this.api.organization}/`)
+    );
+
+    if (!recentProjects.length) {
+      return html``;
+    }
+
+    return html`${this.templateSectionHeader('Recent projects')}
+      <div class="le__part__onboarding__options">
+        <div class="le__grid le__grid--col-3">
+          ${repeat(
+            recentProjects,
+            projectId => projectId,
+            projectId => {
+              return html`<div
+                class="le__grid__item le__grid__item--pad le__grid__item--box le__clickable"
+                @click=${() => {
+                  const repository = projectId.replace(
+                    `${this.api.organization}/`,
+                    ''
+                  );
+                  this.api.project = repository;
+
+                  history.pushState(
+                    {
+                      onboarding: true,
+                      organization: this.api.organization,
+                      repository: repository,
+                    },
+                    repository,
+                    this.generateUrl(this.api.organization, this.api.project)
+                  );
+
+                  this.render();
+                  return false;
+                }}
+              >
+                <a href="${BASE_URL}${projectId}/" @click=${preventNormalLinks}
+                  >${projectId}</a
+                >
+              </div>`;
+            }
+          )}
+        </div>
+      </div>
+      ${this.templateSectionHeader('Available projects')}`;
+  }
+
   templateRepositories(): TemplateResult {
     // When using popstate, the repository id can be different than the cached selection.
     if (
@@ -283,40 +336,50 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
             <a href=${this.installation?.url || APP_URL}>GitHub App</a>
             repository access.`
         : html`Install the <a href=${APP_URL}>GitHub App</a>.`}`)}
+      ${this.templateRecentProjects()}
       ${this.repositories
         ? ''
         : this.templateLoadingStatus(html`Finding ${this.api.organization}
           repositories…`)}
-      <div class="le__part__onboarding__github__options">
-        <div class="le__grid le__grid--col-4 le__grid--3-2">
+      <div class="le__part__onboarding__github__list">
+        <div class="le__grid le__grid--col-3 le__grid--gap_small">
           ${repeat(
             this.repositories || [],
             repo => repo.repo,
             repo => {
+              const handleClick = () => {
+                this.api.project = repo.repo;
+
+                history.pushState(
+                  {
+                    onboarding: true,
+                    organization: this.api.organization,
+                    repository: repo.repo,
+                  },
+                  repo.repo,
+                  this.generateUrl(this.api.organization, repo.repo)
+                );
+
+                this.render();
+                return false;
+              };
+
               return html`<div
-                class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
-                @click=${() => {
-                  this.api.project = repo.repo;
-
-                  history.pushState(
-                    {
-                      onboarding: true,
-                      organization: this.api.organization,
-                      repository: repo.repo,
-                    },
-                    repo.repo,
-                    this.generateUrl(this.api.organization, repo.repo)
-                  );
-
-                  this.render();
-                  return false;
-                }}
+                class="le__grid__item le__grid__item--pad le__grid__item--box le__clickable"
+                @click=${handleClick}
               >
-                <a
-                  href="${BASE_URL}${repo.org}/${repo.repo}/"
-                  @click=${preventNormalLinks}
-                  >${repo.org}/${repo.repo}</a
-                >
+                <div>
+                  <a
+                    href="${BASE_URL}${repo.org}/${repo.repo}/"
+                    @click=${preventNormalLinks}
+                    >${repo.org}/${repo.repo}</a
+                  >
+                </div>
+                ${repo.updatedAt
+                  ? html`<div class="le__part__onboarding__github__time">
+                      Updated ${this.timeAgo.format(new Date(repo.updatedAt))}
+                    </div>`
+                  : ''}
               </div>`;
             }
           )}
@@ -329,6 +392,12 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
             : ''}
         </div>
       </div>`;
+  }
+
+  templateSectionHeader(title: string): TemplateResult {
+    return html`<div class="le__part__onboarding__section">
+      <h3>${title}</h3>
+    </div>`;
   }
 
   templateWorkspaces(): TemplateResult {
@@ -358,7 +427,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         : this.templateLoadingStatus(html`Finding
           ${this.api.organization}/${this.api.project} workspaces…`)
     }
-      <div class="le__part__onboarding__github__options">
+      <div class="le__part__onboarding__options">
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
             this.workspaces || [],

@@ -638,6 +638,13 @@ export interface SourceData {
    * Label shown to the user for identifying the source.
    */
   label: string;
+  /**
+   * Identifier for the project.
+   *
+   * For example, in a github project this would be the
+   * '<organization>/<project>' (ex: blinkk/amagaki-starter)
+   */
+  identifier: string;
 }
 
 /**
@@ -1123,9 +1130,10 @@ export interface GitHubInstallationInfo {
  * GitHub service organization installation information.
  */
 export interface GitHubOrgInstallationInfo {
-  repo: string;
-  org: string;
   description: string;
+  updatedAt?: string;
+  org: string;
+  repo: string;
   url: string;
 }
 

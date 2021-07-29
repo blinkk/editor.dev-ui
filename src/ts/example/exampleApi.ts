@@ -1756,6 +1756,7 @@ export class ExampleApi implements LiveEditorApiComponent {
           source: {
             source: ProjectSource.Example,
             label: 'Example source',
+            identifier: 'example',
           },
           users: [
             {

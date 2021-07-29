@@ -4,14 +4,14 @@ import {
   GitHubOnboardingPartConfig,
 } from './onboarding/github';
 import {
-  HeaderOnboardingPart,
-  HeaderOnboardingPartConfig,
-} from './onboarding/header';
-import {
   LocalOnboardingPart,
   LocalOnboardingPartConfig,
 } from './onboarding/local';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+import {
+  ToolbarOnboardingPart,
+  ToolbarOnboardingPartConfig,
+} from './onboarding/toolbar';
 
 import {DataStorage} from '../../../utility/dataStorage';
 import {EditorState} from '../../state';
@@ -35,9 +35,9 @@ export class OnboardingPart extends BasePart implements UiPartComponent {
 
     this.parts = new LazyUiParts();
 
-    this.parts.register('header', HeaderOnboardingPart, {
+    this.parts.register('toolbar', ToolbarOnboardingPart, {
       editor: this.config.editor,
-    } as HeaderOnboardingPartConfig);
+    } as ToolbarOnboardingPartConfig);
 
     this.parts.register('local', LocalOnboardingPart, {
       editor: this.config.editor,
@@ -60,8 +60,8 @@ export class OnboardingPart extends BasePart implements UiPartComponent {
     return this.parts.get('github') as GitHubOnboardingPart;
   }
 
-  get partHeader(): HeaderOnboardingPart {
-    return this.parts.get('header') as HeaderOnboardingPart;
+  get partToolbar(): ToolbarOnboardingPart {
+    return this.parts.get('toolbar') as ToolbarOnboardingPart;
   }
 
   get partLocal(): LocalOnboardingPart {
@@ -69,7 +69,7 @@ export class OnboardingPart extends BasePart implements UiPartComponent {
   }
 
   template(): TemplateResult {
-    const parts: Array<TemplateResult> = [this.partHeader.template()];
+    const parts: Array<TemplateResult> = [this.partToolbar.template()];
 
     if (this.config.state.onboardingInfo?.flow === OnboardingFlow.Local) {
       parts.push(this.partLocal.template());

@@ -6,7 +6,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
 
-const STORAGE_RECENT = 'live.dashboard.recent';
+export const STORAGE_RECENT = 'live.dashboard.recent';
 const RECENT_MAX_COUNT = 8;
 
 export interface DashboardPartConfig extends UiPartConfig {
@@ -20,6 +20,7 @@ export interface DashboardPartConfig extends UiPartConfig {
   storage: DataStorage;
 }
 
+// TODO: Refactor recent into the State.
 export interface DashboardRecent {
   /**
    * Recently opened files.
@@ -29,6 +30,10 @@ export interface DashboardRecent {
    * Recently opened workspaces.
    */
   workspaces?: Record<string, Array<string>>;
+  /**
+   * Recently opened projects.
+   */
+  projects?: Array<string>;
 }
 
 export class DashboardPart extends BasePart implements UiPartComponent {
@@ -41,6 +46,20 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     this.recent = this.config.storage.getItemRecord(STORAGE_RECENT) || {};
     this.recent.files = this.recent.files ?? {};
     this.recent.workspaces = this.recent.workspaces ?? {};
+    this.recent.projects = this.recent.projects ?? [];
+
+    // Watch for loaded project and add them to recent projects.
+    this.config.state.addListener(StatePromiseKeys.GetProject, () => {
+      if (this.config.state.project?.source?.identifier) {
+        this.updateRecentProjects(
+          this.config.state.project?.source?.identifier
+        );
+      }
+    });
+
+    if (this.config.state.project?.source?.identifier) {
+      this.updateRecentProjects(this.config.state.project?.source?.identifier);
+    }
 
     // Watch for loaded files and add them to recent files.
     this.config.state.addListener(
@@ -94,6 +113,14 @@ export class DashboardPart extends BasePart implements UiPartComponent {
   set recentFiles(value: Array<string>) {
     this.recent.files = this.recent.files ?? {};
     this.recent.files[this.workspaceId] = value;
+  }
+
+  get recentProjects(): Array<string> {
+    return this.recent.projects || [];
+  }
+
+  set recentProjects(value: Array<string>) {
+    this.recent.projects = value;
   }
 
   get recentWorkspaces(): Array<string> {
@@ -256,6 +283,12 @@ export class DashboardPart extends BasePart implements UiPartComponent {
 
   updateRecentWorkspace(workspace: string) {
     this.recentWorkspaces = updateRecentList(this.recentWorkspaces, workspace);
+    this.config.storage.setItemRecord(STORAGE_RECENT, this.recent);
+    this.render();
+  }
+
+  updateRecentProjects(project: string) {
+    this.recentProjects = updateRecentList(this.recentProjects, project);
     this.config.storage.setItemRecord(STORAGE_RECENT, this.recent);
     this.render();
   }

@@ -8,7 +8,6 @@ import {
   LiveEditorApiComponent,
   MediaFileData,
   MediaOptions,
-  OnboardingData,
   OnboardingDataGitHub,
   OnboardingDataLocal,
   OnboardingFlow,
@@ -22,12 +21,12 @@ import {
   WorkspaceData,
 } from '../editor/api';
 import {AmagakiApi} from '../projectType/amagaki/amagakiApi';
+import {EVENT_ONBOARDING_UPDATE} from '../editor/events';
 import {GrowApi} from '../projectType/grow/growApi';
 import {RemoteMediaConstructor} from '../remoteMedia';
 import bent from 'bent';
 import {interpolatePreviewConfigUrl} from '../editor/preview';
 import {rafTimeout} from '../utility/rafTimeout';
-import {EVENT_ONBOARDING_UPDATE, EVENT_RENDER} from '../editor/events';
 
 const DEFAULT_LOCAL_PORT = 9090;
 

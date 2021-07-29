@@ -235,6 +235,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadOrganizations();
     }
 
+    const useFilter = Boolean(
+      this.organizations && this.organizations.length > MIN_FILTER_LENGTH
+    );
+
     // Allow the filter input to filter the repositories.
     let filtered = this.organizations;
     if (
@@ -255,16 +259,27 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         ? ''
         : this.templateLoadingStatus(html`Finding organizations…`)}
       <div class="le__part__onboarding__options">
-        ${this.organizations && this.organizations.length > MIN_FILTER_LENGTH
-          ? this.templateFilter()
-          : ''}
-        <div class="le__grid le__grid--col-4 le__grid--3-2">
+        ${useFilter ? this.templateFilter() : ''}
+        <div
+          class=${classMap({
+            le__grid: true,
+            'le__grid--col-3': true,
+            'le__grid--gap_small': useFilter,
+            'le__grid--3-2': !useFilter,
+          })}
+        >
           ${repeat(
             filtered || [],
             org => org.id,
             org => {
               return html`<div
-                class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
+                class=${classMap({
+                  le__grid__item: true,
+                  'le__grid__item--pad': true,
+                  'le__grid__item--box': true,
+                  'le__grid__item--box-centered': !useFilter,
+                  le__clickable: true,
+                })}
                 @click=${() => {
                   this.api.organization = org.org;
                   this.installation = org;
@@ -298,7 +313,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
           )}
           ${this.organizations && !this.organizations.length
             ? html`<div
-                class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
+                class="le__grid__item le__grid__item--pad le__grid__item--emphasis"
               >
                 No organization access found.
               </div>`
@@ -323,13 +338,24 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
 
     return html`${this.templateSectionHeader('Recent projects')}
       <div class="le__part__onboarding__options">
-        <div class="le__grid le__grid--col-3">
+        <div
+          class=${classMap({
+            le__grid: true,
+            'le__grid--col-3': true,
+          })}
+        >
           ${repeat(
             recentProjects,
             projectId => projectId,
             projectId => {
               return html`<div
-                class="le__grid__item le__grid__item--pad le__grid__item--box le__clickable"
+                class=${classMap({
+                  le__grid__item: true,
+                  'le__grid__item--pad': true,
+                  'le__grid__item--box': true,
+                  'le__grid__item--box-centered': true,
+                  le__clickable: true,
+                })}
                 @click=${() => {
                   const repository = projectId.replace(
                     `${this.api.organization}/`,
@@ -384,6 +410,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadRepositories();
     }
 
+    const useFilter = Boolean(
+      this.repositories && this.repositories.length > MIN_FILTER_LENGTH
+    );
+
     // Allow the filter input to filter the repositories.
     let filtered = this.repositories;
     if (this.repositories && this.listFilter && this.listFilter.trim() !== '') {
@@ -410,10 +440,15 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         : this.templateLoadingStatus(html`Finding ${this.api.organization}
           repositories…`)}
       <div class="le__part__onboarding__github__list">
-        ${this.repositories && this.repositories.length > MIN_FILTER_LENGTH
-          ? this.templateFilter()
-          : ''}
-        <div class="le__grid le__grid--col-3 le__grid--gap_small">
+        ${useFilter ? this.templateFilter() : ''}
+        <div
+          class=${classMap({
+            le__grid: true,
+            'le__grid--col-3': true,
+            'le__grid--gap_small': useFilter,
+            'le__grid--3-2': !useFilter,
+          })}
+        >
           ${repeat(
             filtered || [],
             repo => repo.repo,
@@ -437,7 +472,13 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               };
 
               return html`<div
-                class="le__grid__item le__grid__item--pad le__grid__item--box le__clickable"
+                class=${classMap({
+                  le__grid__item: true,
+                  'le__grid__item--pad': true,
+                  'le__grid__item--box': true,
+                  'le__grid__item--box-centered': !useFilter,
+                  le__clickable: true,
+                })}
                 @click=${handleClick}
                 @keydown=${this.handleKeyboardNav.bind(this)}
                 tabindex="0"
@@ -462,7 +503,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
           )}
           ${this.repositories && !this.repositories.length
             ? html`<div
-                class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
+                class="le__grid__item le__grid__item--pad le__grid__item--emphasis"
               >
                 No repository access found.
               </div>`
@@ -486,6 +527,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     ) {
       this.workspaces = undefined;
     }
+
+    const useFilter = Boolean(
+      this.workspaces && this.workspaces.length > MIN_FILTER_LENGTH
+    );
 
     if (!this.workspaces) {
       this.loadWorkspaces();
@@ -513,18 +558,25 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
           ${this.api.organization}/${this.api.project} workspaces…`)
     }
       <div class="le__part__onboarding__options">
-        ${
-          this.workspaces && this.workspaces.length > MIN_FILTER_LENGTH
-            ? this.templateFilter()
-            : ''
-        }
-        <div class="le__grid le__grid--col-4 le__grid--3-2">
+        ${useFilter ? this.templateFilter() : ''}
+        <div class=${classMap({
+          le__grid: true,
+          'le__grid--col-3': true,
+          'le__grid--gap_small': useFilter,
+          'le__grid--3-2': !useFilter,
+        })}>
           ${repeat(
             filtered || [],
             workspace => workspace.name,
             workspace => {
               return html`<div
-                class="le__grid__item le__grid__item--pad_small le__grid__item--box le__grid__item--box-centered le__clickable"
+                class=${classMap({
+                  le__grid__item: true,
+                  'le__grid__item--pad': true,
+                  'le__grid__item--box': true,
+                  'le__grid__item--box-centered': !useFilter,
+                  le__clickable: true,
+                })}
                 @click=${() => {
                   this.api.branch = workspace.name;
 
@@ -571,7 +623,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
           ${
             this.workspaces && !this.workspaces.length
               ? html`<div
-                  class="le__grid__item le__grid__item--pad_small le__grid__item--emphasis"
+                  class="le__grid__item le__grid__item--pad le__grid__item--emphasis"
                 >
                   Unable to find workspaces.
                 </div>`

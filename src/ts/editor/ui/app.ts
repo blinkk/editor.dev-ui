@@ -9,6 +9,7 @@ import {
   NotificationsPart,
   NotificationsPartConfig,
 } from './parts/notifications';
+import {OnboardingPart, OnboardingPartConfig} from './parts/onboarding';
 import {OverviewPart, OverviewPartConfig} from './parts/overview';
 import {PreviewPart, PreviewPartConfig} from './parts/preview';
 import {TemplateResult, classMap, html, render} from '@blinkk/selective-edit';
@@ -16,9 +17,11 @@ import {ToastsPart, ToastsPartConfig} from './parts/toasts';
 
 import {DataStorage} from '../../utility/dataStorage';
 import {LazyUiParts} from './parts';
+import {OnboardingStatus} from '../api';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import {templateLoading} from '../template';
 
 // Set the default locale for the time ago globally.
 TimeAgo.addDefaultLocale(en);
@@ -84,6 +87,10 @@ export class AppUi {
     this.parts.register('notifications', NotificationsPart, {
       editor: this.config.editor,
     } as NotificationsPartConfig);
+    this.parts.register('onboarding', OnboardingPart, {
+      editor: this.config.editor,
+      state: this.config.state,
+    } as OnboardingPartConfig);
     this.parts.register('overview', OverviewPart, {
       editor: this.config.editor,
       state: this.config.state,
@@ -121,7 +128,11 @@ export class AppUi {
     };
 
     // Make sure that the menu is in use before checking for docked menu.
-    if (this.parts.has('menu')) {
+    // If the onboarding status becomes invalid the docked state fails.
+    if (
+      this.parts.has('menu') &&
+      this.config.state.onboardingInfo?.status === OnboardingStatus.Valid
+    ) {
       classes['le--docked-menu'] = this.partMenu.isDocked;
     }
 
@@ -146,6 +157,10 @@ export class AppUi {
 
   get partNotifications(): NotificationsPart {
     return this.parts.get('notifications') as NotificationsPart;
+  }
+
+  get partOnboarding(): OnboardingPart {
+    return this.parts.get('onboarding') as OnboardingPart;
   }
 
   get partOverview(): OverviewPart {
@@ -194,8 +209,19 @@ export class AppUi {
   template(): TemplateResult {
     const parts: Array<TemplateResult> = [];
 
-    parts.push(this.partMenu.template());
-    parts.push(this.templateContentStructure());
+    // Check if we need to onboard the user.
+    if (this.config.state.onboardingInfo?.status === OnboardingStatus.Valid) {
+      parts.push(this.partMenu.template());
+      parts.push(this.templateContentStructure());
+    } else if (this.config.state.onboardingInfo === undefined) {
+      this.config.state.checkOnboarding();
+      parts.push(templateLoading());
+    } else {
+      parts.push(this.partOnboarding.template());
+    }
+
+    // Modals and Toasts are available globally.
+    // They do not show a UI by default.
     parts.push(this.partModals.template());
     parts.push(this.partToasts.template());
 

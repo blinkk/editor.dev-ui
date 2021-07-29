@@ -25,6 +25,17 @@ export interface LiveEditorApiComponent {
   checkAuth(): boolean;
 
   /**
+   * Verify that the basic information is available for the editor.
+   *
+   * If information needed to start editing files are missing the
+   * onboarding UI will be shown.
+   *
+   * @returns Onboarding status to determine if the app needs to
+   * onboard users to prompt for more information.
+   */
+  checkOnboarding(): Promise<OnboardingInfo>;
+
+  /**
    * Copy a file.
    *
    * @param path Full path for the original file.
@@ -138,6 +149,18 @@ export interface LiveEditorApiComponent {
    * @param isRawEdit Is the edit to the raw file data?
    */
   saveFile(file: EditorFileData, isRawEdit: boolean): Promise<EditorFileData>;
+
+  /**
+   * Update onboarding information when it is changed in the UI.
+   *
+   * If information needed to start editing files are missing the
+   * onboarding UI will be shown. After updating the API decides
+   * if the onboarding is complete.
+   *
+   * @returns Onboarding status to determine if the app needs to
+   * onboard users to prompt for more information.
+   */
+  updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo>;
 
   /**
    * Upload a file.
@@ -615,6 +638,13 @@ export interface SourceData {
    * Label shown to the user for identifying the source.
    */
   label: string;
+  /**
+   * Identifier for the project.
+   *
+   * For example, in a github project this would be the
+   * '<organization>/<project>' (ex: blinkk/amagaki-starter)
+   */
+  identifier: string;
 }
 
 /**
@@ -964,6 +994,69 @@ export interface WorkspacePublishConfig {
 }
 
 /**
+ * Onboarding
+ */
+
+/**
+ * Status of the onboarding for the app.
+ *
+ * Determines if the user is missing information needed
+ * to start editing files and denotes which onboarding process
+ * to use.
+ */
+export interface OnboardingInfo {
+  /**
+   * Is the api missing information or has all information needed?
+   */
+  status: OnboardingStatus;
+  /**
+   * The onboarding flow to use if missing information.
+   */
+  flow?: OnboardingFlow;
+  /**
+   * Data needed for onboarding flow.
+   *
+   * The UI uses this data to know which pieces of information
+   * the onboarding flow needs to prompt the user for.
+   */
+  data?: OnboardingData;
+}
+
+/**
+ * Onboarding status.
+ */
+export enum OnboardingStatus {
+  Valid = 'Valid',
+  Missing = 'Missing',
+}
+
+/**
+ * Available onboarding flows.
+ */
+export enum OnboardingFlow {
+  Local = 'Local',
+  GitHub = 'GitHub',
+}
+
+export type OnboardingData = OnboardingDataGitHub | OnboardingDataLocal;
+
+/**
+ * Onboarding data for the github service.
+ */
+export interface OnboardingDataGitHub {
+  organization?: string;
+  project?: string;
+  branch?: string;
+}
+
+/**
+ * Onboarding data for the local projects.
+ */
+export interface OnboardingDataLocal {
+  port?: number;
+}
+
+/**
  * Media interfaces.
  */
 
@@ -1025,28 +1118,29 @@ export interface GoogleMediaOptions extends MediaOptions {
 export type RemoteMediaOptions = GoogleMediaOptions;
 
 /**
- * Github service installations information.
+ * GitHub service installations information.
  */
-export interface GithubInstallationInfo {
+export interface GitHubInstallationInfo {
   id: number;
   org: string;
   url: string;
 }
 
 /**
- * Github service organization installation information.
+ * GitHub service organization installation information.
  */
-export interface GithubOrgInstallationInfo {
-  repo: string;
-  org: string;
+export interface GitHubOrgInstallationInfo {
   description: string;
+  updatedAt?: string;
+  org: string;
+  repo: string;
   url: string;
 }
 
 /**
- * Github service branch information.
+ * GitHub service branch information.
  */
-export interface GithubBranchInfo {
+export interface GitHubBranchInfo {
   branch: string;
   repo: string;
   org: string;

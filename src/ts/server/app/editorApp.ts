@@ -123,14 +123,16 @@ export abstract class EditorApp implements EditorAppComponent {
     // Check for initial file to load.
     if (this.initialFile) {
       this._editor.state.getFile({
-        path: this.initialFile || '',
+        path: this.initialFile,
       });
     }
 
     return this._editor;
   }
 
-  abstract init(): Promise<void>;
+  async init() {
+    this.editor.render();
+  }
 
   get selectiveConfig() {
     return {

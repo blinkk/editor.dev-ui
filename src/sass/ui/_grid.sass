@@ -7,12 +7,18 @@
   grid-template-columns: var(--grid_columns)
   row-gap: $le-space-medium
 
+  &--col-1
+    --grid_columns: 1fr
+
   &--col-3
     --grid_columns: 1fr 1fr 1fr
 
   &--col-4
     --grid_columns: 1fr 1fr 1fr 1fr
 
+  &--gap-small
+    column-gap: $le-space-small
+    row-gap: $le-space-small
 
 .le__grid__item
   --color-grid-item-background: var(--color-background)
@@ -22,7 +28,7 @@
   color: var(--color-on-grid-item-background)
 
   .le__grid--3-2 &
-      aspect-ratio: 3 / 2
+    aspect-ratio: 3 / 2
 
   &--box
     border: $le-border-size-medium solid var(--color-border)

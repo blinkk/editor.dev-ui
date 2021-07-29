@@ -1,0 +1,62 @@
+.le__part__onboarding
+  display: flex
+  flex-flow: column
+
+.le__part__onboarding__header,
+.le__part__onboarding__section
+  text-align: center
+
+.le__part__onboarding__icon
+  text-align: center
+  margin: $le-space-large 0 $le-space-medium 0
+
+  svg
+    max-height: $le-space-xxlarge
+    max-width: $le-space-xxlarge
+    width: 100%
+
+.le__part__onboarding__filter
+  margin: $le-space-medium 0
+
+  input
+    background-color: var(--color-background)
+    border: $le-border-size-medium solid var(--color-border)
+    border-radius: $le-radius-medium
+    color: var(--color-on-background)
+    padding: $le-space-small
+    width: 100%
+
+.le__part__onboarding__help
+  align-items: center
+  background-color: var(--color-tertiary)
+  color: var(--color-on-tertiary)
+  display: flex
+  flex-flow: row
+  justify-content: center
+  position: sticky
+  top: 0
+
+  a
+    color: var(--color-on-tertiary)
+
+.le__part__onboarding__help__message
+  padding: $le-space-medium
+
+.le__part__onboarding__options
+  margin-left: auto
+  margin-right: auto
+  max-width: $le-space-max-content-width
+  padding: $le-space-medium
+  width: 100%
+
+.le__part__onboarding__loading
+  align-items: center
+  display: flex
+  flex-flow: row
+  justify-content: center
+  margin: $le-space-medium 0
+
+@import './onboarding/toolbar'
+
+@import './onboarding/github'
+@import './onboarding/local'

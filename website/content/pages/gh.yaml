@@ -1,31 +1,7 @@
 title: GitHub
 navTitle: GitHub
 description: Edit projects hosted on GitHub.
-
-css:
-- !pod.staticFile /static/editor.css
-
-js:
-- !pod.staticFile /static/app.min.js
+$view: /views/editor.njk
 
 config:
   service: gh
-
-partials:
-- partial: spacer
-  options:
-  - large
-
-- partial: hero
-  title: GitHub
-  body: Directly edit projects hosted on GitHub.
-
-- partial: spacer
-  options:
-  - medium
-
-- partial: service-github
-
-- partial: spacer
-  options:
-  - large

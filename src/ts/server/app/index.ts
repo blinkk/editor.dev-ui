@@ -1,5 +1,5 @@
 import {EditorAppComponent} from './editorApp';
-import {GithubEditorApp} from './githubApp';
+import {GitHubEditorApp} from './githubApp';
 import {LocalEditorApp} from './localApp';
 
 /**
@@ -21,7 +21,7 @@ export function appFromContainer(container: HTMLElement): EditorAppComponent {
   const service = container.dataset.service;
 
   if (service === 'gh') {
-    return new GithubEditorApp(container);
+    return new GitHubEditorApp(container);
   }
 
   throw new Error('Unable to determine app to use');

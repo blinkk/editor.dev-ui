@@ -106,13 +106,6 @@ const exampleEditor = new LiveEditor(
   container as HTMLElement
 );
 
-const url = new URL(window.location.toString());
-if (url.searchParams.get('path')) {
-  exampleEditor.state.getFile({
-    path: url.searchParams.get('path') || '',
-  });
-}
-
 /**
  * When not simulating the network (ex: screenshotting) do not use tools.
  */
@@ -132,3 +125,11 @@ if (!noNetworkSimulation) {
 // Render the editor after the tool is created so that stored
 // error states can be loaded before the editor calls them.
 exampleEditor.render();
+
+// Check for path after the editor has rendered at least once.
+const url = new URL(window.location.toString());
+if (url.searchParams.get('path')) {
+  exampleEditor.state.getFile({
+    path: url.searchParams.get('path') || '',
+  });
+}

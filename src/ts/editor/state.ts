@@ -7,6 +7,8 @@ import {
   FileData,
   LiveEditorApiComponent,
   MediaOptions,
+  OnboardingInfo,
+  OnboardingStatus,
   PreviewRoutesLocaleData,
   PreviewRoutesMetaData,
   PreviewSettings,
@@ -23,6 +25,7 @@ import {
   EVENT_FILE_LOAD,
   EVENT_FILE_LOAD_COMPLETE,
   EVENT_FILE_SAVE_COMPLETE,
+  EVENT_ONBOARDING_UPDATE,
   EVENT_RENDER,
 } from './events';
 
@@ -82,6 +85,19 @@ export class EditorState extends ListenersMixin(Base) {
    * Only set when a file is being loaded.
    */
   loadingFilePath?: string;
+  /**
+   * Current onboarding status.
+   */
+  onboardingInfo?: OnboardingInfo;
+  /**
+   * Pending file waiting to be loaded.
+   *
+   * When the editor loads the path information is determined from
+   * the URL, but the file cannot be loaded until the onboarding
+   * process is complete. The path is stored to be loaded after the
+   * onboarding is complete.
+   */
+  pendingFile?: FileData;
   /**
    * Preview server settings.
    */
@@ -175,6 +191,30 @@ export class EditorState extends ListenersMixin(Base) {
       this.getFile(customEvent.detail as FileData);
       this.render();
     });
+
+    // Listen for a onboarding status updates.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    document.addEventListener(EVENT_ONBOARDING_UPDATE, (evt: Event) => {
+      this.checkOnboarding();
+    });
+  }
+
+  checkOnboarding(
+    callback?: (info: OnboardingInfo) => void,
+    callbackError?: (error: ApiError) => void
+  ) {
+    const promiseKey = StatePromiseKeys.CheckOnboarding;
+    this.delayCallbacks(promiseKey, callback, callbackError);
+    this.api
+      .checkOnboarding()
+      .then(data => {
+        this.onboardingInfo = data;
+        this.processPendingFilePath();
+        this.handleDataAndCleanup(promiseKey, data);
+      })
+      .catch((error: ApiError) =>
+        this.handleErrorAndCleanup(promiseKey, error)
+      );
   }
 
   copyFile(
@@ -389,7 +429,6 @@ export class EditorState extends ListenersMixin(Base) {
         }
 
         this.handleDataAndCleanup(promiseKey, this.devices);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -404,13 +443,25 @@ export class EditorState extends ListenersMixin(Base) {
   ): EditorFileData | undefined {
     const promiseKey = StatePromiseKeys.GetFile;
     this.delayCallbacks(promiseKey, callback, callbackError);
+
+    // TODO: Check if the file being loaded is the same file.
     if (this.inProgress(promiseKey)) {
       return;
     }
 
-    // Start the loading of the preview configuration before waiting
-    // for a full file load response.
+    // If the onboarding is not complete wait for the onboarding process
+    // before loading the file.
+    if (
+      !this.onboardingInfo ||
+      this.onboardingInfo.status === OnboardingStatus.Missing
+    ) {
+      this.pendingFile = file;
+      return;
+    }
+
     if (this.previewConfig === undefined) {
+      // Start the loading of the preview configuration before waiting
+      // for a full file load response.
       this.getPreviewConfig();
     }
 
@@ -429,8 +480,8 @@ export class EditorState extends ListenersMixin(Base) {
         this.updateTitle();
 
         this.handleDataAndCleanup(promiseKey, this.file);
+
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
-        this.render();
       })
       .catch((error: ApiError) => {
         if (error.errorCode === ApiErrorCode.FileNotFound) {
@@ -475,7 +526,6 @@ export class EditorState extends ListenersMixin(Base) {
       .then(data => {
         this.files = data;
         this.handleDataAndCleanup(promiseKey, data);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -496,7 +546,6 @@ export class EditorState extends ListenersMixin(Base) {
     const handlePreviewSettings = (data: PreviewSettings | null) => {
       this.previewConfig = data;
       this.handleDataAndCleanup(promiseKey, data);
-      this.render();
     };
 
     const handleWorkspace = (
@@ -510,7 +559,6 @@ export class EditorState extends ListenersMixin(Base) {
           console.error('Unable to load preview server config');
           this.previewConfig = null;
           this.handleErrorAndCleanup(promiseKey, error, true);
-          this.render();
         });
     };
 
@@ -578,7 +626,6 @@ export class EditorState extends ListenersMixin(Base) {
         this.updateTitle();
 
         this.handleDataAndCleanup(promiseKey, this.project);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -604,7 +651,6 @@ export class EditorState extends ListenersMixin(Base) {
         this.updateTitle();
 
         this.handleDataAndCleanup(promiseKey, data);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -626,7 +672,6 @@ export class EditorState extends ListenersMixin(Base) {
       .then(data => {
         this.workspaces = data;
         this.handleDataAndCleanup(promiseKey, data);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -646,6 +691,7 @@ export class EditorState extends ListenersMixin(Base) {
       callback(...values);
     }
     this.triggerListener(promiseKey, ...values);
+    this.render();
   }
 
   /**
@@ -706,11 +752,21 @@ export class EditorState extends ListenersMixin(Base) {
         }
 
         this.handleDataAndCleanup(promiseKey, data);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
       );
+  }
+
+  protected processPendingFilePath() {
+    if (!this.pendingFile) {
+      return;
+    }
+
+    if (this.onboardingInfo?.status === OnboardingStatus.Valid) {
+      this.getFile(this.pendingFile);
+      this.pendingFile = undefined;
+    }
   }
 
   publish(
@@ -729,7 +785,6 @@ export class EditorState extends ListenersMixin(Base) {
         this.workspace = this.getWorkspace();
 
         this.handleDataAndCleanup(promiseKey, result);
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -770,7 +825,6 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleDataAndCleanup(promiseKey, data);
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
         document.dispatchEvent(new CustomEvent(EVENT_FILE_SAVE_COMPLETE));
-        this.render();
       })
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
@@ -861,6 +915,7 @@ export enum Schemes {
  * Promise keys used for tracking in operation promises for the state.
  */
 export enum StatePromiseKeys {
+  CheckOnboarding = 'CheckOnboarding',
   CopyFile = 'CopyFile',
   CreateFile = 'CreateFile',
   CreateWorkspace = 'CreateWorkspace',

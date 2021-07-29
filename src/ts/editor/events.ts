@@ -51,6 +51,12 @@ export const EVENT_NOTIFICATION_READ = 'live.notification.read';
 export const EVENT_NOTIFICATION_SHOW = 'live.notification.show';
 
 /**
+ * Custom event name for triggering an update of the onboarding
+ * info.
+ */
+export const EVENT_ONBOARDING_UPDATE = 'live.onboarding.update';
+
+/**
  * Custom event name for triggering a render.
  */
 export const EVENT_RENDER = 'live.render';

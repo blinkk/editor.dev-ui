@@ -152,10 +152,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
 
     if (!this.api.checkAuth()) {
       parts.push(this.templateLogin());
-    }
-
-    // Determine which part of the onboarding is missing.
-    if (!this.api.organization) {
+    } else if (!this.api.organization) {
       parts.push(this.templateOrganizations());
     } else if (!this.api.project) {
       parts.push(this.templateRepositories());
@@ -168,12 +165,13 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
 
   templateLogin(): TemplateResult {
     return html`<div class="le__part__onboarding__github__login">
+      <p>Login with your GitHub account to access your files in GitHub.</p>
       <button
         class="le__button le__button--primary"
         href="#"
         @click=${this.api.triggerAuth}
       >
-        Login to GitHub
+        Login with GitHub
       </button>
     </div>`;
   }

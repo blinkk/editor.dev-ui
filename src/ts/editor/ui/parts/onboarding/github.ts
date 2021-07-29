@@ -57,6 +57,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     super();
     this.config = config;
     this.timeAgo = new TimeAgo('en-US');
+
+    // Update current state with onboarding flag.
+    history.replaceState(
+      Object.assign({}, history.state || {}, {
+        onboarding: true,
+      }),
+      history.state?.title || document.title
+    );
+
+    // Watch for the history popstate.
+    window.addEventListener('popstate', this.handlePopstate.bind(this));
   }
 
   get api(): GitHubApi {
@@ -92,6 +103,16 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   handleKeyboardNav(evt: KeyboardEvent) {
     if (evt.key === 'Enter' || evt.key === ' ') {
       (evt.target as HTMLElement).click();
+    }
+  }
+
+  handlePopstate(evt: PopStateEvent) {
+    // When using popstate update the onboarding flow to the state values.
+    if (evt.state.onboarding === true) {
+      this.api.organization = evt.state.organization || undefined;
+      this.api.project = evt.state.repository || undefined;
+      this.api.branch = evt.state.branch || undefined;
+      this.config.state.checkOnboarding();
     }
   }
 

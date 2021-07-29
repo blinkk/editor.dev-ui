@@ -128,7 +128,11 @@ export class AppUi {
     };
 
     // Make sure that the menu is in use before checking for docked menu.
-    if (this.parts.has('menu')) {
+    // If the onboarding status becomes invalid the docked state fails.
+    if (
+      this.parts.has('menu') &&
+      this.config.state.onboardingInfo?.status === OnboardingStatus.Valid
+    ) {
       classes['le--docked-menu'] = this.partMenu.isDocked;
     }
 

@@ -186,8 +186,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         <div class="le__part__onboarding__github__selection">
           ${this.organizations
             ? html`Select an organization`
-            : html`${templateLoading({padHorizontal: true, size: 'small'})}
-              Finding organizations…`}
+            : html`${templateLoading({padHorizontal: true})} Finding
+              organizations…`}
         </div>
       </div>
       <div class="le__part__onboarding__github__options">
@@ -258,8 +258,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         <div class="le__part__onboarding__github__selection">
           ${this.repositories
             ? html`Select a repository`
-            : html`${templateLoading({padHorizontal: true, size: 'small'})}
-              Finding ${this.api.organization} repositories…`}
+            : html`${templateLoading({padHorizontal: true})} Finding
+              ${this.api.organization} repositories…`}
         </div>
       </div>
       <div class="le__part__onboarding__github__options">
@@ -337,8 +337,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
           ${
             this.workspaces
               ? html`Select a workspace`
-              : html`${templateLoading({padHorizontal: true, size: 'small'})}
-                Finding ${this.api.organization}/${this.api.project} workspaces…`
+              : html`${templateLoading({padHorizontal: true})} Finding
+                ${this.api.organization}/${this.api.project} workspaces…`
           }
         </div>
       </div>

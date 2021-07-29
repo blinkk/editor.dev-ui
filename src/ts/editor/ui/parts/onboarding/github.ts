@@ -18,6 +18,7 @@ import {templateLoading} from '../../../template';
 
 const APP_URL = 'https://github.com/apps/editor-dev';
 const BASE_URL = '/gh/';
+const MIN_FILTER_LENGTH = 9;
 
 export interface GitHubOnboardingPartConfig extends UiPartConfig {
   /**
@@ -30,6 +31,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   config: GitHubOnboardingPartConfig;
   organizations?: Array<GitHubInstallationInfo>;
   installation?: GitHubInstallationInfo;
+  /**
+   * Value to filter the list of results for.
+   */
+  listFilter?: string;
   repositories?: Array<GitHubOrgInstallationInfo>;
   /**
    * Track the id that was used to load the repositories.
@@ -77,6 +82,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       return `${BASE_URL}${organization}/`;
     }
     return BASE_URL;
+  }
+
+  handleFilterInput(evt: Event) {
+    this.listFilter = (evt.target as HTMLInputElement).value;
+    this.render();
+  }
+
+  handleKeyboardNav(evt: KeyboardEvent) {
+    if (evt.key === 'Enter' || evt.key === ' ') {
+      (evt.target as HTMLElement).click();
+    }
   }
 
   loadWorkspaces() {
@@ -168,6 +184,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     return html`<div class=${classMap(this.classesForPart())}>${parts}</div>`;
   }
 
+  templateFilter(): TemplateResult {
+    return html`<div class="le__part__onboarding__filter">
+      <input
+        type="text"
+        @input=${this.handleFilterInput.bind(this)}
+        placeholder="Filter…"
+        value=${this.listFilter || ''}
+      />
+    </div>`;
+  }
+
   templateHeader(title: string): TemplateResult {
     return html`<div class="le__part__onboarding__header">
       <div class="le__part__onboarding__icon">${githubIcon}</div>
@@ -208,6 +235,18 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadOrganizations();
     }
 
+    // Allow the filter input to filter the repositories.
+    let filtered = this.organizations;
+    if (
+      this.organizations &&
+      this.listFilter &&
+      this.listFilter.trim() !== ''
+    ) {
+      filtered = this.organizations.filter(org =>
+        org.org.includes(this.listFilter || '')
+      );
+    }
+
     return html`${this.templateHeader('Organizations')}
       ${this.templateSectionHeader('Select an organization')}
       ${this.templateHelp(html`Unable to find your organization? Install the
@@ -216,9 +255,12 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         ? ''
         : this.templateLoadingStatus(html`Finding organizations…`)}
       <div class="le__part__onboarding__options">
+        ${this.organizations && this.organizations.length > MIN_FILTER_LENGTH
+          ? this.templateFilter()
+          : ''}
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
-            this.organizations || [],
+            filtered || [],
             org => org.id,
             org => {
               return html`<div
@@ -226,6 +268,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 @click=${() => {
                   this.api.organization = org.org;
                   this.installation = org;
+                  this.listFilter = undefined;
 
                   history.pushState(
                     {
@@ -239,8 +282,15 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   this.render();
                   return false;
                 }}
+                @keydown=${this.handleKeyboardNav.bind(this)}
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
               >
-                <a href="${BASE_URL}${org.org}/" @click=${preventNormalLinks}
+                <a
+                  href="${BASE_URL}${org.org}/"
+                  @click=${preventNormalLinks}
+                  tabindex="-1"
                   >${org.org}</a
                 >
               </div>`;
@@ -286,6 +336,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                     ''
                   );
                   this.api.project = repository;
+                  this.listFilter = undefined;
 
                   history.pushState(
                     {
@@ -300,8 +351,15 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   this.render();
                   return false;
                 }}
+                @keydown=${this.handleKeyboardNav.bind(this)}
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
               >
-                <a href="${BASE_URL}${projectId}/" @click=${preventNormalLinks}
+                <a
+                  href="${BASE_URL}${projectId}/"
+                  @click=${preventNormalLinks}
+                  tabindex="-1"
                   >${projectId}</a
                 >
               </div>`;
@@ -326,6 +384,16 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadRepositories();
     }
 
+    // Allow the filter input to filter the repositories.
+    let filtered = this.repositories;
+    if (this.repositories && this.listFilter && this.listFilter.trim() !== '') {
+      console.log('filtered!');
+
+      filtered = this.repositories.filter(repo =>
+        repo.repo.includes(this.listFilter || '')
+      );
+    }
+
     return html`${this.templateHeader(
         `Repositories in ${this.api.organization}`
       )}
@@ -342,13 +410,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         : this.templateLoadingStatus(html`Finding ${this.api.organization}
           repositories…`)}
       <div class="le__part__onboarding__github__list">
+        ${this.repositories && this.repositories.length > MIN_FILTER_LENGTH
+          ? this.templateFilter()
+          : ''}
         <div class="le__grid le__grid--col-3 le__grid--gap_small">
           ${repeat(
-            this.repositories || [],
+            filtered || [],
             repo => repo.repo,
             repo => {
               const handleClick = () => {
                 this.api.project = repo.repo;
+                this.listFilter = undefined;
 
                 history.pushState(
                   {
@@ -367,11 +439,16 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               return html`<div
                 class="le__grid__item le__grid__item--pad le__grid__item--box le__clickable"
                 @click=${handleClick}
+                @keydown=${this.handleKeyboardNav.bind(this)}
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
               >
                 <div>
                   <a
                     href="${BASE_URL}${repo.org}/${repo.repo}/"
                     @click=${preventNormalLinks}
+                    tabindex="-1"
                     >${repo.org}/${repo.repo}</a
                   >
                 </div>
@@ -414,6 +491,14 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadWorkspaces();
     }
 
+    // Allow the filter input to filter the repositories.
+    let filtered = this.workspaces;
+    if (this.workspaces && this.listFilter && this.listFilter.trim() !== '') {
+      filtered = this.workspaces.filter(workspace =>
+        workspace.name.includes(this.listFilter || '')
+      );
+    }
+
     return html`${this.templateHeader(
       `Workspaces in ${this.api.organization}/${this.api.project}`
     )}
@@ -422,15 +507,20 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       <code>workspace/</code> or special branches like <code>main</code>,
       <code>staging</code>, or <code>master</code>.`)}
     ${
-      this.repositories
+      this.workspaces
         ? ''
         : this.templateLoadingStatus(html`Finding
           ${this.api.organization}/${this.api.project} workspaces…`)
     }
       <div class="le__part__onboarding__options">
+        ${
+          this.workspaces && this.workspaces.length > MIN_FILTER_LENGTH
+            ? this.templateFilter()
+            : ''
+        }
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
-            this.workspaces || [],
+            filtered || [],
             workspace => workspace.name,
             workspace => {
               return html`<div
@@ -460,6 +550,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   );
                   return false;
                 }}
+                @keydown=${this.handleKeyboardNav.bind(this)}
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
               >
                 <a
                   href=${this.generateUrl(
@@ -468,6 +562,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                     workspace.name
                   )}
                   @click=${preventNormalLinks}
+                  tabindex="-1"
                   >${workspace.name}</a
                 >
               </div>`;

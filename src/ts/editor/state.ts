@@ -8,6 +8,7 @@ import {
   LiveEditorApiComponent,
   MediaOptions,
   OnboardingInfo,
+  OnboardingStatus,
   PreviewRoutesLocaleData,
   PreviewRoutesMetaData,
   PreviewSettings,
@@ -88,6 +89,15 @@ export class EditorState extends ListenersMixin(Base) {
    * Current onboarding status.
    */
   onboardingInfo?: OnboardingInfo;
+  /**
+   * Pending file waiting to be loaded.
+   *
+   * When the editor loads the path information is determined from
+   * the URL, but the file cannot be loaded until the onboarding
+   * process is complete. The path is stored to be loaded after the
+   * onboarding is complete.
+   */
+  pendingFile?: FileData;
   /**
    * Preview server settings.
    */
@@ -199,6 +209,7 @@ export class EditorState extends ListenersMixin(Base) {
       .checkOnboarding()
       .then(data => {
         this.onboardingInfo = data;
+        this.processPendingFilePath();
         this.handleDataAndCleanup(promiseKey, data);
       })
       .catch((error: ApiError) =>
@@ -432,13 +443,25 @@ export class EditorState extends ListenersMixin(Base) {
   ): EditorFileData | undefined {
     const promiseKey = StatePromiseKeys.GetFile;
     this.delayCallbacks(promiseKey, callback, callbackError);
+
+    // TODO: Check if the file being loaded is the same file.
     if (this.inProgress(promiseKey)) {
       return;
     }
 
-    // Start the loading of the preview configuration before waiting
-    // for a full file load response.
+    // If the onboarding is not complete wait for the onboarding process
+    // before loading the file.
+    if (
+      !this.onboardingInfo ||
+      this.onboardingInfo.status === OnboardingStatus.Missing
+    ) {
+      this.pendingFile = file;
+      return;
+    }
+
     if (this.previewConfig === undefined) {
+      // Start the loading of the preview configuration before waiting
+      // for a full file load response.
       this.getPreviewConfig();
     }
 
@@ -733,6 +756,17 @@ export class EditorState extends ListenersMixin(Base) {
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
       );
+  }
+
+  protected processPendingFilePath() {
+    if (!this.pendingFile) {
+      return;
+    }
+
+    if (this.onboardingInfo?.status === OnboardingStatus.Valid) {
+      this.getFile(this.pendingFile);
+      this.pendingFile = undefined;
+    }
   }
 
   publish(

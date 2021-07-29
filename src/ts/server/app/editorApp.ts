@@ -121,12 +121,11 @@ export abstract class EditorApp implements EditorAppComponent {
     );
 
     // Check for initial file to load.
-    // TODO: load the initial file after the onboarding is successful.
-    // if (this.initialFile) {
-    //   this._editor.state.getFile({
-    //     path: this.initialFile || '',
-    //   });
-    // }
+    if (this.initialFile) {
+      this._editor.state.getFile({
+        path: this.initialFile,
+      });
+    }
 
     return this._editor;
   }

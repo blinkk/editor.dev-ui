@@ -11,8 +11,8 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_ONBOARDING_UPDATE} from '../../../events';
 import {EditorState} from '../../../state';
 import {GitHubApi} from '../../../../server/gh/githubApi';
-import {templateLoading} from '../../../template';
 import {githubIcon} from '../../icons';
+import {templateLoading} from '../../../template';
 
 const APP_URL = 'https://github.com/apps/editor-dev';
 const BASE_URL = '/gh/';

@@ -127,7 +127,6 @@ if (!noNetworkSimulation) {
 exampleEditor.render();
 
 // Check for path after the editor has rendered at least once.
-// TODO: Make it not interfere with the onboarding process.
 const url = new URL(window.location.toString());
 if (url.searchParams.get('path')) {
   exampleEditor.state.getFile({

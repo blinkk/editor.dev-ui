@@ -17,10 +17,10 @@ import {ToastsPart, ToastsPartConfig} from './parts/toasts';
 
 import {DataStorage} from '../../utility/dataStorage';
 import {LazyUiParts} from './parts';
+import {OnboardingStatus} from '../api';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
-import {OnboardingStatus} from '../api';
 import {templateLoading} from '../template';
 
 // Set the default locale for the time ago globally.
@@ -209,14 +209,17 @@ export class AppUi {
     if (this.config.state.onboardingInfo?.status === OnboardingStatus.Valid) {
       parts.push(this.partMenu.template());
       parts.push(this.templateContentStructure());
-      parts.push(this.partModals.template());
-      parts.push(this.partToasts.template());
     } else if (this.config.state.onboardingInfo === undefined) {
       this.config.state.checkOnboarding();
       parts.push(templateLoading());
     } else {
       parts.push(this.partOnboarding.template());
     }
+
+    // Modals and Toasts are available globally.
+    // They do not show a UI by default.
+    parts.push(this.partModals.template());
+    parts.push(this.partToasts.template());
 
     return html`<div class=${classMap(this.classesForApp())}>${parts}</div>`;
   }

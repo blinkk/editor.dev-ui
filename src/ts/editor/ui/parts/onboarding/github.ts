@@ -12,6 +12,7 @@ import {EVENT_ONBOARDING_UPDATE} from '../../../events';
 import {EditorState} from '../../../state';
 import {GitHubApi} from '../../../../server/gh/githubApi';
 import {templateLoading} from '../../../template';
+import {githubIcon} from '../../icons';
 
 const APP_URL = 'https://github.com/apps/editor-dev';
 const BASE_URL = '/gh/';
@@ -163,17 +164,45 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     return html`<div class=${classMap(this.classesForPart())}>${parts}</div>`;
   }
 
-  templateLogin(): TemplateResult {
-    return html`<div class="le__part__onboarding__github__login">
-      <p>Login with your GitHub account to access your files in GitHub.</p>
-      <button
-        class="le__button le__button--primary"
-        href="#"
-        @click=${this.api.triggerAuth}
-      >
-        Login with GitHub
-      </button>
+  templateHeader(title: string): TemplateResult {
+    return html`<div class="le__part__onboarding__github__header">
+      <div class="le__part__onboarding__github__icon">${githubIcon}</div>
+      <h1>GitHub</h1>
+      <h2>${title}</h2>
     </div>`;
+  }
+
+  templateHelp(message: TemplateResult): TemplateResult {
+    return html`<div class="le__part__onboarding__help">
+      <span class="material-icons">help_outline</span>
+      <div class="le__part__onboarding__help__message">${message}</div>
+    </div>`;
+  }
+
+  templateLoadingStatus(message: TemplateResult): TemplateResult {
+    return html`<div class="le__part__onboarding__loading">
+      ${templateLoading({padHorizontal: true})} ${message}
+    </div>`;
+  }
+
+  templateSectionHeader(title: string): TemplateResult {
+    return html`<div class="le__part__onboarding__github__header">
+      <h3>${title}</h3>
+    </div>`;
+  }
+
+  templateLogin(): TemplateResult {
+    return html`${this.templateHeader('Login with GitHub')}
+      <div class="le__part__onboarding__github__login">
+        <p>Login with your GitHub account to access your files in GitHub.</p>
+        <button
+          class="le__button le__button--primary"
+          href="#"
+          @click=${this.api.triggerAuth}
+        >
+          Login with GitHub
+        </button>
+      </div>`;
   }
 
   templateOrganizations(): TemplateResult {
@@ -181,15 +210,13 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadOrganizations();
     }
 
-    return html`<div class="le__part__onboarding__github__header">
-        <h2>Organizations</h2>
-        <div class="le__part__onboarding__github__selection">
-          ${this.organizations
-            ? html`Select an organization`
-            : html`${templateLoading({padHorizontal: true})} Finding
-              organizations…`}
-        </div>
-      </div>
+    return html`${this.templateHeader('Organizations')}
+      ${this.templateSectionHeader('Select an organization')}
+      ${this.templateHelp(html`Unable to find your organization? Install the
+        <a href=${APP_URL}>GitHub App</a>.`)}
+      ${this.organizations
+        ? ''
+        : this.templateLoadingStatus(html`Finding organizations…`)}
       <div class="le__part__onboarding__github__options">
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
@@ -229,13 +256,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               </div>`
             : ''}
         </div>
-      </div>
-      <div class="le__part__onboarding__help">
-        <span class="material-icons">help_outline</span>
-        <div class="le__part__onboarding__help__message">
-          Unable to find your organization? Install the
-          <a href=${APP_URL}>GitHub App</a>.
-        </div>
       </div>`;
   }
 
@@ -253,15 +273,20 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadRepositories();
     }
 
-    return html`<div class="le__part__onboarding__github__header">
-        <h2>Repositories in ${this.api.organization}</h2>
-        <div class="le__part__onboarding__github__selection">
-          ${this.repositories
-            ? html`Select a repository`
-            : html`${templateLoading({padHorizontal: true})} Finding
-              ${this.api.organization} repositories…`}
-        </div>
-      </div>
+    return html`${this.templateHeader(
+        `Repositories in ${this.api.organization}`
+      )}
+      ${this.templateSectionHeader('Select a repository')}
+      ${this.templateHelp(html`Repository missing?
+      ${this.installation
+        ? html`Configure the
+            <a href=${this.installation?.url || APP_URL}>GitHub App</a>
+            repository access.`
+        : html`Install the <a href=${APP_URL}>GitHub App</a>.`}`)}
+      ${this.repositories
+        ? ''
+        : this.templateLoadingStatus(html`Finding ${this.api.organization}
+          repositories…`)}
       <div class="le__part__onboarding__github__options">
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
@@ -303,17 +328,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               </div>`
             : ''}
         </div>
-      </div>
-      <div class="le__part__onboarding__help">
-        <span class="material-icons">help_outline</span>
-        <div class="le__part__onboarding__help__message">
-          Repository missing?
-          ${this.installation
-            ? html`Configure the
-                <a href=${this.installation?.url || APP_URL}>GitHub App</a>
-                repository access.`
-            : html`Install the <a href=${APP_URL}>GitHub App</a>.`}
-        </div>
       </div>`;
   }
 
@@ -331,17 +345,19 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadWorkspaces();
     }
 
-    return html`<div class="le__part__onboarding__github__header">
-        <h2>Workspaces in ${this.api.organization}/${this.api.project}</h2>
-        <div class="le__part__onboarding__github__selection">
-          ${
-            this.workspaces
-              ? html`Select a workspace`
-              : html`${templateLoading({padHorizontal: true})} Finding
-                ${this.api.organization}/${this.api.project} workspaces…`
-          }
-        </div>
-      </div>
+    return html`${this.templateHeader(
+      `Workspaces in ${this.api.organization}/${this.api.project}`
+    )}
+    ${this.templateSectionHeader('Select a workspace')}
+    ${this.templateHelp(html`Workspaces are git branches that begin with
+      <code>workspace/</code> or special branches like <code>main</code>,
+      <code>staging</code>, or <code>master</code>.`)}
+    ${
+      this.repositories
+        ? ''
+        : this.templateLoadingStatus(html`Finding
+          ${this.api.organization}/${this.api.project} workspaces…`)
+    }
       <div class="le__part__onboarding__github__options">
         <div class="le__grid le__grid--col-4 le__grid--3-2">
           ${repeat(
@@ -397,14 +413,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 </div>`
               : ''
           }
-        </div>
-      </div>
-      <div class="le__part__onboarding__help">
-        <span class="material-icons">info</span>
-        <div class="le__part__onboarding__help__message">
-          Workspaces are git branches that begin with
-          <code>workspace/</code> or special branches like <code>main</code>,
-          <code>staging</code>, or <code>master</code>.
         </div>
       </div>
     </div>`;

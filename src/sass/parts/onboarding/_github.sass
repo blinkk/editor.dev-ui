@@ -2,10 +2,20 @@
   display: flex
   flex-flow: column
   flex-grow: 1
+  height: 0
+  overflow: auto
 
 .le__part__onboarding__github__header
-  margin-bottom: $le-space-medium
-  padding: $le-space-medium
+  text-align: center
+
+.le__part__onboarding__github__icon
+  text-align: center
+  margin: $le-space-large 0 $le-space-medium 0
+
+  svg
+    max-height: $le-space-xxlarge
+    max-width: $le-space-xxlarge
+    width: 100%
 
 .le__part__onboarding__github__selection
   align-items: center
@@ -17,14 +27,8 @@
   margin-top: $le-space-medium
 
 .le__part__onboarding__github__options
-  flex-grow: 1
-  height: 0
-  overflow: auto
   padding: $le-space-medium
-
-.le__part__onboarding__github__onboarding
-  h2
-    text-align: center
 
 .le__part__onboarding__github__login
   padding: $le-space-medium
+  text-align: center

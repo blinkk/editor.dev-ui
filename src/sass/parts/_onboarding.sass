@@ -4,17 +4,26 @@
 
 .le__part__onboarding__help
   align-items: center
-  background-color: var(--color-secondary)
-  color: var(--color-on-secondary)
+  background-color: var(--color-tertiary)
+  color: var(--color-on-tertiary)
   display: flex
   flex-flow: row
   justify-content: center
+  position: sticky
+  top: 0
 
   a
-    color: var(--color-on-secondary)
+    color: var(--color-on-tertiary)
 
 .le__part__onboarding__help__message
   padding: $le-space-medium
+
+.le__part__onboarding__loading
+  align-items: center
+  display: flex
+  flex-flow: row
+  justify-content: center
+  margin: $le-space-medium 0
 
 @import './onboarding/header'
 

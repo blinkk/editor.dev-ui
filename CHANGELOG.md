@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.5.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.1...v3.5.0) (2021-07-29)
+
+
+### Features
+
+* icon for project source ([#147](https://www.github.com/blinkk/editor.dev-ui/issues/147)) ([ed9487f](https://www.github.com/blinkk/editor.dev-ui/commit/ed9487f3d8280ee8d606dd8b40fc5454b8cfdfdc))
+* onboarding in editor app  ([#157](https://www.github.com/blinkk/editor.dev-ui/issues/157)) ([600adf9](https://www.github.com/blinkk/editor.dev-ui/commit/600adf9ffcad7f900bb5029da779777ec7baa375))
+* title updating with content changes ([#150](https://www.github.com/blinkk/editor.dev-ui/issues/150)) ([5312590](https://www.github.com/blinkk/editor.dev-ui/commit/5312590caca9529728e893e782c5718ea2b76ba9)), closes [#141](https://www.github.com/blinkk/editor.dev-ui/issues/141)
+
+
+### Bug Fixes
+
+* adjust default for desktop to have a height ([#130](https://www.github.com/blinkk/editor.dev-ui/issues/130)) ([724dbce](https://www.github.com/blinkk/editor.dev-ui/commit/724dbce276c691b9186fd58598bc079815e5d0c2))
+* adjust filter to not filter only content yamls ([#142](https://www.github.com/blinkk/editor.dev-ui/issues/142)) ([02d0b60](https://www.github.com/blinkk/editor.dev-ui/commit/02d0b60d88ab86b4e2cf1ee5352dc7698dc75614)), closes [#110](https://www.github.com/blinkk/editor.dev-ui/issues/110)
+* border color between panels of UI ([#146](https://www.github.com/blinkk/editor.dev-ui/issues/146)) ([112ca07](https://www.github.com/blinkk/editor.dev-ui/commit/112ca07910fc6f9deb64c177dff8420215816ed4))
+* guess field label from key if no field present ([3ff3861](https://www.github.com/blinkk/editor.dev-ui/commit/3ff3861be9a3125a7d205c373e485ab7fab76b57)), closes [#129](https://www.github.com/blinkk/editor.dev-ui/issues/129)
+* reload preview server config after creating or copying file ([#145](https://www.github.com/blinkk/editor.dev-ui/issues/145)) ([cdb6599](https://www.github.com/blinkk/editor.dev-ui/commit/cdb65992b520af3cd3ae335fe0b328e0fdadf083)), closes [#132](https://www.github.com/blinkk/editor.dev-ui/issues/132)
+* style the variant for changes to the label and ability to clear ([#149](https://www.github.com/blinkk/editor.dev-ui/issues/149)) ([47f9936](https://www.github.com/blinkk/editor.dev-ui/commit/47f99363f09f95f8aebad0eaad315b4b2933cb84))
+* support both `previewField` and `previewFields` for partials ([991d83b](https://www.github.com/blinkk/editor.dev-ui/commit/991d83b6b4a3f356d738f1ad9083ee5c0e168566))
+* ui improvements for content and preview panes ([#140](https://www.github.com/blinkk/editor.dev-ui/issues/140)) ([9a87491](https://www.github.com/blinkk/editor.dev-ui/commit/9a874919cde00dd184642da3453a69aedcdfb443)), closes [#97](https://www.github.com/blinkk/editor.dev-ui/issues/97)
+* update project type when the project type already exists ([#156](https://www.github.com/blinkk/editor.dev-ui/issues/156)) ([7db1548](https://www.github.com/blinkk/editor.dev-ui/commit/7db154833b61b2bae306517bb64c192af7e937b0))
+
 ### [3.4.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.0...v3.4.1) (2021-07-22)
 
 

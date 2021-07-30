@@ -272,7 +272,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       );
     }
 
-    return html`${this.templateHeader('Organizations')}
+    return html` ${this.templateHeader('Organizations')}
       ${this.templateSectionHeader('Select an organization')}
       ${this.templateHelp(html`Unable to find your organization? Install the
         <a href=${APP_URL}>GitHub App</a>.`)}
@@ -350,20 +350,25 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       </div>`;
   }
 
-  templateRecentProjects(): TemplateResult {
+  templateRecentRepositories(filter?: string, maxCount = 10): TemplateResult {
     let recentProjects = this.config.state.history.recentProjects;
 
     // Filter down all the recent to just ones that belong to the current
     // organization.
-    recentProjects = recentProjects.filter(project =>
-      project.identifier.startsWith(`${this.api.organization}/`)
-    );
+    if (filter) {
+      recentProjects = recentProjects.filter(project =>
+        project.identifier.startsWith(filter)
+      );
+    }
+
+    // Adjust the number of recent projects to show.
+    recentProjects = recentProjects.slice(0, maxCount);
 
     if (!recentProjects.length) {
       return html``;
     }
 
-    return html`${this.templateSectionHeader('Recent projects')}
+    return html`${this.templateSectionHeader('Recent repositories')}
       <div class="le__part__onboarding__options">
         <div
           class=${classMap({
@@ -424,8 +429,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
             }
           )}
         </div>
-      </div>
-      ${this.templateSectionHeader('Available projects')}`;
+      </div>`;
   }
 
   templateRepositories(): TemplateResult {
@@ -459,6 +463,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     return html`${this.templateHeader(
         `Repositories in ${this.api.organization}`
       )}
+      ${this.templateRecentRepositories(`${this.api.organization}/`, 3)}
       ${this.templateSectionHeader('Select a repository')}
       ${this.templateHelp(html`Repository missing?
       ${this.installation
@@ -466,7 +471,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
             <a href=${this.installation?.url || APP_URL}>GitHub App</a>
             repository access.`
         : html`Install the <a href=${APP_URL}>GitHub App</a>.`}`)}
-      ${this.templateRecentProjects()}
       ${this.repositories
         ? ''
         : this.templateLoadingStatus(html`Finding ${this.api.organization}

@@ -13,6 +13,7 @@ import {
   PreviewRoutesMetaData,
   PreviewSettings,
   ProjectData,
+  ProjectSource,
   PublishResult,
   SiteData,
   UserData,
@@ -488,7 +489,12 @@ export class EditorState extends ListenersMixin(Base) {
         this.updateTitle();
 
         // Add the file to the project history.
-        if (this.projectId) {
+        if (
+          this.projectId &&
+          // Local projects do not have a good unique identifier except the
+          // file path and do not want to use the file path as an identifier.
+          this.project?.source?.source !== ProjectSource.Local
+        ) {
           const projectHistory = this.history.getProject(this.projectId);
           const fileHistory = {
             path: file.path,
@@ -688,7 +694,12 @@ export class EditorState extends ListenersMixin(Base) {
         this.updateTitle();
 
         // Add the workspace to the project history.
-        if (this.projectId) {
+        if (
+          this.projectId &&
+          // Local projects do not have a good unique identifier except the
+          // file path and do not want to use the file path as an identifier.
+          this.project?.source?.source !== ProjectSource.Local
+        ) {
           const projectHistory = this.history.getProject(this.projectId);
           projectHistory.addRecentWorkspace({
             name: this.workspace.name,

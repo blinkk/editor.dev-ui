@@ -655,6 +655,7 @@ export class EditorState extends ListenersMixin(Base) {
 
         // Add to recent project history.
         this.history.addRecentProject({
+          avatarUrl: this.project.avatarUrl,
           identifier: this.project.source?.identifier || 'unknown',
           source: this.project.source?.source,
           label: this.project.source?.label || this.project.title,

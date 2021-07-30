@@ -522,6 +522,10 @@ export interface PartialEditorConfig {
  */
 export interface ProjectData {
   /**
+   * Url for an avatar to use when showing a project.
+   */
+  avatarUrl?: string;
+  /**
    * Project title
    */
   title: string;

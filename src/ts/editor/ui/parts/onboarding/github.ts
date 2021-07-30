@@ -323,12 +323,19 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 role="button"
                 aria-pressed="false"
               >
-                <a
-                  href="${BASE_URL}${org.org}/"
-                  @click=${preventNormalLinks}
-                  tabindex="-1"
-                  >${org.org}</a
-                >
+                ${org.avatarUrl
+                  ? html`<div>
+                      <img src=${org.avatarUrl} alt=${org.org} />
+                    </div>`
+                  : ''}
+                <div>
+                  <a
+                    href="${BASE_URL}${org.org}/"
+                    @click=${preventNormalLinks}
+                    tabindex="-1"
+                    >${org.org}</a
+                  >
+                </div>
               </div>`;
             }
           )}
@@ -344,13 +351,12 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   templateRecentProjects(): TemplateResult {
-    const recent: DashboardRecent =
-      this.config.editor.storage.getItemRecord(STORAGE_RECENT) ?? {};
+    let recentProjects = this.config.state.history.recentProjects;
 
     // Filter down all the recent to just ones that belong to the current
     // organization.
-    const recentProjects = (recent.projects ?? []).filter(project =>
-      project.startsWith(`${this.api.organization}/`)
+    recentProjects = recentProjects.filter(project =>
+      project.identifier.startsWith(`${this.api.organization}/`)
     );
 
     if (!recentProjects.length) {
@@ -367,8 +373,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         >
           ${repeat(
             recentProjects,
-            projectId => projectId,
-            projectId => {
+            project => project.identifier,
+            project => {
               return html`<div
                 class=${classMap({
                   le__grid__item: true,
@@ -378,7 +384,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   le__clickable: true,
                 })}
                 @click=${() => {
-                  const repository = projectId.replace(
+                  const repository = project.identifier.replace(
                     `${this.api.organization}/`,
                     ''
                   );
@@ -403,12 +409,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 role="button"
                 aria-pressed="false"
               >
-                <a
-                  href="${BASE_URL}${projectId}/"
-                  @click=${preventNormalLinks}
-                  tabindex="-1"
-                  >${projectId}</a
-                >
+                <div>
+                  <a
+                    href="${BASE_URL}${project.identifier}/"
+                    @click=${preventNormalLinks}
+                    tabindex="-1"
+                    >${project.identifier}</a
+                  >
+                </div>
+                <div class="le__part__onboarding__github__time">
+                  Visited ${this.timeAgo.format(new Date(project.lastVisited))}
+                </div>
               </div>`;
             }
           )}

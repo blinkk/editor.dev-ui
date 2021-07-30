@@ -31,6 +31,7 @@ import {
 
 import {AmagakiState} from '../projectType/amagaki/amagakiState';
 import {Base} from '@blinkk/selective-edit/dist/mixins';
+import {EditorHistory} from './recent';
 import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
@@ -79,6 +80,10 @@ export class EditorState extends ListenersMixin(Base) {
    * Value is null when the file is not found.
    */
   file?: EditorFileData | null;
+  /**
+   * Editor history.
+   */
+  history: EditorHistory;
   /**
    * Path being actively loaded.
    *
@@ -156,6 +161,9 @@ export class EditorState extends ListenersMixin(Base) {
     this.errorCallbacks = {};
     this.successCallbacks = {};
     this.storage = new LocalDataStorage();
+    this.history = new EditorHistory({
+      storage: this.storage,
+    });
 
     // Features are on by default.
     this.features = new FeatureManager({
@@ -479,6 +487,26 @@ export class EditorState extends ListenersMixin(Base) {
         // Update document title.
         this.updateTitle();
 
+        // Add the file to the project history.
+        if (this.projectId) {
+          const projectHistory = this.history.getProject(this.projectId);
+          const fileHistory = {
+            path: file.path,
+            lastVisited: new Date().toISOString(),
+          };
+          if (this.workspace) {
+            projectHistory.addRecentFile(this.workspace.name, fileHistory);
+          } else {
+            this.getWorkspace(() => {
+              if (!this.workspace) {
+                console.error('Unable to add file history, missing workspace.');
+                return;
+              }
+              projectHistory.addRecentFile(this.workspace.name, fileHistory);
+            });
+          }
+        }
+
         this.handleDataAndCleanup(promiseKey, this.file);
 
         document.dispatchEvent(new CustomEvent(EVENT_FILE_LOAD_COMPLETE));
@@ -625,6 +653,15 @@ export class EditorState extends ListenersMixin(Base) {
         // Update document title.
         this.updateTitle();
 
+        // Add to recent project history.
+        this.history.addRecentProject({
+          avatarUrl: this.project.avatarUrl,
+          identifier: this.project.source?.identifier || 'unknown',
+          source: this.project.source?.source,
+          label: this.project.source?.label || this.project.title,
+          lastVisited: new Date().toISOString(),
+        });
+
         this.handleDataAndCleanup(promiseKey, this.project);
       })
       .catch((error: ApiError) =>
@@ -634,7 +671,7 @@ export class EditorState extends ListenersMixin(Base) {
   }
 
   getWorkspace(
-    callback?: (project: WorkspaceData) => void,
+    callback?: (workspace: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
   ): WorkspaceData | undefined {
     const promiseKey = StatePromiseKeys.GetWorkspace;
@@ -649,6 +686,15 @@ export class EditorState extends ListenersMixin(Base) {
 
         // Update document title.
         this.updateTitle();
+
+        // Add the workspace to the project history.
+        if (this.projectId) {
+          const projectHistory = this.history.getProject(this.projectId);
+          projectHistory.addRecentWorkspace({
+            name: this.workspace.name,
+            lastVisited: new Date().toISOString(),
+          });
+        }
 
         this.handleDataAndCleanup(promiseKey, data);
       })
@@ -767,6 +813,13 @@ export class EditorState extends ListenersMixin(Base) {
       this.getFile(this.pendingFile);
       this.pendingFile = undefined;
     }
+  }
+
+  get projectId(): string | undefined {
+    if (this.project?.source?.source && this.project?.source?.identifier) {
+      return `${this.project.source.source}/${this.project.source.identifier}`;
+    }
+    return undefined;
   }
 
   publish(

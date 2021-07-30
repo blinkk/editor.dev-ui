@@ -522,6 +522,10 @@ export interface PartialEditorConfig {
  */
 export interface ProjectData {
   /**
+   * Url for an avatar to use when showing a project.
+   */
+  avatarUrl?: string;
+  /**
    * Project title
    */
   title: string;
@@ -1121,6 +1125,7 @@ export type RemoteMediaOptions = GoogleMediaOptions;
  * GitHub service installations information.
  */
 export interface GitHubInstallationInfo {
+  avatarUrl?: string;
   id: number;
   org: string;
   url: string;
@@ -1130,10 +1135,11 @@ export interface GitHubInstallationInfo {
  * GitHub service organization installation information.
  */
 export interface GitHubOrgInstallationInfo {
+  avatarUrl?: string;
   description: string;
-  updatedAt?: string;
   org: string;
   repo: string;
+  updatedAt?: string;
   url: string;
 }
 

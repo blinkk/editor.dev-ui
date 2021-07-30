@@ -460,7 +460,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         ? ''
         : this.templateLoadingStatus(html`Finding ${this.api.organization}
           repositories…`)}
-      <div class="le__part__onboarding__github__list">
+      <div class="le__part__onboarding__options">
         ${useFilter ? this.templateFilter() : ''}
         <div
           class=${classMap({

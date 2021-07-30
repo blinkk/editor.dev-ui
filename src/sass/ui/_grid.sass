@@ -1,20 +1,35 @@
 
 .le__grid
-  --grid_columns: 1fr 1fr
+  --grid_columns: 1fr
 
   column-gap: $le-space-medium
   display: grid
   grid-template-columns: var(--grid_columns)
   row-gap: $le-space-medium
 
-  &--col-1
-    --grid_columns: 1fr
+  &--col-2
+    --grid_columns: 1fr 1fr 1fr
+
+    @container (max-width: #{$le-space-xxxxlarge - 1})
+      --grid_columns: 1fr
 
   &--col-3
     --grid_columns: 1fr 1fr 1fr
 
+    @container (max-width: #{$le-space-xxxxlarge - 1})
+      --grid_columns: 1fr
+
   &--col-4
     --grid_columns: 1fr 1fr 1fr 1fr
+
+    @container (max-width: #{$le-space-xxxxlarge - 1})
+      --grid_columns: 1fr
+
+  &--col-5
+    --grid_columns: 1fr 1fr 1fr 1fr 1fr
+
+    @container (max-width: #{$le-space-xxxxlarge - 1})
+      --grid_columns: 1fr
 
   &--gap-small
     column-gap: $le-space-small
@@ -28,7 +43,8 @@
   color: var(--color-on-grid-item-background)
 
   .le__grid--3-2 &
-    aspect-ratio: 3 / 2
+    @container (min-width: #{$le-space-xxxxlarge})
+      aspect-ratio: 3 / 2
 
   &--box
     border: $le-border-size-medium solid var(--color-border)

@@ -1,13 +1,17 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '.';
-import {EditorFileData, WorkspaceData} from '../../api';
 import {EditorState, StatePromiseKeys} from '../../state';
+import {
+  ProjectHistory,
+  RecentFileData,
+  RecentWorkspaceData,
+} from '../../recent';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
+import TimeAgo from 'javascript-time-ago';
 
 export const STORAGE_RECENT = 'live.dashboard.recent';
-const RECENT_MAX_COUNT = 8;
 
 export interface DashboardPartConfig extends UiPartConfig {
   /**
@@ -23,77 +27,33 @@ export interface DashboardPartConfig extends UiPartConfig {
 // TODO: Refactor recent into the State.
 export interface DashboardRecent {
   /**
-   * Recently opened files.
-   */
-  files?: Record<string, Array<string>>;
-  /**
    * Recently opened workspaces.
    */
   workspaces?: Record<string, Array<string>>;
-  /**
-   * Recently opened projects.
-   */
-  projects?: Array<string>;
 }
 
 export class DashboardPart extends BasePart implements UiPartComponent {
   config: DashboardPartConfig;
-  recent: DashboardRecent;
+  projectHistory?: ProjectHistory;
+  timeAgo: TimeAgo;
 
   constructor(config: DashboardPartConfig) {
     super();
     this.config = config;
-    this.recent = this.config.storage.getItemRecord(STORAGE_RECENT) || {};
-    this.recent.files = this.recent.files ?? {};
-    this.recent.workspaces = this.recent.workspaces ?? {};
-    this.recent.projects = this.recent.projects ?? [];
+    this.timeAgo = new TimeAgo('en-US');
 
-    // Watch for loaded project and add them to recent projects.
-    this.config.state.addListener(StatePromiseKeys.GetProject, () => {
-      if (this.config.state.project?.source?.identifier) {
-        this.updateRecentProjects(
-          this.config.state.project?.source?.identifier
+    if (!this.config.state.projectId) {
+      this.config.state.getProject(() => {
+        this.projectHistory = this.config.state.history.getProject(
+          this.config.state.projectId as string
         );
-      }
-    });
-
-    if (this.config.state.project?.source?.identifier) {
-      this.updateRecentProjects(this.config.state.project?.source?.identifier);
+        this.render();
+      });
+    } else {
+      this.projectHistory = this.config.state.history.getProject(
+        this.config.state.projectId
+      );
     }
-
-    // Watch for loaded files and add them to recent files.
-    this.config.state.addListener(
-      StatePromiseKeys.GetFile,
-      (file: EditorFileData | undefined) => {
-        if (!file || !file.file.path) {
-          return;
-        }
-        if (this.config.state.workspace) {
-          this.updateRecentFile(file.file.path);
-        } else {
-          this.config.state.getWorkspace(() => {
-            this.updateRecentFile(file.file.path);
-          });
-        }
-      }
-    );
-
-    // Watch for loaded workspaces and add them to recent files.
-    this.config.state.addListener(
-      StatePromiseKeys.GetWorkspace,
-      (workspace: WorkspaceData | undefined) => {
-        if (!workspace || !workspace.name) {
-          return;
-        }
-        if (this.config.state.project) {
-          this.updateRecentWorkspace(workspace.name);
-        } else {
-          this.config.state.getProject(() => {
-            this.updateRecentWorkspace(workspace.name);
-          });
-        }
-      }
-    );
   }
 
   classesForPart(): Record<string, boolean> {
@@ -104,40 +64,6 @@ export class DashboardPart extends BasePart implements UiPartComponent {
         StatePromiseKeys.GetFile
       ),
     };
-  }
-
-  get recentFiles(): Array<string> {
-    return (this.recent.files || {})[this.workspaceId] || [];
-  }
-
-  set recentFiles(value: Array<string>) {
-    this.recent.files = this.recent.files ?? {};
-    this.recent.files[this.workspaceId] = value;
-  }
-
-  get recentProjects(): Array<string> {
-    return this.recent.projects || [];
-  }
-
-  set recentProjects(value: Array<string>) {
-    this.recent.projects = value;
-  }
-
-  get recentWorkspaces(): Array<string> {
-    return (this.recent.workspaces || {})[this.projectId] || [];
-  }
-
-  set recentWorkspaces(value: Array<string>) {
-    this.recent.workspaces = this.recent.workspaces ?? {};
-    this.recent.workspaces[this.projectId] = value;
-  }
-
-  get projectId(): string {
-    return `${this.config.state.project?.title}`;
-  }
-
-  get workspaceId(): string {
-    return `${this.projectId}-${this.config.state.workspace?.branch.name}`;
   }
 
   template(): TemplateResult {
@@ -188,8 +114,15 @@ export class DashboardPart extends BasePart implements UiPartComponent {
 
   templateRecentFiles(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
+    let recentFiles: Array<RecentFileData> = [];
 
-    if (this.recentFiles.length) {
+    if (this.projectHistory && this.config.state.workspace) {
+      recentFiles = this.projectHistory.getRecentFiles(
+        this.config.state.workspace.name
+      );
+    }
+
+    if (recentFiles.length) {
       subParts.push(html`<div class="le__part__dashboard__recent">
         <h2>Recent files</h2>
         <p>
@@ -198,9 +131,9 @@ export class DashboardPart extends BasePart implements UiPartComponent {
         </p>
         <div class="le__list">
           ${repeat(
-            this.recentFiles,
-            path => path,
-            path => {
+            recentFiles,
+            recentFile => recentFile.path,
+            recentFile => {
               return html`<div
                 class=${classMap({
                   le__list__item: true,
@@ -212,13 +145,13 @@ export class DashboardPart extends BasePart implements UiPartComponent {
                   document.dispatchEvent(
                     new CustomEvent(EVENT_FILE_LOAD, {
                       detail: {
-                        path: path,
+                        path: recentFile.path,
                       },
                     })
                   );
                 }}
               >
-                ${this.templateFileParts(path)}
+                ${this.templateFileParts(recentFile.path)}
               </div>`;
             }
           )}
@@ -232,13 +165,19 @@ export class DashboardPart extends BasePart implements UiPartComponent {
 
   templateRecentWorkspaces(): TemplateResult {
     const subParts: Array<TemplateResult> = [];
-    if (this.recentWorkspaces.length > 1) {
+    let recentWorkspaces: Array<RecentWorkspaceData> = [];
+
+    if (this.projectHistory && this.config.state.workspace) {
+      recentWorkspaces = this.projectHistory.getRecentWorkspaces();
+    }
+
+    if (recentWorkspaces.length > 1) {
       subParts.push(html`<div class="le__part__dashboard__recent">
         <h2>Recent Workspaces</h2>
         <div class="le__grid le__grid--3-2 le__grid--col-4">
           ${repeat(
-            this.recentWorkspaces,
-            workspace => workspace,
+            recentWorkspaces,
+            workspace => workspace.name,
             workspace => {
               return html`<div
                 class=${classMap({
@@ -247,25 +186,28 @@ export class DashboardPart extends BasePart implements UiPartComponent {
                   'le__grid__item--box-centered': true,
                   'le__grid__item--pad_small': true,
                   'le__grid__item--selected':
-                    this.config.state.workspace?.name === workspace,
+                    this.config.state.workspace?.name === workspace.name,
                   le__clickable: true,
                 })}
                 @click=${() => {
                   // TODO: Load workspaces if not loaded yet.
                   for (const workspaceInfo of this.config.state.workspaces ||
                     []) {
-                    if (workspaceInfo.name === workspace) {
+                    if (workspaceInfo.name === workspace.name) {
                       this.config.state.loadWorkspace(workspaceInfo);
                     }
                   }
                 }}
               >
-                <div>${workspace}</div>
-                ${this.config.state.workspace?.name === workspace
+                <div>${workspace.name}</div>
+                ${this.config.state.workspace?.name === workspace.name
                   ? html`<div class="le__part__dashboard__aside">
                       (current workspace)
                     </div>`
-                  : ''}
+                  : html`<div class="le__part__onboarding__github__time">
+                      Visited
+                      ${this.timeAgo.format(new Date(workspace.lastVisited))}
+                    </div>`}
               </div>`;
             }
           )}
@@ -274,39 +216,4 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     }
     return html`${subParts}`;
   }
-
-  updateRecentFile(path: string) {
-    this.recentFiles = updateRecentList(this.recentFiles, path);
-    this.config.storage.setItemRecord(STORAGE_RECENT, this.recent);
-    this.render();
-  }
-
-  updateRecentWorkspace(workspace: string) {
-    this.recentWorkspaces = updateRecentList(this.recentWorkspaces, workspace);
-    this.config.storage.setItemRecord(STORAGE_RECENT, this.recent);
-    this.render();
-  }
-
-  updateRecentProjects(project: string) {
-    this.recentProjects = updateRecentList(this.recentProjects, project);
-    this.config.storage.setItemRecord(STORAGE_RECENT, this.recent);
-    this.render();
-  }
-}
-
-function updateRecentList(list: Array<string>, value: string): Array<string> {
-  if (list.includes(value)) {
-    // Already in recent, shift to the beginning of the list.
-    const index = list.indexOf(value);
-    if (index > 0) {
-      list = [value, ...list.slice(0, index), ...list.slice(index + 1)];
-    }
-  } else {
-    // Add newest file to the beginning of the path.
-    list.unshift(value);
-
-    // Trim old values.
-    list = list.slice(0, RECENT_MAX_COUNT - 1) || [];
-  }
-  return list;
 }

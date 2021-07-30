@@ -9,6 +9,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
+import {ProjectSource} from '../../api';
 import TimeAgo from 'javascript-time-ago';
 
 export const STORAGE_RECENT = 'live.dashboard.recent';
@@ -167,7 +168,12 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
     let recentWorkspaces: Array<RecentWorkspaceData> = [];
 
-    if (this.projectHistory && this.config.state.workspace) {
+    if (
+      // Local projects do not provide workspace support.
+      this.config.state.project?.source?.source !== ProjectSource.Local &&
+      this.projectHistory &&
+      this.config.state.workspace
+    ) {
       recentWorkspaces = this.projectHistory.getRecentWorkspaces();
     }
 

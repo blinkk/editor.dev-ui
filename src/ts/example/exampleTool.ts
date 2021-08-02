@@ -1,4 +1,5 @@
 import {ExampleApi, WorkspaceWorkflow} from './exampleApi';
+import {STORAGE_SCHEME, Schemes} from '../editor/state';
 import {
   TemplateResult,
   findParentByClassname,
@@ -8,7 +9,6 @@ import {
 } from '@blinkk/selective-edit';
 import {DataStorage} from '../utility/dataStorage';
 import {EVENT_RENDER_COMPLETE} from '../editor/events';
-import {STORAGE_SCHEME, Schemes} from '../editor/state';
 
 const STORAGE_ERROR_METHODS = 'example.api.error.methods';
 const STORAGE_THEME = 'example.theme';
@@ -341,8 +341,6 @@ export class ExampleTool {
     }
   }
 }
-
-type ThemeMode = 'Light' | 'Dark';
 
 interface ThemeOption {
   text: string;

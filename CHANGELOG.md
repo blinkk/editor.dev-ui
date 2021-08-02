@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.6.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.5.0...v3.6.0) (2021-08-02)
+
+
+### Features
+
+* editor history as a stand alone part of the state ([#160](https://www.github.com/blinkk/editor.dev-ui/issues/160)) ([36dc4e6](https://www.github.com/blinkk/editor.dev-ui/commit/36dc4e6af435d6138f68e8a6c73e3437da34494d))
+* Use container queries for dynamically adjusting layout ([87fd033](https://www.github.com/blinkk/editor.dev-ui/commit/87fd0335de5043b11f4ce9492c4e612ceb2582c6))
+
+
+### Bug Fixes
+
+* color for unstyled button to be readable ([f7a1322](https://www.github.com/blinkk/editor.dev-ui/commit/f7a1322e16f8a96a819e321b2700b49b48b4046d))
+* restrict history for local projects ([#161](https://www.github.com/blinkk/editor.dev-ui/issues/161)) ([adec8ec](https://www.github.com/blinkk/editor.dev-ui/commit/adec8ec229ecf965356288ac1089068d92ab2026))
+* upstream fix for shared deep references for clean checks ([3f2a5e7](https://www.github.com/blinkk/editor.dev-ui/commit/3f2a5e7ab0a527e391b124fc9fe73e66cdc2df74)), closes [#136](https://www.github.com/blinkk/editor.dev-ui/issues/136)
+
 ## [3.5.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.4.1...v3.5.0) (2021-07-29)
 
 

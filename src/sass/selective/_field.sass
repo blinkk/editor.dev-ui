@@ -12,7 +12,6 @@
       color: var(--color-extreme)
 
 .selective__field__help
-  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   line-height: $le-line-height-paragraph
   margin-bottom: $le-space-small
@@ -56,14 +55,14 @@
   background: var(--color-tertiary)
   color: var(--color-on-tertiary)
   border: none
-  box-shadow: 0 $le-border-size-medium 0 0 var(--color-secondary)
+  box-shadow: 0 $le-border-size-medium 0 0 var(--color-primary)
   font-family: var(--font-family-default)
   padding: $le-space-medium
   width: 100%
 
   &:focus
     outline: none
-    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-secondary-dark)
+    box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-primary-light)
 
   &:disabled
     opacity: .5
@@ -90,7 +89,7 @@
     box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-warning)
 
 =field-section-heading
-  color: var(--color-secondary-light)
+  color: var(--color-primary-light)
   font-size: $le-font-size-small
   text-transform: uppercase
   margin: $le-space-medium 0 $le-space-small 0
@@ -131,8 +130,8 @@
   color: var(--color-on-primary-light)
 
   &::before
-    background: var(--color-primary-dark)
-    background: linear-gradient(45deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%)
+    background: var(--color-primary-light)
+    background: linear-gradient(45deg, var(--color-primary-light) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%)
     box-shadow: $le-shadow-small
     content: ''
     height: 100%
@@ -142,7 +141,7 @@
     width: 100%
 
   &::after
-    color: var(--color-on-primary-dark)
+    color: var(--color-on-primary-light)
     content: 'Drop file…'
     font-size: $le-font-size-large
     font-weight: 700

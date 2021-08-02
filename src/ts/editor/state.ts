@@ -41,7 +41,7 @@ import {announceNotification} from './ui/parts/notifications';
 import {interpolatePreviewBaseUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;
-const STORAGE_SCHEME = 'live.scheme';
+export const STORAGE_SCHEME = 'live.scheme';
 
 /**
  * Track the references to the editor state.

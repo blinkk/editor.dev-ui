@@ -5,9 +5,11 @@
   right: $le-space-large
   z-index: 10000
 
-  h3,
-  h4
+  h3
     margin: 0 0 $le-space-medium 0
+
+  h4
+    margin: $le-space-medium 0
 
 .example_tool__float_button
   align-items: center
@@ -31,20 +33,17 @@
   bottom: $le-space-large
   box-shadow: $le-shadow-medium
   color: var(--color-on-tertiary)
+  column-gap: $le-space-large
   display: flex
   flex-flow: row
   padding: $le-space-large
   position: fixed
   right: $le-space-large * 2 + $le-font-size-icon-large * 2
 
-  > div
-    margin: 0 $le-space-medium
-
-    &:first-child
-      margin-left: 0
-
-    &:last-child
-      margin-right: 0
+.example_tool__column
+  display: flex
+  flex-flow: column
+  row-gap: $le-space-medium
 
 .example_tool__api_method
   align-items: center
@@ -64,3 +63,12 @@
   .material-icons
     font-size: $le-font-size-icon
     margin-right: $le-space-small
+
+.example_tool__setting
+  margin: $le-space-xsmall 0
+
+  label
+    align-items: center
+    display: flex
+    flex-flow: row
+    column-gap: $le-space-small

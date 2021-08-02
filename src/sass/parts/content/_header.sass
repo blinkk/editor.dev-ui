@@ -14,7 +14,6 @@
 .le__part__content__header__section
   padding: $le-space-medium $le-space-medium calc(#{$le-space-medium} - #{$le-border-size-large})
   border-bottom: $le-border-size-large solid transparent
-  color: var(--color-secondary-light)
   font-size: $le-font-size-small
   font-weight: 700
   text-transform: uppercase
@@ -24,15 +23,10 @@
     opacity: $le-opacity-disabled
 
   &:hover:not(.le__part__content__header__section--disabled)
-    border-bottom: $le-border-size-large solid var(--color-secondary-light)
-    color: var(--color-secondary)
+    border-bottom: $le-border-size-large solid var(--color-on-tertiary)
 
   &--selected
-    border-bottom: $le-border-size-large solid var(--color-secondary)
-    color: var(--color-secondary)
-
-  &--selected:hover
-    border-bottom: $le-border-size-large solid var(--color-secondary-dark)
+    border-bottom: $le-border-size-large solid var(--color-on-tertiary)
 
 .le__part__content__header__actions
   align-items: center
@@ -45,6 +39,9 @@
 
 .le__part__content__header__action
   min-width: $le-space-xxlarge
+
+  &.le__button
+    +button-tertiary-invert
 
 .le__part__content__header__status
   &--error

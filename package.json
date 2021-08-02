@@ -67,8 +67,8 @@
     "@types/node": "^16.4.10",
     "@types/nunjucks": "^3.1.5",
     "@types/quill": "^2.0.9",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
     "ava": "^3.14.0",
     "codecov": "^3.8.3",
     "concurrently": "^6.2.0",
@@ -92,7 +92,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@blinkk/selective-edit": "^2.2.0",
+    "@blinkk/selective-edit": "^2.2.1",
     "@toast-ui/editor": "^2.5.3",
     "bent": "^7.3.12",
     "codemirror": "^5.62.2",

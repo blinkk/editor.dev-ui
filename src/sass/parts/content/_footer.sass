@@ -25,6 +25,8 @@
     font-size: $le-font-size-icon-small
 
 .le__part__content__dev_tools__icon
-  &--selected
-    color: var(--color-primary)
+  border-bottom: $le-border-size-large solid transparent
 
+  &:hover,
+  &--selected
+    border-bottom: $le-border-size-large solid var(--color-on-tertiary)

@@ -154,6 +154,7 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
         le__part__preview__toolbar__icon: true,
         'le__part__preview__toolbar__icon--selected':
           this.isDeviceMode || false,
+        'le__part__preview__toolbar__icon--toggle': true,
         le__clickable: true,
         'le__tooltip--top-left': true,
       })}
@@ -186,6 +187,7 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
         le__part__preview__toolbar__icon: true,
         'le__part__preview__toolbar__icon--disabled': blockRotate,
         'le__part__preview__toolbar__icon--selected': this.isRotated || false,
+        'le__part__preview__toolbar__icon--toggle': true,
         le__clickable: true,
         'le__tooltip--top-left': true,
       })}

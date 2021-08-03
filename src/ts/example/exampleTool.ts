@@ -1,4 +1,5 @@
 import {ExampleApi, WorkspaceWorkflow} from './exampleApi';
+import {STORAGE_SCHEME, Schemes} from '../editor/state';
 import {
   TemplateResult,
   findParentByClassname,
@@ -7,8 +8,10 @@ import {
   repeat,
 } from '@blinkk/selective-edit';
 import {DataStorage} from '../utility/dataStorage';
+import {EVENT_RENDER_COMPLETE} from '../editor/events';
 
 const STORAGE_ERROR_METHODS = 'example.api.error.methods';
+const STORAGE_THEME = 'example.theme';
 const STORAGE_WORKSPACE_WORKFLOW = 'example.workspace.workflow';
 
 export class ExampleTool {
@@ -35,6 +38,20 @@ export class ExampleTool {
       WorkspaceWorkflow.Success;
     this.workflow = workflowValue as WorkspaceWorkflow;
     this.api.workflow = this.workflow;
+
+    // Update theme based on local storage value.
+    const theme = this.storage.getItemRecord(STORAGE_THEME) as ThemeOption;
+    if (theme.text && theme.background) {
+      document.addEventListener(
+        EVENT_RENDER_COMPLETE,
+        () => {
+          this.updateTheme(theme);
+        },
+        {
+          once: true,
+        }
+      );
+    }
 
     // Auto close when clicking out of expanded list.
     document.addEventListener('click', (evt: Event) => {
@@ -64,7 +81,7 @@ export class ExampleTool {
   }
 
   render() {
-    render(this.template(this), this.container);
+    render(this.template(), this.container);
   }
 
   storeErrorMethods() {
@@ -74,13 +91,11 @@ export class ExampleTool {
     );
   }
 
-  template(tool: ExampleTool): TemplateResult {
-    return html`${this.templateFloatButton(tool)}
-    ${this.templateStructure(tool)}`;
+  template(): TemplateResult {
+    return html`${this.templateFloatButton()} ${this.templateStructure()}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateApiResponse(tool: ExampleTool): TemplateResult {
+  templateApiResponse(): TemplateResult {
     if (!this.isExpanded) {
       return html``;
     }
@@ -114,8 +129,7 @@ export class ExampleTool {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateFloatButton(tool: ExampleTool): TemplateResult {
+  templateFloatButton(): TemplateResult {
     return html`<div
       class="example_tool__float_button ${this.api.errorController.errorMethods
         .size > 0
@@ -127,8 +141,7 @@ export class ExampleTool {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateSettings(tool: ExampleTool): TemplateResult {
+  templateSettings(): TemplateResult {
     if (!this.isExpanded) {
       return html``;
     }
@@ -198,15 +211,141 @@ export class ExampleTool {
     </div>`;
   }
 
-  templateStructure(tool: ExampleTool): TemplateResult {
+  templateStructure(): TemplateResult {
     if (!this.isExpanded) {
       return html``;
     }
 
     return html`<div class="example_tool__container">
-      ${this.templateApiResponse(tool)} ${this.templateSettings(tool)}
+      <div class="example_tool__column">${this.templateApiResponse()}</div>
+      <div class="example_tool__column">
+        ${this.templateSettings()} ${this.templateTheme()}
+      </div>
     </div>`;
   }
+
+  templateTheme(): TemplateResult {
+    if (!this.isExpanded) {
+      return html``;
+    }
+
+    let theme: ThemeOption = this.storage.getItemRecord(
+      STORAGE_THEME
+    ) as ThemeOption;
+
+    let mode: string = this.storage.getItem(STORAGE_SCHEME) || '';
+
+    const themeOptions = [
+      {
+        text: '',
+        background: '',
+        label: 'Default',
+      } as ThemeOption,
+      {
+        text: 'dark',
+        background: 'light',
+        label: 'Dark text on light back',
+      } as ThemeOption,
+      {
+        text: 'light',
+        background: 'dark',
+        label: 'Light text on dark back',
+      } as ThemeOption,
+    ];
+
+    const modeOptions = [
+      {
+        value: Schemes.Light,
+        label: 'Light Mode',
+      },
+      {
+        value: Schemes.Dark,
+        label: 'Dark Mode',
+      },
+    ];
+
+    return html`<div class="example_tool__settings">
+      <h3>Theme</h3>
+
+      <h4>Light/Dark Mode</h4>
+
+      ${repeat(
+        modeOptions,
+        option => option.value,
+        option => {
+          const handleClick = () => {
+            mode = option.value;
+            this.updateThemeMode(mode);
+          };
+
+          return html`<div class="example_tool__setting">
+            <label>
+              <input
+                type="radio"
+                name="scheme"
+                ?checked=${mode === option.value}
+                @click=${handleClick}
+              />
+              <span class="material-icons"
+                >${`${option.value.toLowerCase()}_mode`}</span
+              >
+              ${option.label}
+            </label>
+          </div>`;
+        }
+      )}
+
+      <h4>Colors</h4>
+
+      ${repeat(
+        themeOptions,
+        option => option.label,
+        option => {
+          const handlePublishClick = () => {
+            theme = option;
+            this.updateTheme(option);
+          };
+
+          return html`<div class="example_tool__setting">
+            <label>
+              <input
+                type="radio"
+                name="theme"
+                ?checked=${theme.label === option.label}
+                @click=${handlePublishClick}
+              />
+              ${option.label}
+            </label>
+          </div>`;
+        }
+      )}
+    </div>`;
+  }
+
+  updateTheme(theme: ThemeOption) {
+    this.storage.setItemRecord(STORAGE_THEME, theme);
+    const container = document.querySelector('.le') as HTMLElement;
+    if (container) {
+      container.dataset.text = theme.text;
+      container.dataset.background = theme.background;
+    }
+  }
+
+  updateThemeMode(mode: string) {
+    this.storage.setItem(STORAGE_SCHEME, mode);
+    const container = document.querySelector('.le') as HTMLElement;
+    if (container) {
+      container.classList.remove('scheme-light');
+      container.classList.remove('scheme-dark');
+      container.classList.add(`scheme-${mode.toLowerCase()}`);
+    }
+  }
+}
+
+interface ThemeOption {
+  text: string;
+  background: string;
+  label: string;
 }
 
 function getMethodsOfClass(obj: any): Array<string> {

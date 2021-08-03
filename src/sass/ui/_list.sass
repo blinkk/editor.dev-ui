@@ -107,18 +107,9 @@
     padding-left: $le-space-xxlarge
 
   &--primary
-    --color-list-item-background: var(--color-on-primary)
-    --color-on-list-item-background: var(--color-primary)
-    font-weight: 700
-
-  &--secondary
-    --color-list-item-background: var(--color-on-secondary)
-    --color-on-list-item-background: var(--color-secondary)
     font-weight: 700
 
   &--heading
-    --color-list-item-background: var(--color-on-secondary-dark)
-    --color-on-list-item-background: var(--color-secondary-dark)
     font-weight: 700
 
     // Prevent item immediately under the heading from indenting.
@@ -153,40 +144,17 @@
       .le__actions
         display: flex
 
-  &--primary.le__clickable
-    --color-list-item-background: var(--color-on-primary)
-    --color-on-list-item-background: var(--color-primary)
-
-  &--primary.le__clickable:hover
-    --color-list-item-background: var(--color-primary)
-    --color-on-list-item-background: var(--color-on-primary)
-
-  &--secondary.le__clickable
-    --color-list-item-background: var(--color-on-secondary)
-    --color-on-list-item-background: var(--color-secondary)
-
-  &--secondary.le__clickable:hover
-    --color-list-item-background: var(--color-secondary)
-    --color-on-list-item-background: var(--color-on-secondary)
-
-  &--heading.le__clickable
-    --color-list-item-background: var(--color-on-secondary-dark)
-    --color-on-list-item-background: var(--color-secondary-dark)
-
-  &--heading.le__clickable:hover
-    --color-list-item-background: var(--color-secondary-dark)
-    --color-on-list-item-background: var(--color-on-secondary-dark)
-
   &--selected
-    --color-list-item-background: var(--color-secondary)
-    --color-on-list-item-background: var(--color-on-secondary)
+    --color-list-item-background: var(--color-primary-light)
+    --color-on-list-item-background: var(--color-on-primary-light)
+
+    &.le__clickable:focus,
+    &.le__clickable:hover
+      --color-list-item-background: var(--color-primary)
+      --color-on-list-item-background: var(--color-on-primary)
 
     a
       color: inherit
-
-  &--selected.le__clickable:hover
-    --color-list-item-background: var(--color-secondary)
-    --color-on-list-item-background: var(--color-on-secondary)
 
 .le__list__item__label
   flex-grow: 1
@@ -211,10 +179,17 @@
 
 .le__list__item__icon
   align-items: center
+  color: var(--color-tertiary-dark)
   display: flex
   justify-content: center
   height: $le-font-size-icon-menu
   width: $le-font-size-icon-menu
+
+  .le__list__item--primary &
+    color: var(--color-on-background)
+
+  .le__list__item--selected &
+    color: var(--color-on-primary)
 
   .material-icons
     font-size: $le-font-size-icon-menu

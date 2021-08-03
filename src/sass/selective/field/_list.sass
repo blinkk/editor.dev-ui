@@ -14,7 +14,7 @@
     button
       +button
       +button-outline
-      +button-primary-invert
+      +button-tertiary
 
     .selective__action--add
       +field-action-icon
@@ -51,12 +51,12 @@
       max-width: 100%
 
   &:not(.selective__list__item--simple):not(.selective__list__item--empty)
-    border: $le-border-size-medium solid var(--color-border)
+    border: $le-border-size-medium solid var(--color-tertiary)
     border-radius: $le-radius-small
     margin-bottom: $le-space-small
 
     &:hover
-      border-color: var(--color-border)-hover
+      border-color: var(--color-tertiary-dark)
       box-shadow: $le-shadow-small
 
     &:last-child
@@ -108,7 +108,7 @@
       pointer-events: none
 
     &.selective__sortable--above
-      box-shadow: 0 -1 * $le-border-size-xlarge 0 0 var(--color-secondary-dark)
+      box-shadow: 0 -1 * $le-border-size-xlarge 0 0 var(--color-primary-light)
 
     &.selective__sortable--below
-      box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-secondary-dark)
+      box-shadow: 0 $le-border-size-xlarge 0 0 var(--color-primary-light)

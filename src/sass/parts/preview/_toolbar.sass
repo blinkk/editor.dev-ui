@@ -1,14 +1,14 @@
 .le__part__preview__toolbar
   align-items: center
-  background-color: var(--color-secondary)
-  color: var(--color-on-secondary)
+  background-color: var(--color-primary-light)
+  color: var(--color-on-primary-light)
   display: flex
   flex-flow: row
   flex-grow: 0
   justify-content: space-between
 
   a
-    color: var(--color-on-secondary)
+    color: var(--color-on-primary-light)
 
 .le__part__preview__toolbar__devices
   display: flex
@@ -20,15 +20,23 @@
 .le__part__preview__toolbar__device
   margin: 0 $le-space-small
 
+  &:hover,
   &--selected
-    color: var(--color-primary)
+    text-decoration: underline
 
 .le__part__preview__toolbar__icons
+  align-items: center
+  display: flex
+  flex-flow: row
   margin: 0 $le-space-medium
 
 .le__part__preview__toolbar__icon
-  &--selected
-    color: var(--color-primary)
+  &--toggle
+    border-bottom: $le-border-size-large solid transparent
+
+    &:hover:not(.le__part__preview__toolbar__icon--disabled),
+    &.le__part__preview__toolbar__icon--selected
+      border-bottom: $le-border-size-large solid var(--color-on-primary-light)
 
   &--disabled
     .material-icons

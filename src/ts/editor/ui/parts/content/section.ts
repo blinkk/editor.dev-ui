@@ -96,7 +96,6 @@ export class ContentSectionPart extends BasePart implements UiPartComponent {
       le__part__content__header__action: true,
       le__button: true,
       'le__button--extreme': !this.selective.isValid,
-      'le__button--primary': this.selective.isValid,
     };
   }
 

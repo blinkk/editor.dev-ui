@@ -5,8 +5,9 @@ import {PreviewToolbarPart, PreviewToolbarPartConfig} from './preview/toolbar';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData} from '../../api';
+import {DeviceData, EditorPreviewSettings, WorkspaceData} from '../../api';
 import {templateLoading} from '../../template';
+import {interpolatePreviewBaseUrl} from '../../preview';
 
 export interface PreviewPartConfig extends UiPartConfig {
   /**
@@ -61,10 +62,15 @@ export class PreviewPart extends BasePart implements UiPartComponent {
       clearInterval(this.loginTimer);
     }
 
+    const baseUrl = interpolatePreviewBaseUrl(
+      this.config.state.project?.preview as EditorPreviewSettings,
+      this.config.state.workspace as WorkspaceData
+    );
+
     // Open the base url in a new window to let it trigger any auth
     // requirements before we try to load the preview config again.
     this.loginWindow = window.open(
-      this.config.state.project?.preview?.baseUrl || '/',
+      baseUrl,
       'editor-preview-login',
       'resizable,scrollbars,status,width=600,height=400'
     );
@@ -138,10 +144,10 @@ export class PreviewPart extends BasePart implements UiPartComponent {
           class="le__button le__button--outline le__button--primary"
           @click=${this.handleLoginClick.bind(this)}
         >
-          Sign in preview server
+          Sign in to preview server
         </button>
         <button class="le__button" @click=${this.handleRefreshClick.bind(this)}>
-          Reload preview
+          Reload
         </button>
       </div>
     </div>`;

@@ -23,6 +23,8 @@ export class PreviewPart extends BasePart implements UiPartComponent {
   config: PreviewPartConfig;
   device?: DeviceData;
   parts: LazyUiParts;
+  loginWindow?: Window | null;
+  loginTimer?: number;
 
   constructor(config: PreviewPartConfig) {
     super();
@@ -54,6 +56,36 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     return this.partToolbar.isExpanded || false;
   }
 
+  handleLoginClick() {
+    if (this.loginTimer) {
+      clearInterval(this.loginTimer);
+    }
+
+    // Open the base url in a new window to let it trigger any auth
+    // requirements before we try to load the preview config again.
+    this.loginWindow = window.open(
+      this.config.state.project?.preview?.baseUrl || '/',
+      'editor-preview-login',
+      'resizable,scrollbars,status,width=600,height=400'
+    );
+
+    // Use interval to check for when the window is closed to reload
+    // the preview config since it is on a different domain.
+    this.loginTimer = setInterval(() => {
+      if (this.loginWindow?.closed) {
+        clearInterval(this.loginTimer);
+        this.handleRefreshClick();
+      }
+    }, 1500) as unknown as number;
+  }
+
+  handleRefreshClick() {
+    // Reset the preview config before reloading it shows the loading UI.
+    this.config.state.previewConfig = undefined;
+    this.config.state.getPreviewConfig();
+    this.render();
+  }
+
   get partFrame(): PreviewFramePart {
     return this.parts.get('frame') as PreviewFramePart;
   }
@@ -77,7 +109,12 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     } else if (this.config.state.previewConfig === undefined) {
       pieces.push(this.templatePreviewConfigLoading());
     } else if (this.config.state.previewConfig === null) {
-      pieces.push(this.templatePreviewNotConfigured());
+      // Check if we tried to load it and it failed.
+      if (this.config.state.project?.preview?.baseUrl) {
+        pieces.push(this.templatePreviewConfigLoadingError());
+      } else {
+        pieces.push(this.templatePreviewNotConfigured());
+      }
     } else {
       pieces.push(this.templatePreviewNotAvailable());
     }
@@ -89,6 +126,27 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     return templateLoading({}, html`<div>Searching for file preview.</div>`);
   }
 
+  templatePreviewConfigLoadingError(): TemplateResult {
+    return html`<div class="le__part__preview__message">
+      <h3>Trouble connecting to preview server</h3>
+      <p>
+        You may need to sign in to the preview server, or it may be offline.
+        Sign into the preview server then reload this page.
+      </p>
+      <div>
+        <button
+          class="le__button le__button--outline le__button--primary"
+          @click=${this.handleLoginClick.bind(this)}
+        >
+          Sign in preview server
+        </button>
+        <button class="le__button" @click=${this.handleRefreshClick.bind(this)}>
+          Reload preview
+        </button>
+      </div>
+    </div>`;
+  }
+
   templatePreviewNotAvailable(): TemplateResult {
     // When waiting for the file to load do not show anything
     // since the file load is already showing.
@@ -97,19 +155,19 @@ export class PreviewPart extends BasePart implements UiPartComponent {
     }
 
     return html`<div class="le__part__preview__message">
-      <div>
-        Unable to find a preview for
-        <code>${this.config.state.file?.file.path}</code>.
-      </div>
+      <h3>No preview found for file</h3>
+      <p>This file doesn't have a preview associated with it.</p>
     </div>`;
   }
 
   templatePreviewNotConfigured(): TemplateResult {
     // TODO: Link to the documentation on setting up a preview server.
     return html`<div class="le__part__preview__message">
-      <div>
-        No preview server configured or unable to load preview configuration.
-      </div>
+      <h3>No preview server</h3>
+      <p>
+        A preview server has not yet been set up for this project. Ask a
+        developer to set up a preview server for reactive previews.
+      </p>
     </div>`;
   }
 }

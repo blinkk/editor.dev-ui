@@ -52,6 +52,9 @@ export class MenuFooterPart extends BasePart implements UiPartComponent {
       <div class="le__part__menu__footer__icons">
         ${this.templateActionScheme()}
       </div>
+      <!-- Spacing is based on text, not icons. -->
+      <!-- Need some text to use for spacing. -->
+      <div class="le__part__menu__footer__label">&nbsp;</div>
     </div>`;
   }
 

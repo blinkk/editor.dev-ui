@@ -1,7 +1,13 @@
+.le__part__menu
+  display: flex
+  flex-flow: column
+  flex-grow: 1
+
 .le__part__menu__content
+  flex-grow: 1
+  flex-shrink: 1
+  height: 0
   overflow-x: auto
-  // TODO: Hacky way to scroll the contents of the menu.
-  max-height: calc(100vh - 46px)
 
 .le__part__menu__header
   align-items: center
@@ -33,3 +39,5 @@
 
 .le__part__menu__section__title
   padding: $le-space-medium 0
+
+@import "./menu/_footer"

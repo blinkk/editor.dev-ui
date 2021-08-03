@@ -34,13 +34,12 @@
   &--toggle
     border-bottom: $le-border-size-large solid transparent
 
-    &:hover:not(.le__part__preview__toolbar__icon--disabled),
+    &:hover:not(.le__actions__action--disabled),
     &.le__part__preview__toolbar__icon--selected
       border-bottom: $le-border-size-large solid var(--color-on-primary-light)
 
-  &--disabled
-    .material-icons
-      opacity: $le-opacity-disabled
+    &:hover.le__actions__action--disabled
+      border-bottom: $le-border-size-large solid transparent
 
 .le__part__preview__toolbar__label
   font-size: $le-font-size-small

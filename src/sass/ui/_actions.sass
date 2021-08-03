@@ -16,3 +16,10 @@
 
   &:hover
     border-bottom: $le-border-size-medium solid var(--color-on-action-background)
+
+  &--disabled
+    cursor: default
+
+    // Only opacity on children so that tooltip is not applied.
+    > *
+      opacity: $le-opacity-disabled

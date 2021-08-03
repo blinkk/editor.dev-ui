@@ -1,6 +1,6 @@
 import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
 import {DialogPriorityLevel, Modal} from '../../ui/modal';
-import {EditorState, Schemes} from '../../state';
+import {MenuFooterPart, MenuFooterPartConfig} from './menu/footer';
 import {SiteMenuPartConfig, SitePart} from './menu/site';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 import {UsersMenuPartConfig, UsersPart} from './menu/users';
@@ -8,6 +8,7 @@ import {WorkspacesMenuPartConfig, WorkspacesPart} from './menu/workspaces';
 
 import {DataStorage} from '../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../events';
+import {EditorState} from '../../state';
 
 const MODAL_KEY = 'menu';
 const STORAGE_DOCKED_KEY = 'live.menu.isDocked';
@@ -40,6 +41,13 @@ export class MenuPart extends BasePart implements UiPartComponent {
     this.isDocked = this.config.storage.getItemBoolean(STORAGE_DOCKED_KEY);
 
     this.parts = new LazyUiParts();
+
+    this.parts.register('footer', MenuFooterPart, {
+      editor: this.config.editor,
+      isExpandedByDefault: true,
+      state: this.config.state,
+      storage: this.config.storage,
+    } as MenuFooterPartConfig);
 
     this.parts.register('site', SitePart, {
       editor: this.config.editor,
@@ -118,6 +126,10 @@ export class MenuPart extends BasePart implements UiPartComponent {
     this.modal?.show();
   }
 
+  get partFooter(): MenuFooterPart {
+    return this.parts.get('footer') as MenuFooterPart;
+  }
+
   get partSite(): SitePart {
     return this.parts.get('site') as SitePart;
   }
@@ -183,35 +195,6 @@ export class MenuPart extends BasePart implements UiPartComponent {
     </div>`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateActionScheme(): TemplateResult {
-    let currentMode = this.config.state.prefersDarkScheme
-      ? Schemes.Dark
-      : Schemes.Light;
-
-    if (this.config.state.scheme === Schemes.Dark) {
-      currentMode = Schemes.Dark;
-    } else if (this.config.state.scheme === Schemes.Light) {
-      currentMode = Schemes.Light;
-    }
-
-    const toggleMode =
-      currentMode === Schemes.Light ? Schemes.Dark : Schemes.Light;
-    const icon = currentMode === Schemes.Dark ? 'light_mode' : 'dark_mode';
-    const tip = `${toggleMode} mode`;
-
-    return html`<div
-      class="le__part__menu__action le__clickable le__tooltip--bottom"
-      @click=${() => {
-        this.config.state.setScheme(toggleMode);
-        this.render();
-      }}
-      data-tip=${tip}
-    >
-      <span class="material-icons">${icon}</span>
-    </div>`;
-  }
-
   templateContent(): TemplateResult {
     return html`<div class="le__part__menu__content">
       ${this.partWorkspaces.template()} ${this.partSite.template()}
@@ -232,8 +215,7 @@ export class MenuPart extends BasePart implements UiPartComponent {
         ${project?.title || html`&nbsp;`}
       </div>
       <div class="le__actions">
-        ${this.templateActionScheme()} ${this.templateActionDocking()}
-        ${this.templateActionClose()}
+        ${this.templateActionDocking()} ${this.templateActionClose()}
       </div>
     </div>`;
   }
@@ -241,6 +223,7 @@ export class MenuPart extends BasePart implements UiPartComponent {
   templateStructure(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       ${this.templateMenu()} ${this.templateContent()}
+      ${this.partFooter.template()}
     </div>`;
   }
 

@@ -472,7 +472,8 @@ export class ServiceServerApi extends ServerApi {
     if (
       this.organization !== undefined &&
       this.project !== undefined &&
-      this.branch !== undefined
+      this.branch !== undefined &&
+      this.checkAuth()
     ) {
       return OnboardingStatus.Valid;
     }

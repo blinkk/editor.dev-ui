@@ -1,34 +1,10 @@
 import {EditorApp, EditorAppOptions} from './editorApp';
-import {
-  GitHubInstallationInfo,
-  GitHubOrgInstallationInfo,
-  LiveEditorApiComponent,
-  WorkspaceData,
-} from '../../editor/api';
-import {TemplateResult, html, repeat} from '@blinkk/selective-edit';
 
 import {GCSRemoteMedia} from '../../remoteMedia/GCSRemoteMedia';
 import {GitHubApi} from '../gh/githubApi';
+import {LiveEditorApiComponent} from '../../editor/api';
 import {RemoteMediaConstructor} from '../../remoteMedia';
 import {ServerApiComponent} from '../api';
-import {ServiceOnboarding} from './service';
-import {templateLoading} from '../../editor/template';
-
-const APP_URL = 'https://github.com/apps/editor-dev';
-const BASE_URL = '/gh/';
-
-/**
- * Do not want to have normal link clicks redirect, but still want
- * links to be able to be opened in a new tab.
- */
-const preventNormalLinks = (evt: KeyboardEvent) => {
-  if (evt.ctrlKey || evt.shiftKey || evt.metaKey) {
-    // Stop the upstream click handler from triggering.
-    evt.stopPropagation();
-    return;
-  }
-  evt.preventDefault();
-};
 
 export interface GitHubEditorAppOptions extends EditorAppOptions {
   organization?: string;

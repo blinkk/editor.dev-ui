@@ -32,8 +32,10 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
     super();
     this.config = config;
     this.isDeviceMode = this.config.storage.getItemBoolean(
-      STORAGE_DEVICE_MODE_KEY
+      STORAGE_DEVICE_MODE_KEY,
+      true
     );
+
     this.isExpanded = this.config.storage.getItemBoolean(STORAGE_EXPANDED_KEY);
     this.isRotated = this.config.storage.getItemBoolean(
       STORAGE_DEVICE_ROTATED_KEY
@@ -58,6 +60,9 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
             break;
           }
         }
+      } else if (devices.length >= 1) {
+        // Default to the first device in the list if none selected.
+        this.device = devices[0];
       }
     });
   }

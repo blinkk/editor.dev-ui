@@ -57,12 +57,24 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
           if (device.label === storedDevice) {
             this.device = device;
             this.render();
-            break;
+            return;
           }
         }
-      } else if (devices.length >= 1) {
-        // Default to the first device in the list if none selected.
+      }
+
+      // Check for a default device in config.
+      for (const device of devices) {
+        if (device.isDefault) {
+          this.device = device;
+          this.render();
+          return;
+        }
+      }
+
+      // Default to the first device in the list if none selected.
+      if (!this.device && devices.length >= 1) {
         this.device = devices[0];
+        this.render();
       }
     });
   }

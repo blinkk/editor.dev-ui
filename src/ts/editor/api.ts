@@ -377,6 +377,10 @@ export interface DeviceData {
    */
   height?: number;
   /**
+   * Is the device the default for the device view?
+   */
+  isDefault?: boolean;
+  /**
    * Label for the device.
    */
   label: string;

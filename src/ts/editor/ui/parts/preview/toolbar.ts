@@ -202,7 +202,8 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
     return html`<div
       class=${classMap({
         le__part__preview__toolbar__icon: true,
-        'le__part__preview__toolbar__icon--disabled': blockRotate,
+        le__actions__action: true,
+        'le__actions__action--disabled': blockRotate,
         'le__part__preview__toolbar__icon--selected': this.isRotated || false,
         'le__part__preview__toolbar__icon--toggle': true,
         le__clickable: true,

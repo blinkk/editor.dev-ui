@@ -163,7 +163,8 @@ export class NotificationsPart extends BasePart implements UiPartComponent {
 
     if (notification.level === NotificationLevel.Error && !isDisplayed) {
       this.hasNewError = true;
-    } else {
+    } else if (!(notification as InternalNotification).isRead) {
+      // Only show the toast when the notification has not been read.
       showToast({
         editor: this.config.editor,
         notification: notification,
@@ -289,6 +290,7 @@ export class NotificationsPart extends BasePart implements UiPartComponent {
     // Only scrub the notification if it has not been added before.
     if (!this.notifications.has(notification)) {
       notification = this.scrubNewNotification(notification, defaultLevel);
+      (notification as InternalNotification).isRead = true;
       this.notifications.add(notification);
     }
     (notification as InternalNotification).isRead = true;

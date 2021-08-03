@@ -29,6 +29,7 @@ import {
   EVENT_ONBOARDING_UPDATE,
   EVENT_RENDER,
 } from './events';
+import {announceNotification, readNotification} from './ui/parts/notifications';
 
 import {AmagakiState} from '../projectType/amagaki/amagakiState';
 import {Base} from '@blinkk/selective-edit/dist/mixins';
@@ -37,7 +38,6 @@ import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {ProjectTypeComponent} from '../projectType/projectType';
-import {announceNotification} from './ui/parts/notifications';
 import {interpolatePreviewBaseUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;
@@ -531,7 +531,9 @@ export class EditorState extends ListenersMixin(Base) {
             });
           }
 
-          this.handleErrorAndCleanup(promiseKey, error, true);
+          this.handleErrorAndCleanup(promiseKey, error, {
+            preventDefaultHandling: true,
+          });
         } else {
           this.handleErrorAndCleanup(promiseKey, error);
         }
@@ -592,7 +594,10 @@ export class EditorState extends ListenersMixin(Base) {
         .catch((error: ApiError) => {
           console.error('Unable to load preview server config');
           this.previewConfig = null;
-          this.handleErrorAndCleanup(promiseKey, error, true);
+          this.handleErrorAndCleanup(promiseKey, error, {
+            preventDefaultHandling: true,
+            preventNotification: true,
+          });
         });
     };
 
@@ -758,7 +763,7 @@ export class EditorState extends ListenersMixin(Base) {
   protected handleErrorAndCleanup(
     promiseKey: string,
     error: ApiError,
-    preventDefaultHandling?: boolean
+    options?: ErrorHandlingOptions
   ) {
     delete this.promises[promiseKey];
     const callbacks = this.errorCallbacks[promiseKey] ?? new Set();
@@ -766,10 +771,12 @@ export class EditorState extends ListenersMixin(Base) {
     for (const callback of callbacks) {
       callback(error);
     }
-    if (!preventDefaultHandling) {
+    if (!options?.preventDefaultHandling) {
       catchError(error);
-    } else {
+    } else if (!options?.preventNotification) {
       announceNotification(error);
+    } else {
+      readNotification(error);
     }
   }
 
@@ -996,4 +1003,16 @@ export enum StatePromiseKeys {
   SaveFile = 'SaveFile',
   SetScheme = 'SetScheme',
   SetProjectType = 'SetProjectType',
+}
+
+export interface ErrorHandlingOptions {
+  /**
+   * When true, prevents opening the full notification window with
+   * error details.
+   */
+  preventDefaultHandling?: boolean;
+  /**
+   * When true, prevents showing a notification for the error.
+   */
+  preventNotification?: boolean;
 }

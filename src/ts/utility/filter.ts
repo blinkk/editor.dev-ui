@@ -219,5 +219,5 @@ export function escapeRegExp(value: string) {
 }
 
 function isFileGlobPattern(pattern: string) {
-  return pattern == '*' || pattern.indexOf('.') !== -1;
+  return pattern === '*' || pattern.indexOf('.') !== -1;
 }

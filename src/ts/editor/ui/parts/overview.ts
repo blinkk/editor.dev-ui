@@ -15,6 +15,7 @@ import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
+import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
@@ -50,7 +51,8 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_PUBLISH]) {
       const selectiveConfig = merge(
         {},
-        this.config.editor.config.selectiveConfig,
+        // Clone to prevent shared values if editor changes config.
+        cloneDeep(this.config.editor.config.selectiveConfig),
         {
           fields: fields,
         }

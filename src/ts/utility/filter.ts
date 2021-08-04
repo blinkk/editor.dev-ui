@@ -140,6 +140,74 @@ export class GlobFilter implements FilterComponent {
   }
 }
 
+export interface GitignoreFilterConfig {
+  /**
+   * Value needs to match at least one of the patterns to
+   * pass the filtering.
+   */
+  patterns: Array<string>;
+}
+
+/**
+ * Filtering use gitignore glob style patterns.
+ */
+export class GitignoreFilter implements FilterComponent {
+  config: GitignoreFilterConfig;
+
+  constructor(config: GitignoreFilterConfig) {
+    this.config = config;
+
+    // Convert the patterns to gitignore style globs.
+    this.config.patterns = this.convertPatterns(this.config.patterns);
+  }
+
+  /**
+   *
+   * @param values Raw patterns for ignored filters
+   * @returns
+   */
+  protected convertPatterns(values: Array<string>): Array<string> {
+    const patterns: Array<string> = [];
+    for (const pattern of values) {
+      const prefix = pattern.charAt(0) !== '/' ? '**/' : '';
+      if (!isFileGlobPattern(pattern)) {
+        const suffix = pattern.slice(-1) === '*' ? '*' : '/**';
+        if (pattern.slice(-1) === '/') {
+          patterns.push(`${prefix}${pattern}${suffix}`);
+        } else {
+          // Create pair of globs.
+          patterns.push(`${prefix}${pattern}`);
+          patterns.push(`${prefix}${pattern}${suffix}`);
+        }
+      } else {
+        patterns.push(pattern);
+        if (pattern.startsWith('*') && !pattern.startsWith('**')) {
+          patterns.push(`${prefix}${pattern}`);
+        }
+      }
+    }
+    return patterns;
+  }
+
+  filter(values: Array<string>): Array<string> {
+    return values.filter(this.matches, this);
+  }
+
+  matches(value: string): boolean {
+    // If there are includes, it needs to match at least one of them.
+    let matchesPattern = false;
+    for (const pattern of this.config.patterns) {
+      if (minimatch(value, pattern)) {
+        matchesPattern = true;
+        break;
+      }
+    }
+
+    // Using ignores, which means we want to remove matches.
+    return !matchesPattern;
+  }
+}
+
 /**
  * Escapes a string to be used as a 'constant' in a regex.
  *
@@ -148,4 +216,8 @@ export class GlobFilter implements FilterComponent {
  */
 export function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+}
+
+function isFileGlobPattern(pattern: string) {
+  return pattern == '*' || pattern.indexOf('.') !== -1;
 }

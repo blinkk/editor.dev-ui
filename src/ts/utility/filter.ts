@@ -109,9 +109,7 @@ export interface GlobFilterConfig {
 }
 
 /**
- * Filtering use glob patterns.
- *
- *
+ * Filtering use glob style patterns.
  */
 export class GlobFilter implements FilterComponent {
   config: GlobFilterConfig;

@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.7.0...v3.8.0) (2021-08-04)
+
+
+### Features
+
+* Glob style filter. ([#193](https://www.github.com/blinkk/editor.dev-ui/issues/193)) ([2f5caed](https://www.github.com/blinkk/editor.dev-ui/commit/2f5caedb2e31f9b7a79c30856ea730ecc0ce4418))
+
 ## [3.7.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.6.0...v3.7.0) (2021-08-04)
 
 

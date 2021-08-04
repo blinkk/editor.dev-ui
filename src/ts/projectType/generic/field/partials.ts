@@ -24,6 +24,7 @@ import {
 
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
+import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 
@@ -163,24 +164,29 @@ export class GenericPartialsField
         });
       }
 
-      const selectiveConfig = merge({}, editor.config.selectiveConfig, {
-        fields: [
-          {
-            type: 'radio',
-            key: 'partial',
-            label: this.config.partialLabel || 'Partial',
-            help: this.config.partialHelpLabel || 'Choose a partial to add.',
-            options: options,
-            validation: [
-              {
-                type: 'require',
-                message:
-                  this.config.partialRequireLabel || 'Partial is required.',
-              },
-            ],
-          },
-        ],
-      });
+      const selectiveConfig = merge(
+        {},
+        // Clone to prevent shared values if editor changes config.
+        cloneDeep(editor.config.selectiveConfig),
+        {
+          fields: [
+            {
+              type: 'radio',
+              key: 'partial',
+              label: this.config.partialLabel || 'Partial',
+              help: this.config.partialHelpLabel || 'Choose a partial to add.',
+              options: options,
+              validation: [
+                {
+                  type: 'require',
+                  message:
+                    this.config.partialRequireLabel || 'Partial is required.',
+                },
+              ],
+            },
+          ],
+        }
+      );
       const modal = new FormDialogModal({
         title: this.config.addLabel || 'Add partial',
         selectiveConfig: selectiveConfig,

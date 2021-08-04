@@ -14,6 +14,7 @@ import {
 
 import {DataStorage} from '../../../../utility/dataStorage';
 import {LiveEditorAutoFields} from '../../../autoFields';
+import cloneDeep from 'lodash.clonedeep';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
@@ -45,7 +46,10 @@ export class ContentSectionPart extends BasePart implements UiPartComponent {
   constructor(config: ContentSectionPartConfig) {
     super();
     this.config = config;
-    this.selective = new SelectiveEditor(this.config.selectiveConfig);
+    this.selective = new SelectiveEditor(
+      // Clone to prevent shared values if editor changes config.
+      cloneDeep(this.config.selectiveConfig)
+    );
 
     // Override the autofields class.
     this.selective.types.globals.AutoFieldsCls = LiveEditorAutoFields;

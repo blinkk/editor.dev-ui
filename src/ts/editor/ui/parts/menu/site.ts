@@ -17,7 +17,7 @@ import {EVENT_FILE_LOAD} from '../../../events';
 import {LiveEditor} from '../../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
 import {StatePromiseKeys} from '../../../state';
-import merge from 'lodash.merge';
+import cloneDeep from 'lodash.clonedeep';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
 
@@ -61,8 +61,8 @@ export class SitePart extends MenuSectionPart {
 
   protected getOrCreateModalCopy(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_COPY]) {
-      const selectiveConfig = merge(
-        {},
+      // Clone to prevent shared values if editor changes config.
+      const selectiveConfig = cloneDeep(
         this.config.editor.config.selectiveConfig
       );
       const modal = new FormDialogModal({
@@ -120,8 +120,8 @@ export class SitePart extends MenuSectionPart {
 
   protected getOrCreateModalDelete(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_DELETE]) {
-      const selectiveConfig = merge(
-        {},
+      // Clone to prevent shared values if editor changes config.
+      const selectiveConfig = cloneDeep(
         this.config.editor.config.selectiveConfig
       );
       const modal = new FormDialogModal({
@@ -171,8 +171,8 @@ export class SitePart extends MenuSectionPart {
 
   protected getOrCreateModalNew(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NEW]) {
-      const selectiveConfig = merge(
-        {},
+      // Clone to prevent shared values if editor changes config.
+      const selectiveConfig = cloneDeep(
         this.config.editor.config.selectiveConfig
       );
       const modal = new FormDialogModal({

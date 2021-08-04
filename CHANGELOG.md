@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.7.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.6.0...v3.7.0) (2021-08-04)
+
+
+### Features
+
+* monochromatic color scheme ([#162](https://www.github.com/blinkk/editor.dev-ui/issues/162)) ([2264696](https://www.github.com/blinkk/editor.dev-ui/commit/22646969635199cbdaa7769ea8966e8425a03890))
+
+
+### Bug Fixes
+
+* Allow the state to handle errors as a read notification. ([4310284](https://www.github.com/blinkk/editor.dev-ui/commit/43102840cf3ce28747e8a0b87526a8caa7d74115)), closes [#167](https://www.github.com/blinkk/editor.dev-ui/issues/167)
+* Footer for the menu with light/dark mode toggle. ([#168](https://www.github.com/blinkk/editor.dev-ui/issues/168)) ([1c1a1c7](https://www.github.com/blinkk/editor.dev-ui/commit/1c1a1c70830310d108f9793410888128d7eb301c))
+* Missing auth fails the onboarding status. ([11a9862](https://www.github.com/blinkk/editor.dev-ui/commit/11a98625203e496e1e3d69c623a599c913fe6b0a)), closes [#169](https://www.github.com/blinkk/editor.dev-ui/issues/169)
+* use deep copy for the selective config to prevent shared config ([#178](https://www.github.com/blinkk/editor.dev-ui/issues/178)) ([c50d00c](https://www.github.com/blinkk/editor.dev-ui/commit/c50d00ca259949bfe61b6d40da392aed72963689)), closes [#174](https://www.github.com/blinkk/editor.dev-ui/issues/174)
+* UX messaging around the preview status. ([#166](https://www.github.com/blinkk/editor.dev-ui/issues/166)) ([a566536](https://www.github.com/blinkk/editor.dev-ui/commit/a566536ed041ade5e9e586612e225e2a520aeca3)), closes [#158](https://www.github.com/blinkk/editor.dev-ui/issues/158)
+
 ## [3.6.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.5.0...v3.6.0) (2021-08-02)
 
 

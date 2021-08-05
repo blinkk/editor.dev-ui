@@ -21,7 +21,7 @@
 
   a
     color: inherit
-    font-weight: 700
+    font-weight: var(--font-weight-bold)
     text-decoration: dotted
 
     &:hover
@@ -29,9 +29,38 @@
 
   p
     line-height: $le-line-height-paragraph
+    margin: $le-space-medium 0
 
   pre
     margin: 0
+
+  h1
+    font-size: $le-font-size-xxlarge
+    font-weight: var(--font-weight-default)
+
+  h2
+    font-size: $le-font-size-xlarge
+    font-weight: var(--font-weight-bold)
+
+  h3
+    font-size: $le-font-size-xlarge
+    font-weight: var(--font-weight-heavy)
+
+  h4
+    font-size: $le-font-size-large
+    font-weight: var(--font-weight-bold)
+
+  h5
+    font-size: $le-font-size-large
+    font-weight: var(--font-weight-heavy)
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5
+    margin: $le-space-medium 0
+    line-height: $le-line-height
 
   .material-icons
     font-size: $le-font-size-icon

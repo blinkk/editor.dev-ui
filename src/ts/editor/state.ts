@@ -943,7 +943,7 @@ export class EditorState extends ListenersMixin(Base) {
       parts.unshift(this.project?.source?.source);
     }
 
-    parts.push('editor.dev');
+    parts.push('Editor.dev');
 
     document.title = parts.join(' - ');
   }

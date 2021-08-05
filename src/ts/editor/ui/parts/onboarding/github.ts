@@ -1,5 +1,4 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
-import {DashboardRecent, STORAGE_RECENT} from '../dashboard';
 import {
   GitHubInstallationInfo,
   GitHubOrgInstallationInfo,
@@ -58,13 +57,16 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     this.config = config;
     this.timeAgo = new TimeAgo('en-US');
 
-    // Update current state with onboarding flag.
-    history.replaceState(
-      Object.assign({}, history.state || {}, {
-        onboarding: true,
-      }),
-      history.state?.title || document.title
-    );
+    if (!history.state) {
+      // Update current state with onboarding flag.
+      history.replaceState(
+        Object.assign({}, history.state || {}, {
+          onboarding: true,
+        }),
+        history.state?.title || document.title,
+        window.location.pathname
+      );
+    }
 
     // Watch for the history popstate.
     window.addEventListener('popstate', this.handlePopstate.bind(this));
@@ -108,7 +110,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
 
   handlePopstate(evt: PopStateEvent) {
     // When using popstate update the onboarding flow to the state values.
-    if (evt.state.onboarding === true) {
+    if (evt.state && evt.state.onboarding === true) {
       this.api.organization = evt.state.organization || undefined;
       this.api.project = evt.state.repository || undefined;
       this.api.branch = evt.state.branch || undefined;
@@ -216,11 +218,20 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     </div>`;
   }
 
-  templateHeader(title: string): TemplateResult {
+  templateHeader(title?: string): TemplateResult {
     return html`<div class="le__part__onboarding__header">
-      <div class="le__part__onboarding__icon">${githubIcon}</div>
-      <h1>GitHub</h1>
-      <h2>${title}</h2>
+      <div class="le__part__onboarding__header__inner">
+        <div class="le__part__onboarding__icon">
+          ${this.installation?.avatarUrl
+            ? html`<img
+                src=${this.installation?.avatarUrl}
+                alt=${this.installation?.org}
+              />`
+            : html`${githubIcon}`}
+        </div>
+        <h1>GitHub</h1>
+        ${title ? html`<h2>${title}</h2>` : ''}
+      </div>
     </div>`;
   }
 
@@ -238,16 +249,19 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   templateLogin(): TemplateResult {
-    return html`${this.templateHeader('Login with GitHub')}
+    return html`${this.templateHeader()}
       <div class="le__part__onboarding__github__login">
-        <p>Login with your GitHub account to access your files in GitHub.</p>
-        <button
-          class="le__button le__button--primary"
+        <p>Sign in to Github to start editing.</p>
+        <div
+          class="le__button le__button--primary le__button--no-wrap le__button--outline le__button--center"
           href="#"
           @click=${this.api.triggerAuth}
         >
-          Login with GitHub
-        </button>
+          <div class="le__button__inner">
+            ${githubIcon}
+            <div>Login with GitHub</div>
+          </div>
+        </div>
       </div>`;
   }
 
@@ -272,33 +286,37 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       );
     }
 
-    return html` ${this.templateHeader('Organizations')}
-      ${this.templateSectionHeader('Select an organization')}
-      ${this.templateHelp(html`Unable to find your organization? Install the
-        <a href=${APP_URL}>GitHub App</a>.`)}
-      ${this.organizations
-        ? ''
-        : this.templateLoadingStatus(html`Finding organizations…`)}
+    return html` ${this.templateHeader()}
+      ${this.templateSection('Select an organization')}
       <div class="le__part__onboarding__options">
-        ${useFilter ? this.templateFilter() : ''}
         <div
           class=${classMap({
-            le__grid: true,
-            'le__grid--col-3': true,
-            'le__grid--gap_small': useFilter,
-            'le__grid--3-2': !useFilter,
+            le__list: true,
           })}
         >
+          <div
+            class=${classMap({
+              le__list__item: true,
+              'le__list__item--header': true,
+              'le__list__item--pad': true,
+            })}
+          >
+            <div class="le__list__item__title">
+              ${useFilter ? this.templateFilter() : 'Organization'}
+            </div>
+          </div>
+          ${this.organizations
+            ? ''
+            : this.templateLoadingStatus(html`Finding organizations…`)}
           ${repeat(
             filtered || [],
             org => org.id,
             org => {
               return html`<div
                 class=${classMap({
-                  le__grid__item: true,
-                  'le__grid__item--pad': true,
-                  'le__grid__item--box': true,
-                  'le__grid__item--box-centered': !useFilter,
+                  le__list__item: true,
+                  'le__list__item--pad': true,
+                  'le__list__item--separator': true,
                   le__clickable: true,
                 })}
                 @click=${() => {
@@ -323,12 +341,17 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 role="button"
                 aria-pressed="false"
               >
-                ${org.avatarUrl
-                  ? html`<div>
-                      <img src=${org.avatarUrl} alt=${org.org} />
-                    </div>`
-                  : ''}
-                <div>
+                <div class="le__list__item__avatar">
+                  <a
+                    href="${BASE_URL}${org.org}/"
+                    @click=${preventNormalLinks}
+                    tabindex="-1"
+                    >${org.avatarUrl
+                      ? html`<img src=${org.avatarUrl} alt=${org.org} />`
+                      : html`${githubIcon}`}</a
+                  >
+                </div>
+                <div class="le__list__item__title">
                   <a
                     href="${BASE_URL}${org.org}/"
                     @click=${preventNormalLinks}
@@ -347,6 +370,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               </div>`
             : ''}
         </div>
+        ${this.templateHelp(html`Unable to find your organization? Install the
+          <a href=${APP_URL}>GitHub App</a>.`)}
       </div>`;
   }
 
@@ -368,7 +393,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       return html``;
     }
 
-    return html`${this.templateSectionHeader('Recent repositories')}
+    return html`${this.templateSection('Recent repositories')}
       <div class="le__part__onboarding__options">
         <div
           class=${classMap({
@@ -460,31 +485,32 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       );
     }
 
-    return html`${this.templateHeader(
-        `Repositories in ${this.api.organization}`
-      )}
-      ${this.templateRecentRepositories(`${this.api.organization}/`, 3)}
-      ${this.templateSectionHeader('Select a repository')}
-      ${this.templateHelp(html`Repository missing?
-      ${this.installation
-        ? html`Configure the
-            <a href=${this.installation?.url || APP_URL}>GitHub App</a>
-            repository access.`
-        : html`Install the <a href=${APP_URL}>GitHub App</a>.`}`)}
-      ${this.repositories
-        ? ''
-        : this.templateLoadingStatus(html`Finding ${this.api.organization}
-          repositories…`)}
+    // ${this.templateRecentRepositories(`${this.api.organization}/`, 3)}
+
+    return html`${this.templateHeader()}
+      ${this.templateSection(html`Repositories in ${this.api.organization}`)}
       <div class="le__part__onboarding__options">
-        ${useFilter ? this.templateFilter() : ''}
         <div
           class=${classMap({
-            le__grid: true,
-            'le__grid--col-3': true,
-            'le__grid--gap_small': useFilter,
-            'le__grid--3-2': !useFilter,
+            le__list: true,
           })}
         >
+          <div
+            class=${classMap({
+              le__list__item: true,
+              'le__list__item--header': true,
+              'le__list__item--pad': true,
+            })}
+          >
+            <div class="le__list__item__title">
+              ${useFilter ? this.templateFilter() : 'Repository'}
+            </div>
+            <div class="le__list__item__data">Last updated</div>
+          </div>
+          ${this.repositories
+            ? ''
+            : this.templateLoadingStatus(html`Finding ${this.api.organization}
+              repositories…`)}
           ${repeat(
             filtered || [],
             repo => repo.repo,
@@ -509,10 +535,9 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
 
               return html`<div
                 class=${classMap({
-                  le__grid__item: true,
-                  'le__grid__item--pad': true,
-                  'le__grid__item--box': true,
-                  'le__grid__item--box-centered': !useFilter,
+                  le__list__item: true,
+                  'le__list__item--pad': true,
+                  'le__list__item--separator': true,
                   le__clickable: true,
                 })}
                 @click=${handleClick}
@@ -521,7 +546,9 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 role="button"
                 aria-pressed="false"
               >
-                <div>
+                <div
+                  class="le__list__item__title le__list__item__title--no-avatar"
+                >
                   <a
                     href="${BASE_URL}${repo.org}/${repo.repo}/"
                     @click=${preventNormalLinks}
@@ -530,7 +557,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   >
                 </div>
                 ${repo.updatedAt
-                  ? html`<div class="le__part__onboarding__github__time">
+                  ? html`<div class="le__list__item__data">
                       Updated ${this.timeAgo.format(new Date(repo.updatedAt))}
                     </div>`
                   : ''}
@@ -545,12 +572,22 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               </div>`
             : ''}
         </div>
+        ${this.templateHelp(html`Repository missing?
+        ${this.installation
+          ? html`Configure the
+              <a href=${this.installation?.url || APP_URL}>GitHub App</a>
+              repository access.`
+          : html`Install the <a href=${APP_URL}>GitHub App</a>.`}`)}
       </div>`;
   }
 
-  templateSectionHeader(title: string): TemplateResult {
+  templateSection(
+    title?: string | TemplateResult,
+    description?: string
+  ): TemplateResult {
     return html`<div class="le__part__onboarding__section">
-      <h3>${title}</h3>
+      ${title ? html`<h4>${title}</h4>` : ''}
+      ${description ? html`<p>${description}</p>` : ''}
     </div>`;
   }
 
@@ -580,37 +617,41 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       );
     }
 
-    return html`${this.templateHeader(
-      `Workspaces in ${this.api.organization}/${this.api.project}`
-    )}
-    ${this.templateSectionHeader('Select a workspace')}
-    ${this.templateHelp(html`Workspaces are git branches that begin with
-      <code>workspace/</code> or special branches like <code>main</code>,
-      <code>staging</code>, or <code>master</code>.`)}
-    ${
-      this.workspaces
-        ? ''
-        : this.templateLoadingStatus(html`Finding
-          ${this.api.organization}/${this.api.project} workspaces…`)
-    }
+    return html`${this.templateHeader()}
+      ${this.templateSection(
+        `Select a workspace from ${this.api.organization}/${this.api.project}`
+      )}
       <div class="le__part__onboarding__options">
         ${useFilter ? this.templateFilter() : ''}
-        <div class=${classMap({
-          le__grid: true,
-          'le__grid--col-3': true,
-          'le__grid--gap_small': useFilter,
-          'le__grid--3-2': !useFilter,
-        })}>
+        <div
+          class=${classMap({
+            le__list: true,
+          })}
+        >
+          <div
+            class=${classMap({
+              le__list__item: true,
+              'le__list__item--header': true,
+              'le__list__item--pad': true,
+            })}
+          >
+            <div class="le__list__item__title">
+              ${useFilter ? this.templateFilter() : 'Workspace'}
+            </div>
+          </div>
+          ${this.workspaces
+            ? ''
+            : this.templateLoadingStatus(html`Finding
+              ${this.api.organization}/${this.api.project} workspaces…`)}
           ${repeat(
             filtered || [],
             workspace => workspace.name,
             workspace => {
               return html`<div
                 class=${classMap({
-                  le__grid__item: true,
-                  'le__grid__item--pad': true,
-                  'le__grid__item--box': true,
-                  'le__grid__item--box-centered': !useFilter,
+                  le__list__item: true,
+                  'le__list__item--pad': true,
+                  'le__list__item--separator': true,
                   le__clickable: true,
                 })}
                 @click=${() => {
@@ -643,31 +684,35 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 role="button"
                 aria-pressed="false"
               >
-                <a
-                  href=${this.generateUrl(
-                    this.api.organization,
-                    this.api.project,
-                    workspace.name
-                  )}
-                  @click=${preventNormalLinks}
-                  tabindex="-1"
-                  >${workspace.name}</a
+                <div
+                  class="le__list__item__title le__list__item__title--no-avatar"
                 >
+                  <a
+                    href=${this.generateUrl(
+                      this.api.organization,
+                      this.api.project,
+                      workspace.name
+                    )}
+                    @click=${preventNormalLinks}
+                    tabindex="-1"
+                    >${workspace.name}</a
+                  >
+                </div>
               </div>`;
             }
           )}
-          ${
-            this.workspaces && !this.workspaces.length
-              ? html`<div
-                  class="le__grid__item le__grid__item--pad le__grid__item--emphasis"
-                >
-                  Unable to find workspaces.
-                </div>`
-              : ''
-          }
+          ${this.workspaces && !this.workspaces.length
+            ? html`<div
+                class="le__grid__item le__grid__item--pad le__grid__item--emphasis"
+              >
+                Unable to find workspaces.
+              </div>`
+            : ''}
         </div>
-      </div>
-    </div>`;
+        ${this.templateHelp(html`Workspaces are git branches that begin with
+          <code>workspace/</code> or special branches like <code>main</code>,
+          <code>staging</code>, or <code>master</code>.`)}
+      </div>`;
   }
 }
 

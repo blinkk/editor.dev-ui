@@ -1,0 +1,25 @@
+.le__part__onboarding__generic
+  .le__part__onboarding__options
+    .le__grid__item
+      column-gap: $le-space-medium
+      display: grid
+      grid-template-columns: $le-space-xlarge 1fr
+      grid-template-rows: $le-space-large 1fr
+      grid-template-areas: "icon title" "icon label"
+
+      svg
+        max-height: $le-space-xlarge
+        max-width: $le-space-xlarge
+
+.le__part__onboarding__generic__icon
+  grid-area: icon
+
+.le__part__onboarding__generic__label
+  font-weight: var(--font-weight-heavy)
+  line-height: $le-line-height-paragraph
+  grid-area: label
+
+.le__part__onboarding__generic__title
+  font-size: $le-font-size-large
+  font-weight: var(--font-weight-bold)
+  grid-area: title

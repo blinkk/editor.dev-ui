@@ -6,33 +6,12 @@ partials:
   options:
   - large
 
-# - partial: hero
-#   title: editor.dev
-#   body: Online editor providing a rich UI for editing structured data with live previews.
-#   buttons:
-#   - label: Local project
-#     doc: !pod.doc /content/pages/local.yaml
-#   - label: Github project
-#     doc: !pod.doc /content/pages/gh.yaml
-
-# - partial: spacer
-#   options:
-#   - large
-
-- partial: editor-launch
-  title: Try editor.dev
-  body: Choose a local project or a project hosted on GitHub to use editor.dev with.
+- partial: hero
+  title: Editor.dev
+  body: Online editor providing a rich UI for editing structured data with live previews.
   buttons:
-  - label: Local project
-    doc: !pod.doc /content/pages/local.yaml
-    media:
-      label: Local project
-      static: !pod.staticFile /static/img/local.svg
-  - label: GitHub project
-    doc: !pod.doc /content/pages/gh.yaml
-    media:
-      label: GitHub project
-      static: !pod.staticFile /static/img/github.svg
+  - label: Edit now
+    doc: !pod.doc /content/pages/start.yaml
 
 - partial: spacer
   options:

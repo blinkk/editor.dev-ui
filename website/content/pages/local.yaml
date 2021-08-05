@@ -1,4 +1,4 @@
-title: Local Development
+title: Editor.dev - Local Projects
 navTitle: Local
 description: Develop projects using a local set of project files.
 $view: /views/editor.njk

@@ -21,7 +21,7 @@ export class ToolbarOnboardingPart extends BasePart implements UiPartComponent {
   template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__onboarding__toolbar__title">
-        <a href="/">editor.dev</a>
+        <a href="/start/">Editor.dev</a>
       </div>
       ${this.config.editor.ui.partNotifications.template()}
     </div>`;

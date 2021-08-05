@@ -135,6 +135,11 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   loadWorkspaces() {
+    // Load organization to show the current organization avatar.
+    if (!this.organizations) {
+      this.loadOrganizations();
+    }
+
     this.api
       .getWorkspaces(this.api.organization, this.api.project)
       .then(workspaces => {
@@ -152,6 +157,16 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       .getOrganizations()
       .then(organizations => {
         this.organizations = organizations;
+
+        // Check if we already have an organization selected.
+        if (this.api.organization) {
+          for (const org of this.organizations) {
+            if (org.org === this.api.organization) {
+              this.installation = org;
+            }
+          }
+        }
+
         this.render();
       })
       .catch(() => {
@@ -191,6 +206,26 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       .getRepositories(this.installation.id)
       .then(repositories => {
         this.repositories = repositories;
+
+        // Sort the repositories by the last activity.
+        this.repositories.sort((a, b) => {
+          if (!a.updatedAt && !b.updatedAt) {
+            return 0;
+          }
+          if (!a.updatedAt) {
+            return -1;
+          }
+          if (!b.updatedAt) {
+            return 1;
+          }
+          if (a.updatedAt < b.updatedAt) {
+            return 1;
+          } else if (a.updatedAt > b.updatedAt) {
+            return -1;
+          }
+          return 0;
+        });
+
         this.repositoriesId = this.installation?.id;
         this.render();
       })
@@ -484,7 +519,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   templateRepositories(): TemplateResult {
     this.config.breadcrumbs.addBreadcrumb(
       {
-        label: this.installation?.org || 'Organization',
+        label:
+          this.api.organization || this.installation?.org || 'Organization',
         handleClick: () => {
           this.api.project = undefined;
           this.api.branch = undefined;
@@ -521,8 +557,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     // Allow the filter input to filter the repositories.
     let filtered = this.repositories;
     if (this.repositories && this.listFilter && this.listFilter.trim() !== '') {
-      console.log('filtered!');
-
       filtered = this.repositories.filter(repo =>
         repo.repo.includes(this.listFilter || '')
       );
@@ -637,6 +671,18 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   templateWorkspaces(): TemplateResult {
     this.config.breadcrumbs.addBreadcrumb(
       {
+        label:
+          this.api.organization || this.installation?.org || 'Organization',
+        handleClick: () => {
+          this.api.project = undefined;
+          this.api.branch = undefined;
+          this.render();
+        },
+      },
+      1
+    );
+    this.config.breadcrumbs.addBreadcrumb(
+      {
         label: this.api.project || '',
         handleClick: () => {
           this.api.branch = undefined;
@@ -683,7 +729,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         `Select a workspace from ${this.api.organization}/${this.api.project}`
       )}
       <div class="le__part__onboarding__options">
-        ${useFilter ? this.templateFilter() : ''}
         <div
           class=${classMap({
             le__list: true,

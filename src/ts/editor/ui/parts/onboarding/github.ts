@@ -7,6 +7,11 @@ import {
   WorkspaceData,
 } from '../../../api';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
+import {
+  handleKeyboardNav,
+  preventNormalLinks,
+  templateLoading,
+} from '../../../template';
 
 import {EVENT_ONBOARDING_UPDATE} from '../../../events';
 import {EditorState} from '../../../state';
@@ -14,7 +19,6 @@ import {GitHubApi} from '../../../../server/gh/githubApi';
 import {OnboardingBreadcrumbs} from '../onboarding';
 import TimeAgo from 'javascript-time-ago';
 import {githubIcon} from '../../icons';
-import {templateLoading} from '../../../template';
 
 const APP_URL = 'https://github.com/apps/editor-dev';
 const BASE_URL = '/gh/';
@@ -116,12 +120,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   handleFilterInput(evt: Event) {
     this.listFilter = (evt.target as HTMLInputElement).value;
     this.render();
-  }
-
-  handleKeyboardNav(evt: KeyboardEvent) {
-    if (evt.key === 'Enter' || evt.key === ' ') {
-      (evt.target as HTMLElement).click();
-    }
   }
 
   handlePopstate(evt: PopStateEvent) {
@@ -395,7 +393,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   this.render();
                   return false;
                 }}
-                @keydown=${this.handleKeyboardNav.bind(this)}
+                @keydown=${handleKeyboardNav.bind(this)}
                 tabindex="0"
                 role="button"
                 aria-pressed="false"
@@ -493,7 +491,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   this.render();
                   return false;
                 }}
-                @keydown=${this.handleKeyboardNav.bind(this)}
+                @keydown=${handleKeyboardNav.bind(this)}
                 tabindex="0"
                 role="button"
                 aria-pressed="false"
@@ -618,7 +616,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   le__clickable: true,
                 })}
                 @click=${handleClick}
-                @keydown=${this.handleKeyboardNav.bind(this)}
+                @keydown=${handleKeyboardNav.bind(this)}
                 tabindex="0"
                 role="button"
                 aria-pressed="false"
@@ -785,7 +783,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   );
                   return false;
                 }}
-                @keydown=${this.handleKeyboardNav.bind(this)}
+                @keydown=${handleKeyboardNav.bind(this)}
                 tabindex="0"
                 role="button"
                 aria-pressed="false"
@@ -821,16 +819,3 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       </div>`;
   }
 }
-
-/**
- * Do not want to have normal link clicks redirect, but still want
- * links to be able to be opened in a new tab.
- */
-const preventNormalLinks = (evt: KeyboardEvent) => {
-  if (evt.ctrlKey || evt.shiftKey || evt.metaKey) {
-    // Stop the upstream click handler from triggering.
-    evt.stopPropagation();
-    return;
-  }
-  evt.preventDefault();
-};

@@ -1,34 +1,24 @@
-import {TemplateResult, html, render, repeat} from '@blinkk/selective-edit';
+import {DataStorage, LocalDataStorage} from '../../utility/dataStorage';
+import {
+  TemplateResult,
+  classMap,
+  html,
+  render,
+  repeat,
+} from '@blinkk/selective-edit';
 import {githubIcon, localIcon} from '../../editor/ui/icons';
+import {
+  getBaseUrlForSource,
+  handleKeyboardNav,
+  preventNormalLinks,
+} from '../../editor/template';
 
 import {EditorAppComponent} from './editorApp';
+import {EditorHistory} from '../../editor/recent';
 import {GitHubEditorApp} from './githubApp';
 import {LocalEditorApp} from './localApp';
-
-/**
- * Use the container data attributes to determine which app to create and use.
- *
- * @param container Container for the application to render.
- * @returns App customized for the settings based on the container attributes.
- */
-export function appFromContainer(container: HTMLElement): EditorAppComponent {
-  const localPort = parseInt(container.dataset.port || '');
-  const isLocal = localPort > 0;
-
-  if (isLocal) {
-    return new LocalEditorApp(container, {
-      port: localPort,
-    });
-  }
-
-  const service = container.dataset.service;
-
-  if (service === 'gh') {
-    return new GitHubEditorApp(container);
-  }
-
-  throw new Error('Unable to determine app to use');
-}
+import {ProjectSource, SourceData} from '../../editor/api';
+import TimeAgo from 'javascript-time-ago';
 
 /**
  * The editor needs to determine a few things before it can start display.
@@ -42,9 +32,20 @@ export function appFromContainer(container: HTMLElement): EditorAppComponent {
 export class EditorAppShell {
   container: HTMLElement;
   editorApp?: EditorAppComponent;
+  /**
+   * Editor history.
+   */
+  history: EditorHistory;
+  storage: DataStorage;
+  timeAgo: TimeAgo;
 
   constructor(container: HTMLElement) {
     this.container = container;
+    this.storage = new LocalDataStorage();
+    this.history = new EditorHistory({
+      storage: this.storage,
+    });
+    this.timeAgo = new TimeAgo('en-US');
   }
 
   init() {
@@ -104,7 +105,7 @@ export class EditorAppShell {
             <h1>Start editing</h1>
           </div>
         </div>
-        ${this.templateConnectors()}
+        ${this.templateConnectors()} ${this.templateRecentRepositories()}
       </div>
     </div>`;
   }
@@ -156,6 +157,76 @@ export class EditorAppShell {
             }
           )}
         </div>
+      </div>
+    </div>`;
+  }
+
+  templateRecentRepositories(maxCount = 10): TemplateResult {
+    let recentProjects = this.history.recentProjects;
+
+    // Adjust the number of recent projects to show.
+    recentProjects = recentProjects.slice(0, maxCount);
+
+    if (!recentProjects.length) {
+      return html``;
+    }
+
+    return html`<div class="le__part__onboarding__options">
+      <div
+        class=${classMap({
+          le__list: true,
+        })}
+      >
+        <div
+          class=${classMap({
+            le__list__item: true,
+            'le__list__item--header': true,
+            'le__list__item--pad': true,
+          })}
+        >
+          <div class="le__list__item__title">Recent project</div>
+          <div class="le__list__item__data">Last visited</div>
+        </div>
+        ${repeat(
+          recentProjects,
+          project => project.identifier,
+          project => {
+            return html`<div
+              class=${classMap({
+                le__list__item: true,
+                'le__list__item--pad': true,
+                'le__list__item--separator': true,
+                le__clickable: true,
+              })}
+              @click=${() => {
+                window.location.href = `${getBaseUrlForSource(project.source)}${
+                  project.identifier
+                }/`;
+                return false;
+              }}
+              @keydown=${handleKeyboardNav.bind(this)}
+              tabindex="0"
+              role="button"
+              aria-pressed="false"
+            >
+              <div
+                class="le__list__item__title le__list__item__title--no-avatar"
+              >
+                <a
+                  href="${getBaseUrlForSource(
+                    project.source
+                  )}${project.identifier}/"
+                  @click=${preventNormalLinks}
+                  tabindex="-1"
+                  >${project.identifier}</a
+                >
+              </div>
+              <div class="le__list__item__data">
+                Visited ${this.timeAgo.format(new Date(project.lastVisited))}
+              </div>
+            </div>`;
+          }
+        )}
       </div>
     </div>`;
   }

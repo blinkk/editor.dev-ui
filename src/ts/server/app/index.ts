@@ -90,8 +90,13 @@ export class EditorAppShell {
     return html`<div class="le">
       <div class="le__panel le__part__onboarding">
         <div class="le__panel le__part__onboarding__toolbar">
-          <div class="le__part__onboarding__toolbar__title">
-            <a href="/start/">Editor.dev</a>
+          <div class="le__part__onboarding__breadcrumb">
+            <div class="le__part__onboarding__toolbar__title">
+              <a href="/start/">Editor.dev</a>
+            </div>
+            <div class="le__part__onboarding__breadcrumb__item">
+              Choose a connector
+            </div>
           </div>
         </div>
         <div class="le__part__onboarding__header">

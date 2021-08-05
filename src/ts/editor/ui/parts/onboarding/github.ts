@@ -11,6 +11,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {EVENT_ONBOARDING_UPDATE} from '../../../events';
 import {EditorState} from '../../../state';
 import {GitHubApi} from '../../../../server/gh/githubApi';
+import {OnboardingBreadcrumbs} from '../onboarding';
 import TimeAgo from 'javascript-time-ago';
 import {githubIcon} from '../../icons';
 import {templateLoading} from '../../../template';
@@ -20,6 +21,7 @@ const BASE_URL = '/gh/';
 const MIN_FILTER_LENGTH = 9;
 
 export interface GitHubOnboardingPartConfig extends UiPartConfig {
+  breadcrumbs: OnboardingBreadcrumbs;
   /**
    * State class for working with editor state.
    */
@@ -56,6 +58,20 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
     super();
     this.config = config;
     this.timeAgo = new TimeAgo('en-US');
+
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: 'GitHub',
+        handleClick: () => {
+          this.api.organization = undefined;
+          this.api.project = undefined;
+          this.api.branch = undefined;
+          this.render();
+        },
+      },
+      0,
+      true
+    );
 
     if (!history.state) {
       // Update current state with onboarding flag.
@@ -270,6 +286,14 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadOrganizations();
     }
 
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: 'Select an organization',
+      },
+      1,
+      true
+    );
+
     const useFilter = Boolean(
       this.organizations && this.organizations.length > MIN_FILTER_LENGTH
     );
@@ -458,6 +482,25 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   templateRepositories(): TemplateResult {
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: this.installation?.org || 'Organization',
+        handleClick: () => {
+          this.api.project = undefined;
+          this.api.branch = undefined;
+          this.render();
+        },
+      },
+      1
+    );
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: 'Select a project',
+      },
+      2,
+      true
+    );
+
     // When using popstate, the repository id can be different than the cached selection.
     if (
       this.repositories &&
@@ -592,6 +635,24 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   }
 
   templateWorkspaces(): TemplateResult {
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: this.api.project || '',
+        handleClick: () => {
+          this.api.branch = undefined;
+          this.render();
+        },
+      },
+      2
+    );
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: 'Select a workspace',
+      },
+      3,
+      true
+    );
+
     // When using popstate, the repository id can be different than the cached selection.
     if (
       this.workspaces &&

@@ -13,3 +13,28 @@
   flex-grow: 1
   font-weight: var(--font-weight-bold)
   padding: $le-space-medium
+
+.le__part__onboarding__breadcrumb
+  align-items: center
+  display: flex
+  flex-flow: row
+  justify-content: flex-start
+
+  >
+    div
+      &::after
+        border-right: $le-border-size-medium solid var(--color-background)
+        border-top: $le-border-size-medium solid var(--color-background)
+        content: ' '
+        display: inline-block
+        height: $le-space-large
+        margin-left: -$le-space-small
+        margin-top: -$le-space-small - 1px
+        opacity: $le-opacity-disabled
+        pointer-events: none
+        position: absolute
+        transform: scale(.5, 1) rotate(45deg)
+        width: $le-space-large
+
+.le__part__onboarding__breadcrumb__item
+  padding: $le-space-medium

@@ -1,9 +1,12 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {ProjectData, UserData} from '../../../api';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
+
 import {EditorState} from '../../../state';
+import {OnboardingBreadcrumbs} from '../onboarding';
 
 export interface LocalOnboardingPartConfig extends UiPartConfig {
+  breadcrumbs: OnboardingBreadcrumbs;
   /**
    * State class for working with editor state.
    */
@@ -17,6 +20,14 @@ export class LocalOnboardingPart extends BasePart implements UiPartComponent {
   constructor(config: LocalOnboardingPartConfig) {
     super();
     this.config = config;
+
+    this.config.breadcrumbs.addBreadcrumb(
+      {
+        label: 'Local',
+      },
+      0,
+      true
+    );
   }
 
   classesForPart(): Record<string, boolean> {

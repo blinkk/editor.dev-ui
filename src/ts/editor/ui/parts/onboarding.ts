@@ -28,22 +28,27 @@ export interface OnboardingPartConfig extends UiPartConfig {
 export class OnboardingPart extends BasePart implements UiPartComponent {
   config: OnboardingPartConfig;
   parts: LazyUiParts;
+  breadcrumbs: OnboardingBreadcrumbs;
 
   constructor(config: OnboardingPartConfig) {
     super();
     this.config = config;
+    this.breadcrumbs = new OnboardingBreadcrumbs();
 
     this.parts = new LazyUiParts();
 
     this.parts.register('toolbar', ToolbarOnboardingPart, {
+      breadcrumbs: this.breadcrumbs,
       editor: this.config.editor,
     } as ToolbarOnboardingPartConfig);
 
     this.parts.register('local', LocalOnboardingPart, {
+      breadcrumbs: this.breadcrumbs,
       editor: this.config.editor,
       state: this.config.state,
     } as LocalOnboardingPartConfig);
     this.parts.register('github', GitHubOnboardingPart, {
+      breadcrumbs: this.breadcrumbs,
       editor: this.config.editor,
       state: this.config.state,
     } as GitHubOnboardingPartConfig);
@@ -85,5 +90,33 @@ export class OnboardingPart extends BasePart implements UiPartComponent {
     }
 
     return html`<div class=${classMap(this.classesForPart())}>${parts}</div>`;
+  }
+}
+
+/**
+ * Parts of the breadcrumb for the onboarding header.
+ */
+export interface BreadcrumPart {
+  label: string;
+  handleClick?: (evt: Event) => void;
+}
+
+export class OnboardingBreadcrumbs {
+  crumbs: Array<BreadcrumPart>;
+
+  constructor() {
+    this.crumbs = [];
+  }
+
+  addBreadcrumb(crumb: BreadcrumPart, index?: number, clearRest?: boolean) {
+    if (index) {
+      this.crumbs[index] = crumb;
+    } else {
+      this.crumbs.push(crumb);
+    }
+
+    if (index && clearRest) {
+      this.crumbs = this.crumbs.slice(0, index);
+    }
   }
 }

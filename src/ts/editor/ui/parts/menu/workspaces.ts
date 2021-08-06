@@ -175,21 +175,9 @@ export class WorkspacesPart extends MenuSectionPart {
     ] as FormDialogModal;
   }
 
-  loadWorkspace() {
-    this.config.state.getWorkspace();
-  }
-
-  loadWorkspaces() {
-    this.config.state.getWorkspaces();
-  }
-
   templateContent(): TemplateResult {
-    // Lazy load the workspaces information.
-    if (!this.config.state.workspaces) {
-      this.loadWorkspaces();
-    }
-
-    if (!this.config.state.workspaces) {
+    const workspaces = this.config.state.workspacesOrGetWorkspaces();
+    if (!workspaces) {
       return templateLoading({
         pad: true,
       });
@@ -201,7 +189,7 @@ export class WorkspacesPart extends MenuSectionPart {
       >
         ${this.templateCreateWorkspace()}
         ${repeat(
-          this.config.state.workspaces || [],
+          workspaces || [],
           workspace => workspace.name,
           workspace => html`<div
             class=${classMap(this.classesForWorkspace(workspace))}

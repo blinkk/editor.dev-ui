@@ -156,8 +156,10 @@ export class EditorState extends ListenersMixin(Base) {
   workspace?: WorkspaceData | null;
   /**
    * Workspaces available to use in the editor.
+   *
+   * Value is null when fails to load.
    */
-  workspaces?: Array<WorkspaceData>;
+  workspaces?: Array<WorkspaceData> | null;
 
   constructor(api: LiveEditorApiComponent) {
     super();
@@ -732,11 +734,11 @@ export class EditorState extends ListenersMixin(Base) {
   getWorkspaces(
     callback?: (workspaces: Array<WorkspaceData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Array<WorkspaceData> | undefined {
+  ): Array<WorkspaceData> | undefined | null {
     const promiseKey = StatePromiseKeys.GetWorkspaces;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.workspaces;
     }
     this.promises[promiseKey] = this.api
       .getWorkspaces()
@@ -744,9 +746,10 @@ export class EditorState extends ListenersMixin(Base) {
         this.workspaces = data;
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.workspaces = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.workspaces;
   }
 
@@ -986,6 +989,21 @@ export class EditorState extends ListenersMixin(Base) {
       this.getWorkspace();
     }
     return this.workspace;
+  }
+
+  /**
+   * Lazy load of workspaces data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  workspacesOrGetWorkspaces(): Array<WorkspaceData> | undefined | null {
+    if (
+      this.workspaces === undefined &&
+      !this.inProgress(StatePromiseKeys.GetWorkspaces)
+    ) {
+      this.getWorkspaces();
+    }
+    return this.workspaces;
   }
 }
 

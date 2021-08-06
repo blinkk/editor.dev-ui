@@ -36,4 +36,19 @@ export class AmagakiAutoFields extends LiveEditorAutoFields {
 
     return super.deepGuessObject(data, keyBase);
   }
+
+  /**
+   * Guess the type of field to use based on the key and value.
+   *
+   * @param key Key to guess the type of field.
+   * @param data Data to use for guessing field type.
+   */
+  guessType(key: string, data: any): string {
+    // Check for partials field.
+    if (key === 'partials' && DataType.isArray(data)) {
+      return 'partials';
+    }
+
+    return super.guessType(key, data);
+  }
 }

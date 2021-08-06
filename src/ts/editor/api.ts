@@ -90,7 +90,10 @@ export interface LiveEditorApiComponent {
   /**
    * Retrieve the url to preview the file.
    *
-   * When retrieving a list of files it is often slow
+   * When retrieving a list of files it is often slow to
+   * retrieve the serving url for all the files. If the
+   * preview url is missing, the API will be called to
+   * the serving url on a per file basis.
    */
   getFileUrl(file: FileData): Promise<FileData>;
 
@@ -550,6 +553,10 @@ export interface ProjectData {
    */
   features?: Record<string, boolean | FeatureManagerSettings>;
   /**
+   * The editor will use important links for the project in the UI.
+   */
+  links?: ProjectLinksData;
+  /**
    * Media configuration for the project.
    *
    * This controls options around how the media is handled in the project.
@@ -589,6 +596,31 @@ export interface ProjectData {
    * Users or groups approved access to the editor.
    */
   users?: Array<UserData>;
+}
+
+/**
+ * Links for the project that can be used in the UI to direct the user.
+ */
+export interface ProjectLinksData {
+  /**
+   * The UI can display a breadcrumb style heirarchy links for the project.
+   * This allows for easier navigation between projects on a given service.
+   */
+  breadcrumbs?: Array<LinkData>;
+}
+
+/**
+ * Information about a specific link.
+ */
+export interface LinkData {
+  /**
+   * Label for how the link is displayed.
+   */
+  label?: string;
+  /**
+   * URL for the link.
+   */
+  url: string;
 }
 
 /**

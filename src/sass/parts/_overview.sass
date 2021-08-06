@@ -34,3 +34,16 @@
 
     path
       fill: currentColor
+
+.le__part__breadcrumb
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+  span
+    &::after
+      content: ' / '
+
+    &:last-child
+      &::after
+        content: ''

@@ -92,6 +92,10 @@ export class GitHubApi extends ServiceServerApi {
     ) as Promise<Array<WorkspaceData>>;
   }
 
+  get serviceName(): string {
+    return 'GitHub';
+  }
+
   /**
    * Start the authentication process.
    */

@@ -203,16 +203,9 @@ export class MenuPart extends BasePart implements UiPartComponent {
   }
 
   templateMenu(): TemplateResult {
-    const project = this.config.state.project;
-
-    // Lazy load the project.
-    if (!project) {
-      this.loadProject();
-    }
-
     return html`<div class="le__part__menu__header">
       <div class="le__part__menu__project">
-        ${project?.title || html`&nbsp;`}
+        ${this.config.editor.ui.partOverview.templateProjectTitle()}
       </div>
       <div class="le__actions">
         ${this.templateActionDocking()} ${this.templateActionClose()}

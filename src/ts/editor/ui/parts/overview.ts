@@ -6,6 +6,7 @@ import {
   classMap,
   html,
   ifDefined,
+  repeat,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../modal';
 import {exampleIcon, githubIcon, localIcon} from '../icons';
@@ -226,21 +227,49 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   }
 
   templateProject(): TemplateResult {
+    return html`<div class="le__part__overview__title">
+      ${this.config.editor.ui.partMenu.isDocked
+        ? html`&nbsp;`
+        : this.templateProjectTitle()}
+    </div>`;
+  }
+
+  templateProjectTitle(): TemplateResult {
     const project = this.config.state.project;
 
     // Lazy load the project.
-    if (!project) {
+    if (project === undefined) {
       this.loadProject();
     }
 
-    let projectName = project?.title || html`&nbsp;`;
+    const parts: Array<TemplateResult> = [];
+    let links = project?.links?.breadcrumbs ?? [];
 
-    // Menu shows the project name when it is docked.
-    if (this.config.editor.ui.partMenu.isDocked) {
-      projectName = html`&nbsp;`;
+    // TODO: Better way of limiting the breadcrumbs for services.
+    if (links.length > 2) {
+      // Trim off the service level and branch level links.
+      links = links.slice(1, -1);
     }
 
-    return html`<div class="le__part__overview__title">${projectName}</div>`;
+    // Menu shows the project name when it is docked.
+    if (links.length) {
+      parts.push(
+        html`${repeat(
+          links,
+          link => link.url,
+          link =>
+            html`<span
+              ><a href=${link.url} alt=${ifDefined(link.label)}
+                >${link.label}</a
+              ></span
+            >`
+        )}`
+      );
+    } else {
+      parts.push(html`${project?.title || html`&nbsp;`}`);
+    }
+
+    return html`<div class="le__part__breadcrumb">${parts}</div>`;
   }
 
   templatePublish(): TemplateResult {

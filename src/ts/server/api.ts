@@ -467,6 +467,50 @@ export class ServiceServerApi extends ServerApi {
     };
   }
 
+  async getProject(): Promise<ProjectData> {
+    const response = await super.getProject();
+
+    // Generate breadcrumb links for the project.
+    const links = response.links ?? {};
+    const breadcrumbs = links.breadcrumbs ?? [];
+
+    // Only generate the breadcrumbs here if the
+    // remote api does not provide them.
+    if (breadcrumbs.length === 0) {
+      // Main service breadcrumb.
+      breadcrumbs.push({
+        label: this.serviceName,
+        url: `/${this.service}/`,
+      });
+
+      if (this.organization) {
+        breadcrumbs.push({
+          label: this.organization,
+          url: `/${this.service}/${this.organization}/`,
+        });
+
+        if (this.project) {
+          breadcrumbs.push({
+            label: this.project,
+            url: `/${this.service}/${this.organization}/${this.project}/`,
+          });
+
+          if (this.branch) {
+            breadcrumbs.push({
+              label: this.branch,
+              url: `/${this.service}/${this.organization}/${this.project}/${this.branch}/`,
+            });
+          }
+        }
+      }
+    }
+
+    links.breadcrumbs = breadcrumbs;
+    response.links = links;
+
+    return response;
+  }
+
   protected get onboardingStatus(): OnboardingStatus {
     // Only valid when all required information is set.
     if (
@@ -479,6 +523,10 @@ export class ServiceServerApi extends ServerApi {
     }
 
     return OnboardingStatus.Missing;
+  }
+
+  get serviceName(): string {
+    return 'Service';
   }
 
   async updateOnboarding(info: OnboardingInfo): Promise<OnboardingInfo> {

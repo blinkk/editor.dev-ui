@@ -116,11 +116,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     const project = this.config.state.project;
     const workspace = this.config.state.workspace;
 
-    // Lazy load the project.
-    if (project === undefined) {
-      this.config.state.getProject();
-    }
-
     // Lazy load the workspace.
     if (!workspace) {
       this.loadWorkspace();
@@ -232,12 +227,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
 
   templateProjectTitle(): TemplateResult {
     const project = this.config.state.project;
-
-    // Lazy load the project.
-    if (project === undefined) {
-      this.config.state.getProject();
-    }
-
     const parts: Array<TemplateResult> = [];
     let links = project?.links?.breadcrumbs ?? [];
 
@@ -271,11 +260,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   templatePublish(): TemplateResult {
     const project = this.config.state.project;
     const workspace = this.config.state.workspace;
-
-    // Lazy load the project.
-    if (project === undefined) {
-      this.config.state.getProject();
-    }
 
     // Lazy load the workspace.
     if (!workspace) {

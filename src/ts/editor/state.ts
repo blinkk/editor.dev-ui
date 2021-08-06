@@ -117,7 +117,7 @@ export class EditorState extends ListenersMixin(Base) {
    *
    * Value is null when the project cannot be loaded.
    */
-  project?: ProjectData | null;
+  _project?: ProjectData | null;
   /**
    * Project types states.
    */
@@ -837,6 +837,26 @@ export class EditorState extends ListenersMixin(Base) {
       this.getFile(this.pendingFile);
       this.pendingFile = undefined;
     }
+  }
+
+  /**
+   * Lazy load of project data.
+   *
+   * Understands the null state when there is an error requesting the
+   * project state and does not re-request the project info.
+   */
+  get project(): ProjectData | undefined | null {
+    if (
+      this._project === undefined &&
+      !this.inProgress(StatePromiseKeys.GetProject)
+    ) {
+      this.getProject();
+    }
+    return this._project;
+  }
+
+  set project(project: ProjectData | undefined | null) {
+    this._project = project;
   }
 
   get projectId(): string | undefined {

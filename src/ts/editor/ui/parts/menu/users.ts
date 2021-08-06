@@ -25,8 +25,7 @@ export class UsersPart extends MenuSectionPart {
 
   templateContent(): TemplateResult {
     // Lazy load the project information.
-    if (this.config.state.project === undefined) {
-      this.config.state.getProject();
+    if (!this.config.state.project) {
       return templateLoading({
         pad: true,
       });

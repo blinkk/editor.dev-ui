@@ -1,7 +1,7 @@
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
-import {ProjectData, UserData} from '../../../api';
 import {TemplateResult, html} from '@blinkk/selective-edit';
 
+import {UserData} from '../../../api';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
 
@@ -23,21 +23,15 @@ export class UsersPart extends MenuSectionPart {
     return classes;
   }
 
-  loadProject() {
-    this.users = this.config.state.getProject((project: ProjectData) => {
-      // Default to array so it does not try to keep reloading the project data.
-      this.users = project.users || [];
-      this.render();
-    })?.users;
-  }
-
   templateContent(): TemplateResult {
-    // Lazy load the users information.
-    if (this.users === undefined) {
-      this.loadProject();
+    // Lazy load the project information.
+    if (this.config.state.project === undefined) {
+      this.config.state.getProject();
       return templateLoading({
         pad: true,
       });
+    } else if (this.users === undefined) {
+      this.users = this.config.state.project?.users ?? [];
     }
 
     if (!this.users.length) {

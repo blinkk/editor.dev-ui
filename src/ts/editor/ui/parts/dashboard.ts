@@ -43,7 +43,9 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     this.config = config;
     this.timeAgo = new TimeAgo('en-US');
 
-    if (!this.config.state.projectId) {
+    if (!this.config.state.project === null) {
+      console.log('Unable to show dashboard without project');
+    } else if (!this.config.state.projectId) {
       this.config.state.getProject(() => {
         this.projectHistory = this.config.state.history.getProject(
           this.config.state.projectId as string

@@ -117,8 +117,8 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     const workspace = this.config.state.workspace;
 
     // Lazy load the project.
-    if (!project) {
-      this.loadProject();
+    if (project === undefined) {
+      this.config.state.getProject();
     }
 
     // Lazy load the workspace.
@@ -158,10 +158,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     // Need to collect additional data, show the modal for the form.
     const modal = this.getOrCreateModalPublish(project.publish?.fields || []);
     modal.show();
-  }
-
-  loadProject() {
-    this.config.state.getProject();
   }
 
   loadWorkspace() {
@@ -239,7 +235,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
 
     // Lazy load the project.
     if (project === undefined) {
-      this.loadProject();
+      this.config.state.getProject();
     }
 
     const parts: Array<TemplateResult> = [];
@@ -277,8 +273,8 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     const workspace = this.config.state.workspace;
 
     // Lazy load the project.
-    if (!project) {
-      this.loadProject();
+    if (project === undefined) {
+      this.config.state.getProject();
     }
 
     // Lazy load the workspace.

@@ -114,8 +114,10 @@ export class EditorState extends ListenersMixin(Base) {
   projectType?: ProjectTypeComponent;
   /**
    * Project information.
+   *
+   * Value is null when the project cannot be loaded.
    */
-  project?: ProjectData;
+  project?: ProjectData | null;
   /**
    * Project types states.
    */
@@ -624,7 +626,9 @@ export class EditorState extends ListenersMixin(Base) {
     this.promises[promiseKey] = true;
 
     // Project needs to be loaded first.
-    if (!this.project) {
+    if (this.project === null) {
+      console.error('Unable to load preview server config without project');
+    } else if (!this.project) {
       this.getProject(handleProject);
     } else {
       handleProject(this.project);
@@ -636,7 +640,7 @@ export class EditorState extends ListenersMixin(Base) {
   getProject(
     callback?: (project: ProjectData) => void,
     callbackError?: (error: ApiError) => void
-  ): ProjectData | undefined {
+  ): ProjectData | undefined | null {
     const promiseKey = StatePromiseKeys.GetProject;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
@@ -675,9 +679,11 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, this.project);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        // Set value as null when there was an error.
+        this.project = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.project;
   }
 

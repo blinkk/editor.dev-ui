@@ -36,14 +36,6 @@ export class LocalOnboardingPart extends BasePart implements UiPartComponent {
     };
   }
 
-  loadProject() {
-    this.users = this.config.state.getProject((project: ProjectData) => {
-      // Default to array so it does not try to keep reloading the project data.
-      this.users = project.users || [];
-      this.render();
-    })?.users;
-  }
-
   template(): TemplateResult {
     return html`<div class=${classMap(this.classesForPart())}>
       <div class="le__part__onboarding__local__title">

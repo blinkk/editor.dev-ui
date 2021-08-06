@@ -234,17 +234,13 @@ export class SitePart extends MenuSectionPart {
     });
   }
 
-  loadProject() {
-    this.config.state.getProject();
-  }
-
   templateContent(): TemplateResult {
     const project = this.config.state.project;
     const files = this.config.state.files;
 
     // Lazy load the project.
-    if (!project) {
-      this.loadProject();
+    if (project === undefined) {
+      this.config.state.getProject();
     }
 
     // Lazy load the files.

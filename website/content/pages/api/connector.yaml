@@ -1,4 +1,4 @@
-title: editor.dev connector API docs
+title: Editor.dev connector API docs
 navTitle: Connector API
 description: API docs for the editor connector.
 
@@ -8,7 +8,7 @@ partials:
   - large
 
 - partial: hero
-  title: editor.dev connector API docs
+  title: Editor.dev connector API docs
   body: Stub for the connector API docs page.
 
 - partial: spacer

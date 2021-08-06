@@ -1,4 +1,4 @@
-title: editor.dev UI API docs
+title: Editor.dev UI API docs
 navTitle: UI API
 description: API docs for the editor UI.
 
@@ -8,7 +8,7 @@ partials:
   - large
 
 - partial: hero
-  title: editor.dev UI API docs
+  title: Editor.dev UI API docs
   body: Stub for the UI API docs page.
 
 - partial: spacer

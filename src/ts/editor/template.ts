@@ -1,5 +1,7 @@
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
+import {ProjectSource} from './api';
+
 export interface LiveTemplate {
   (): TemplateResult;
 }
@@ -141,4 +143,44 @@ export interface LiveEditorLabels {
    * Label for the workspace.
    */
   workspaces?: string;
+}
+
+/**
+ * Allow keyboard events for clicking on an element.
+ *
+ * @param evt keyboard event
+ */
+export function handleKeyboardNav(evt: KeyboardEvent) {
+  if (evt.key === 'Enter' || evt.key === ' ') {
+    (evt.target as HTMLElement).click();
+  }
+}
+
+/**
+ * Do not want to have normal link clicks redirect, but still want
+ * links to be able to be opened in a new tab.
+ */
+export function preventNormalLinks(evt: KeyboardEvent) {
+  if (evt.ctrlKey || evt.shiftKey || evt.metaKey) {
+    // Stop the upstream click handler from triggering.
+    evt.stopPropagation();
+    return;
+  }
+  evt.preventDefault();
+}
+
+/**
+ * Determine the correct base url to use for the project.
+ *
+ * @param source Source when available.
+ * @returns Base url for the given source.
+ */
+export function getBaseUrlForSource(source?: ProjectSource | string): string {
+  if (source === ProjectSource.Local) {
+    return '/';
+  }
+  if (source === ProjectSource.GitHub) {
+    return '/gh/';
+  }
+  return '/';
 }

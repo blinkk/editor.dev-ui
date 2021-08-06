@@ -1,4 +1,4 @@
-title: editor.dev API documentation
+title: Editor.dev API documentation
 navTitle: API Docs
 description: Documentation for the api for developing for the editor.
 
@@ -8,7 +8,7 @@ partials:
   - large
 
 - partial: hero
-  title: editor.dev API
+  title: Editor.dev API
   body: |
     The API has two main parts: the UI for providing a rich editor and the
     Connector that connects the editor to the project source code.

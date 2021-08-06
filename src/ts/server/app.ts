@@ -1,5 +1,5 @@
+import {EditorAppShell} from './app/index';
 import StackdriverErrorReporter from 'stackdriver-errors-js';
-import {appFromContainer} from './app/index';
 
 // Check for configured stackdriver error reporting.
 const stackdriverKey = document.body.dataset.stackdriverKey;
@@ -14,5 +14,5 @@ if (stackdriverKey) {
 }
 
 const container = document.querySelector('.container') as HTMLElement;
-const app = appFromContainer(container);
-app.init();
+const shellApp = new EditorAppShell(container);
+shellApp.init();

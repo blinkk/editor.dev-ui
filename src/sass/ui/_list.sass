@@ -40,6 +40,13 @@
     align-items: flex-start
     flex-flow: column
 
+  &--header
+    font-weight: var(--font-weight-bold)
+    border-bottom: $le-border-size-large solid var(--color-border)
+
+  &--separator
+    border-bottom: $le-border-size-medium solid var(--color-border)
+
   &--pad_xsmall
     padding: $le-space-xsmall
 
@@ -107,17 +114,17 @@
     padding-left: $le-space-xxlarge
 
   &--primary
-    font-weight: 700
+    font-weight: var(--font-weight-bold)
 
   &--heading
-    font-weight: 700
+    font-weight: var(--font-weight-bold)
 
     // Prevent item immediately under the heading from indenting.
     & + .le__list
       padding-left: 0
 
   &--emphasis
-    font-weight: 700
+    font-weight: var(--font-weight-bold)
 
   &.le__clickable
     // Menu has the 'full width' effect for list items.

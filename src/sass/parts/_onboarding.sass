@@ -2,22 +2,33 @@
   display: flex
   flex-flow: column
 
-.le__part__onboarding__header,
+.le__part__onboarding__header
+  display: flex
+  flex-flow: column
+  min-height: $le-space-xxxlarge - $le-space-large
+  justify-content: flex-end
+  flex-shrink: 0
+
+.le__part__onboarding__header__inner
+  align-items: center
+  column-gap: $le-space-medium
+  display: flex
+  flex-flow: column
+
 .le__part__onboarding__section
+  margin: $le-space-medium 0
   text-align: center
 
 .le__part__onboarding__icon
   text-align: center
-  margin: $le-space-large 0 $le-space-medium 0
 
+  img,
   svg
-    max-height: $le-space-xxlarge
-    max-width: $le-space-xxlarge
+    height: $le-space-xlarge
+    max-width: $le-space-xlarge
     width: 100%
 
 .le__part__onboarding__filter
-  margin: $le-space-medium 0
-
   input
     background-color: var(--color-background)
     border: $le-border-size-medium solid var(--color-border)
@@ -28,8 +39,6 @@
 
 .le__part__onboarding__help
   align-items: center
-  background-color: var(--color-tertiary)
-  color: var(--color-on-tertiary)
   display: flex
   flex-flow: row
   justify-content: center
@@ -45,18 +54,49 @@
 .le__part__onboarding__help__message
   padding: $le-space-medium
 
+.le__part__onboarding__description
+  margin-left: auto
+  margin-right: auto
+  max-width: $le-space-max-body-width
+  padding: $le-space-medium
+  width: 100%
+
 .le__part__onboarding__options
   contain: layout inline-size style
   margin-left: auto
   margin-right: auto
-  max-width: $le-space-max-content-width
+  max-width: $le-space-max-body-width
   padding: $le-space-medium
   width: 100%
 
-  img
-    max-height: $le-space-xlarge
-    max-width: $le-space-xlarge
-    margin-bottom: $le-space-small
+
+  .le__list__item
+    display: grid
+    column-gap: $le-space-medium
+    grid-template-areas: "avatar label data"
+    grid-template-columns: $le-space-large 1fr 1fr
+
+  img,
+  svg
+    max-height: $le-space-large
+    max-width: $le-space-large
+
+  .le__list__item__avatar
+    grid-area: avatar
+
+  .le__list__item__title
+    grid-area: label
+
+    &--no-avatar
+      grid-area:  avatar / avatar / avatar / label
+
+  .le__list__item__data
+    grid-area: data
+    text-align: right
+
+  .le__list__item--header
+    .le__list__item__title
+      grid-area:  avatar / avatar / avatar / label
 
 .le__part__onboarding__loading
   align-items: center
@@ -67,5 +107,6 @@
 
 @import './onboarding/toolbar'
 
+@import './onboarding/generic'
 @import './onboarding/github'
 @import './onboarding/local'

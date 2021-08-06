@@ -8,7 +8,7 @@
   row-gap: $le-space-medium
 
   &--col-2
-    --grid_columns: 1fr 1fr 1fr
+    --grid_columns: 1fr 1fr
 
     @container (max-width: #{$le-space-xxxxlarge - 1})
       --grid_columns: 1fr
@@ -51,7 +51,7 @@
     border-radius: $le-radius-medium
 
     &.le__grid__item--selected
-      font-weight: 700
+      font-weight: var(--font-weight-bold)
 
   &--box-centered
     align-items: center
@@ -67,7 +67,7 @@
     --color-on-action-background: var(--color-on-grid-item-background)
 
   &--emphasis
-    font-weight: 700
+    font-weight: var(--font-weight-bold)
 
   &--selected
     --color-grid-item-background: var(--color-primary)

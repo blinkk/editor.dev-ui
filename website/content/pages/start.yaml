@@ -1,0 +1,4 @@
+title: Start editing
+navTitle: Start
+description: Begin editing a project with Editor.dev.
+$view: /views/editor.njk

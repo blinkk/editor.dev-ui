@@ -22,9 +22,19 @@
   width: 100%
 
 .le__part__onboarding__github__login
-  padding: $le-space-medium
   text-align: center
 
-.le__part__onboarding__github__time
-  margin-top: $le-space-small
-  font-size: $le-font-size-small
+  .le__button
+    display: inline-block
+    margin-top: $le-space-large
+
+  .le__button__inner
+    align-items: center
+    column-gap: $le-space-small
+    display: flex
+    flex-flow: row
+    width: auto
+
+    svg
+      max-height: $le-space-medium
+      width: $le-space-medium

@@ -1,6 +1,6 @@
-title: editor.dev example
+title: Editor.dev example
 navTitle: UI Example
-description: Example of the editor.dev UI.
+description: Example of the Editor.dev UI.
 
 partials:
 - partial: spacer

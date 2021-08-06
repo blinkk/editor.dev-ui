@@ -558,6 +558,7 @@ export class EditorState extends ListenersMixin(Base) {
             preventDefaultHandling: true,
           });
         } else {
+          this.file = null;
           this.handleErrorAndCleanup(promiseKey, error);
         }
       });

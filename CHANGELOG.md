@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.8.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.8.0...v3.8.1) (2021-08-06)
+
+
+### Bug Fixes
+
+* Updated onboarding flow to match newer mocks. ([#209](https://www.github.com/blinkk/editor.dev-ui/issues/209)) ([49ef330](https://www.github.com/blinkk/editor.dev-ui/commit/49ef33080e09e62efb094d09268cdad77b71e16a))
+
 ## [3.8.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.7.0...v3.8.0) (2021-08-04)
 
 

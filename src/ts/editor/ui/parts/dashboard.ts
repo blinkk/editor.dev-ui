@@ -110,10 +110,9 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
     let recentFiles: Array<RecentFileData> = [];
 
-    if (this.projectHistory && this.config.state.workspace) {
-      recentFiles = this.projectHistory.getRecentFiles(
-        this.config.state.workspace.name
-      );
+    const workspace = this.config.state.workspaceOrGetWorkspace();
+    if (this.projectHistory && workspace) {
+      recentFiles = this.projectHistory.getRecentFiles(workspace.name);
     }
 
     if (recentFiles.length) {
@@ -161,11 +160,12 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
     let recentWorkspaces: Array<RecentWorkspaceData> = [];
 
+    const workspace = this.config.state.workspaceOrGetWorkspace();
     if (
       // Local projects do not provide workspace support.
       this.config.state.project?.source?.source !== ProjectSource.Local &&
       this.projectHistory &&
-      this.config.state.workspace
+      workspace
     ) {
       recentWorkspaces = this.projectHistory.getRecentWorkspaces();
     }

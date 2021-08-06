@@ -115,7 +115,7 @@ export class EditorState extends ListenersMixin(Base) {
   /**
    * Project information.
    *
-   * Value is null when the project cannot be loaded.
+   * Value is null when fails to load.
    */
   project?: ProjectData | null;
   /**
@@ -150,8 +150,10 @@ export class EditorState extends ListenersMixin(Base) {
   users?: Array<UserData>;
   /**
    * Workspace in use in the editor.
+   *
+   * Value is null when fails to load.
    */
-  workspace?: WorkspaceData;
+  workspace?: WorkspaceData | null;
   /**
    * Workspaces available to use in the editor.
    */
@@ -251,9 +253,9 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
   }
 
   createFile(
@@ -578,7 +580,7 @@ export class EditorState extends ListenersMixin(Base) {
     const promiseKey = StatePromiseKeys.GetPreviewConfig;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.previewConfig;
     }
 
     const handlePreviewSettings = (data: PreviewSettings | null) => {
@@ -644,7 +646,7 @@ export class EditorState extends ListenersMixin(Base) {
     const promiseKey = StatePromiseKeys.GetProject;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.project;
     }
     this.promises[promiseKey] = this.api
       .getProject()
@@ -690,11 +692,11 @@ export class EditorState extends ListenersMixin(Base) {
   getWorkspace(
     callback?: (workspace: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
-  ): WorkspaceData | undefined {
+  ): WorkspaceData | undefined | null {
     const promiseKey = StatePromiseKeys.GetWorkspace;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.workspace;
     }
     this.promises[promiseKey] = this.api
       .getWorkspace()
@@ -720,9 +722,10 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.workspace = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.workspace;
   }
 
@@ -842,8 +845,7 @@ export class EditorState extends ListenersMixin(Base) {
   /**
    * Lazy load of project data.
    *
-   * Understands the null state when there is an error requesting the
-   * project state and does not re-request the project info.
+   * Understands the null state when there is an error requesting.
    */
   projectOrGetProject(): ProjectData | undefined | null {
     if (
@@ -969,6 +971,21 @@ export class EditorState extends ListenersMixin(Base) {
     parts.push('Editor.dev');
 
     document.title = parts.join(' - ');
+  }
+
+  /**
+   * Lazy load of workspace data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  workspaceOrGetWorkspace(): WorkspaceData | undefined | null {
+    if (
+      this.workspace === undefined &&
+      !this.inProgress(StatePromiseKeys.GetWorkspace)
+    ) {
+      this.getWorkspace();
+    }
+    return this.workspace;
   }
 }
 

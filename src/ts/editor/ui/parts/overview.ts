@@ -77,7 +77,8 @@ export class OverviewPart extends BasePart implements UiPartComponent {
           modal.startProcessing();
 
           const value = modal.selective.value;
-          const workspace = this.config.state.workspace;
+          const workspace = this.config.state.workspaceOrGetWorkspace();
+
           if (!workspace) {
             return;
           }
@@ -114,12 +115,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handlePublishClick(evt: Event) {
     const project = this.config.state.projectOrGetProject();
-    const workspace = this.config.state.workspace;
-
-    // Lazy load the workspace.
-    if (!workspace) {
-      this.loadWorkspace();
-    }
+    const workspace = this.config.state.workspaceOrGetWorkspace();
 
     if (!workspace || !project) {
       return;
@@ -155,15 +151,12 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     modal.show();
   }
 
-  loadWorkspace() {
-    this.config.state.getWorkspace();
-  }
-
   showPublishResult(result: PublishResult) {
     console.log('publish result', result);
 
     const actions: Array<NotificationAction> = [];
-    const currentWorkspace = this.config.state.workspace;
+    const currentWorkspace = this.config.state.workspaceOrGetWorkspace();
+
     let message = '';
 
     if ([PublishStatus.Complete].includes(result.status as PublishStatus)) {
@@ -259,12 +252,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
 
   templatePublish(): TemplateResult {
     const project = this.config.state.projectOrGetProject();
-    const workspace = this.config.state.workspace;
-
-    // Lazy load the workspace.
-    if (!workspace) {
-      this.loadWorkspace();
-    }
+    const workspace = this.config.state.workspaceOrGetWorkspace();
 
     if (!workspace || !project) {
       return html``;
@@ -338,13 +326,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   }
 
   templateWorkspace(): TemplateResult {
-    const workspace = this.config.state.workspace;
-
-    // Lazy load the workspace.
-    if (!workspace) {
-      this.loadWorkspace();
-    }
-
+    const workspace = this.config.state.workspaceOrGetWorkspace();
     const workspaceCommitHash = (workspace?.branch.commit.hash || '...').slice(
       0,
       5
@@ -394,7 +376,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
     } else {
       return html``;
     }
-    const workspace = this.config.state.workspace;
+    const workspace = this.config.state.workspaceOrGetWorkspace();
 
     return html`<div
       class="le__part__overview__icon le__tooltip le__tooltip--bottom"

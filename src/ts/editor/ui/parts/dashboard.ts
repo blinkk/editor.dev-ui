@@ -42,19 +42,6 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     super();
     this.config = config;
     this.timeAgo = new TimeAgo('en-US');
-
-    if (!this.config.state.projectId) {
-      this.config.state.getProject(() => {
-        this.projectHistory = this.config.state.history.getProject(
-          this.config.state.projectId as string
-        );
-        this.render();
-      });
-    } else {
-      this.projectHistory = this.config.state.history.getProject(
-        this.config.state.projectId
-      );
-    }
   }
 
   classesForPart(): Record<string, boolean> {
@@ -68,6 +55,12 @@ export class DashboardPart extends BasePart implements UiPartComponent {
   }
 
   template(): TemplateResult {
+    if (!this.projectHistory && this.config.state.projectId) {
+      this.projectHistory = this.config.state.history.getProject(
+        this.config.state.projectId
+      );
+    }
+
     const subParts: Array<TemplateResult> = [];
 
     subParts.push(this.templateFileNotFound());
@@ -117,10 +110,9 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
     let recentFiles: Array<RecentFileData> = [];
 
-    if (this.projectHistory && this.config.state.workspace) {
-      recentFiles = this.projectHistory.getRecentFiles(
-        this.config.state.workspace.name
-      );
+    const workspace = this.config.state.workspaceOrGetWorkspace();
+    if (this.projectHistory && workspace) {
+      recentFiles = this.projectHistory.getRecentFiles(workspace.name);
     }
 
     if (recentFiles.length) {
@@ -168,11 +160,12 @@ export class DashboardPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
     let recentWorkspaces: Array<RecentWorkspaceData> = [];
 
+    const workspace = this.config.state.workspaceOrGetWorkspace();
     if (
       // Local projects do not provide workspace support.
       this.config.state.project?.source?.source !== ProjectSource.Local &&
       this.projectHistory &&
-      this.config.state.workspace
+      workspace
     ) {
       recentWorkspaces = this.projectHistory.getRecentWorkspaces();
     }

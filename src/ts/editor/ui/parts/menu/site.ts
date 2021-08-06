@@ -227,32 +227,11 @@ export class SitePart extends MenuSectionPart {
     ] as FormDialogModal;
   }
 
-  loadFiles() {
-    this.config.state.getFiles(() => {
-      this.fileStructure = undefined;
-      this.render();
-    });
-  }
-
-  loadProject() {
-    this.config.state.getProject();
-  }
-
   templateContent(): TemplateResult {
-    const project = this.config.state.project;
-    const files = this.config.state.files;
+    const project = this.config.state.projectOrGetProject();
+    const files = this.config.state.filesOrGetFiles();
 
-    // Lazy load the project.
-    if (!project) {
-      this.loadProject();
-    }
-
-    // Lazy load the files.
-    if (files === undefined) {
-      this.loadFiles();
-    }
-
-    if (!project || files === undefined) {
+    if (!project || !files) {
       return templateLoading({
         pad: true,
       });

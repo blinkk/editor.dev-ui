@@ -38,11 +38,12 @@ export class WorkspacesPart extends MenuSectionPart {
   }
 
   classesForWorkspace(workspace: WorkspaceData): Record<string, boolean> {
+    const currentWorkspace = this.config.state.workspaceOrGetWorkspace();
+
     return {
       le__clickable: true,
       le__list__item: true,
-      'le__list__item--selected':
-        this.config.state.workspace?.name === workspace.name,
+      'le__list__item--selected': currentWorkspace?.name === workspace.name,
     };
   }
 
@@ -174,26 +175,9 @@ export class WorkspacesPart extends MenuSectionPart {
     ] as FormDialogModal;
   }
 
-  loadWorkspace() {
-    this.config.state.getWorkspace();
-  }
-
-  loadWorkspaces() {
-    this.config.state.getWorkspaces();
-  }
-
   templateContent(): TemplateResult {
-    // Lazy load the workspace information.
-    if (!this.config.state.workspace) {
-      this.loadWorkspace();
-    }
-
-    // Lazy load the workspaces information.
-    if (!this.config.state.workspaces) {
-      this.loadWorkspaces();
-    }
-
-    if (!this.config.state.workspaces) {
+    const workspaces = this.config.state.workspacesOrGetWorkspaces();
+    if (!workspaces) {
       return templateLoading({
         pad: true,
       });
@@ -205,7 +189,7 @@ export class WorkspacesPart extends MenuSectionPart {
       >
         ${this.templateCreateWorkspace()}
         ${repeat(
-          this.config.state.workspaces || [],
+          workspaces || [],
           workspace => workspace.name,
           workspace => html`<div
             class=${classMap(this.classesForWorkspace(workspace))}

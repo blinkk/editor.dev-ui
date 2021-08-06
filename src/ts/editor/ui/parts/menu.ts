@@ -112,10 +112,6 @@ export class MenuPart extends BasePart implements UiPartComponent {
     this.render();
   }
 
-  loadProject() {
-    this.config.state.getProject();
-  }
-
   /**
    * Open the menu when it is not docked.
    */

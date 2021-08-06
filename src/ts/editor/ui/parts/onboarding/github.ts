@@ -2,7 +2,6 @@ import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {
   GitHubInstallationInfo,
   GitHubOrgInstallationInfo,
-  ProjectData,
   UserData,
   WorkspaceData,
 } from '../../../api';
@@ -230,14 +229,6 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       .catch(() => {
         console.error('Unable to retrieve the list of repositories.');
       });
-  }
-
-  loadProject() {
-    this.users = this.config.state.getProject((project: ProjectData) => {
-      // Default to array so it does not try to keep reloading the project data.
-      this.users = project.users || [];
-      this.render();
-    })?.users;
   }
 
   template(): TemplateResult {

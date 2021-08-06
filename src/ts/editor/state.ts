@@ -73,12 +73,14 @@ export class EditorState extends ListenersMixin(Base) {
   features: FeatureManager;
   /**
    * Files in the project that can be edited by the editor.
+   *
+   * Value is null when fails to load.
    */
-  files?: Array<FileData>;
+  files?: Array<FileData> | null;
   /**
    * Editor file loaded in the editor.
    *
-   * Value is null when the file is not found.
+   * Value is null when the file is not found or fails to load.
    */
   file?: EditorFileData | null;
   /**
@@ -106,6 +108,8 @@ export class EditorState extends ListenersMixin(Base) {
   pendingFile?: FileData;
   /**
    * Preview server settings.
+   *
+   * Value is null when fails to load.
    */
   previewConfig?: PreviewSettings | null;
   /**
@@ -114,8 +118,10 @@ export class EditorState extends ListenersMixin(Base) {
   projectType?: ProjectTypeComponent;
   /**
    * Project information.
+   *
+   * Value is null when fails to load.
    */
-  project?: ProjectData;
+  project?: ProjectData | null;
   /**
    * Project types states.
    */
@@ -148,12 +154,16 @@ export class EditorState extends ListenersMixin(Base) {
   users?: Array<UserData>;
   /**
    * Workspace in use in the editor.
+   *
+   * Value is null when fails to load.
    */
-  workspace?: WorkspaceData;
+  workspace?: WorkspaceData | null;
   /**
    * Workspaces available to use in the editor.
+   *
+   * Value is null when fails to load.
    */
-  workspaces?: Array<WorkspaceData>;
+  workspaces?: Array<WorkspaceData> | null;
 
   constructor(api: LiveEditorApiComponent) {
     super();
@@ -249,9 +259,9 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
   }
 
   createFile(
@@ -400,6 +410,21 @@ export class EditorState extends ListenersMixin(Base) {
   }
 
   /**
+   * Lazy load of files data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  filesOrGetFiles(): Array<FileData> | undefined | null {
+    if (
+      this.files === undefined &&
+      !this.inProgress(StatePromiseKeys.GetFiles)
+    ) {
+      this.getFiles();
+    }
+    return this.files;
+  }
+
+  /**
    * When uploading a file the local field is allowed to override the default
    * remote configuration. If the `remote` config is undefined no options are
    * specified and can use the global configurations to determine which
@@ -426,7 +451,7 @@ export class EditorState extends ListenersMixin(Base) {
     const promiseKey = StatePromiseKeys.GetDevices;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.devices;
     }
     this.promises[promiseKey] = this.api
       .getDevices()
@@ -449,13 +474,13 @@ export class EditorState extends ListenersMixin(Base) {
     file: FileData,
     callback?: (file: EditorFileData) => void,
     callbackError?: (error: ApiError) => void
-  ): EditorFileData | undefined {
+  ): EditorFileData | undefined | null {
     const promiseKey = StatePromiseKeys.GetFile;
     this.delayCallbacks(promiseKey, callback, callbackError);
 
     // TODO: Check if the file being loaded is the same file.
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.file;
     }
 
     // If the onboarding is not complete wait for the onboarding process
@@ -468,11 +493,9 @@ export class EditorState extends ListenersMixin(Base) {
       return;
     }
 
-    if (this.previewConfig === undefined) {
-      // Start the loading of the preview configuration before waiting
-      // for a full file load response.
-      this.getPreviewConfig();
-    }
+    // Start the loading of the preview configuration before waiting
+    // for a full file load response.
+    this.previewConfigOrGetPreviewConfig();
 
     this.promises[promiseKey] = this.api
       .getFile(file)
@@ -535,6 +558,7 @@ export class EditorState extends ListenersMixin(Base) {
             preventDefaultHandling: true,
           });
         } else {
+          this.file = null;
           this.handleErrorAndCleanup(promiseKey, error);
         }
       });
@@ -551,11 +575,11 @@ export class EditorState extends ListenersMixin(Base) {
   getFiles(
     callback?: (files: Array<FileData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Array<FileData> | undefined {
+  ): Array<FileData> | undefined | null {
     const promiseKey = StatePromiseKeys.GetFiles;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.files;
     }
     this.promises[promiseKey] = this.api
       .getFiles()
@@ -563,9 +587,10 @@ export class EditorState extends ListenersMixin(Base) {
         this.files = data;
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.files = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.files;
   }
 
@@ -576,7 +601,7 @@ export class EditorState extends ListenersMixin(Base) {
     const promiseKey = StatePromiseKeys.GetPreviewConfig;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.previewConfig;
     }
 
     const handlePreviewSettings = (data: PreviewSettings | null) => {
@@ -624,7 +649,9 @@ export class EditorState extends ListenersMixin(Base) {
     this.promises[promiseKey] = true;
 
     // Project needs to be loaded first.
-    if (!this.project) {
+    if (this.project === null) {
+      console.error('Unable to load preview server config without project');
+    } else if (!this.project) {
       this.getProject(handleProject);
     } else {
       handleProject(this.project);
@@ -636,11 +663,11 @@ export class EditorState extends ListenersMixin(Base) {
   getProject(
     callback?: (project: ProjectData) => void,
     callbackError?: (error: ApiError) => void
-  ): ProjectData | undefined {
+  ): ProjectData | undefined | null {
     const promiseKey = StatePromiseKeys.GetProject;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.project;
     }
     this.promises[promiseKey] = this.api
       .getProject()
@@ -675,20 +702,22 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, this.project);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        // Set value as null when there was an error.
+        this.project = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.project;
   }
 
   getWorkspace(
     callback?: (workspace: WorkspaceData) => void,
     callbackError?: (error: ApiError) => void
-  ): WorkspaceData | undefined {
+  ): WorkspaceData | undefined | null {
     const promiseKey = StatePromiseKeys.GetWorkspace;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.workspace;
     }
     this.promises[promiseKey] = this.api
       .getWorkspace()
@@ -714,20 +743,21 @@ export class EditorState extends ListenersMixin(Base) {
 
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.workspace = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.workspace;
   }
 
   getWorkspaces(
     callback?: (workspaces: Array<WorkspaceData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Array<WorkspaceData> | undefined {
+  ): Array<WorkspaceData> | undefined | null {
     const promiseKey = StatePromiseKeys.GetWorkspaces;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.workspaces;
     }
     this.promises[promiseKey] = this.api
       .getWorkspaces()
@@ -735,9 +765,10 @@ export class EditorState extends ListenersMixin(Base) {
         this.workspaces = data;
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.workspaces = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.workspaces;
   }
 
@@ -822,6 +853,21 @@ export class EditorState extends ListenersMixin(Base) {
       );
   }
 
+  /**
+   * Lazy load of project data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  previewConfigOrGetPreviewConfig(): PreviewSettings | undefined | null {
+    if (
+      this.previewConfig === undefined &&
+      !this.inProgress(StatePromiseKeys.GetPreviewConfig)
+    ) {
+      this.getPreviewConfig();
+    }
+    return this.previewConfig;
+  }
+
   protected processPendingFilePath() {
     if (!this.pendingFile) {
       return;
@@ -833,9 +879,25 @@ export class EditorState extends ListenersMixin(Base) {
     }
   }
 
+  /**
+   * Lazy load of project data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  projectOrGetProject(): ProjectData | undefined | null {
+    if (
+      this.project === undefined &&
+      !this.inProgress(StatePromiseKeys.GetProject)
+    ) {
+      this.getProject();
+    }
+    return this.project;
+  }
+
   get projectId(): string | undefined {
-    if (this.project?.source?.source && this.project?.source?.identifier) {
-      return `${this.project.source.source}/${this.project.source.identifier}`;
+    const project = this.projectOrGetProject();
+    if (project?.source?.source && project?.source?.identifier) {
+      return `${project.source.source}/${project.source.identifier}`;
     }
     return undefined;
   }
@@ -946,6 +1008,36 @@ export class EditorState extends ListenersMixin(Base) {
     parts.push('Editor.dev');
 
     document.title = parts.join(' - ');
+  }
+
+  /**
+   * Lazy load of workspace data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  workspaceOrGetWorkspace(): WorkspaceData | undefined | null {
+    if (
+      this.workspace === undefined &&
+      !this.inProgress(StatePromiseKeys.GetWorkspace)
+    ) {
+      this.getWorkspace();
+    }
+    return this.workspace;
+  }
+
+  /**
+   * Lazy load of workspaces data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  workspacesOrGetWorkspaces(): Array<WorkspaceData> | undefined | null {
+    if (
+      this.workspaces === undefined &&
+      !this.inProgress(StatePromiseKeys.GetWorkspaces)
+    ) {
+      this.getWorkspaces();
+    }
+    return this.workspaces;
   }
 }
 

@@ -73,12 +73,14 @@ export class EditorState extends ListenersMixin(Base) {
   features: FeatureManager;
   /**
    * Files in the project that can be edited by the editor.
+   *
+   * Value is null when fails to load.
    */
-  files?: Array<FileData>;
+  files?: Array<FileData> | null;
   /**
    * Editor file loaded in the editor.
    *
-   * Value is null when the file is not found.
+   * Value is null when the file is not found or fails to load.
    */
   file?: EditorFileData | null;
   /**
@@ -106,6 +108,8 @@ export class EditorState extends ListenersMixin(Base) {
   pendingFile?: FileData;
   /**
    * Preview server settings.
+   *
+   * Value is null when fails to load.
    */
   previewConfig?: PreviewSettings | null;
   /**
@@ -406,6 +410,21 @@ export class EditorState extends ListenersMixin(Base) {
   }
 
   /**
+   * Lazy load of files data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  filesOrGetFiles(): Array<FileData> | undefined | null {
+    if (
+      this.files === undefined &&
+      !this.inProgress(StatePromiseKeys.GetFiles)
+    ) {
+      this.getFiles();
+    }
+    return this.files;
+  }
+
+  /**
    * When uploading a file the local field is allowed to override the default
    * remote configuration. If the `remote` config is undefined no options are
    * specified and can use the global configurations to determine which
@@ -557,11 +576,11 @@ export class EditorState extends ListenersMixin(Base) {
   getFiles(
     callback?: (files: Array<FileData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Array<FileData> | undefined {
+  ): Array<FileData> | undefined | null {
     const promiseKey = StatePromiseKeys.GetFiles;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.files;
     }
     this.promises[promiseKey] = this.api
       .getFiles()
@@ -569,9 +588,10 @@ export class EditorState extends ListenersMixin(Base) {
         this.files = data;
         this.handleDataAndCleanup(promiseKey, data);
       })
-      .catch((error: ApiError) =>
-        this.handleErrorAndCleanup(promiseKey, error)
-      );
+      .catch((error: ApiError) => {
+        this.files = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
     return this.files;
   }
 

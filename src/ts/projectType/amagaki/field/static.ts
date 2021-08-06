@@ -85,9 +85,7 @@ export class AmagakiStaticField extends AutocompleteConstructorField {
     });
 
     // Load the files if not loaded.
-    if (this.globalConfig.state.files === undefined) {
-      this.globalConfig.state.getFiles();
-    }
+    this.globalConfig.state.filesOrGetFiles();
   }
 
   updateItems(filteredFiles: Array<FileData>) {

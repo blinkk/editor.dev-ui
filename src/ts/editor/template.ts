@@ -1,5 +1,6 @@
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
-import {ProjectSource, SourceData} from './api';
+
+import {ProjectSource} from './api';
 
 export interface LiveTemplate {
   (): TemplateResult;

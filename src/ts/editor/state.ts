@@ -451,7 +451,7 @@ export class EditorState extends ListenersMixin(Base) {
     const promiseKey = StatePromiseKeys.GetDevices;
     this.delayCallbacks(promiseKey, callback, callbackError);
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.devices;
     }
     this.promises[promiseKey] = this.api
       .getDevices()
@@ -474,13 +474,13 @@ export class EditorState extends ListenersMixin(Base) {
     file: FileData,
     callback?: (file: EditorFileData) => void,
     callbackError?: (error: ApiError) => void
-  ): EditorFileData | undefined {
+  ): EditorFileData | undefined | null {
     const promiseKey = StatePromiseKeys.GetFile;
     this.delayCallbacks(promiseKey, callback, callbackError);
 
     // TODO: Check if the file being loaded is the same file.
     if (this.inProgress(promiseKey)) {
-      return;
+      return this.file;
     }
 
     // If the onboarding is not complete wait for the onboarding process
@@ -493,11 +493,9 @@ export class EditorState extends ListenersMixin(Base) {
       return;
     }
 
-    if (this.previewConfig === undefined) {
-      // Start the loading of the preview configuration before waiting
-      // for a full file load response.
-      this.getPreviewConfig();
-    }
+    // Start the loading of the preview configuration before waiting
+    // for a full file load response.
+    this.previewConfigOrGetPreviewConfig();
 
     this.promises[promiseKey] = this.api
       .getFile(file)
@@ -852,6 +850,21 @@ export class EditorState extends ListenersMixin(Base) {
       .catch((error: ApiError) =>
         this.handleErrorAndCleanup(promiseKey, error)
       );
+  }
+
+  /**
+   * Lazy load of project data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  previewConfigOrGetPreviewConfig(): PreviewSettings | undefined | null {
+    if (
+      this.previewConfig === undefined &&
+      !this.inProgress(StatePromiseKeys.GetPreviewConfig)
+    ) {
+      this.getPreviewConfig();
+    }
+    return this.previewConfig;
   }
 
   protected processPendingFilePath() {

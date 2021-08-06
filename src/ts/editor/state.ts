@@ -117,7 +117,7 @@ export class EditorState extends ListenersMixin(Base) {
    *
    * Value is null when the project cannot be loaded.
    */
-  _project?: ProjectData | null;
+  project?: ProjectData | null;
   /**
    * Project types states.
    */
@@ -845,23 +845,20 @@ export class EditorState extends ListenersMixin(Base) {
    * Understands the null state when there is an error requesting the
    * project state and does not re-request the project info.
    */
-  get project(): ProjectData | undefined | null {
+  projectOrGetProject(): ProjectData | undefined | null {
     if (
-      this._project === undefined &&
+      this.project === undefined &&
       !this.inProgress(StatePromiseKeys.GetProject)
     ) {
       this.getProject();
     }
-    return this._project;
-  }
-
-  set project(project: ProjectData | undefined | null) {
-    this._project = project;
+    return this.project;
   }
 
   get projectId(): string | undefined {
-    if (this.project?.source?.source && this.project?.source?.identifier) {
-      return `${this.project.source.source}/${this.project.source.identifier}`;
+    const project = this.projectOrGetProject();
+    if (project?.source?.source && project?.source?.identifier) {
+      return `${project.source.source}/${project.source.identifier}`;
     }
     return undefined;
   }

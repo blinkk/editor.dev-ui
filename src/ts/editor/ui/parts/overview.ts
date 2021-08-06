@@ -113,7 +113,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handlePublishClick(evt: Event) {
-    const project = this.config.state.project;
+    const project = this.config.state.projectOrGetProject();
     const workspace = this.config.state.workspace;
 
     // Lazy load the workspace.
@@ -226,7 +226,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   }
 
   templateProjectTitle(): TemplateResult {
-    const project = this.config.state.project;
+    const project = this.config.state.projectOrGetProject();
     const parts: Array<TemplateResult> = [];
     let links = project?.links?.breadcrumbs ?? [];
 
@@ -258,7 +258,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   }
 
   templatePublish(): TemplateResult {
-    const project = this.config.state.project;
+    const project = this.config.state.projectOrGetProject();
     const workspace = this.config.state.workspace;
 
     // Lazy load the workspace.

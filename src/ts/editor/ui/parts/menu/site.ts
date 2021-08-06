@@ -235,7 +235,7 @@ export class SitePart extends MenuSectionPart {
   }
 
   templateContent(): TemplateResult {
-    const project = this.config.state.project;
+    const project = this.config.state.projectOrGetProject();
     const files = this.config.state.files;
 
     // Lazy load the files.

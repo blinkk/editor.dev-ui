@@ -9,6 +9,7 @@ import {EVENT_SAVE} from './events';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {LiveEditorLabels} from './template';
 import {ProjectTypeComponent} from '../projectType/projectType';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Global configuration used by the selective editor fields.
@@ -129,4 +130,19 @@ export class LiveEditor {
   updateProjectType(projectType: ProjectTypeComponent) {
     this.state.setProjectType(projectType);
   }
+}
+
+/**
+ * When using the selective configuration for different forms is uses a global
+ * configuration, but the individual selective editors may try to change the
+ * config since it is not immutable, so we need to deep copy the configuration
+ * while preserving the references to objects.
+ */
+export function cloneSelectiveConfig(
+  config: LiveEditorSelectiveEditorConfig
+): LiveEditorSelectiveEditorConfig {
+  // TODO: Clone without cloning global key?
+  const newConfig = cloneDeep(config);
+  newConfig.global = config.global;
+  return newConfig;
 }

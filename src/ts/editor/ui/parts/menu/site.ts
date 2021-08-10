@@ -10,14 +10,17 @@ import {
   IncludeExcludeFilter,
   IncludeExcludeFilterConfig,
 } from '../../../../utility/filter';
+import {
+  LiveEditor,
+  LiveEditorSelectiveEditorConfig,
+  cloneSelectiveConfig,
+} from '../../../editor';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
 import {DataStorage} from '../../../../utility/dataStorage';
 import {EVENT_FILE_LOAD} from '../../../events';
-import {LiveEditor} from '../../../editor';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
 import {StatePromiseKeys} from '../../../state';
-import cloneDeep from 'lodash.clonedeep';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
 
@@ -62,8 +65,9 @@ export class SitePart extends MenuSectionPart {
   protected getOrCreateModalCopy(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_COPY]) {
       // Clone to prevent shared values if editor changes config.
-      const selectiveConfig = cloneDeep(
-        this.config.editor.config.selectiveConfig
+      const selectiveConfig = cloneSelectiveConfig(
+        this.config.editor.config
+          .selectiveConfig as LiveEditorSelectiveEditorConfig
       );
       const modal = new FormDialogModal({
         title: 'Copy file',
@@ -121,8 +125,9 @@ export class SitePart extends MenuSectionPart {
   protected getOrCreateModalDelete(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_DELETE]) {
       // Clone to prevent shared values if editor changes config.
-      const selectiveConfig = cloneDeep(
-        this.config.editor.config.selectiveConfig
+      const selectiveConfig = cloneSelectiveConfig(
+        this.config.editor.config
+          .selectiveConfig as LiveEditorSelectiveEditorConfig
       );
       const modal = new FormDialogModal({
         title: 'Delete file',
@@ -172,8 +177,9 @@ export class SitePart extends MenuSectionPart {
   protected getOrCreateModalNew(): FormDialogModal {
     if (!this.config.editor.ui.partModals.modals[MODAL_KEY_NEW]) {
       // Clone to prevent shared values if editor changes config.
-      const selectiveConfig = cloneDeep(
-        this.config.editor.config.selectiveConfig
+      const selectiveConfig = cloneSelectiveConfig(
+        this.config.editor.config
+          .selectiveConfig as LiveEditorSelectiveEditorConfig
       );
       const modal = new FormDialogModal({
         title: 'New file',

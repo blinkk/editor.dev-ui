@@ -19,7 +19,7 @@ import {ApiError} from '../api';
 import {BaseUI} from './index';
 import {ListenersMixin} from '../../mixin/listeners';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
-import cloneDeep from 'lodash.clonedeep';
+import {LiveEditorSelectiveEditorConfig, cloneSelectiveConfig} from '../editor';
 import {templateApiError} from './error';
 
 /**
@@ -357,9 +357,12 @@ export class FormDialogModal extends DialogModal {
     super(config);
     this.config = config;
     this.data = new DeepObject({});
+
+    // Clone to prevent shared values if editor changes config.
     this.selective = new SelectiveEditor(
-      // Clone to prevent shared values if editor changes config.
-      cloneDeep(this.config.selectiveConfig)
+      cloneSelectiveConfig(
+        this.config.selectiveConfig as LiveEditorSelectiveEditorConfig
+      )
     );
 
     // When the project type is updated the selective editor changes.

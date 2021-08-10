@@ -6,10 +6,14 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../modal';
+import {
+  LiveEditorSelectiveEditorConfig,
+  cloneSelectiveConfig,
+} from '../../../editor';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
+
 import {EVENT_WORKSPACE_LOAD} from '../../../events';
 import {FeatureFlags} from '../../../features';
-import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
@@ -60,7 +64,10 @@ export class WorkspacesPart extends MenuSectionPart {
       const selectiveConfig = merge(
         {},
         // Clone to prevent shared values if editor changes config.
-        cloneDeep(this.config.editor.config.selectiveConfig),
+        cloneSelectiveConfig(
+          this.config.editor.config
+            .selectiveConfig as LiveEditorSelectiveEditorConfig
+        ),
         {
           fields: [
             {

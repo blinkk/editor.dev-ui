@@ -8,13 +8,16 @@ import {
 } from '@blinkk/selective-edit';
 import {EditorState, StatePromiseKeys} from '../../../../editor/state';
 import {
+  LiveEditorSelectiveEditorConfig,
+  cloneSelectiveConfig,
+} from '../../../editor';
+import {
   ProjectTypeComponent,
   updateSelectiveForProjectType,
 } from '../../../../projectType/projectType';
 
 import {DataStorage} from '../../../../utility/dataStorage';
 import {LiveEditorAutoFields} from '../../../autoFields';
-import cloneDeep from 'lodash.clonedeep';
 
 export const STORAGE_CONTENT_SECTION = 'live.content.section';
 
@@ -48,7 +51,9 @@ export class ContentSectionPart extends BasePart implements UiPartComponent {
     this.config = config;
     this.selective = new SelectiveEditor(
       // Clone to prevent shared values if editor changes config.
-      cloneDeep(this.config.selectiveConfig)
+      cloneSelectiveConfig(
+        this.config.selectiveConfig as LiveEditorSelectiveEditorConfig
+      )
     );
 
     // Override the autofields class.

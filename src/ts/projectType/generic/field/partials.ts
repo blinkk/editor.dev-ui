@@ -279,6 +279,14 @@ export class GenericPartialsField
     throw new Error('Not implemented.');
   }
 
+  templateFooter(editor: SelectiveEditor, data: DeepObject): TemplateResult {
+    if (!this.partials) {
+      return html``;
+    }
+
+    return super.templateFooter(editor, data);
+  }
+
   templateInput(editor: SelectiveEditor, data: DeepObject): TemplateResult {
     // While waiting for the partials config show the loading indicator.
     if (!this.partials) {

@@ -9,6 +9,10 @@ import {
   repeat,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../modal';
+import {
+  LiveEditorSelectiveEditorConfig,
+  cloneSelectiveConfig,
+} from '../../editor';
 import {exampleIcon, githubIcon, localIcon} from '../icons';
 
 import {EVENT_WORKSPACE_LOAD} from '../../events';
@@ -16,7 +20,6 @@ import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {NotificationAction} from './notifications';
 import TimeAgo from 'javascript-time-ago';
-import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 
 const MODAL_KEY_PUBLISH = 'overview_publish';
@@ -53,7 +56,10 @@ export class OverviewPart extends BasePart implements UiPartComponent {
       const selectiveConfig = merge(
         {},
         // Clone to prevent shared values if editor changes config.
-        cloneDeep(this.config.editor.config.selectiveConfig),
+        cloneSelectiveConfig(
+          this.config.editor.config
+            .selectiveConfig as LiveEditorSelectiveEditorConfig
+        ),
         {
           fields: fields,
         }

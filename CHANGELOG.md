@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.9.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.8.0...v3.9.0) (2021-08-10)
+
+
+### Features
+
+* Project breadcrumb links. ([#211](https://www.github.com/blinkk/editor.dev-ui/issues/211)) ([9f8a07d](https://www.github.com/blinkk/editor.dev-ui/commit/9f8a07dfc073541c34d4efcee2488b3d06ad1b29))
+
+
+### Bug Fixes
+
+* Clone of selective config causes global objects to be cloned. ([#217](https://www.github.com/blinkk/editor.dev-ui/issues/217)) ([120af68](https://www.github.com/blinkk/editor.dev-ui/commit/120af6889662bca4d9bc9c7c0e62000132e74bd1))
+* Infinite loading when errors retrieving data ([#214](https://www.github.com/blinkk/editor.dev-ui/issues/214)) ([527de65](https://www.github.com/blinkk/editor.dev-ui/commit/527de65e5b6acfc230a180318cc6cd18a5aa7be1)), closes [#128](https://www.github.com/blinkk/editor.dev-ui/issues/128)
+* Project type specific guessing of partials. ([#215](https://www.github.com/blinkk/editor.dev-ui/issues/215)) ([ef7920d](https://www.github.com/blinkk/editor.dev-ui/commit/ef7920d567a936bbcabd0db5af00c96740fe72f9)), closes [#213](https://www.github.com/blinkk/editor.dev-ui/issues/213)
+* SVG path fill color to current color for theming. ([43b4d46](https://www.github.com/blinkk/editor.dev-ui/commit/43b4d4642a5f76cd9ccd95c29054b5964b852772))
+* Updated onboarding flow to match newer mocks. ([#209](https://www.github.com/blinkk/editor.dev-ui/issues/209)) ([49ef330](https://www.github.com/blinkk/editor.dev-ui/commit/49ef33080e09e62efb094d09268cdad77b71e16a))
+
 ## [3.8.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.7.0...v3.8.0) (2021-08-04)
 
 

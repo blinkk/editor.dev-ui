@@ -1,4 +1,5 @@
 import {
+  DataType,
   DeepObject,
   Field,
   FieldConfig,
@@ -10,7 +11,6 @@ import {
 } from '@blinkk/selective-edit';
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
-import {MediaOptions} from '../api';
 import Quill from 'quill';
 import {base64toFile} from '../../utility/base64';
 

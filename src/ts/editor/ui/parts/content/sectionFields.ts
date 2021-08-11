@@ -4,6 +4,7 @@ import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
 import {EVENT_SAVE} from '../../../events';
 import {EditorFileData} from '../../../api';
 import {StatePromiseKeys} from '../../../state';
+import {UnknownField} from '../../../field/unknown';
 import merge from 'lodash.merge';
 
 export class FieldsPart extends ContentSectionPart {
@@ -29,6 +30,9 @@ export class FieldsPart extends ContentSectionPart {
         this.handleAction(evt);
       }
     });
+
+    // Custom field for unknown fields.
+    this.selective.types.fields.DefaultCls = UnknownField as any;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

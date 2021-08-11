@@ -286,6 +286,37 @@ export class MediaField
     return super.isClean && this.group.isClean;
   }
 
+  /**
+   * Check if the data format is invalid for what the field expects to edit.
+   */
+  get isDataFormatValid(): boolean {
+    if (this.originalValue === undefined || this.originalValue === null) {
+      return true;
+    }
+
+    if (!DataType.isObject(this.originalValue)) {
+      return false;
+    }
+
+    // Label needs to be a string.
+    if (
+      this.originalValue.label &&
+      !DataType.isString(this.originalValue.label)
+    ) {
+      return false;
+    }
+
+    // Path needs to be a string.
+    if (
+      this.originalValue.path &&
+      !DataType.isString(this.originalValue.path)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   get isSimple(): boolean {
     // Media field has multiple inputs and is considered complex.
     return false;

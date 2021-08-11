@@ -22,7 +22,10 @@ import {
   findPreviewValue,
 } from '@blinkk/selective-edit/dist/utility/preview';
 
-import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
+import {
+  EVENT_RENDER_COMPLETE,
+  EVENT_UNLOCK,
+} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
@@ -193,6 +196,78 @@ export class GenericPartialsField
         state: this.globalConfig.state,
       });
 
+      const handleSubmit = () => {
+        const value = modal.selective.value;
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        if (!this.partials) {
+          console.error('Unable to find partials.');
+          modal.stopProcessing();
+          return;
+        }
+
+        if (!this.items) {
+          console.error('Unable to find items.');
+          modal.stopProcessing();
+          return;
+        }
+
+        const partialConfig = this.partials[value.partial] as PartialData;
+        const fields = this.createFields(partialConfig.editor?.fields || []);
+        fields.updateOriginal(
+          selectiveEditor,
+          autoDeepObject({
+            partial: value.partial,
+          })
+        );
+        // Update original from the
+        fields.lock();
+
+        // Unlock fields after saving is complete to let the values be updated
+        // when clean.
+        // TODO: Automate this unlock without having to be done manually.
+        document.addEventListener(
+          EVENT_UNLOCK,
+          () => {
+            fields.unlock();
+            this.render();
+          },
+          {once: true}
+        );
+
+        const newItem = new this.ListItemCls(this, fields);
+        newItem.isExpanded = true;
+        this.items.push(newItem);
+        modal.stopProcessing(true);
+      };
+
       // Show an error when there are no partial configs for the editor.
       if (!options.length) {
         modal.error = {
@@ -218,50 +293,7 @@ export class GenericPartialsField
           return modal.isProcessing || !modal.selective.isValid;
         },
         isSubmit: true,
-        onClick: () => {
-          const value = modal.selective.value;
-          modal.startProcessing();
-
-          if (!this.partials) {
-            console.error('Unable to find partials.');
-            modal.stopProcessing();
-            return;
-          }
-
-          if (!this.items) {
-            console.error('Unable to find items.');
-            modal.stopProcessing();
-            return;
-          }
-
-          const partialConfig = this.partials[value.partial] as PartialData;
-          const fields = this.createFields(partialConfig.editor?.fields || []);
-          fields.updateOriginal(
-            selectiveEditor,
-            autoDeepObject({
-              partial: value.partial,
-            })
-          );
-          // Update original from the
-          fields.lock();
-
-          // Unlock fields after saving is complete to let the values be updated
-          // when clean.
-          // TODO: Automate this unlock without having to be done manually.
-          document.addEventListener(
-            EVENT_UNLOCK,
-            () => {
-              fields.unlock();
-              this.render();
-            },
-            {once: true}
-          );
-
-          const newItem = new this.ListItemCls(this, fields);
-          newItem.isExpanded = true;
-          this.items.push(newItem);
-          modal.stopProcessing(true);
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;

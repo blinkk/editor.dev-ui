@@ -12,7 +12,7 @@ import {
 } from '../../../editor';
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
-import {EVENT_WORKSPACE_LOAD} from '../../../events';
+import {EVENT_RENDER_COMPLETE, EVENT_WORKSPACE_LOAD} from '../../../events';
 import {FeatureFlags} from '../../../features';
 import merge from 'lodash.merge';
 import {repeat} from '@blinkk/selective-edit';
@@ -117,6 +117,83 @@ export class WorkspacesPart extends MenuSectionPart {
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
+
+      const handleSubmit = () => {
+        const value = modal.selective.value;
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        // Find the full workspace information for the base workspace.
+        let baseWorkspace: WorkspaceData | undefined = undefined;
+        for (const workspace of this.config.state.workspaces || []) {
+          if (workspace.branch.name === value.base) {
+            baseWorkspace = workspace;
+          }
+        }
+
+        if (!baseWorkspace) {
+          modal.error = {
+            message: `Unable to find the base workspace information for '${value.base}'`,
+          };
+          modal.stopProcessing();
+          return;
+        }
+
+        this.config.state.createWorkspace(
+          baseWorkspace,
+          value.workspace,
+          (workspace: WorkspaceData) => {
+            // Log the success to the notifications.
+            this.config.editor.ui.partNotifications.showNotification({
+              message: `New '${workspace.name}' workspace successfully created.`,
+              actions: [
+                {
+                  label: 'Visit workspace',
+                  customEvent: EVENT_WORKSPACE_LOAD,
+                  details: workspace,
+                },
+              ],
+              title: 'New workspace created',
+            });
+            // Reset the data for the next time the form is shown.
+            modal.data = new DeepObject();
+            modal.stopProcessing(true);
+          },
+          (error: ApiError) => {
+            // Log the error to the notifications.
+            this.config.editor.ui.partNotifications.addError(error, true);
+            modal.error = error;
+            modal.stopProcessing();
+          }
+        );
+      };
+
       modal.templateModal = this.templateNewWorkspace.bind(this);
       modal.actions.push({
         label: 'Create workspace',
@@ -125,54 +202,7 @@ export class WorkspacesPart extends MenuSectionPart {
           return modal.isProcessing || !modal.selective.isValid;
         },
         isSubmit: true,
-        onClick: () => {
-          const value = modal.selective.value;
-          modal.startProcessing();
-
-          // Find the full workspace information for the base workspace.
-          let baseWorkspace: WorkspaceData | undefined = undefined;
-          for (const workspace of this.config.state.workspaces || []) {
-            if (workspace.branch.name === value.base) {
-              baseWorkspace = workspace;
-            }
-          }
-
-          if (!baseWorkspace) {
-            modal.error = {
-              message: `Unable to find the base workspace information for '${value.base}'`,
-            };
-            modal.stopProcessing();
-            return;
-          }
-
-          this.config.state.createWorkspace(
-            baseWorkspace,
-            value.workspace,
-            (workspace: WorkspaceData) => {
-              // Log the success to the notifications.
-              this.config.editor.ui.partNotifications.showNotification({
-                message: `New '${workspace.name}' workspace successfully created.`,
-                actions: [
-                  {
-                    label: 'Visit workspace',
-                    customEvent: EVENT_WORKSPACE_LOAD,
-                    details: workspace,
-                  },
-                ],
-                title: 'New workspace created',
-              });
-              // Reset the data for the next time the form is shown.
-              modal.data = new DeepObject();
-              modal.stopProcessing(true);
-            },
-            (error: ApiError) => {
-              // Log the error to the notifications.
-              this.config.editor.ui.partNotifications.addError(error, true);
-              modal.error = error;
-              modal.stopProcessing();
-            }
-          );
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       this.config.editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;

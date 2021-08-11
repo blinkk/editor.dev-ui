@@ -1,7 +1,7 @@
 import {ContentSectionPart, ContentSectionPartConfig} from './section';
 import {DeepObject, TemplateResult} from '@blinkk/selective-edit';
 
-import {EVENT_SAVE} from '../../../events';
+import {EVENT_RENDER_COMPLETE, EVENT_SAVE} from '../../../events';
 import {EditorFileData} from '../../../api';
 import {StatePromiseKeys} from '../../../state';
 import {UnknownField} from '../../../field/unknown';
@@ -35,9 +35,34 @@ export class FieldsPart extends ContentSectionPart {
     this.selective.types.fields.DefaultCls = UnknownField as any;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAction(evt: Event) {
+    this.isProcessing = true;
+    this.render();
+
+    // The first time the editor is marked for validation the values cannot be trusted.
+    // The render step needs to complete before the validation can be trusted.
+    if (!this.selective.markValidation) {
+      // Mark the selective editor for all field validation.
+      // For UX the validation is not run until the user interacts with a
+      // field or when they try to 'submit'.
+      this.selective.markValidation = true;
+
+      document.addEventListener(
+        EVENT_RENDER_COMPLETE,
+        () => {
+          this.handleAction(evt);
+        },
+        {
+          once: true,
+        }
+      );
+      this.render();
+      return;
+    }
+
     if (this.selective.isClean || !this.selective.isValid) {
+      this.isProcessing = false;
+      this.render();
       return;
     }
 
@@ -46,8 +71,6 @@ export class FieldsPart extends ContentSectionPart {
     // instead of overwritten.
     value.data = this.selective.value;
 
-    this.isProcessing = true;
-    this.render();
     this.config.state.saveFile(value as EditorFileData, false, () => {
       this.isProcessing = false;
       this.render();

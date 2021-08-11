@@ -50,8 +50,10 @@ export class ConstructorField extends Field implements ConstructorComponent {
 
     // Workaround to validate the constructor value without
     // having to have a complex validation structure in the config.
-    this.zoneToKey = {};
-    this.zoneToKey[DEFAULT_ZONE_KEY] = '_data';
+    this.zones = {};
+    this.zones[DEFAULT_ZONE_KEY] = {
+      key: '_data',
+    };
   }
 
   /**

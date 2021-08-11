@@ -15,7 +15,7 @@ import {
 } from '../../editor';
 import {exampleIcon, githubIcon, localIcon} from '../icons';
 
-import {EVENT_WORKSPACE_LOAD} from '../../events';
+import {EVENT_RENDER_COMPLETE, EVENT_WORKSPACE_LOAD} from '../../events';
 import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {NotificationAction} from './notifications';
@@ -69,6 +69,66 @@ export class OverviewPart extends BasePart implements UiPartComponent {
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
+
+      const handleSubmit = () => {
+        this.isPendingPublish = true;
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        const value = modal.selective.value;
+        const workspace = this.config.state.workspaceOrGetWorkspace();
+
+        if (!workspace) {
+          return;
+        }
+
+        this.config.state.publish(
+          workspace,
+          value,
+          (result: PublishResult) => {
+            this.showPublishResult(result);
+
+            // Reset the data for the next time the form is shown.
+            modal.data = new DeepObject();
+            this.isPendingPublish = false;
+            modal.stopProcessing(true);
+          },
+          (error: ApiError) => {
+            // Log the error to the notifications.
+            this.config.editor.ui.partNotifications.addError(error, true);
+            modal.error = error;
+            this.isPendingPublish = false;
+            modal.stopProcessing();
+          }
+        );
+      };
+
       modal.templateModal = this.templatePublishWorkspace.bind(this);
       modal.actions.push({
         label:
@@ -78,37 +138,7 @@ export class OverviewPart extends BasePart implements UiPartComponent {
           return modal.isProcessing || !modal.selective.isValid;
         },
         isSubmit: true,
-        onClick: () => {
-          this.isPendingPublish = true;
-          modal.startProcessing();
-
-          const value = modal.selective.value;
-          const workspace = this.config.state.workspaceOrGetWorkspace();
-
-          if (!workspace) {
-            return;
-          }
-
-          this.config.state.publish(
-            workspace,
-            value,
-            (result: PublishResult) => {
-              this.showPublishResult(result);
-
-              // Reset the data for the next time the form is shown.
-              modal.data = new DeepObject();
-              this.isPendingPublish = false;
-              modal.stopProcessing(true);
-            },
-            (error: ApiError) => {
-              // Log the error to the notifications.
-              this.config.editor.ui.partNotifications.addError(error, true);
-              modal.error = error;
-              this.isPendingPublish = false;
-              modal.stopProcessing();
-            }
-          );
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       this.config.editor.ui.partModals.modals[MODAL_KEY_PUBLISH] = modal;
@@ -158,8 +188,6 @@ export class OverviewPart extends BasePart implements UiPartComponent {
   }
 
   showPublishResult(result: PublishResult) {
-    console.log('publish result', result);
-
     const actions: Array<NotificationAction> = [];
     const currentWorkspace = this.config.state.workspaceOrGetWorkspace();
 

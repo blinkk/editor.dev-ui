@@ -613,6 +613,9 @@ const fullFiles: Record<string, EditorFileData> = {
     url: 'preview.html',
   },
   '/example/standard.yaml': {
+    data: {
+      text: {},
+    },
     editor: {
       fields: [
         // Text example.

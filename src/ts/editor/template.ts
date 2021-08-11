@@ -13,6 +13,17 @@ export interface TemplateOptions {
   size?: 'small' | 'medium' | 'large';
 }
 
+export function templateInfo(message?: TemplateResult): TemplateResult {
+  const classes = {
+    le__info: true,
+  };
+
+  return html`<div class=${classMap(classes)}>
+    <div class="le__info__icon"><span class="material-icons">info</span></div>
+    <div class="le__info__message">${message}</div>
+  </div>`;
+}
+
 export function templateLoading(
   options?: TemplateOptions,
   message?: TemplateResult

@@ -1,5 +1,6 @@
 import {
   Base,
+  DataType,
   DeepObject,
   DroppableMixin,
   Field,
@@ -362,6 +363,17 @@ export class MediaListField
     }
 
     return true;
+  }
+
+  /**
+   * Check if the data format is invalid for what the field expects to edit.
+   */
+  get isDataFormatValid(): boolean {
+    if (this.originalValue === undefined || this.originalValue === null) {
+      return true;
+    }
+
+    return DataType.isArray(this.originalValue);
   }
 
   get isValid(): boolean {

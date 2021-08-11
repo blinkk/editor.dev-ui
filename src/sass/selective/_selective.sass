@@ -1,6 +1,28 @@
 .selective
   margin: $le-space-medium
 
+.selective__error,
+.selective__info,
+.selective__warning
+  align-items: center
+  column-gap: $le-space-medium
+  line-height: $le-line-height-paragraph
+  display: flex
+  flex-flow: row
+  padding: $le-space-medium
+
+.selective__error
+  border: $le-border-size-medium dashed var(--color-error)
+  color: var(--color-error)
+
+.selective__info
+  border: $le-border-size-medium dashed var(--color-info)
+  color: var(--color-info)
+
+.selective__warning
+  border: $le-border-size-medium dashed var(--color-warning)
+  color: var(--color-warning)
+
 @import './field'
 @import './fields'
 @import './mixins'

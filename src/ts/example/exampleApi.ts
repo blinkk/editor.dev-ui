@@ -207,7 +207,7 @@ const fullFiles: Record<string, EditorFileData> = {
         // Html example.
         {
           type: 'exampleField',
-          key: 'html-small',
+          key: 'htmlSmall',
           docUrls: [
             {
               label: 'Config interface',
@@ -227,7 +227,7 @@ const fullFiles: Record<string, EditorFileData> = {
         } as ExampleFieldConfig,
         {
           type: 'exampleField',
-          key: 'html-medium',
+          key: 'htmlMedium',
           docUrls: [
             {
               label: 'Config interface',
@@ -247,7 +247,7 @@ const fullFiles: Record<string, EditorFileData> = {
         } as ExampleFieldConfig,
         {
           type: 'exampleField',
-          key: 'html-large',
+          key: 'htmlLarge',
           docUrls: [
             {
               label: 'Config interface',

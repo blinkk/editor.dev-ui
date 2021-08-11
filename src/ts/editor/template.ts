@@ -27,14 +27,15 @@ export function templateWarning(message?: TemplateResult): TemplateResult {
 
 export function templateMessage(
   messageType: 'info' | 'warning' | 'error',
-  message?: TemplateResult
+  message?: TemplateResult,
+  icon?: string
 ): TemplateResult {
   const classes: Record<string, boolean> = {};
   classes[`le__${messageType}`] = true;
 
   return html`<div class=${classMap(classes)}>
     <div class="le__${messageType}__icon">
-      <span class="material-icons">${messageType}</span>
+      <span class="material-icons">${icon || messageType}</span>
     </div>
     <div class="le__${messageType}__message">${message}</div>
   </div>`;

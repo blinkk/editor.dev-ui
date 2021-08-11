@@ -32,6 +32,7 @@
     "coverage": "codecov",
     "dev": "concurrently \"npx ava --watch\" \"tsc --watch\"",
     "docs": "npx typedoc",
+    "example": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "fix": "npx eslint --fix src/ts/**/*.ts",
     "hosted": "concurrently \"webpack --config webpack.server.js\" \"yarn run sass:watch\" \"nodemon ./src/ts/server/server.ts\"",
     "lint": "npx eslint src/ts/**/*.ts",
@@ -40,7 +41,6 @@
     "sass:build": "sass --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
     "sass:watch": "sass --watch --no-source-map ./src/sass/:./dist/css --style compressed --load-path=node_modules/",
     "screenshot:docs": "node dist/screenshot-docs.js",
-    "serve": "concurrently \"webpack serve --config webpack.dev.js\" \"yarn run sass:watch\"",
     "test": "npx nyc ava",
     "test-ci": "npx nyc --reporter=lcov ava && codecov"
   },

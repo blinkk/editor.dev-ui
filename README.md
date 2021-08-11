@@ -21,7 +21,7 @@ To start developing on the editor UI run the following:
 
 ```sh
 yarn install
-yarn run serve
+yarn run example
 ```
 
 Then visit https://localhost:8888/ to iterate and improve the editor UI.
@@ -46,7 +46,7 @@ yarn run hosted
 
 Then visit https://localhost:8080/ to iterate and improve.
 
-If you are developing on the editor app UI only, use the `yarn run serve` command from above instead.
+If you are developing on the editor app UI only, use the `yarn run example` command from above instead.
 
 ## Deployment
 

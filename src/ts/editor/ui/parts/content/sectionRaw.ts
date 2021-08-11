@@ -5,7 +5,7 @@ import {
   TextAreaFieldConfig,
 } from '@blinkk/selective-edit';
 
-import {EVENT_SAVE} from '../../../events';
+import {EVENT_RENDER_COMPLETE, EVENT_SAVE} from '../../../events';
 import {EditorFileData} from '../../../api';
 import {StatePromiseKeys} from '../../../state';
 
@@ -52,12 +52,37 @@ export class RawPart extends ContentSectionPart {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAction(evt: Event) {
-    if (this.selective.isClean || !this.selective.isValid) {
+    this.isProcessing = true;
+    this.render();
+
+    // The first time the editor is marked for validation the values cannot be trusted.
+    // The render step needs to complete before the validation can be trusted.
+    if (!this.selective.markValidation) {
+      // Mark the selective editor for all field validation.
+      // For UX the validation is not run until the user interacts with a
+      // field or when they try to 'submit'.
+      this.selective.markValidation = true;
+
+      document.addEventListener(
+        EVENT_RENDER_COMPLETE,
+        () => {
+          this.handleAction(evt);
+        },
+        {
+          once: true,
+        }
+      );
+
+      this.render();
       return;
     }
 
-    this.isProcessing = true;
-    this.render();
+    if (this.selective.isClean || !this.selective.isValid) {
+      this.isProcessing = false;
+      this.render();
+      return;
+    }
+
     this.config.state.saveFile(
       this.selective.value as EditorFileData,
       true,

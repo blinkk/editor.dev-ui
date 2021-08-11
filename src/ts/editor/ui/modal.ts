@@ -222,6 +222,7 @@ export class DialogModal extends Modal {
       le__button: true,
       le__modal__action: true,
       'le__button--extreme': config.level === DialogActionLevel.Extreme,
+      'le__button--outline': config.level === DialogActionLevel.Primary,
       'le__button--primary': config.level === DialogActionLevel.Primary,
       'le__button--secondary': config.level === DialogActionLevel.Secondary,
     };

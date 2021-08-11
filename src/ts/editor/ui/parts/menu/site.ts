@@ -18,7 +18,7 @@ import {
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
 import {DataStorage} from '../../../../utility/dataStorage';
-import {EVENT_FILE_LOAD} from '../../../events';
+import {EVENT_FILE_LOAD, EVENT_RENDER_COMPLETE} from '../../../events';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
 import {StatePromiseKeys} from '../../../state';
 import {repeat} from '@blinkk/selective-edit';
@@ -74,6 +74,66 @@ export class SitePart extends MenuSectionPart {
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
+
+      const handleSubmit = () => {
+        const value = modal.selective.value;
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        this.config.state.copyFile(
+          value.originalPath,
+          value.path,
+          (newFile: FileData) => {
+            // Log the success to the notifications.
+            this.config.editor.ui.partNotifications.addInfo({
+              message: `New '${newFile.path}' file successfully created.`,
+              actions: [
+                {
+                  label: 'Load file',
+                  customEvent: EVENT_FILE_LOAD,
+                  details: newFile,
+                },
+              ],
+            });
+            // Reset the data for the next time the form is shown.
+            modal.data = new DeepObject();
+            modal.stopProcessing(true);
+          },
+          (error: ApiError) => {
+            // Log the error to the notifications.
+            this.config.editor.ui.partNotifications.addError(error, true);
+            modal.error = error;
+            modal.stopProcessing();
+          }
+        );
+      };
+
       modal.templateModal = this.templateFileCopy.bind(this);
       modal.actions.push({
         label: 'Copy file',
@@ -82,37 +142,7 @@ export class SitePart extends MenuSectionPart {
           return modal.isProcessing || !modal.selective.isValid;
         },
         isSubmit: true,
-        onClick: () => {
-          const value = modal.selective.value;
-          modal.startProcessing();
-
-          this.config.state.copyFile(
-            value.originalPath,
-            value.path,
-            (newFile: FileData) => {
-              // Log the success to the notifications.
-              this.config.editor.ui.partNotifications.addInfo({
-                message: `New '${newFile.path}' file successfully created.`,
-                actions: [
-                  {
-                    label: 'Load file',
-                    customEvent: EVENT_FILE_LOAD,
-                    details: newFile,
-                  },
-                ],
-              });
-              // Reset the data for the next time the form is shown.
-              modal.data = new DeepObject();
-              modal.stopProcessing(true);
-            },
-            (error: ApiError) => {
-              // Log the error to the notifications.
-              this.config.editor.ui.partNotifications.addError(error, true);
-              modal.error = error;
-              modal.stopProcessing();
-            }
-          );
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       this.config.editor.ui.partModals.modals[MODAL_KEY_COPY] = modal;
@@ -134,37 +164,67 @@ export class SitePart extends MenuSectionPart {
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
+
+      const handleSubmit = () => {
+        const path = modal.data.get('path');
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        this.config.state.deleteFile(
+          {
+            path: path,
+          },
+          () => {
+            // Log the success to the notifications.
+            this.config.editor.ui.partNotifications.addInfo({
+              message: `Deleted '${path}' file successfully.`,
+            });
+            // Reset the data for the next time the form is shown.
+            modal.data = new DeepObject();
+            modal.stopProcessing(true);
+          },
+          (error: ApiError) => {
+            // Log the error to the notifications.
+            this.config.editor.ui.partNotifications.addError(error, true);
+            modal.error = error;
+            modal.stopProcessing();
+          }
+        );
+      };
+
       modal.templateModal = this.templateFileDelete.bind(this);
       modal.actions.push({
         label: 'Delete file',
         level: DialogActionLevel.Extreme,
         isDisabledFunc: () => false,
         isSubmit: true,
-        onClick: () => {
-          const path = modal.data.get('path');
-          modal.startProcessing();
-
-          this.config.state.deleteFile(
-            {
-              path: path,
-            },
-            () => {
-              // Log the success to the notifications.
-              this.config.editor.ui.partNotifications.addInfo({
-                message: `Deleted '${path}' file successfully.`,
-              });
-              // Reset the data for the next time the form is shown.
-              modal.data = new DeepObject();
-              modal.stopProcessing(true);
-            },
-            (error: ApiError) => {
-              // Log the error to the notifications.
-              this.config.editor.ui.partNotifications.addError(error, true);
-              modal.error = error;
-              modal.stopProcessing();
-            }
-          );
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       this.config.editor.ui.partModals.modals[MODAL_KEY_DELETE] = modal;
@@ -186,6 +246,65 @@ export class SitePart extends MenuSectionPart {
         selectiveConfig: selectiveConfig,
         state: this.config.state,
       });
+
+      const handleSubmit = () => {
+        const value = modal.selective.value;
+        modal.startProcessing();
+
+        // The first time the selective editor is marked for validation the values
+        // cannot be trusted.
+        // The render step needs to complete before the validation can be trusted.
+        if (!modal.selective.markValidation) {
+          // Mark the selective editor for all field validation.
+          // For UX the validation is not run until the user interacts with a
+          // field or when they try to 'submit'.
+          modal.selective.markValidation = true;
+
+          document.addEventListener(
+            EVENT_RENDER_COMPLETE,
+            () => {
+              handleSubmit();
+            },
+            {
+              once: true,
+            }
+          );
+          this.render();
+          return;
+        }
+
+        if (modal.selective.isClean || !modal.selective.isValid) {
+          modal.stopProcessing();
+          return;
+        }
+
+        this.config.state.createFile(
+          `${value.directory}${value.path}`,
+          (newFile: FileData) => {
+            // Log the success to the notifications.
+            this.config.editor.ui.partNotifications.addInfo({
+              message: `New '${newFile.path}' file successfully created.`,
+              actions: [
+                {
+                  label: 'Load file',
+                  customEvent: EVENT_FILE_LOAD,
+                  details: newFile,
+                },
+              ],
+            });
+            // Reset the data for the next time the form is shown.
+            modal.data = new DeepObject();
+            modal.stopProcessing(true);
+          },
+          (error: ApiError) => {
+            // Log the error to the notifications.
+            this.config.editor.ui.partNotifications.addError(error, true);
+            modal.error = error;
+            modal.stopProcessing();
+          }
+        );
+      };
+
       modal.templateModal = this.templateFileNew.bind(this);
       modal.actions.push({
         label: 'Create file',
@@ -194,36 +313,7 @@ export class SitePart extends MenuSectionPart {
           return modal.isProcessing || !modal.selective.isValid;
         },
         isSubmit: true,
-        onClick: () => {
-          const value = modal.selective.value;
-          modal.startProcessing();
-
-          this.config.state.createFile(
-            `${value.directory}${value.path}`,
-            (newFile: FileData) => {
-              // Log the success to the notifications.
-              this.config.editor.ui.partNotifications.addInfo({
-                message: `New '${newFile.path}' file successfully created.`,
-                actions: [
-                  {
-                    label: 'Load file',
-                    customEvent: EVENT_FILE_LOAD,
-                    details: newFile,
-                  },
-                ],
-              });
-              // Reset the data for the next time the form is shown.
-              modal.data = new DeepObject();
-              modal.stopProcessing(true);
-            },
-            (error: ApiError) => {
-              // Log the error to the notifications.
-              this.config.editor.ui.partNotifications.addError(error, true);
-              modal.error = error;
-              modal.stopProcessing();
-            }
-          );
-        },
+        onClick: handleSubmit,
       });
       modal.addCancelAction();
       this.config.editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;

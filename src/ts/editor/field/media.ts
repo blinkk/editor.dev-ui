@@ -153,9 +153,13 @@ export class MediaField
     ];
     this.droppableUi.listeners.add('files', this.handleFiles.bind(this));
 
-    this.zoneToKey = {
-      path: 'path',
-      label: 'label',
+    this.zones = {
+      path: {
+        key: 'path',
+      },
+      label: {
+        key: 'label',
+      },
     };
   }
 
@@ -446,6 +450,9 @@ export class MediaField
                 type="text"
                 id="media-${this.uid}"
                 placeholder=${this.config.placeholder || ''}
+                @blur=${() => {
+                  this.lostFocus('path');
+                }}
                 @input=${this.handleInput.bind(this)}
                 value=${value.path || ''}
               />

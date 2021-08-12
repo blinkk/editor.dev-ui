@@ -534,23 +534,11 @@ class MediaListFieldItem
       })}
       draggable=${canDrag && sortable.canDrag ? 'true' : 'false'}
       data-index=${index}
-      @dragenter=${(evt: DragEvent) => {
-        sortable.handleDragEnter(evt);
-        droppable.handleDragEnter(evt);
-      }}
-      @dragleave=${(evt: DragEvent) => {
-        sortable.handleDragLeave(evt);
-        droppable.handleDragLeave(evt);
-      }}
-      @dragover=${(evt: DragEvent) => {
-        sortable.handleDragOver(evt);
-        droppable.handleDragOver(evt);
-      }}
+      @dragenter=${sortable.handleDragEnter.bind(sortable)}
+      @dragleave=${sortable.handleDragLeave.bind(sortable)}
+      @dragover=${sortable.handleDragOver.bind(sortable)}
       @dragstart=${sortable.handleDragStart.bind(sortable)}
-      @drop=${(evt: DragEvent) => {
-        sortable.handleDrop(evt);
-        droppable.handleDrop(evt);
-      }}
+      @drop=${sortable.handleDrop.bind(sortable)}
       @focusin=${(evt: FocusEvent) => {
         sortable.handleFocusIn(evt);
         this.listField.render();

@@ -21,6 +21,7 @@ import {ListenersMixin} from '../../mixin/listeners';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
 import {LiveEditorSelectiveEditorConfig, cloneSelectiveConfig} from '../editor';
 import {templateApiError} from './error';
+import merge from 'lodash.merge';
 
 /**
  * Priority of the modal.
@@ -359,12 +360,21 @@ export class FormDialogModal extends DialogModal {
     this.config = config;
     this.data = new DeepObject({});
 
-    // Clone to prevent shared values if editor changes config.
-    this.selective = new SelectiveEditor(
+    const selectiveConfig = merge(
+      {},
+      // Clone to prevent shared values if editor changes config.
       cloneSelectiveConfig(
         this.config.selectiveConfig as LiveEditorSelectiveEditorConfig
-      )
+      ),
+      {
+        // For smaller forms, like in modals, delay the validation
+        // until after the form has been submitted.
+        delayValidation: true,
+      }
     );
+
+    // Clone to prevent shared values if editor changes config.
+    this.selective = new SelectiveEditor(selectiveConfig);
 
     // When the project type is updated the selective editor changes.
     this.config.state.addListener(

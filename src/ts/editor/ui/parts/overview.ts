@@ -9,13 +9,13 @@ import {
   repeat,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../modal';
+import {EVENT_RENDER_COMPLETE, EVENT_WORKSPACE_LOAD} from '../../events';
 import {
   LiveEditorSelectiveEditorConfig,
   cloneSelectiveConfig,
 } from '../../editor';
 import {exampleIcon, githubIcon, localIcon} from '../icons';
 
-import {EVENT_RENDER_COMPLETE, EVENT_WORKSPACE_LOAD} from '../../events';
 import {EditorState} from '../../state';
 import {FieldConfig} from '@blinkk/selective-edit/dist/selective/field';
 import {NotificationAction} from './notifications';

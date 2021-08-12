@@ -532,7 +532,7 @@ class MediaListFieldItem
         'selective__media_list__item--no-drag': this.listField.length <= 1,
         selective__sortable: true,
       })}
-      draggable=${canDrag ? 'true' : 'false'}
+      draggable=${canDrag && sortable.canDrag ? 'true' : 'false'}
       data-index=${index}
       @dragenter=${(evt: DragEvent) => {
         sortable.handleDragEnter(evt);
@@ -550,6 +550,14 @@ class MediaListFieldItem
       @drop=${(evt: DragEvent) => {
         sortable.handleDrop(evt);
         droppable.handleDrop(evt);
+      }}
+      @focusin=${(evt: FocusEvent) => {
+        sortable.handleFocusIn(evt);
+        this.listField.render();
+      }}
+      @focusout=${(evt: FocusEvent) => {
+        sortable.handleFocusOut(evt);
+        this.listField.render();
       }}
     >
       <div
@@ -570,14 +578,38 @@ class MediaListFieldItem
     data: DeepObject,
     index: number
   ): TemplateResult {
+    const canDrag = this.listField.length > 1;
     const sortable = this.listField.sortableUi;
+    const droppable = this.mediaField.droppableUi;
     return html` <div
       class="selective__media_list__item selective__media_list__item--expanded selective__sortable"
+      draggable=${canDrag && sortable.canDrag ? 'true' : 'false'}
       data-index=${index}
-      @dragenter=${sortable.handleDragEnter.bind(sortable)}
-      @dragleave=${sortable.handleDragLeave.bind(sortable)}
-      @dragover=${sortable.handleDragOver.bind(sortable)}
-      @drop=${sortable.handleDrop.bind(sortable)}
+      @dragenter=${(evt: DragEvent) => {
+        sortable.handleDragEnter(evt);
+        droppable.handleDragEnter(evt);
+      }}
+      @dragleave=${(evt: DragEvent) => {
+        sortable.handleDragLeave(evt);
+        droppable.handleDragLeave(evt);
+      }}
+      @dragover=${(evt: DragEvent) => {
+        sortable.handleDragOver(evt);
+        droppable.handleDragOver(evt);
+      }}
+      @dragstart=${sortable.handleDragStart.bind(sortable)}
+      @drop=${(evt: DragEvent) => {
+        sortable.handleDrop(evt);
+        droppable.handleDrop(evt);
+      }}
+      @focusin=${(evt: FocusEvent) => {
+        sortable.handleFocusIn(evt);
+        this.listField.render();
+      }}
+      @focusout=${(evt: FocusEvent) => {
+        sortable.handleFocusOut(evt);
+        this.listField.render();
+      }}
     >
       <div
         class="selective__media_list__fields__header"

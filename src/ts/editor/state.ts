@@ -996,18 +996,18 @@ export class EditorState extends ListenersMixin(Base) {
     const parts = [];
 
     if (this.file?.file) {
-      parts.unshift(this.file.file.path);
+      parts.push(this.file.file.path.split('/').pop());
     }
 
     if (this.project?.source?.label) {
-      parts.unshift(this.project?.source?.label);
+      parts.push(this.project?.source?.label);
     } else if (this.project?.source?.source) {
-      parts.unshift(this.project?.source?.source);
+      parts.push(this.project?.source?.source);
     }
 
     parts.push('Editor.dev');
 
-    document.title = parts.join(' - ');
+    document.title = parts.join(' — ');
   }
 
   /**

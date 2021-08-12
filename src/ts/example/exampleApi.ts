@@ -3,6 +3,7 @@ import {
   ApiError,
   ApiErrorCode,
   ApiProjectTypes,
+  AuthenticationData,
   DeviceData,
   EditorFileData,
   EditorPreviewSettings,
@@ -1423,6 +1424,29 @@ export class ExampleApi implements LiveEditorApiComponent {
     });
   }
 
+  async clearAuth(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const methodName = 'clearAuth';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to clear authentication.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      console.info('Example authentication cleared!');
+
+      simulateNetwork(resolve, null, {
+        // Do not need to slow down the normal example loading.
+        // But may be useful later?
+        noNetworkSimulation: true,
+      });
+    });
+  }
+
   async copyFile(originalPath: string, path: string): Promise<FileData> {
     return new Promise<FileData>((resolve, reject) => {
       const methodName = 'copyFile';
@@ -1520,6 +1544,29 @@ export class ExampleApi implements LiveEditorApiComponent {
       }
 
       simulateNetwork(resolve, {}, this.options);
+    });
+  }
+
+  async getAuthentication(): Promise<AuthenticationData> {
+    return new Promise<AuthenticationData>((resolve, reject) => {
+      const methodName = 'getAuthentication';
+      console.log(`API: ${methodName}`);
+
+      if (this.errorController.shouldError(methodName)) {
+        reject({
+          message: 'Failed to get the devices.',
+          description: 'Api is set to always return an error.',
+        } as ApiError);
+        return;
+      }
+
+      simulateNetwork(
+        resolve,
+        {
+          usesAccounts: true,
+        } as AuthenticationData,
+        this.options
+      );
     });
   }
 

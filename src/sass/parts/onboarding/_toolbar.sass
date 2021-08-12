@@ -5,6 +5,7 @@
   display: flex
   flex-flow: row
   justify-content: space-between
+  padding: 0 $le-space-medium
 
   a
     color: var(--color-on-primary)
@@ -12,7 +13,7 @@
 .le__part__onboarding__toolbar__title
   flex-grow: 1
   font-weight: var(--font-weight-bold)
-  padding: $le-space-medium
+  padding: $le-space-medium $le-space-medium $le-space-medium 0
 
 .le__part__onboarding__breadcrumb
   align-items: center
@@ -38,3 +39,10 @@
 
 .le__part__onboarding__breadcrumb__item
   padding: $le-space-medium
+
+.le__part__onboarding__actions
+  align-items: center
+  column-gap: $le-space-medium
+  display: flex
+  flex-flow: row
+  justify-content: space-between

@@ -1,5 +1,6 @@
 import {
   ApiProjectTypes,
+  AuthenticationData,
   DeviceData,
   EditorFileData,
   EditorPreviewSettings,
@@ -88,6 +89,11 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
   }
 
   /**
+   * Clear the authentication. Signs the user out of any accounts.
+   */
+  async clearAuth(): Promise<void> {}
+
+  /**
    * Specific services may need to add additional params to all of
    * the api request (such as authentication params.)
    *
@@ -137,6 +143,12 @@ export class ServerApi implements LiveEditorApiComponent, ServerApiComponent {
         file: file,
       })
     ) as Promise<EmptyData>;
+  }
+
+  async getAuthentication(): Promise<AuthenticationData> {
+    return {
+      usesAccounts: false,
+    };
   }
 
   async getDevices(): Promise<Array<DeviceData>> {
@@ -464,6 +476,12 @@ export class ServiceServerApi extends ServerApi {
         project: this.project,
         branch: this.branch,
       } as OnboardingDataGitHub,
+    };
+  }
+
+  async getAuthentication(): Promise<AuthenticationData> {
+    return {
+      usesAccounts: true,
     };
   }
 

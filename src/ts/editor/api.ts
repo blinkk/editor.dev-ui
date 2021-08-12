@@ -20,7 +20,7 @@ export interface LiveEditorApiComponent {
   /**
    * Verify that the authentication for services that require auth.
    *
-   * @returns True if the auth checks out.
+   * @returns True if the authentication is complete.
    */
   checkAuth(): boolean;
 
@@ -34,6 +34,12 @@ export interface LiveEditorApiComponent {
    * onboard users to prompt for more information.
    */
   checkOnboarding(): Promise<OnboardingInfo>;
+
+  /**
+   * Clean any current authentication and log out the user of any
+   * accounts.
+   */
+  clearAuth(): Promise<void>;
 
   /**
    * Copy a file.
@@ -67,6 +73,12 @@ export interface LiveEditorApiComponent {
    * @param path Full path for the file being deleted.
    */
   deleteFile(file: FileData): Promise<EmptyData>;
+
+  /**
+   * Retrieve information about the account requirements for the
+   * project.
+   */
+  getAuthentication(): Promise<AuthenticationData>;
 
   /**
    * Retrieve the devices used for previews.
@@ -172,6 +184,16 @@ export interface LiveEditorApiComponent {
    * or saved appropriately. Often for media like images or videos.
    */
   uploadFile(file: File, options?: MediaOptions): Promise<MediaFileData>;
+}
+
+/**
+ * Information about the account requirements.
+ */
+export interface AuthenticationData {
+  /**
+   * Are there accounts in use?
+   */
+  usesAccounts: boolean;
 }
 
 export interface ApiProjectTypes {

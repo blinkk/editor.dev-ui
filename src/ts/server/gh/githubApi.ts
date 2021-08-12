@@ -6,11 +6,18 @@ import {
 } from '../../editor/api';
 import {ServiceServerApi, postJSON} from '../api';
 
-import {SessionDataStorage} from '../../utility/dataStorage';
+import {LocalDataStorage} from '../../utility/dataStorage';
 import {generateUUID} from '@blinkk/selective-edit/dist/utility/uuid';
 
 const CLIENT_ID = 'Iv1.e422a5bfa1197db1';
-const sessionStorage = new SessionDataStorage();
+
+/**
+ * Login information will persist until the local storage is cleared.
+ * The user can use the logout option in the app header, otherwise the
+ * authentication will persist as long as the server keeps the OAuth
+ * credentials.
+ */
+const loginStorage = new LocalDataStorage();
 
 /**
  * Example api that returns data through a 'simulated' network.
@@ -22,11 +29,23 @@ export class GitHubApi extends ServiceServerApi {
    * @returns True if the auth is valid.
    */
   checkAuth(): boolean {
-    const githubCode = sessionStorage.getItem('github.code');
+    const githubCode = loginStorage.getItem('github.code');
     if (!githubCode) {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Clear the authentication. Sign the user out of any accounts.
+   */
+  async clearAuth(): Promise<void> {
+    // Server request to clear auth.
+    await postJSON(this.resolveApiUrl('/auth.clear'), this.expandParams({}));
+
+    // Clear the local authentication information.
+    loginStorage.removeItem('github.code');
+    loginStorage.removeItem('github.state');
   }
 
   /**
@@ -37,8 +56,8 @@ export class GitHubApi extends ServiceServerApi {
    * @returns Updated params to send to the api.
    */
   expandParams(params: Record<string, any>): Record<string, any> {
-    params['githubState'] = sessionStorage.getItem('github.state');
-    params['githubCode'] = sessionStorage.getItem('github.code');
+    params['githubState'] = loginStorage.getItem('github.state');
+    params['githubCode'] = loginStorage.getItem('github.code');
     return params;
   }
 
@@ -101,12 +120,12 @@ export class GitHubApi extends ServiceServerApi {
    */
   triggerAuth() {
     // Save the current url to redirect back to after auth.
-    sessionStorage.setItem('redirectUrl', window.location.href);
+    loginStorage.setItem('redirectUrl', window.location.href);
 
-    let state = sessionStorage.getItem('github.state');
+    let state = loginStorage.getItem('github.state');
     if (!state) {
       state = generateUUID();
-      sessionStorage.setItem('github.state', state);
+      loginStorage.setItem('github.state', state);
     }
 
     const loginUrl = new URL('/login/oauth/authorize', 'https://github.com');

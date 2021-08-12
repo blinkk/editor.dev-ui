@@ -6,6 +6,7 @@ import {
   html,
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../modal';
+import {EVENT_FILE_LOAD, EVENT_RENDER_COMPLETE} from '../../../events';
 import {
   IncludeExcludeFilter,
   IncludeExcludeFilterConfig,
@@ -18,7 +19,6 @@ import {
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
 import {DataStorage} from '../../../../utility/dataStorage';
-import {EVENT_FILE_LOAD, EVENT_RENDER_COMPLETE} from '../../../events';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
 import {StatePromiseKeys} from '../../../state';
 import {repeat} from '@blinkk/selective-edit';

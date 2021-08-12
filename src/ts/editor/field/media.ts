@@ -515,16 +515,18 @@ export class MediaField
    * @param editor Selective editor used to render the template.
    * @param data Data provided to render the template.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templatePreviewValue(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     index?: number
   ): TemplateResult {
     return html`${findPreviewValue(
       this.currentValue,
       ['label'],
-      `{ Media ${index !== undefined ? index + 1 : ''} }`
+      'Untitled media'
     )}`;
   }
 

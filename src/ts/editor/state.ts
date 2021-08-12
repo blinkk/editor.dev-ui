@@ -1,6 +1,7 @@
 import {
   ApiError,
   ApiErrorCode,
+  AuthenticationData,
   DeviceData,
   EditorFileData,
   EditorPreviewSettings,
@@ -55,6 +56,10 @@ export class EditorState extends ListenersMixin(Base) {
    * API for retrieving data for the editor.
    */
   api: LiveEditorApiComponent;
+  /**
+   * Information about the authentication for account management.
+   */
+  authentication?: AuthenticationData | null;
   /**
    * Array of devices supported for previews.
    */
@@ -216,6 +221,21 @@ export class EditorState extends ListenersMixin(Base) {
     document.addEventListener(EVENT_ONBOARDING_UPDATE, (evt: Event) => {
       this.checkOnboarding();
     });
+  }
+
+  /**
+   * Lazy load of authentication data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  authenticationOrGetAuthentication(): AuthenticationData | undefined | null {
+    if (
+      this.authentication === undefined &&
+      !this.inProgress(StatePromiseKeys.GetAuthentication)
+    ) {
+      this.getAuthentication();
+    }
+    return this.authentication;
   }
 
   checkOnboarding(
@@ -425,23 +445,30 @@ export class EditorState extends ListenersMixin(Base) {
   }
 
   /**
-   * When uploading a file the local field is allowed to override the default
-   * remote configuration. If the `remote` config is undefined no options are
-   * specified and can use the global configurations to determine which
-   * configuration should be used.
+   * Get the authentication information to know how to handle accounts.
+   *
+   * Used to understand when and how to show account information.
    */
-  getMediaOptions(useRemote?: boolean): MediaOptions | undefined {
-    if (useRemote === true) {
-      return this.project?.media?.remote;
-    } else if (useRemote === false) {
-      return this.project?.media?.options;
+  getAuthentication(
+    callback?: (devices: Array<DeviceData>) => void,
+    callbackError?: (error: ApiError) => void
+  ): AuthenticationData | undefined | null {
+    const promiseKey = StatePromiseKeys.GetAuthentication;
+    this.delayCallbacks(promiseKey, callback, callbackError);
+    if (this.inProgress(promiseKey)) {
+      return this.authentication;
     }
-
-    if (this.project?.media?.remote?.isDefault) {
-      return this.project?.media?.remote;
-    }
-
-    return this.project?.media?.options;
+    this.promises[promiseKey] = this.api
+      .getAuthentication()
+      .then(data => {
+        this.authentication = data;
+        this.handleDataAndCleanup(promiseKey, this.authentication);
+      })
+      .catch((error: ApiError) => {
+        this.authentication = null;
+        this.handleErrorAndCleanup(promiseKey, error);
+      });
+    return this.authentication;
   }
 
   getDevices(
@@ -592,6 +619,26 @@ export class EditorState extends ListenersMixin(Base) {
         this.handleErrorAndCleanup(promiseKey, error);
       });
     return this.files;
+  }
+
+  /**
+   * When uploading a file the local field is allowed to override the default
+   * remote configuration. If the `remote` config is undefined no options are
+   * specified and can use the global configurations to determine which
+   * configuration should be used.
+   */
+  getMediaOptions(useRemote?: boolean): MediaOptions | undefined {
+    if (useRemote === true) {
+      return this.project?.media?.remote;
+    } else if (useRemote === false) {
+      return this.project?.media?.options;
+    }
+
+    if (this.project?.media?.remote?.isDefault) {
+      return this.project?.media?.remote;
+    }
+
+    return this.project?.media?.options;
   }
 
   getPreviewConfig(
@@ -1084,6 +1131,7 @@ export enum StatePromiseKeys {
   CreateFile = 'CreateFile',
   CreateWorkspace = 'CreateWorkspace',
   DeleteFile = 'DeleteFile',
+  GetAuthentication = 'GetAuthentication',
   GetDevices = 'GetDevices',
   GetFile = 'GetFile',
   GetFiles = 'GetFiles',

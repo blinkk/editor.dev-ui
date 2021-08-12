@@ -223,6 +223,36 @@ export class OverviewPart extends BasePart implements UiPartComponent {
       ${this.templateMenu()} ${this.templateProject()} ${this.templateIcon()}
       ${this.templateWorkspace()} ${this.templatePublish()}
       ${this.config.editor.ui.partNotifications.template()}
+      ${this.templateAccount()}
+    </div>`;
+  }
+
+  templateAccount(): TemplateResult {
+    const authentication =
+      this.config.state.authenticationOrGetAuthentication();
+
+    if (!authentication?.usesAccounts) {
+      return html``;
+    }
+
+    const handleAccountClick = () => {
+      this.config.editor.api
+        .clearAuth()
+        .then(() => {
+          // Redirect to homepage after signing out.
+          window.location.href = '/';
+        })
+        .catch(err => {
+          console.error('Unable to sign out!', err);
+        });
+    };
+
+    return html`<div
+      class="le__part__overview__account le__clickable le__tooltip--bottom-left"
+      @click=${handleAccountClick}
+      data-tip="Sign out"
+    >
+      <span class="material-icons">logout</span>
     </div>`;
   }
 

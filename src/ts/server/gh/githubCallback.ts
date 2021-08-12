@@ -1,6 +1,6 @@
-import {SessionDataStorage} from '../../utility/dataStorage';
+import {LocalDataStorage} from '../../utility/dataStorage';
 
-const sessionStorage = new SessionDataStorage();
+const sessionStorage = new LocalDataStorage();
 const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
 
 const githubState = sessionStorage.getItem('github.state');

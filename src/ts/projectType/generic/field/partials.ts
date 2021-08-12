@@ -22,10 +22,8 @@ import {
   findPreviewValue,
 } from '@blinkk/selective-edit/dist/utility/preview';
 
-import {
-  EVENT_RENDER_COMPLETE,
-  EVENT_UNLOCK,
-} from '@blinkk/selective-edit/dist/selective/events';
+import {EVENT_RENDER_COMPLETE} from '../../../editor/events';
+import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
@@ -357,6 +355,9 @@ class GenericPartialListFieldItem extends ListFieldItem {
     data: DeepObject,
     index?: number
   ): TemplateResult {
+    const indexLabel = html`${index !== undefined
+      ? html`<span class="selective__index">${index + 1}</span>`
+      : ''}`;
     const partialValue = this.fields.value;
     const partialKey = partialValue?.partial;
     if (partialKey && this.listField.partials) {
@@ -371,10 +372,14 @@ class GenericPartialListFieldItem extends ListFieldItem {
       );
 
       if (partial.editor?.label) {
-        return html`${partial.editor?.label}
-        ${previewValue ? html`<span>${previewValue}</span>` : ''}`;
+        return html`${indexLabel}${partial.editor?.label}
+        ${previewValue
+          ? html`<span class="selective__field__partials__preview"
+              >${previewValue}</span
+            >`
+          : ''}`;
       }
-      return html`${partialKey}`;
+      return html`${indexLabel}${partialKey}`;
     }
 
     return super.templatePreviewValue(editor, data, index);

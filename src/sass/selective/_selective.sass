@@ -23,6 +23,12 @@
   border: $le-border-size-medium dashed var(--color-warning)
   color: var(--color-warning)
 
+.selective__index
+  margin-right: $le-space-small
+
+  &::after
+    content: '.'
+
 @import './field'
 @import './fields'
 @import './mixins'

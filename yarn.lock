@@ -208,10 +208,10 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-3.0.0.tgz#5f01f16ff8a2bf04e051570717e873e99168ac66"
-  integrity sha512-0j/h9HKffss0Yy36SK4ESM3mRWUtyUIriJM/vrfBMBXLpVJo3Qvr8q8rqDudPvRAxM9Dwj3JcWVoFb7KvFjPcA==
+"@blinkk/selective-edit@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-3.0.1.tgz#fe54b76144f6abfde508d33276e5468c0580c9c9"
+  integrity sha512-WbW/r3v53iTdAoPBxRuIMNh3P4nvyamSQLDVswoFwhFZY/U2TONF11VwvHr3QL9DcsGe51N5Qph0nXkvAwWitA==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.4.1"
@@ -1445,9 +1445,9 @@ camelcase@^6.2.0:
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
 
 caniuse-lite@^1.0.30001248:
-  version "1.0.30001249"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001249.tgz#90a330057f8ff75bfe97a94d047d5e14fabb2ee8"
-  integrity sha512-vcX4U8lwVXPdqzPWi6cAJ3FnQaqXbBqy/GZseKNQzRj37J7qZdGcBtxq/QLFNLLlfsoXLUdHw8Iwenri86Tagw==
+  version "1.0.30001251"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001251.tgz#6853a606ec50893115db660f82c094d18f096d85"
+  integrity sha512-HOe1r+9VkU4TFmnU70z+r7OLmtR+/chB1rdcJUeQlAinjEeb0cKL20tlAtOagNZhbrtLnCvV19B4FmF1rgzl6A==
 
 caseless@~0.12.0:
   version "0.12.0"

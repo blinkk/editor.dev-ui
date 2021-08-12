@@ -163,6 +163,25 @@ export class MediaField
     };
   }
 
+  /**
+   * Cleanup the media value.
+   *
+   * If the media field is used in a normal list it will have trouble
+   * determining a default empty value.
+   *
+   * @param value Original value from the source.
+   */
+  cleanOriginalValue(value: any): any {
+    value = super.cleanOriginalValue(value);
+
+    // Default to object if original value is an empty string.
+    if (value === '') {
+      return {};
+    }
+
+    return value;
+  }
+
   protected ensureGroup() {
     if (!this.group && this.config.fields) {
       this.group = this.types.fields.newFromKey(

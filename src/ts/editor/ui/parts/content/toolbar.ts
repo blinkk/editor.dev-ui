@@ -60,6 +60,7 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
         )}
       </div>
       <div class="le__part__content__toolbar__icons">
+        ${this.templateIconRefresh()}
         ${repeat(
           this.config.state?.file?.urls || [],
           url => {
@@ -75,12 +76,12 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
             >`;
           }
         )}
-        ${this.templateExpanded()}
+        ${this.templateIconExpanded()}
       </div>
     </div>`;
   }
 
-  templateExpanded(): TemplateResult {
+  templateIconExpanded(): TemplateResult {
     return html`<div
       class="le__clickable le__tooltip--top"
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}
@@ -96,6 +97,31 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
       <span class="material-icons"
         >${this.isExpanded ? 'fullscreen_exit' : 'fullscreen'}</span
       >
+    </div>`;
+  }
+
+  templateIconRefresh(): TemplateResult {
+    if (!this.config.state.file) {
+      return html``;
+    }
+
+    return html`<div
+      class="le__clickable le__tooltip--top"
+      data-tip="Refresh file"
+      @click=${() => {
+        //  Reset the partials so that they are refreshed.
+        this.config.state.projectTypes.amagaki.partials = undefined;
+        this.config.state.projectTypes.grow.partials = undefined;
+
+        // Reload the current file.
+        if (this.config.state.file) {
+          this.config.state.getFile(this.config.state.file.file);
+        }
+
+        this.render();
+      }}
+    >
+      <span class="material-icons">refresh</span>
     </div>`;
   }
 }

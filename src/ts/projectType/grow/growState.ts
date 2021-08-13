@@ -2,8 +2,8 @@ import {ApiError, PartialData, catchError} from '../../editor/api';
 import {BaseProjectTypeState} from '../state';
 
 export class GrowState extends BaseProjectTypeState {
-  partials?: Record<string, PartialData>;
-  strings?: Record<string, any>;
+  partials?: Record<string, PartialData> | null;
+  strings?: Record<string, any> | null;
 
   get api() {
     return this.editorState.api;
@@ -12,10 +12,10 @@ export class GrowState extends BaseProjectTypeState {
   getPartials(
     callback?: (partials: Record<string, PartialData>) => void,
     callbackError?: (error: ApiError) => void
-  ): Record<string, PartialData> | undefined {
-    const promiseKey = 'getPartials';
+  ): Record<string, PartialData> | undefined | null {
+    const promiseKey = GrowStatePromiseKeys.GetPartials;
     if (this.promises[promiseKey]) {
-      return;
+      return this.partials;
     }
     this.promises[promiseKey] = this.api.projectTypes.grow
       .getPartials()
@@ -29,17 +29,20 @@ export class GrowState extends BaseProjectTypeState {
         this.triggerListener(promiseKey, this.partials);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch(error => {
+        this.partials = null;
+        catchError(error, callbackError);
+      });
     return this.partials;
   }
 
   getStrings(
     callback?: (strings: Record<string, any>) => void,
     callbackError?: (error: ApiError) => void
-  ): Record<string, any> | undefined {
-    const promiseKey = 'getStrings';
+  ): Record<string, any> | undefined | null {
+    const promiseKey = GrowStatePromiseKeys.GetStrings;
     if (this.promises[promiseKey]) {
-      return;
+      return this.strings;
     }
     this.promises[promiseKey] = this.api.projectTypes.grow
       .getStrings()
@@ -53,7 +56,48 @@ export class GrowState extends BaseProjectTypeState {
         this.triggerListener(promiseKey, this.strings);
         this.render();
       })
-      .catch(error => catchError(error, callbackError));
+      .catch(error => {
+        this.strings = null;
+        catchError(error, callbackError);
+      });
     return this.strings;
   }
+
+  /**
+   * Lazy load of partials data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  partialsOrGetPartials(): Record<string, PartialData> | undefined | null {
+    if (
+      this.partials === undefined &&
+      !this.inProgress(GrowStatePromiseKeys.GetPartials)
+    ) {
+      this.getPartials();
+    }
+    return this.partials;
+  }
+
+  /**
+   * Lazy load of strings data.
+   *
+   * Understands the null state when there is an error requesting.
+   */
+  stringsOrGetStrings(): Record<string, any> | undefined | null {
+    if (
+      this.strings === undefined &&
+      !this.inProgress(GrowStatePromiseKeys.GetStrings)
+    ) {
+      this.getStrings();
+    }
+    return this.strings;
+  }
+}
+
+/**
+ * Promise keys used for tracking in operation promises for the state.
+ */
+export enum GrowStatePromiseKeys {
+  GetPartials = 'GetPartials',
+  GetStrings = 'GetStrings',
 }

@@ -155,15 +155,20 @@ export class GenericPartialsField
       const options = [];
       for (const [partialKey, partial] of Object.entries(this.partials || {})) {
         // Without the editor config there are no fields to add for a partial.
-        if (!partial.editor) {
+        // Also don't show the hidden partials.
+        if (!partial.editor || partial.isHidden) {
           continue;
         }
 
         options.push({
           label: partial.editor.label || partialKey,
           value: partialKey,
+          priority: partial.priority ?? 1000,
         });
       }
+
+      // Sort the options by priority.
+      options.sort((a, b) => a.priority - b.priority);
 
       const selectiveConfig = merge(
         {},

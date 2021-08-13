@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.10.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.9.0...v3.10.0) (2021-08-13)
+
+
+### Features
+
+* Delay validation on form modal. ([#225](https://www.github.com/blinkk/editor.dev-ui/issues/225)) ([92fc14a](https://www.github.com/blinkk/editor.dev-ui/commit/92fc14a2c8f3d288456ece9052563a46608867ac))
+* File refresh icon for reloading the file (and partials). ([#236](https://www.github.com/blinkk/editor.dev-ui/issues/236)) ([b59521a](https://www.github.com/blinkk/editor.dev-ui/commit/b59521a2e64088f93521dbba86424b6bce73012c))
+* GitHub authenticaion log out. ([#229](https://www.github.com/blinkk/editor.dev-ui/issues/229)) ([d793eb1](https://www.github.com/blinkk/editor.dev-ui/commit/d793eb10d1636d3931766e0be1b3a0b3cefa820d))
+* Hidden partials and partial priority. ([#233](https://www.github.com/blinkk/editor.dev-ui/issues/233)) ([ab539bb](https://www.github.com/blinkk/editor.dev-ui/commit/ab539bb11683ee5410632b726f20b96ac68fd78c)), closes [#222](https://www.github.com/blinkk/editor.dev-ui/issues/222)
+* Indexes on labels for lists and partials. ([4c8c210](https://www.github.com/blinkk/editor.dev-ui/commit/4c8c210dde3d050841096ceef553e4762442dabd))
+* Manual refresh for preview. ([#237](https://www.github.com/blinkk/editor.dev-ui/issues/237)) ([a6fd369](https://www.github.com/blinkk/editor.dev-ui/commit/a6fd3690a74ade657e1a15bd13fe8d86c186a072)), closes [#133](https://www.github.com/blinkk/editor.dev-ui/issues/133)
+* Media preview serving path from the preview server setting. ([#231](https://www.github.com/blinkk/editor.dev-ui/issues/231)) ([5a00242](https://www.github.com/blinkk/editor.dev-ui/commit/5a002426951dbb324a929ecec07841e038a9e997)), closes [#228](https://www.github.com/blinkk/editor.dev-ui/issues/228)
+* Message when field values are invalid for field or missing field. ([#218](https://www.github.com/blinkk/editor.dev-ui/issues/218)) ([cc0cdf8](https://www.github.com/blinkk/editor.dev-ui/commit/cc0cdf847a92740ffe9deacdf6dea3e92cc46022)), closes [#154](https://www.github.com/blinkk/editor.dev-ui/issues/154) [#94](https://www.github.com/blinkk/editor.dev-ui/issues/94)
+* Validation delay for forms and fields. ([#223](https://www.github.com/blinkk/editor.dev-ui/issues/223)) ([ffc24f7](https://www.github.com/blinkk/editor.dev-ui/commit/ffc24f7ab7aa7a7a4b093e377018582723a2d6e4))
+
+
+### Bug Fixes
+
+* Cleanup the default value for media field when used in lists. ([#227](https://www.github.com/blinkk/editor.dev-ui/issues/227)) ([b21762b](https://www.github.com/blinkk/editor.dev-ui/commit/b21762bebc183a038489c769c3683ac2ebe288a6))
+* Coloring for icons in the list to only target non-special leafs. ([#230](https://www.github.com/blinkk/editor.dev-ui/issues/230)) ([c68543f](https://www.github.com/blinkk/editor.dev-ui/commit/c68543f7915c6e723464d4364f14a51a75402cf1)), closes [#177](https://www.github.com/blinkk/editor.dev-ui/issues/177)
+* Sorting elements use updated focus handlers to not drag inputs. ([#226](https://www.github.com/blinkk/editor.dev-ui/issues/226)) ([4a5e008](https://www.github.com/blinkk/editor.dev-ui/commit/4a5e008de11c4d64a11b443519c94388f95e96a6))
+* Upstream fix for zone based lost focus check ([a328f15](https://www.github.com/blinkk/editor.dev-ui/commit/a328f154aa8897ee1b1317c17359253164da56e9)), closes [#224](https://www.github.com/blinkk/editor.dev-ui/issues/224)
+
 ## [3.9.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.8.0...v3.9.0) (2021-08-10)
 
 

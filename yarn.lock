@@ -208,10 +208,10 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@blinkk/selective-edit@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-3.2.0.tgz#5f4c89053d4ba8aeabca924455c0bc44dd7a244b"
-  integrity sha512-xhljgOCSriIQSqBhzmM+MDYnG4JMiWWL/ztkFt7Zjx+WHnmXNniig3fiY534Kun30z12VaiReBiJqtKQaAu1Kw==
+"@blinkk/selective-edit@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@blinkk/selective-edit/-/selective-edit-3.2.1.tgz#52dbd78d962dd24d5960b5db5122ec5d0fe30aa5"
+  integrity sha512-QAwWDPGYateIYMao0Bya5OGsQxQIt9b/bwjFjp9EQOqiadbuTQaOPnS22FcycHVqaxW4ZqsCx7IyerBLtgmQag==
   dependencies:
     json-stable-stringify "^1.0.1"
     lit-html "^1.4.1"
@@ -4959,9 +4959,9 @@ prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0:
     prosemirror-model "^1.0.0"
 
 prosemirror-view@^1.18.7:
-  version "1.18.11"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.18.11.tgz#1a839508e7cb6d500a95512af8079661f9e36034"
-  integrity sha512-KXUM8UEV+IK4JYWHNyxkPGDGbxeTEUHQv3POApfyTRN5eMcPFbY4cB0mDJr0LPelVvYPghmZDOCqfCIm9mYHtQ==
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.19.0.tgz#f030b610213bc8627c027886e40e2e61d7ad3b40"
+  integrity sha512-XS0EUmxYr/k9KkANHwjBkH6EZNbuFh37oYLDgdcLRdX89eZVvlptqHqu/92j/Y+3iFsuW917FATjLkQtlLHylQ==
   dependencies:
     prosemirror-model "^1.14.3"
     prosemirror-state "^1.0.0"

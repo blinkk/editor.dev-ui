@@ -1,7 +1,9 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {UrlConfig, UrlLevel} from '../../../api';
+
 import {DataStorage} from '../../../../utility/dataStorage';
+import {EVENT_REFRESH_FILE} from '../../../events';
 import {EditorState} from '../../../state';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 
@@ -109,10 +111,8 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
       class="le__clickable le__tooltip--top"
       data-tip="Refresh file"
       @click=${() => {
-        //  Reset the project type states so that they are refreshed.
-        this.config.state.projectTypes.amagaki.partials = undefined;
-        this.config.state.projectTypes.grow.partials = undefined;
-        this.config.state.projectTypes.grow.strings = undefined;
+        // Notify that the file refresh is happening.
+        document.dispatchEvent(new CustomEvent(EVENT_REFRESH_FILE));
 
         // Reload the current file.
         if (this.config.state.file) {

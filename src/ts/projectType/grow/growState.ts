@@ -1,9 +1,22 @@
 import {ApiError, PartialData, catchError} from '../../editor/api';
+
 import {BaseProjectTypeState} from '../state';
+import {EVENT_REFRESH_FILE} from '../../editor/events';
+import {EditorState} from '../../editor/state';
 
 export class GrowState extends BaseProjectTypeState {
   partials?: Record<string, PartialData> | null;
   strings?: Record<string, any> | null;
+
+  constructor(editorState: EditorState) {
+    super(editorState);
+
+    document.addEventListener(EVENT_REFRESH_FILE, () => {
+      // Reset when the file refreshes.
+      this.partials = undefined;
+      this.strings = undefined;
+    });
+  }
 
   get api() {
     return this.editorState.api;

@@ -1,9 +1,9 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
+import {EVENT_FILE_SAVE_COMPLETE, EVENT_REFRESH_PREVIEW} from '../../../events';
 import {TemplateResult, classMap, html, styleMap} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../../../utility/dataStorage';
 import {DeviceData} from '../../../api';
-import {EVENT_FILE_SAVE_COMPLETE} from '../../../events';
 import {EditorState} from '../../../state';
 
 /**
@@ -44,14 +44,12 @@ export class PreviewFramePart extends BasePart implements UiPartComponent {
 
     // Watch for a save file event and reload the iframe.
     document.addEventListener(EVENT_FILE_SAVE_COMPLETE, () => {
-      // Find and reload the iframe if it is visible.
-      const iframe = document.querySelector('.le__part__preview__frame iframe');
-      if (iframe) {
-        // Needs to be manually set in JS since the html src does not change the
-        // value and will not trigger a refresh like it will in JS.
-        (iframe as HTMLIFrameElement).src =
-          this.config.state.file?.url || (iframe as HTMLIFrameElement).src;
-      }
+      this.refresh();
+    });
+
+    // Watch for preview refresh event and reload the iframe.
+    document.addEventListener(EVENT_REFRESH_PREVIEW, () => {
+      this.refresh();
     });
   }
 
@@ -136,6 +134,17 @@ export class PreviewFramePart extends BasePart implements UiPartComponent {
       width: deviceSize.width,
       scale: Math.min(heightRatio, widthRatio),
     };
+  }
+
+  refresh() {
+    // Find and reload the iframe if it is visible.
+    const iframe = document.querySelector('.le__part__preview__frame iframe');
+    if (iframe) {
+      // Needs to be manually set in JS since the html src does not change the
+      // value and will not trigger a refresh like it will in JS.
+      (iframe as HTMLIFrameElement).src =
+        this.config.state.file?.url || (iframe as HTMLIFrameElement).src;
+    }
   }
 
   template(device?: DeviceData, isRotated?: boolean): TemplateResult {

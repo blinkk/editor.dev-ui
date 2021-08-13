@@ -599,9 +599,6 @@ export class EditorState extends ListenersMixin(Base) {
         }
       });
 
-    // Unset the existing file since it is 'unloaded'.
-    // this.file = undefined;
-
     // Mark the file path that is being loaded.
     this.loadingFilePath = file.path;
 

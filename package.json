@@ -65,7 +65,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/marked": "^2.0.4",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^16.6.0",
+    "@types/node": "^16.6.1",
     "@types/nunjucks": "^3.1.5",
     "@types/prosemirror-commands": "^1.0.4",
     "@types/prosemirror-model": "^1.13.1",

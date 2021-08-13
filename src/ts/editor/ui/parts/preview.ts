@@ -1,13 +1,13 @@
 import {BasePart, LazyUiParts, UiPartComponent, UiPartConfig} from '.';
+import {DeviceData, EditorPreviewSettings, WorkspaceData} from '../../api';
 import {EditorState, StatePromiseKeys} from '../../state';
 import {PreviewFramePart, PreviewFramePartConfig} from './preview/frame';
 import {PreviewToolbarPart, PreviewToolbarPartConfig} from './preview/toolbar';
 import {TemplateResult, classMap, html} from '@blinkk/selective-edit';
 
 import {DataStorage} from '../../../utility/dataStorage';
-import {DeviceData, EditorPreviewSettings, WorkspaceData} from '../../api';
+import {interpolatePreviewUrl} from '../../preview';
 import {templateLoading} from '../../template';
-import {interpolatePreviewBaseUrl} from '../../preview';
 
 export interface PreviewPartConfig extends UiPartConfig {
   /**
@@ -62,7 +62,7 @@ export class PreviewPart extends BasePart implements UiPartComponent {
       clearInterval(this.loginTimer);
     }
 
-    const baseUrl = interpolatePreviewBaseUrl(
+    const baseUrl = interpolatePreviewUrl(
       this.config.state.project?.preview as EditorPreviewSettings,
       this.config.state.workspace as WorkspaceData
     );

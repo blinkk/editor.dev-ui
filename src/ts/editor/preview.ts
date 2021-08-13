@@ -9,16 +9,19 @@ import {shortenWorkspaceName} from './workspace';
  * @param workspace Workspace to generate the url for.
  * @returns Interpolated url for the base preview server.
  */
-export function interpolatePreviewBaseUrl(
+export function interpolatePreviewUrl(
   settings: EditorPreviewSettings,
   workspace: WorkspaceData,
-  params?: Record<string, string>
+  params?: Record<string, string>,
+  path = '/'
 ) {
   params = params ?? {
     workspace: shortenWorkspaceName(workspace.name),
     workspaceFull: workspace.name,
   };
-  return interpolate(params, settings.baseUrl);
+  const baseUrl = interpolate(params, settings.baseUrl);
+  path = path.replace(/^\/*/, '');
+  return `${baseUrl}${baseUrl.endsWith('/') ? '' : '/'}${path}`;
 }
 
 /**
@@ -40,7 +43,7 @@ export function interpolatePreviewConfigUrl(
     baseUrl: '',
   };
 
-  params.baseUrl = interpolatePreviewBaseUrl(settings, workspace, params);
+  params.baseUrl = interpolatePreviewUrl(settings, workspace, params);
   params.baseUrl = `${params.baseUrl}${
     params.baseUrl.endsWith('/') ? '' : '/'
   }`;

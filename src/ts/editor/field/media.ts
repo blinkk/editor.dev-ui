@@ -14,12 +14,18 @@ import {
   classMap,
   html,
 } from '@blinkk/selective-edit';
+import {
+  EditorPreviewSettings,
+  MediaFileData,
+  PreviewRoutesLocaleData,
+  WorkspaceData,
+} from '../api';
 
 import {EVENT_RENDER_COMPLETE} from '../events';
 import {LiveEditorGlobalConfig} from '../editor';
-import {MediaFileData} from '../api';
 import {Template} from '@blinkk/selective-edit/dist/selective/template';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
+import {interpolatePreviewUrl} from '../preview';
 import merge from 'lodash.merge';
 import {reduceFraction} from '../../utility/math';
 import {templateLoading} from '../template';
@@ -371,7 +377,29 @@ export class MediaField
       }
     }
 
-    // TODO: Use api to get the preview url for the file path.
+    // Check the preview config to see if it knows the preview url.
+    const previewConfig =
+      this.globalConfig.state.previewConfigOrGetPreviewConfig();
+
+    if (previewConfig?.routes[value.path]) {
+      let path = '';
+      if (previewConfig.routes[value.path].path) {
+        path = previewConfig.routes[value.path].path as string;
+      } else {
+        path = (previewConfig.routes[value.path] as PreviewRoutesLocaleData)[
+          previewConfig.defaultLocale
+        ].path as string;
+      }
+
+      const previewUrl = interpolatePreviewUrl(
+        this.globalConfig.state.project?.preview as EditorPreviewSettings,
+        this.globalConfig.state.workspace as WorkspaceData,
+        undefined,
+        path
+      );
+
+      return previewUrl;
+    }
 
     return undefined;
   }

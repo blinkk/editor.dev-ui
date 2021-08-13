@@ -28,6 +28,7 @@ import {
   EVENT_FILE_LOAD_COMPLETE,
   EVENT_FILE_SAVE_COMPLETE,
   EVENT_ONBOARDING_UPDATE,
+  EVENT_REFRESH_FILE,
   EVENT_RENDER,
 } from './events';
 import {announceNotification, readNotification} from './ui/parts/notifications';
@@ -220,6 +221,14 @@ export class EditorState extends ListenersMixin(Base) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     document.addEventListener(EVENT_ONBOARDING_UPDATE, (evt: Event) => {
       this.checkOnboarding();
+    });
+
+    // Listen for file refreshing.
+    document.addEventListener(EVENT_REFRESH_FILE, () => {
+      // Reload the current file.
+      if (this.file) {
+        this.getFile(this.file.file);
+      }
     });
   }
 

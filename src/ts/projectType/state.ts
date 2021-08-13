@@ -24,6 +24,15 @@ export class BaseProjectTypeState
   }
 
   /**
+   * Determines if there is an existing promise for a given key.
+   *
+   * @param key Key identifying the promise or loading status.
+   */
+  inProgress(key: string): boolean {
+    return key in this.promises;
+  }
+
+  /**
    * Signal for the editor to re-render.
    */
   render() {

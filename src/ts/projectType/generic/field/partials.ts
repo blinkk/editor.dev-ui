@@ -55,7 +55,7 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
 }
 
 export interface GenericPartialsFieldComponent {
-  partials?: Record<string, PartialData>;
+  partials?: Record<string, PartialData> | undefined | null;
 }
 
 export class GenericPartialsField
@@ -64,7 +64,6 @@ export class GenericPartialsField
 {
   config: GenericPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
-  partials?: Record<string, PartialData>;
   selective?: SelectiveEditor;
 
   constructor(
@@ -77,22 +76,27 @@ export class GenericPartialsField
     this.config = config;
     this.globalConfig = globalConfig;
     this.ListItemCls = GenericPartialListFieldItem;
-    this.initPartials();
   }
 
   /**
-   * Does the list allow for showing simple fields?
+   * Partial list does not allow showing simple fields inline.
    */
   get allowSimple(): boolean {
     return false;
   }
 
   protected ensureItems(editor: SelectiveEditor): Array<ListItemComponent> {
+    // If there are no items there is a chance this is from the partials not
+    // being loaded yet. If there are partials, reset the value.
+    if (this.items && this.items.length === 0 && this.partials) {
+      this.items = null;
+    }
+
     if (this.items === null) {
       this.items = [];
 
       // While waiting for the partials to load, there are no items.
-      if (this.partials === undefined) {
+      if (!this.partials) {
         return this.items;
       }
 
@@ -310,7 +314,7 @@ export class GenericPartialsField
     modal.show();
   }
 
-  initPartials() {
+  get partials(): Record<string, PartialData> | undefined | null {
     throw new Error('Not implemented.');
   }
 

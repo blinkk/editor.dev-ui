@@ -1,7 +1,9 @@
 import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {UrlConfig, UrlLevel} from '../../../api';
+
 import {DataStorage} from '../../../../utility/dataStorage';
+import {EVENT_REFRESH_FILE} from '../../../events';
 import {EditorState} from '../../../state';
 import {findPreviewValue} from '@blinkk/selective-edit/dist/utility/preview';
 
@@ -60,6 +62,7 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
         )}
       </div>
       <div class="le__part__content__toolbar__icons">
+        ${this.templateIconRefresh()}
         ${repeat(
           this.config.state?.file?.urls || [],
           url => {
@@ -75,12 +78,12 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
             >`;
           }
         )}
-        ${this.templateExpanded()}
+        ${this.templateIconExpanded()}
       </div>
     </div>`;
   }
 
-  templateExpanded(): TemplateResult {
+  templateIconExpanded(): TemplateResult {
     return html`<div
       class="le__clickable le__tooltip--top"
       data-tip=${this.isExpanded ? 'Content and preview' : 'Content only'}
@@ -96,6 +99,25 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
       <span class="material-icons"
         >${this.isExpanded ? 'fullscreen_exit' : 'fullscreen'}</span
       >
+    </div>`;
+  }
+
+  templateIconRefresh(): TemplateResult {
+    if (!this.config.state.file) {
+      return html``;
+    }
+
+    return html`<div
+      class="le__clickable le__tooltip--top"
+      data-tip="Refresh file"
+      @click=${() => {
+        // Notify that the file refresh is happening.
+        document.dispatchEvent(new CustomEvent(EVENT_REFRESH_FILE));
+
+        this.render();
+      }}
+    >
+      <span class="material-icons">refresh</span>
     </div>`;
   }
 }

@@ -57,6 +57,13 @@ export const EVENT_NOTIFICATION_SHOW = 'live.notification.show';
 export const EVENT_ONBOARDING_UPDATE = 'live.onboarding.update';
 
 /**
+ * Custom event name for when the editor wants to refresh the file.
+ *
+ * Can be used to clear specific caches when a refresh occurs.
+ */
+export const EVENT_REFRESH_FILE = 'live.refresh.file';
+
+/**
  * Custom event name for triggering a render.
  */
 export const EVENT_RENDER = 'live.render';

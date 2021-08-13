@@ -455,6 +455,12 @@ const fullFiles: Record<string, EditorFileData> = {
     url: 'preview.html',
   },
   '/example/media.yaml': {
+    data: {
+      media: {
+        path: '/static/img/landscape.png',
+        label: 'Landscape image',
+      },
+    },
     editor: {
       fields: [
         // Media example.

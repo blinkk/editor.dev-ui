@@ -39,7 +39,7 @@ import {FeatureManager} from '../utility/featureManager';
 import {GrowState} from '../projectType/grow/growState';
 import {ListenersMixin} from '../mixin/listeners';
 import {ProjectTypeComponent} from '../projectType/projectType';
-import {interpolatePreviewBaseUrl} from './preview';
+import {interpolatePreviewUrl} from './preview';
 
 const REGEX_START_SLASH = /^\//i;
 export const STORAGE_SCHEME = 'live.scheme';
@@ -401,7 +401,7 @@ export class EditorState extends ListenersMixin(Base) {
           this.file?.file.path &&
           this.file?.file.path in previewSettings.routes
         ) {
-          const baseUrl = interpolatePreviewBaseUrl(
+          const baseUrl = interpolatePreviewUrl(
             this.project?.preview as EditorPreviewSettings,
             this.workspace as WorkspaceData
           );

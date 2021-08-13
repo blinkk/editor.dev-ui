@@ -114,11 +114,6 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
         // Notify that the file refresh is happening.
         document.dispatchEvent(new CustomEvent(EVENT_REFRESH_FILE));
 
-        // Reload the current file.
-        if (this.config.state.file) {
-          this.config.state.getFile(this.config.state.file.file);
-        }
-
         this.render();
       }}
     >

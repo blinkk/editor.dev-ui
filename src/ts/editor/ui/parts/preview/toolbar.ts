@@ -4,6 +4,7 @@ import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {DataStorage} from '../../../../utility/dataStorage';
 import {DeviceData} from '../../../api';
 import {EditorState} from '../../../state';
+import {EVENT_REFRESH_PREVIEW} from '../../../events';
 
 const STORAGE_DEVICE_KEY = 'live.preview.device';
 const STORAGE_DEVICE_MODE_KEY = 'live.preview.isDeviceMode';
@@ -123,8 +124,8 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
           </div>`
         : html`<div class="le__part__preview__toolbar__label">Preview</div>`}
       <div class="le__part__preview__toolbar__icons">
-        ${this.templateIconDeviceRotate()} ${this.templateIconDeviceMode()}
-        ${this.templateIconBreakout()}
+        ${this.templateIconRefresh()} ${this.templateIconDeviceRotate()}
+        ${this.templateIconDeviceMode()} ${this.templateIconBreakout()}
       </div>
     </div>`;
   }
@@ -223,6 +224,25 @@ export class PreviewToolbarPart extends BasePart implements UiPartComponent {
       }}
     >
       <span class="material-icons">screen_rotation</span>
+    </div>`;
+  }
+
+  templateIconRefresh(): TemplateResult {
+    if (!this.config.state.file?.url) {
+      return html``;
+    }
+
+    return html`<div
+      class="le__clickable le__tooltip--top"
+      data-tip="Refresh preview"
+      @click=${() => {
+        // Notify that the preview refresh is happening.
+        document.dispatchEvent(new CustomEvent(EVENT_REFRESH_PREVIEW));
+
+        this.render();
+      }}
+    >
+      <span class="material-icons">refresh</span>
     </div>`;
   }
 }

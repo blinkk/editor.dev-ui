@@ -197,6 +197,10 @@
   .le__list__item--selected &
     color: var(--color-on-primary)
 
+  // Use the secondary color when not special.
+  :not(.le__list__item--heading):not(.le__list__item--selected):not(.le__list__item--primary):not(.le__list__item--secondary) > &
+    color: var(--color-secondary)
+
   .material-icons
     font-size: $le-font-size-icon-menu
     padding: 0

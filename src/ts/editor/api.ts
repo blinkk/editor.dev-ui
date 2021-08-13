@@ -510,8 +510,33 @@ export interface FileData {
 }
 
 export interface PartialData {
+  /**
+   * Partial identifier.
+   *
+   * This is the same value used in the partial definition of partials
+   * in content files.
+   */
   partial: string;
+  /**
+   * Is the partial hidden?
+   *
+   * Partials can opt to not show the partial in the listing of partials.
+   * This is helpful for partials that are part of the design such as
+   * header and footer partials.
+   */
+  isHidden?: boolean;
+  /**
+   * Configuration for how the editor should present the partial in the
+   * editor.
+   */
   editor?: PartialEditorConfig;
+  /**
+   * When displaying lists of paritals the priority will affect the
+   * sort order of the partials.
+   *
+   * Default priority is 1000
+   */
+  priority?: number;
 }
 
 /**

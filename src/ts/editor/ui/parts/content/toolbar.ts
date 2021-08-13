@@ -103,7 +103,7 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
   }
 
   templateIconRefresh(): TemplateResult {
-    if (!this.config.state.file) {
+    if (!this.config.state.file || this.config.state.loadingFilePath) {
       return html``;
     }
 

@@ -138,7 +138,7 @@ export class ContentPart extends BasePart implements UiPartComponent {
 
     subParts.push(this.partToolbar.template());
 
-    if (this.config.editor.state.inProgress(StatePromiseKeys.GetFile)) {
+    if (this.config.editor.state.loadingFilePath) {
       subParts.push(html`<div class="le__part__content__loading">
         ${templateLoading(
           {},

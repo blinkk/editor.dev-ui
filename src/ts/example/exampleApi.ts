@@ -2076,6 +2076,19 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
               ],
             },
           } as PartialData,
+          hidden: {
+            editor: {
+              label: 'Hidden partial',
+              fields: [
+                {
+                  type: 'text',
+                  key: 'title',
+                  label: 'title',
+                } as TextFieldConfig,
+              ],
+            },
+            isHidden: true,
+          } as PartialData,
         },
         this.options
       );

@@ -109,9 +109,10 @@ export class ContentToolbarPart extends BasePart implements UiPartComponent {
       class="le__clickable le__tooltip--top"
       data-tip="Refresh file"
       @click=${() => {
-        //  Reset the partials so that they are refreshed.
+        //  Reset the project type states so that they are refreshed.
         this.config.state.projectTypes.amagaki.partials = undefined;
         this.config.state.projectTypes.grow.partials = undefined;
+        this.config.state.projectTypes.grow.strings = undefined;
 
         // Reload the current file.
         if (this.config.state.file) {

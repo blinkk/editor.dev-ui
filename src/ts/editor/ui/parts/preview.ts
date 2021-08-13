@@ -156,7 +156,10 @@ export class PreviewPart extends BasePart implements UiPartComponent {
   templatePreviewNotAvailable(): TemplateResult {
     // When waiting for the file to load do not show anything
     // since the file load is already showing.
-    if (this.config.editor.state.inProgress(StatePromiseKeys.GetFile)) {
+    if (
+      !this.config.state.loadingFilePath &&
+      this.config.editor.state.inProgress(StatePromiseKeys.GetFile)
+    ) {
       return html``;
     }
 

@@ -137,8 +137,9 @@ export class ContentPart extends BasePart implements UiPartComponent {
     const subParts: Array<TemplateResult> = [];
 
     subParts.push(this.partToolbar.template());
+    subParts.push(this.partHeader.template());
 
-    if (this.config.editor.state.inProgress(StatePromiseKeys.GetFile)) {
+    if (this.config.editor.state.loadingFilePath) {
       subParts.push(html`<div class="le__part__content__loading">
         ${templateLoading(
           {},
@@ -149,7 +150,6 @@ export class ContentPart extends BasePart implements UiPartComponent {
         )}
       </div>`);
     } else {
-      subParts.push(this.partHeader.template());
       subParts.push(this.templateSections());
     }
 

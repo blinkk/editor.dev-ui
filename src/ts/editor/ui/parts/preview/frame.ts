@@ -143,7 +143,7 @@ export class PreviewFramePart extends BasePart implements UiPartComponent {
       // Needs to be manually set in JS since the html src does not change the
       // value and will not trigger a refresh like it will in JS.
       (iframe as HTMLIFrameElement).src =
-        this.config.state.file?.url || (iframe as HTMLIFrameElement).src;
+        this.config.state.filePreviewUrl || (iframe as HTMLIFrameElement).src;
     }
   }
 
@@ -168,7 +168,7 @@ export class PreviewFramePart extends BasePart implements UiPartComponent {
         })}
       >
         <iframe
-          src=${this.config.state.file?.url || ''}
+          src=${this.config.state.filePreviewUrl || ''}
           style=${styleMap({
             'min-height': sizing.height ? `${sizing.height}px` : 'none',
             width: sizing.width ? `${sizing.width}px` : 'auto',

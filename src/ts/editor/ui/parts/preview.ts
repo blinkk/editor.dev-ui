@@ -105,7 +105,7 @@ export class PreviewPart extends BasePart implements UiPartComponent {
 
     pieces.push(this.partToolbar.template());
 
-    if (this.config.state.file?.url) {
+    if (this.config.state.filePreviewUrl) {
       pieces.push(
         this.partFrame.template(
           this.partToolbar.device,

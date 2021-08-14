@@ -90,6 +90,10 @@ export class EditorState extends ListenersMixin(Base) {
    */
   file?: EditorFileData | null;
   /**
+   * File preview url
+   */
+  filePreviewUrl?: string | null;
+  /**
    * Editor history.
    */
   history: EditorHistory;
@@ -390,55 +394,6 @@ export class EditorState extends ListenersMixin(Base) {
   }
 
   /**
-   * When loading a file the url may not be defined and needs to be verified.
-   * If a preview server is defined in the project config the preview server
-   * settings are loaded to check for a url defined by the preview server.
-   */
-  protected ensureFileUrl() {
-    // If there is no url for the file, check if the preview server
-    // knows how to preview the file.
-    if (this.file && !this.file.url) {
-      const originalPath = this.file.file.path;
-      const updateFileUrl = (previewSettings: PreviewSettings | null) => {
-        // If the path has changed then we have moved on, nothing to see here.
-        if (originalPath !== this.file?.file.path) {
-          return;
-        }
-
-        if (
-          previewSettings &&
-          this.file?.file.path &&
-          this.file?.file.path in previewSettings.routes
-        ) {
-          const baseUrl = interpolatePreviewUrl(
-            this.project?.preview as EditorPreviewSettings,
-            this.workspace as WorkspaceData
-          );
-          const route = previewSettings.routes[this.file?.file.path];
-
-          if ((route as PreviewRoutesMetaData).path) {
-            this.file.url = `${baseUrl}${(
-              route as PreviewRoutesMetaData
-            ).path.replace(REGEX_START_SLASH, '')}`;
-          } else {
-            this.file.url = `${baseUrl}${(route as PreviewRoutesLocaleData)[
-              previewSettings.defaultLocale
-            ].path.replace(REGEX_START_SLASH, '')}`;
-          }
-
-          this.render();
-        }
-      };
-
-      if (this.previewConfig === undefined) {
-        this.getPreviewConfig(updateFileUrl);
-      } else {
-        updateFileUrl(this.previewConfig);
-      }
-    }
-  }
-
-  /**
    * Lazy load of files data.
    *
    * Understands the null state when there is an error requesting.
@@ -529,17 +484,13 @@ export class EditorState extends ListenersMixin(Base) {
       return;
     }
 
-    // Start the loading of the preview configuration before waiting
-    // for a full file load response.
-    this.previewConfigOrGetPreviewConfig();
+    // Update the preview url for the path.
+    this.updateFilePreviewUrl(file.path);
 
     this.promises[promiseKey] = this.api
       .getFile(file)
       .then(data => {
         this.file = data;
-
-        // Update the file url as it may not be not defined.
-        this.ensureFileUrl();
 
         // Loading is complete, remove the loading file information.
         this.loadingFilePath = undefined;
@@ -1001,9 +952,6 @@ export class EditorState extends ListenersMixin(Base) {
       .then(data => {
         this.file = data;
 
-        // Update the file url as it may not be not defined.
-        this.ensureFileUrl();
-
         // Reload the workspace from the api.
         // Refreshes the publish status.
         this.workspace = this.getWorkspace();
@@ -1061,6 +1009,38 @@ export class EditorState extends ListenersMixin(Base) {
     parts.push('Editor.dev');
 
     document.title = parts.join(' — ');
+  }
+
+  protected updateFilePreviewUrl(path: string) {
+    const updateUrl = (previewSettings: PreviewSettings | null) => {
+      if (previewSettings && path in previewSettings.routes) {
+        const baseUrl = interpolatePreviewUrl(
+          this.project?.preview as EditorPreviewSettings,
+          this.workspace as WorkspaceData
+        );
+        const route = previewSettings.routes[path];
+
+        if ((route as PreviewRoutesMetaData).path) {
+          this.filePreviewUrl = `${baseUrl}${(
+            route as PreviewRoutesMetaData
+          ).path.replace(REGEX_START_SLASH, '')}`;
+        } else {
+          this.filePreviewUrl = `${baseUrl}${(route as PreviewRoutesLocaleData)[
+            previewSettings.defaultLocale
+          ].path.replace(REGEX_START_SLASH, '')}`;
+        }
+
+        this.render();
+      } else {
+        this.filePreviewUrl = null;
+      }
+    };
+
+    if (this.previewConfig === undefined) {
+      this.getPreviewConfig(updateUrl);
+    } else {
+      updateUrl(this.previewConfig);
+    }
   }
 
   /**

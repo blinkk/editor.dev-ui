@@ -27,7 +27,7 @@ export class GrowState extends BaseProjectTypeState {
     callbackError?: (error: ApiError) => void
   ): Record<string, PartialData> | undefined | null {
     const promiseKey = GrowStatePromiseKeys.GetPartials;
-    if (this.promises[promiseKey]) {
+    if (promiseKey in this.promises) {
       return this.partials;
     }
     this.promises[promiseKey] = this.api.projectTypes.grow
@@ -54,7 +54,7 @@ export class GrowState extends BaseProjectTypeState {
     callbackError?: (error: ApiError) => void
   ): Record<string, any> | undefined | null {
     const promiseKey = GrowStatePromiseKeys.GetStrings;
-    if (this.promises[promiseKey]) {
+    if (promiseKey in this.promises) {
       return this.strings;
     }
     this.promises[promiseKey] = this.api.projectTypes.grow

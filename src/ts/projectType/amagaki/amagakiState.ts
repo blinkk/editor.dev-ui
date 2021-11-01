@@ -25,7 +25,7 @@ export class AmagakiState extends BaseProjectTypeState {
     callbackError?: (error: ApiError) => void
   ): Record<string, PartialData> | undefined | null {
     const promiseKey = AmagakiStatePromiseKeys.GetPartials;
-    if (this.promises[promiseKey]) {
+    if (promiseKey in this.promises) {
       return this.partials;
     }
     this.promises[promiseKey] = this.api.projectTypes.amagaki

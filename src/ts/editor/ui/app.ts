@@ -20,7 +20,7 @@ import {LazyUiParts} from './parts';
 import {OnboardingStatus} from '../api';
 import {EVENT_RENDER as SELECTIVE_EVENT_RENDER} from '@blinkk/selective-edit/dist/selective/events';
 import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
+import en from 'javascript-time-ago/locale/en.json';
 import {templateLoading} from '../template';
 
 // Set the default locale for the time ago globally.

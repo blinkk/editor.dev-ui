@@ -10,15 +10,14 @@ export class GCSRemoteMedia
   extends BaseRemoteMediaProvider
   implements RemoteMediaComponent
 {
+  static canApply(file: File, options?: MediaOptions): boolean {
+    return options?.provider === RemoteMediaProviders.GCS;
+  }
   options: GoogleMediaOptions;
 
   constructor(options: GoogleMediaOptions) {
     super();
     this.options = options;
-  }
-
-  static canApply(file: File, options?: MediaOptions): boolean {
-    return options?.provider === RemoteMediaProviders.GCS;
   }
 
   async upload(file: File): Promise<MediaFileData> {

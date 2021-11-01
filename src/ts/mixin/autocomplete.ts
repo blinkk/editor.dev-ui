@@ -79,9 +79,9 @@ export class AutoCompleteUi
   filteredItems?: Array<AutoCompleteUiItemComponent>;
   private hasBoundDocument?: boolean;
   isVisible?: boolean;
-  _items?: Array<AutoCompleteUiItemComponent>;
   labels?: AutoCompleteUiLabels;
   shouldShowEmpty?: (value: string) => boolean;
+  _items?: Array<AutoCompleteUiItemComponent>;
 
   filter(value: string) {
     this.currentFilter = value;

@@ -5,7 +5,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: ['static/example', 'dist/css/example'],
+    static: ['static/example', 'dist/css/example'],
     port: 8888,
   },
 });

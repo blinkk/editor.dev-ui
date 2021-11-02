@@ -1,5 +1,13 @@
 # Changelog
 
+### [3.10.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.0...v3.10.1) (2021-11-02)
+
+
+### Bug Fixes
+
+* Keep existing preview state while loading a new file. ([#238](https://www.github.com/blinkk/editor.dev-ui/issues/238)) ([9191de5](https://www.github.com/blinkk/editor.dev-ui/commit/9191de50be671cd290413b71e2208f9852f23fde))
+* Load the preview url without waiting for the file to load. ([#240](https://www.github.com/blinkk/editor.dev-ui/issues/240)) ([ebb72d2](https://www.github.com/blinkk/editor.dev-ui/commit/ebb72d2da83858ee7ed6efd559dbac2d97f80713))
+
 ## [3.10.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.9.0...v3.10.0) (2021-08-13)
 
 

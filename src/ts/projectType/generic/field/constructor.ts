@@ -205,7 +205,9 @@ export class AutocompleteConstructorField
    * Template for showing a preview specific to the value of the field.
    */
   templateValuePreview(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: DeepObject
   ): TemplateResult {
     return html``;
@@ -219,10 +221,22 @@ export class AutocompleteConstructorField
    * @param errorMessage Error message shown when the value is not valid.
    */
   updateValidation(validValues: Array<string | RegExp>, errorMessage: string) {
-    this.config.validation = (this.config.validation ||
-      []) as Array<RuleConfig>;
+    if (!this.config.validation) {
+      // If there is no validation, default to a zone based to support the constructor _data.
+      this.config.validation = {} as Record<string, Array<RuleConfig>>;
+      this.config.validation[DEFAULT_ZONE_KEY] = [];
+    } else if (DataType.isArray(this.config.validation)) {
+      // If there are non-zone based validation, convert it to use the zone.
+      const originalValidation = this.config.validation as Array<RuleConfig>;
+      this.config.validation = {} as Record<string, Array<RuleConfig>>;
+      this.config.validation[DEFAULT_ZONE_KEY] = originalValidation;
+    }
+    const validationZone = (
+      this.config.validation as Record<string, Array<RuleConfig>>
+    )[DEFAULT_ZONE_KEY];
+
     const existingIndex = this.listItemValidationRule
-      ? this.config.validation.indexOf(this.listItemValidationRule)
+      ? validationZone.indexOf(this.listItemValidationRule)
       : -1;
 
     // Validate the field to ensure that the document is
@@ -237,10 +251,10 @@ export class AutocompleteConstructorField
 
     if (existingIndex >= 0) {
       // Replace the existing rule.
-      this.config.validation[existingIndex] = this.listItemValidationRule;
+      validationZone[existingIndex] = this.listItemValidationRule;
     } else {
       // Add as new rule.
-      this.config.validation.push(this.listItemValidationRule);
+      validationZone.push(this.listItemValidationRule);
     }
 
     // Reset the compiled rules.

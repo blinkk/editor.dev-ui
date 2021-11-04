@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.10.2](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.1...v3.10.2) (2021-11-03)
+
+
+### Bug Fixes
+
+* Constructor validation using the zones to correctly match value. ([#243](https://www.github.com/blinkk/editor.dev-ui/issues/243)) ([a8d7054](https://www.github.com/blinkk/editor.dev-ui/commit/a8d7054ce5ad2675b7047d92b4affe75e5100fc7))
+
 ### [3.10.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.0...v3.10.1) (2021-11-02)
 
 

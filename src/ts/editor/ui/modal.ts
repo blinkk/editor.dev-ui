@@ -9,6 +9,7 @@ import {
   repeat,
 } from '@blinkk/selective-edit';
 import {EditorState, StatePromiseKeys} from '../state';
+import {LiveEditorSelectiveEditorConfig, cloneSelectiveConfig} from '../editor';
 import {LiveTemplate, templateLoading} from '../template';
 import {
   ProjectTypeComponent,
@@ -19,9 +20,8 @@ import {ApiError} from '../api';
 import {BaseUI} from './index';
 import {ListenersMixin} from '../../mixin/listeners';
 import {UuidMixin} from '@blinkk/selective-edit/dist/mixins/uuid';
-import {LiveEditorSelectiveEditorConfig, cloneSelectiveConfig} from '../editor';
-import {templateApiError} from './error';
 import merge from 'lodash.merge';
+import {templateApiError} from './error';
 
 /**
  * Priority of the modal.

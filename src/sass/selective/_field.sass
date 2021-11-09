@@ -51,6 +51,14 @@
     cursor: default
     opacity: $le-opacity-disabled
 
+  &--hover
+    .material-icons
+      opacity: $le-opacity-faded
+
+    &:hover
+      .material-icons
+        opacity: 1
+
 =field-input
   background: var(--color-tertiary)
   color: var(--color-on-tertiary)
@@ -222,6 +230,7 @@
 @import './field/markdown'
 @import './field/media'
 @import './field/mediaList'
+@import './field/menuList'
 @import './field/number'
 @import './field/select'
 @import './field/text'

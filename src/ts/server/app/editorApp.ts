@@ -7,7 +7,6 @@ import {
   FieldConstructor,
   GroupField,
   LengthRule,
-  ListField,
   MatchRule,
   NumberField,
   PatternRule,
@@ -30,6 +29,7 @@ import {LiveEditorApiComponent} from '../../editor/api';
 import {MarkdownField} from '../../editor/field/markdown';
 import {MediaField} from '../../editor/field/media';
 import {MediaListField} from '../../editor/field/mediaList';
+import {MenuListField} from '../../editor/field/menuList';
 import {ServerApiComponent} from '../api';
 
 export interface EditorAppComponent {
@@ -66,7 +66,7 @@ const fieldTypes = {
   exampleField: ExampleFieldField as unknown as FieldConstructor,
   group: GroupField as unknown as FieldConstructor,
   html: HtmlField as unknown as FieldConstructor,
-  list: ListField as unknown as FieldConstructor,
+  list: MenuListField as unknown as FieldConstructor,
   markdown: MarkdownField as unknown as FieldConstructor,
   media: MediaField as unknown as FieldConstructor,
   mediaList: MediaListField as unknown as FieldConstructor,

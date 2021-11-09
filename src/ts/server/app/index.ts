@@ -6,18 +6,17 @@ import {
   render,
   repeat,
 } from '@blinkk/selective-edit';
-import {githubIcon, localIcon} from '../../editor/ui/icons';
 import {
   getBaseUrlForSource,
   handleKeyboardNav,
   preventNormalLinks,
 } from '../../editor/template';
+import {githubIcon, localIcon} from '../../editor/ui/icons';
 
 import {EditorAppComponent} from './editorApp';
 import {EditorHistory} from '../../editor/recent';
 import {GitHubEditorApp} from './githubApp';
 import {LocalEditorApp} from './localApp';
-import {ProjectSource, SourceData} from '../../editor/api';
 import TimeAgo from 'javascript-time-ago';
 
 /**

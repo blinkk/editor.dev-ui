@@ -1,0 +1,145 @@
+.le__hover_menu
+  background: var(--color-background)
+  border-radius: $le-radius-small
+  box-shadow: $le-shadow-medium
+  color: var(--color-on-background)
+  content: attr(data-tip)
+  font-family: var(--font-family-default)
+  font-size: $le-font-size-small
+  font-weight: var(--font-weight-heavy)
+  margin-bottom: $le-space-small
+  margin-left: $le-space-small
+  position: absolute
+  transform: translateY(-50%)
+  white-space: nowrap
+  z-index: 550
+
+  &:after
+    border: $le-space-small solid var(--color-background)
+    border-color: transparent var(--color-background) transparent transparent
+    content: ""
+    left: 100%
+    margin-left: -$le-space-small
+    pointer-events: none
+    position: absolute
+    top: 50%
+    transform: translateY(-50%)
+    z-index: 510
+
+  &.le__hover_menu--wrap
+    max-width: $le-space-xxxlarge
+    min-width: $le-space-xxlarge
+    white-space: normal
+    width: 10vw
+
+  &.le__hover_menu--bottom,
+  &.le__hover_menu--bottom-left,
+  &.le__hover_menu--bottom-right
+    // Reset
+    left: initial
+    margin: initial
+    top: initial
+
+    top: 100%
+    left: 50%
+    margin-top: $le-space-small
+    transform: translateX(-50%)
+
+    &:after
+      // Reset
+      left: initial
+      margin: initial
+      top: initial
+
+      border-color: transparent transparent var(--color-background) transparent
+      top: 0
+      left: 50%
+      margin-top: -$le-space-small
+      transform: translateX(-50%) translateY(-50%)
+
+  &.le__hover_menu--bottom-left
+    transform: translateX(calc(-100% + #{$le-space-medium}))
+
+    &:after
+      left: initial
+      right: 0
+
+
+  &.le__hover_menu--bottom-right
+    transform: translateX(-$le-space-medium)
+
+    &:after
+      left: $le-space-medium
+
+  &.le__hover_menu--left
+    // Reset
+    left: initial
+    margin: initial
+
+    margin-right: $le-space-small
+    right: 100%
+
+    &:after
+      // Reset
+      left: initial
+      margin: initial
+
+      border-color: transparent transparent transparent var(--color-background)
+      margin-right: -$le-space-small
+      right: 100%
+
+  &.le__hover_menu--top,
+  &.le__hover_menu--top-left,
+  &.le__hover_menu--top-right
+    // Reset
+    left: initial
+    margin: initial
+    top: initial
+
+    bottom: 100%
+    left: 50%
+    margin-bottom: $le-space-small
+    transform: translateX(-50%)
+
+    &:after
+      // Reset
+      left: initial
+      margin: initial
+      top: initial
+
+      border-color: var(--color-background) transparent transparent transparent
+      bottom: 100%
+      left: 50%
+      margin-bottom: -$le-space-small
+      transform: translateX(-50%)
+
+  &.le__hover_menu--top-left
+    transform: translateX(calc(-100% + #{$le-space-medium}))
+
+  &.le__hover_menu--top-right
+    transform: translateX(-$le-space-medium)
+
+.le__hover_menu__item
+  align-items: center
+  cursor: pointer
+  display: flex
+  flex-flow: row
+
+  &:hover
+    background: var(--color-tertiary)
+    color: var(--color-on-tertiary)
+
+  &[disabled]
+    cursor: initial
+    opacity: $le-opacity-disabled
+
+.le__hover_menu__item__label
+  flex-grow: 1
+  margin: $le-space-small
+
+.le__hover_menu__item__icon
+  .material-icons
+    font-size: $le-font-size-icon-small
+
+.le__hover_menu__item__icon + .le__hover_menu__item__label
+  margin-left: 0

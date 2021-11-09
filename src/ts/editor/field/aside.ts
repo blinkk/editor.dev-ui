@@ -9,7 +9,7 @@ import {
   unsafeHTML,
 } from '@blinkk/selective-edit';
 import {LiveEditorGlobalConfig} from '../editor';
-import marked from 'marked';
+import {marked} from 'marked';
 
 export interface AsideFieldConfig extends FieldConfig {
   /**

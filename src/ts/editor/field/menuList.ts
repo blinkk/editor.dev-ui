@@ -215,7 +215,7 @@ export class MenuListFieldItem
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     index: number
   ): TemplateResult {
-    return html` <div class="le__menu_list__container">
+    return html`<div class="le__menu_list__container">
       <div
         class="selective__action selective__action--hover selective__tooltip--left"
         data-item-uid=${this.uid}

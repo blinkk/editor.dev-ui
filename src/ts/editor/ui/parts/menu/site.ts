@@ -23,6 +23,7 @@ import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules'
 import {StatePromiseKeys} from '../../../state';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
+import {HoverMenu} from '../../hoverMenu';
 
 const DEFAULT_SITE_FILTER: IncludeExcludeFilterConfig = {
   includes: [/\.(yaml|yml|html|md)$/],
@@ -547,7 +548,7 @@ class DirectoryStructure {
   root: string;
   directories: Record<string, DirectoryStructure>;
   eventHandlers: DirectoryEventHandlers;
-  files: Array<FileData>;
+  files: Array<FileStructure>;
   isExpanded?: boolean;
   storage: DataStorage;
 
@@ -598,7 +599,9 @@ class DirectoryStructure {
           );
         }
       } else {
-        this.files.push(fileData);
+        this.files.push(
+          new FileStructure(this.editor, this.eventHandlers, fileData)
+        );
       }
     }
   }
@@ -607,12 +610,6 @@ class DirectoryStructure {
     const trimmedRoot = this.root.replace(/^\/+/, '').replace(/\/+$/, '');
     const rootParts = trimmedRoot.split('/');
     return rootParts[rootParts.length - 1];
-  }
-
-  baseFromFilePath(file: FileData) {
-    const fileName = this.fileFromFilePath(file);
-    const fileParts = fileName.split('.');
-    return fileParts.slice(0, -1).join('.');
   }
 
   expandToFile(file: EditorFileData) {
@@ -624,11 +621,6 @@ class DirectoryStructure {
         this.directories[key].expandToFile(file);
       }
     }
-  }
-
-  fileFromFilePath(file: FileData) {
-    const pathParts = file.path.split('/');
-    return pathParts[pathParts.length - 1];
   }
 
   handleExpandCollapse() {
@@ -712,44 +704,111 @@ class DirectoryStructure {
       </div>
       ${repeat(
         this.files,
-        (file: FileData) => file.path,
-        (file: FileData) => html`<div
-          class=${classMap({
-            le__clickable: true,
-            le__list__item: true,
-            'le__list__item--selected':
-              this.editor.state.file?.file.path === file.path ||
-              this.editor.state.loadingFilePath === file.path,
-          })}
-          @click=${(evt: Event) => this.eventHandlers.fileLoad(evt, file)}
-        >
-          <div class="le__list__item__icon">
-            <span class="material-icons">notes</span>
-          </div>
-          <div
-            class="le__list__item__label"
-            title=${this.fileFromFilePath(file)}
-          >
-            ${this.baseFromFilePath(file)}
-          </div>
-          <div class="le__actions le__actions--slim">
-            <div
-              class="le__actions__action le__clickable le__tooltip--top"
-              @click=${(evt: Event) => this.eventHandlers.fileCopy(evt, file)}
-              data-tip="Duplicate file"
-            >
-              <span class="material-icons">file_copy</span>
-            </div>
-            <div
-              class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top-left"
-              @click=${(evt: Event) => this.eventHandlers.fileDelete(evt, file)}
-              data-tip="Delete file"
-            >
-              <span class="material-icons">remove_circle</span>
-            </div>
-          </div>
-        </div>`
+        file => file.file.path,
+        file => file.template()
       )}
+    </div>`;
+  }
+}
+
+class FileStructure {
+  editor: LiveEditor;
+  eventHandlers: DirectoryEventHandlers;
+  file: FileData;
+  hoverMenu: HoverMenu;
+
+  constructor(
+    editor: LiveEditor,
+    eventHandlers: DirectoryEventHandlers,
+    file: FileData
+  ) {
+    this.editor = editor;
+    this.eventHandlers = eventHandlers;
+    this.file = file;
+    this.hoverMenu = new HoverMenu({
+      classes: ['le__hover_menu--bottom-left'],
+      items: [
+        {
+          label: 'Duplicate',
+          icon: 'file_copy',
+          onClick: (evt: Event) => {
+            this.eventHandlers.fileCopy(evt, this.file);
+          },
+        },
+        {
+          label: 'Delete',
+          icon: 'remove_circle',
+          onClick: (evt: Event) => {
+            this.eventHandlers.fileDelete(evt, this.file);
+          },
+        },
+      ],
+    });
+  }
+
+  baseFromFilePath() {
+    const fileName = this.fileFromFilePath();
+    const fileParts = fileName.split('.');
+    return fileParts.slice(0, -1).join('.');
+  }
+
+  fileFromFilePath() {
+    const pathParts = this.file.path.split('/');
+    return pathParts[pathParts.length - 1];
+  }
+
+  template(): TemplateResult {
+    return html`<div
+      class=${classMap({
+        le__clickable: true,
+        'le__clickable--active': this.hoverMenu.isVisible,
+        le__list__item: true,
+        'le__list__item--selected':
+          this.editor.state.file?.file.path === this.file.path ||
+          this.editor.state.loadingFilePath === this.file.path,
+      })}
+      @click=${(evt: Event) => {
+        // Ensure that the click didn't come from the actions.
+        if ((evt.target as HTMLElement).closest('.le__actions')) {
+          return;
+        }
+
+        this.eventHandlers.fileLoad(evt, this.file);
+      }}
+    >
+      <div class="le__list__item__icon">
+        <span class="material-icons">notes</span>
+      </div>
+      <div class="le__list__item__label" title=${this.fileFromFilePath()}>
+        ${this.baseFromFilePath()}
+      </div>
+      <div class="le__actions le__actions--slim">
+        <div class="le__part__menu__site__file__menu">
+          <div
+            class="le__actions__action le__actions__action--extreme le__clickable le__tooltip--top-left"
+            @click=${() => {
+              if (this.hoverMenu.isVisible) {
+                this.hoverMenu.hide();
+              } else {
+                // Add the click listener only after the event has bubbled.
+                // This prevents the same click that opened the menu from closing the menu.
+                document.addEventListener(
+                  'click',
+                  () => this.hoverMenu.show(),
+                  {
+                    once: true,
+                  }
+                );
+              }
+            }}
+            aria-label="Options"
+            data-tip="Options"
+          >
+            <i class="material-icons icon">more_horiz</i>
+          </div>
+          ${this.hoverMenu.template()}
+        </div>
+      </div>
     </div>`;
   }
 }

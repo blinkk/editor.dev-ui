@@ -1,10 +1,11 @@
-import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {
+  ApiError,
   GitHubInstallationInfo,
   GitHubOrgInstallationInfo,
   UserData,
   WorkspaceData,
 } from '../../../api';
+import {BasePart, UiPartComponent, UiPartConfig} from '..';
 import {TemplateResult, classMap, html, repeat} from '@blinkk/selective-edit';
 import {
   handleKeyboardNav,
@@ -18,6 +19,7 @@ import {GitHubApi} from '../../../../server/gh/githubApi';
 import {OnboardingBreadcrumbs} from '../onboarding';
 import TimeAgo from 'javascript-time-ago';
 import {githubIcon} from '../../icons';
+import {templateApiError} from '../../error';
 
 const APP_URL = 'https://github.com/apps/editor-dev';
 const BASE_URL = '/gh/';
@@ -33,6 +35,7 @@ export interface GitHubOnboardingPartConfig extends UiPartConfig {
 
 export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
   config: GitHubOnboardingPartConfig;
+  error?: ApiError;
   organizations?: Array<GitHubInstallationInfo>;
   installation?: GitHubInstallationInfo;
   /**
@@ -127,6 +130,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.api.organization = evt.state.organization || undefined;
       this.api.project = evt.state.repository || undefined;
       this.api.branch = evt.state.branch || undefined;
+      this.error = undefined;
       this.config.state.checkOnboarding();
     }
   }
@@ -137,6 +141,10 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
       this.loadOrganizations();
     }
 
+    if (this.error) {
+      return;
+    }
+
     this.api
       .getWorkspaces(this.api.organization, this.api.project)
       .then(workspaces => {
@@ -144,8 +152,13 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
         this.workspacesId = this.api.project;
         this.render();
       })
-      .catch(() => {
-        console.error('Unable to retrieve the list of branches.');
+      .catch(err => {
+        err.json().then((json: any) => {
+          this.error = json as ApiError;
+          this.render();
+        });
+
+        console.error('Unable to retrieve the list of workspaces.', err);
       });
   }
 
@@ -371,6 +384,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   this.api.organization = org.org;
                   this.installation = org;
                   this.listFilter = undefined;
+                  this.error = undefined;
 
                   history.pushState(
                     {
@@ -468,6 +482,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                   );
                   this.api.project = repository;
                   this.listFilter = undefined;
+                  this.error = undefined;
 
                   history.pushState(
                     {
@@ -584,6 +599,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               const handleClick = () => {
                 this.api.project = repo.repo;
                 this.listFilter = undefined;
+                this.error = undefined;
 
                 history.pushState(
                   {
@@ -734,7 +750,8 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
               ${useFilter ? this.templateFilter() : 'Workspace'}
             </div>
           </div>
-          ${this.workspaces
+          ${this.error ? templateApiError(this.error, {pad: true}) : ''}
+          ${this.workspaces || this.error
             ? ''
             : this.templateLoadingStatus(html`Finding
               ${this.api.organization}/${this.api.project} workspaces…`)}
@@ -751,6 +768,7 @@ export class GitHubOnboardingPart extends BasePart implements UiPartComponent {
                 })}
                 @click=${() => {
                   this.api.branch = workspace.name;
+                  this.error = undefined;
 
                   history.pushState(
                     {

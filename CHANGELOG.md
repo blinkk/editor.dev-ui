@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.11.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.2...v3.11.0) (2021-11-18)
+
+
+### Features
+
+* Floating menu for the site file operation. ([#247](https://www.github.com/blinkk/editor.dev-ui/issues/247)) ([841dd17](https://www.github.com/blinkk/editor.dev-ui/commit/841dd179da362e152c0b2037b20ec042ddf2fd88)), closes [#151](https://www.github.com/blinkk/editor.dev-ui/issues/151)
+* List hover menu for more interaction options. ([#245](https://www.github.com/blinkk/editor.dev-ui/issues/245)) ([bf8dda3](https://www.github.com/blinkk/editor.dev-ui/commit/bf8dda3cbaf55eb036fdcbcf4bf15c77c4547429)), closes [#137](https://www.github.com/blinkk/editor.dev-ui/issues/137)
+
+
+### Bug Fixes
+
+* Show error message when requesting non-existent repository. ([#252](https://www.github.com/blinkk/editor.dev-ui/issues/252)) … ([15c1f30](https://www.github.com/blinkk/editor.dev-ui/commit/15c1f30568d49130b801f2f4db76265f6bfb9aa9))
+
 ### [3.10.2](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.1...v3.10.2) (2021-11-03)
 
 

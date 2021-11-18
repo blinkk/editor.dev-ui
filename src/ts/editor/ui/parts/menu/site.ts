@@ -19,11 +19,11 @@ import {
 import {MenuSectionPart, MenuSectionPartConfig} from './index';
 
 import {DataStorage} from '../../../../utility/dataStorage';
+import {HoverMenu} from '../../hoverMenu';
 import {RuleConfig} from '@blinkk/selective-edit/dist/selective/validationRules';
 import {StatePromiseKeys} from '../../../state';
 import {repeat} from '@blinkk/selective-edit';
 import {templateLoading} from '../../../template';
-import {HoverMenu} from '../../hoverMenu';
 
 const DEFAULT_SITE_FILTER: IncludeExcludeFilterConfig = {
   includes: [/\.(yaml|yml|html|md)$/],

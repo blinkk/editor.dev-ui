@@ -8,9 +8,9 @@ import {AppUi} from './ui/app';
 import {EVENT_SAVE} from './events';
 import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {LiveEditorLabels} from './template';
+import {PreviewCommunicator} from './preview';
 import {ProjectTypeComponent} from '../projectType/projectType';
 import cloneDeep from 'lodash.clonedeep';
-import {PreviewCommunicator} from './preview';
 
 /**
  * Global configuration used by the selective editor fields.

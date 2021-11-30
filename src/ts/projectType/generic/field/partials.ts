@@ -25,11 +25,26 @@ import {
 import {EVENT_RENDER_COMPLETE} from '../../../editor/events';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
+import {PreviewEvent} from '../../../editor/preview';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 
 const MODAL_KEY_NEW = 'partials_new';
+
+export interface PartialHoverOnEvent extends PreviewEvent {
+  event: 'partialHoverOn';
+  details: {
+    index: number;
+  };
+}
+
+export interface PartialHoverOffEvent extends PreviewEvent {
+  event: 'partialHoverOff';
+  details: {
+    index: number;
+  };
+}
 
 export interface GenericPartialsFieldConfig extends FieldConfig {
   /**
@@ -55,6 +70,7 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
 }
 
 export interface GenericPartialsFieldComponent {
+  globalConfig?: LiveEditorGlobalConfig;
   partials?: Record<string, PartialData> | undefined | null;
 }
 
@@ -76,6 +92,13 @@ export class GenericPartialsField
     this.config = config;
     this.globalConfig = globalConfig;
     this.ListItemCls = GenericPartialListFieldItem;
+
+    // Notify the preview that there are partials.
+    // This is used for the example preview and can be used to trigger
+    // additional features in the preview.
+    this.globalConfig.editor?.preview.send({
+      event: 'partial',
+    });
   }
 
   /**
@@ -342,6 +365,8 @@ class GenericPartialListFieldItem extends ListFieldItem {
     ListFieldComponent &
     SortableFieldComponent;
 
+  isHovered: boolean = false;
+
   constructor(
     listField: GenericPartialsFieldComponent &
       ListFieldComponent &
@@ -351,6 +376,22 @@ class GenericPartialListFieldItem extends ListFieldItem {
     super(listField, fields);
     this.listField = listField;
     this.fields = fields;
+  }
+
+  handleHoverOffItem(evt: MouseEvent, index: number) {
+    const editor = this.listField.globalConfig?.editor as LiveEditor;
+    editor.preview.send({
+      event: 'partialHoverOff',
+      details: {index: index},
+    });
+  }
+
+  handleHoverOnItem(evt: MouseEvent, index: number) {
+    const editor = this.listField.globalConfig?.editor as LiveEditor;
+    editor.preview.send({
+      event: 'partialHoverOn',
+      details: {index: index},
+    });
   }
 
   /**

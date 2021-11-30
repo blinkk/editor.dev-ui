@@ -1740,6 +1740,16 @@ export class ExampleApi implements LiveEditorApiComponent {
                 path: '/preview.html',
               },
             },
+            '/example/amagaki/partials.yaml': {
+              en: {
+                path: '/preview.html',
+              },
+            },
+            '/example/grow/partials.yaml': {
+              en: {
+                path: '/preview.html',
+              },
+            },
             '/static/img/landscape.png': {
               path: '/image-landscape.png',
             },

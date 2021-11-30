@@ -10,6 +10,7 @@ import {GrowProjectType} from '../projectType/grow/growProjectType';
 import {LiveEditorLabels} from './template';
 import {ProjectTypeComponent} from '../projectType/projectType';
 import cloneDeep from 'lodash.clonedeep';
+import {PreviewCommunicator} from './preview';
 
 /**
  * Global configuration used by the selective editor fields.
@@ -65,6 +66,10 @@ export class LiveEditor {
   config: LiveEditorConfig;
   isPendingRender?: boolean;
   isRendering?: boolean;
+  /**
+   * Used to handle communiction between the editor and the preview iframe.
+   */
+  preview: PreviewCommunicator;
   state: EditorState;
   storage: DataStorage;
 
@@ -72,6 +77,7 @@ export class LiveEditor {
     this.config = config;
     this.storage = new LocalDataStorage();
     this.state = this.config.state;
+    this.preview = new PreviewCommunicator();
 
     // Bind the editor to the global selective config.
     if (this.config.selectiveConfig.global) {

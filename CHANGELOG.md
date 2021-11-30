@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.11.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.11.0...v3.11.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* Allow delete modal to submit when the form is clean. ([#253](https://www.github.com/blinkk/editor.dev-ui/issues/253)) ([2663414](https://www.github.com/blinkk/editor.dev-ui/commit/2663414a4920eefd73eab70a1a5ca3e0d65abc0f))
+
 ## [3.11.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.10.2...v3.11.0) (2021-11-18)
 
 

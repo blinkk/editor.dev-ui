@@ -192,7 +192,7 @@ export class SitePart extends MenuSectionPart {
           return;
         }
 
-        if (modal.selective.isClean || !modal.selective.isValid) {
+        if (!modal.selective.isValid) {
           modal.stopProcessing();
           return;
         }

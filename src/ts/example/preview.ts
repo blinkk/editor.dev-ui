@@ -121,21 +121,22 @@ class PreviewConnector {
     }
 
     return html`<div class="preview">
-      <p class="details">
-        The editor and preview can communicate via
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
-          target="_blank"
-          ><code>postMessage</code></a
-        >
-        and allows for advanced integration. The example shows some of the
-        possibile usage that the communication can enable.
+        <p class="details">
+          The editor and preview can communicate via
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
+            target="_blank"
+            ><code>postMessage</code></a
+          >
+          and allows for advanced integration. The example shows some of the
+          possibile usage that the communication can enable.
 
-        <!-- TODO: Link to documentation on what events are supported. -->
-      </p>
+          <!-- TODO: Link to documentation on what events are supported. -->
+        </p>
 
-      ${this.templatePartials()}${this.templateLog()}
-    </div>`;
+        ${this.templatePartials()}
+      </div>
+      ${this.templateLog()}`;
   }
 
   templatePartials(): TemplateResult {
@@ -148,8 +149,6 @@ class PreviewConnector {
         () => {
           const partials = document.querySelectorAll('.partial');
           partials.forEach(partial => {
-            console.log('observe', partial);
-
             this.observer.observe(partial);
           });
         },
@@ -160,7 +159,6 @@ class PreviewConnector {
     }
 
     return html`<div class="communication__partials">
-      <h3>Example Partials:</h3>
       <div class="partials">
         ${repeat(
           [0, 1, 2, 3, 4, 5],
@@ -180,7 +178,7 @@ class PreviewConnector {
               });
             }}
           >
-            Example partial ${partial}
+            Example partial ${partial + 1}
           </div>`
         )}
       </div>

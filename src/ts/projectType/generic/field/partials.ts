@@ -46,6 +46,13 @@ export interface PartialHoverOffEvent extends PreviewEvent {
   };
 }
 
+export interface PartialVisibleEvent extends PreviewEvent {
+  event: 'partialVisible';
+  details: {
+    indexes: number;
+  };
+}
+
 export interface GenericPartialsFieldConfig extends FieldConfig {
   /**
    * Label for adding more list items.
@@ -72,6 +79,7 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
 export interface GenericPartialsFieldComponent {
   globalConfig?: LiveEditorGlobalConfig;
   partials?: Record<string, PartialData> | undefined | null;
+  visiblePartials?: Array<number>;
 }
 
 export class GenericPartialsField
@@ -81,6 +89,7 @@ export class GenericPartialsField
   config: GenericPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   selective?: SelectiveEditor;
+  visiblePartials?: Array<number>;
 
   constructor(
     types: Types,
@@ -92,6 +101,14 @@ export class GenericPartialsField
     this.config = config;
     this.globalConfig = globalConfig;
     this.ListItemCls = GenericPartialListFieldItem;
+
+    this.globalConfig?.editor?.preview.addListener(
+      'partialVisible',
+      details => {
+        this.visiblePartials = details.indexes;
+        this.render();
+      }
+    );
 
     // Notify the preview that there are partials.
     // This is used for the example preview and can be used to trigger
@@ -378,6 +395,57 @@ class GenericPartialListFieldItem extends ListFieldItem {
     this.fields = fields;
   }
 
+  classesCollpased(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesCollpased(editor, data, index);
+
+    if (this.listField.visiblePartials?.includes(index)) {
+      classes['selective__list__item--visible'] = true;
+    }
+
+    return classes;
+  }
+
+  classesExpanded(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesExpanded(editor, data, index);
+
+    if (this.listField.visiblePartials?.includes(index)) {
+      classes['selective__list__item--visible'] = true;
+    }
+
+    return classes;
+  }
+
+  classesSimple(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesSimple(editor, data, index);
+
+    if (this.listField.visiblePartials?.includes(index)) {
+      classes['selective__list__item--visible'] = true;
+    }
+
+    return classes;
+  }
+
   handleHoverOffItem(evt: MouseEvent, index: number) {
     const editor = this.listField.globalConfig?.editor as LiveEditor;
     editor.preview.send({
@@ -405,9 +473,6 @@ class GenericPartialListFieldItem extends ListFieldItem {
     data: DeepObject,
     index?: number
   ): TemplateResult {
-    const indexLabel = html`${index !== undefined
-      ? html`<span class="selective__index">${index + 1}</span>`
-      : ''}`;
     const partialValue = this.fields.value;
     const partialKey = partialValue?.partial;
     if (partialKey && this.listField.partials) {
@@ -422,14 +487,14 @@ class GenericPartialListFieldItem extends ListFieldItem {
       );
 
       if (partial.editor?.label) {
-        return html`${indexLabel}${partial.editor?.label}
+        return html`${partial.editor?.label}
         ${previewValue
           ? html`<span class="selective__field__partials__preview"
               >${previewValue}</span
             >`
           : ''}`;
       }
-      return html`${indexLabel}${partialKey}`;
+      return html`${partialKey}`;
     }
 
     return super.templatePreviewValue(editor, data, index);

@@ -79,6 +79,7 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
 export interface GenericPartialsFieldComponent {
   globalConfig?: LiveEditorGlobalConfig;
   partials?: Record<string, PartialData> | undefined | null;
+  hoveredPartial?: number;
   visiblePartials?: Array<number>;
 }
 
@@ -89,6 +90,7 @@ export class GenericPartialsField
   config: GenericPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   selective?: SelectiveEditor;
+  hoveredPartial?: number;
   visiblePartials?: Array<number>;
 
   constructor(
@@ -109,6 +111,33 @@ export class GenericPartialsField
         this.render();
       }
     );
+
+    this.globalConfig?.editor?.preview.addListener(
+      'partialHoverOn',
+      details => {
+        this.hoveredPartial = details.index;
+        this.render();
+      }
+    );
+
+    this.globalConfig?.editor?.preview.addListener('partialHoverOff', () => {
+      this.hoveredPartial = undefined;
+      this.render();
+    });
+
+    this.globalConfig?.editor?.preview.addListener('partialEdit', details => {
+      if (!this.items) {
+        return;
+      }
+
+      for (const item of this.items) {
+        item.isExpanded = false;
+      }
+
+      this.items[details.index].isExpanded = true;
+
+      this.render();
+    });
 
     // Notify the preview that there are partials.
     // This is used for the example preview and can be used to trigger
@@ -405,9 +434,11 @@ class GenericPartialListFieldItem extends ListFieldItem {
   ): Record<string, boolean> {
     const classes = super.classesCollpased(editor, data, index);
 
-    if (this.listField.visiblePartials?.includes(index)) {
-      classes['selective__list__item--visible'] = true;
-    }
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
 
     return classes;
   }
@@ -422,9 +453,11 @@ class GenericPartialListFieldItem extends ListFieldItem {
   ): Record<string, boolean> {
     const classes = super.classesExpanded(editor, data, index);
 
-    if (this.listField.visiblePartials?.includes(index)) {
-      classes['selective__list__item--visible'] = true;
-    }
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
 
     return classes;
   }
@@ -439,9 +472,11 @@ class GenericPartialListFieldItem extends ListFieldItem {
   ): Record<string, boolean> {
     const classes = super.classesSimple(editor, data, index);
 
-    if (this.listField.visiblePartials?.includes(index)) {
-      classes['selective__list__item--visible'] = true;
-    }
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
 
     return classes;
   }

@@ -30,15 +30,23 @@ h1, h2, h3, h4, h5, h6
   margin: $le-space-medium 0
 
 .partial
-  background: var(--color-primary)
-  border: rgba(0, 0, 0, .1) solid 1px
-  color: var(--color-on-primary)
+  // background-color: var(--color-primary)
+  // background-size: 10px 10px
+  // background-image: repeating-linear-gradient(45deg, #e4e3e4 0, #e4e3e4 1px, #fff 0, #fff 50%)
+  border: $le-border-size-medium solid var(--color-primary)
+  // color: var(--color-on-primary)
   height: 45vh
   margin: .5em 0
   padding: .5em
 
   &:hover
     border-color: rgba(0, 0, 0, .5)
+
+  &--hovered
+    outline: $le-border-size-xlarge dotted var(--color-secondary)
+
+.partial__edit
+  font-size: $le-font-size-small
 
 .connection
   flex-grow: 1

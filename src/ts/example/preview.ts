@@ -1,4 +1,10 @@
-import {TemplateResult, html, render, repeat} from '@blinkk/selective-edit';
+import {
+  TemplateResult,
+  classMap,
+  html,
+  render,
+  repeat,
+} from '@blinkk/selective-edit';
 
 import {EVENT_RENDER_COMPLETE} from '../editor/events';
 import cloneDeep from 'lodash.clonedeep';
@@ -16,6 +22,7 @@ class PreviewConnector {
   editorWindow: Window;
   hasBoundPartials: boolean = false;
   hasPartials: boolean = false;
+  hoveredPartial?: number;
   logs: Array<LogData> = [];
   observer: IntersectionObserver;
   visiblePartials: Array<number> = [];
@@ -34,6 +41,16 @@ class PreviewConnector {
       // If the editor indicates it has partials, then we can show them.
       if (event.data.event === 'partial') {
         this.hasPartials = true;
+      }
+
+      // If the editor indicates it has partials, then we can show them.
+      if (event.data.event === 'partialHoverOn') {
+        this.hoveredPartial = event.data.details.index;
+      }
+
+      // If the editor indicates it has partials, then we can show them.
+      if (event.data.event === 'partialHoverOff') {
+        this.hoveredPartial = undefined;
       }
 
       this.log(SOURCE_EDITOR, event.data);
@@ -163,7 +180,10 @@ class PreviewConnector {
         ${repeat(
           [0, 1, 2, 3, 4, 5],
           partial => html`<div
-            class="partial"
+            class=${classMap({
+              partial: true,
+              'partial--hovered': this.hoveredPartial === partial,
+            })}
             data-partial="${partial}"
             @mouseenter=${() => {
               this.send({
@@ -179,6 +199,17 @@ class PreviewConnector {
             }}
           >
             Example partial ${partial + 1}
+            <span
+              class="partial__edit"
+              @click=${() => {
+                this.send({
+                  event: 'partialEdit',
+                  details: {index: partial},
+                });
+              }}
+            >
+              (Edit)
+            </span>
           </div>`
         )}
       </div>

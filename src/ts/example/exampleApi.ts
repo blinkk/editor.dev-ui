@@ -1009,7 +1009,27 @@ const fullFiles: Record<string, EditorFileData> = {
       partials: [
         {
           partial: 'example',
-          title: 'Partial example',
+          title: 'Partial example 1',
+        },
+        {
+          partial: 'example',
+          title: 'Partial example 2',
+        },
+        {
+          partial: 'example',
+          title: 'Partial example 3',
+        },
+        {
+          partial: 'example',
+          title: 'Partial example 4',
+        },
+        {
+          partial: 'example',
+          title: 'Partial example 5',
+        },
+        {
+          partial: 'example',
+          title: 'Partial example 6',
         },
       ],
     },
@@ -1736,6 +1756,16 @@ export class ExampleApi implements LiveEditorApiComponent {
           defaultLocale: 'en',
           routes: {
             '/content/pages/index.yaml': {
+              en: {
+                path: '/preview.html',
+              },
+            },
+            '/example/amagaki/partials.yaml': {
+              en: {
+                path: '/preview.html',
+              },
+            },
+            '/example/grow/partials.yaml': {
               en: {
                 path: '/preview.html',
               },

@@ -1,0 +1,90 @@
+@import '../config'
+@import '../scheme'
+
+body
+  background-color: rgba(200, 200, 200, .3)
+  background-image: linear-gradient(rgba(255, 255, 255, .35) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .35) 1px, transparent 1px)
+  background-position: 0 0
+  background-size: 10px 10px, 10px 10px
+  padding: 0
+  margin: 0
+
+h1, h2, h3, h4, h5, h6
+  margin: .5rem 0
+
+.container
+  display: flex
+  flex-flow: column
+  height: 100vh
+
+.description
+  margin: $le-space-medium
+
+.details
+  font-size: .8em
+  margin: $le-space-medium
+
+.partials
+  display: flex
+  flex-flow: column
+  margin: $le-space-medium 0
+
+.partial
+  // background-color: var(--color-primary)
+  // background-size: 10px 10px
+  // background-image: repeating-linear-gradient(45deg, #e4e3e4 0, #e4e3e4 1px, #fff 0, #fff 50%)
+  border: $le-border-size-medium solid var(--color-primary)
+  // color: var(--color-on-primary)
+  height: 45vh
+  margin: .5em 0
+  padding: .5em
+
+  &:hover
+    border-color: rgba(0, 0, 0, .5)
+
+  &--hovered
+    outline: $le-border-size-xlarge dotted var(--color-secondary)
+
+.partial__edit
+  font-size: $le-font-size-small
+
+.connection
+  flex-grow: 1
+  display: flex
+  flex-flow: column
+
+.preview
+  flex-grow: 1
+  flex-shrink: 1
+  height: 0
+  overflow-x: auto
+
+.communication__log
+  background: var(--color-secondary)
+  bottom: 0
+  color: var(--color-on-secondary)
+  left: 0
+  max-height: 20vh
+  min-height: 20px
+  padding: 1em
+  right: 0
+
+.communication__log__items
+  column-gap: $le-space-small
+  display: grid
+  font-family: var(--font-family-mono)
+  font-size: $le-font-size-small
+  grid-template-columns: minmax(40px, 1fr) 1fr minmax(50px, 2fr)
+  max-height: 10vh
+  overflow-y: auto
+  row-gap: $le-space-small
+
+.communication__log__item__source
+  font-weight: 700
+  flex-basis: 10%
+
+.communication__log__item__event
+  grid-column-start: 2
+
+.communication__log__item__details
+  grid-column-start: 3

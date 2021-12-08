@@ -14,6 +14,39 @@
         &:focus-within
           border-color: var(--color-tertiary-dark)
 
+        > .selective__list__fields__header > .selective__field__actions,
+        > .selective__field__actions
+          .selective__list__item__index
+            aspect-ratio: 1
+            border: $le-border-size-medium solid var(--color-tertiary)
+            border-radius: 50%
+            display: inline-block
+            text-align: center
+            width: $le-space-large
+
+            .selective__list__item:focus-within &
+              border-color: var(--color-tertiary-dark)
+
+        > .selective__list__fields__header > .selective__field__actions
+          .selective__list__item__index
+            border-color: var(--color-on-tertiary)
+
+            .selective__list__item--visible &
+              border-color: var(--color-secondary)
+
+            .selective__list__item:focus-within &
+              border-color: var(--color-tertiary-dark)
+
+
+        &--visible
+          > .selective__list__fields__header > .selective__field__actions,
+          > .selective__field__actions
+            .selective__list__item__index
+              border-color: var(--color-secondary)
+
+        &--hovered
+          outline: $le-border-size-large solid var(--color-secondary)
+
         > .selective__list__fields__header > .selective__list__item__preview,
         > .selective__list__item__preview
           .selective__field__partials__preview

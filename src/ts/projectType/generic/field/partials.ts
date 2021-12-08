@@ -25,11 +25,33 @@ import {
 import {EVENT_RENDER_COMPLETE} from '../../../editor/events';
 import {EVENT_UNLOCK} from '@blinkk/selective-edit/dist/selective/events';
 import {PartialData} from '../../../editor/api';
+import {PreviewEvent} from '../../../editor/preview';
 import cloneDeep from 'lodash.clonedeep';
 import merge from 'lodash.merge';
 import {templateLoading} from '../../../editor/template';
 
 const MODAL_KEY_NEW = 'partials_new';
+
+export interface PartialHoverOnEvent extends PreviewEvent {
+  event: 'partialHoverOn';
+  details: {
+    index: number;
+  };
+}
+
+export interface PartialHoverOffEvent extends PreviewEvent {
+  event: 'partialHoverOff';
+  details: {
+    index: number;
+  };
+}
+
+export interface PartialVisibleEvent extends PreviewEvent {
+  event: 'partialVisible';
+  details: {
+    indexes: number;
+  };
+}
 
 export interface GenericPartialsFieldConfig extends FieldConfig {
   /**
@@ -55,7 +77,10 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
 }
 
 export interface GenericPartialsFieldComponent {
+  globalConfig?: LiveEditorGlobalConfig;
   partials?: Record<string, PartialData> | undefined | null;
+  hoveredPartial?: number;
+  visiblePartials?: Array<number>;
 }
 
 export class GenericPartialsField
@@ -65,6 +90,8 @@ export class GenericPartialsField
   config: GenericPartialsFieldConfig;
   globalConfig: LiveEditorGlobalConfig;
   selective?: SelectiveEditor;
+  hoveredPartial?: number;
+  visiblePartials?: Array<number>;
 
   constructor(
     types: Types,
@@ -76,6 +103,48 @@ export class GenericPartialsField
     this.config = config;
     this.globalConfig = globalConfig;
     this.ListItemCls = GenericPartialListFieldItem;
+
+    this.globalConfig?.editor?.preview.addListener(
+      'partialVisible',
+      details => {
+        this.visiblePartials = details.indexes;
+        this.render();
+      }
+    );
+
+    this.globalConfig?.editor?.preview.addListener(
+      'partialHoverOn',
+      details => {
+        this.hoveredPartial = details.index;
+        this.render();
+      }
+    );
+
+    this.globalConfig?.editor?.preview.addListener('partialHoverOff', () => {
+      this.hoveredPartial = undefined;
+      this.render();
+    });
+
+    this.globalConfig?.editor?.preview.addListener('partialEdit', details => {
+      if (!this.items) {
+        return;
+      }
+
+      for (const item of this.items) {
+        item.isExpanded = false;
+      }
+
+      this.items[details.index].isExpanded = true;
+
+      this.render();
+    });
+
+    // Notify the preview that there are partials.
+    // This is used for the example preview and can be used to trigger
+    // additional features in the preview.
+    this.globalConfig.editor?.preview.send({
+      event: 'partial',
+    });
   }
 
   /**
@@ -342,6 +411,8 @@ class GenericPartialListFieldItem extends ListFieldItem {
     ListFieldComponent &
     SortableFieldComponent;
 
+  isHovered: boolean = false;
+
   constructor(
     listField: GenericPartialsFieldComponent &
       ListFieldComponent &
@@ -351,6 +422,79 @@ class GenericPartialListFieldItem extends ListFieldItem {
     super(listField, fields);
     this.listField = listField;
     this.fields = fields;
+  }
+
+  classesCollpased(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesCollpased(editor, data, index);
+
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
+
+    return classes;
+  }
+
+  classesExpanded(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesExpanded(editor, data, index);
+
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
+
+    return classes;
+  }
+
+  classesSimple(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editor: SelectiveEditor,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: DeepObject,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    index: number
+  ): Record<string, boolean> {
+    const classes = super.classesSimple(editor, data, index);
+
+    classes['selective__list__item--visible'] =
+      this.listField.visiblePartials?.includes(index) ?? false;
+
+    classes['selective__list__item--hovered'] =
+      this.listField.hoveredPartial === index;
+
+    return classes;
+  }
+
+  handleHoverOffItem(evt: MouseEvent, index: number) {
+    const editor = this.listField.globalConfig?.editor as LiveEditor;
+    editor.preview.send({
+      event: 'partialHoverOff',
+      details: {index: index},
+    });
+  }
+
+  handleHoverOnItem(evt: MouseEvent, index: number) {
+    const editor = this.listField.globalConfig?.editor as LiveEditor;
+    editor.preview.send({
+      event: 'partialHoverOn',
+      details: {index: index},
+    });
   }
 
   /**
@@ -364,9 +508,6 @@ class GenericPartialListFieldItem extends ListFieldItem {
     data: DeepObject,
     index?: number
   ): TemplateResult {
-    const indexLabel = html`${index !== undefined
-      ? html`<span class="selective__index">${index + 1}</span>`
-      : ''}`;
     const partialValue = this.fields.value;
     const partialKey = partialValue?.partial;
     if (partialKey && this.listField.partials) {
@@ -381,14 +522,14 @@ class GenericPartialListFieldItem extends ListFieldItem {
       );
 
       if (partial.editor?.label) {
-        return html`${indexLabel}${partial.editor?.label}
+        return html`${partial.editor?.label}
         ${previewValue
           ? html`<span class="selective__field__partials__preview"
               >${previewValue}</span
             >`
           : ''}`;
       }
-      return html`${indexLabel}${partialKey}`;
+      return html`${partialKey}`;
     }
 
     return super.templatePreviewValue(editor, data, index);

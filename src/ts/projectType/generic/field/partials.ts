@@ -170,12 +170,12 @@ export class GenericPartialsField
     }
 
     if (this.items === null) {
-      this.items = [];
-
       // While waiting for the partials to load, there are no items.
       if (!this.partials) {
-        return this.items;
+        return [];
       }
+
+      this.items = [];
 
       // Add list items for each of the values in the list already.
       for (const value of this.originalValue || []) {

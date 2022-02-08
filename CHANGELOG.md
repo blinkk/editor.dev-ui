@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.12.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.11.1...v3.12.0) (2022-02-08)
+
+
+### Features
+
+* Communication with preview iframe. ([#255](https://www.github.com/blinkk/editor.dev-ui/issues/255)) ([38c7e52](https://www.github.com/blinkk/editor.dev-ui/commit/38c7e52e8fe422daf5ebecd57dd9161084cd7851))
+* Partial list filtering by key using include/exclude filter. ([27b1b3c](https://www.github.com/blinkk/editor.dev-ui/commit/27b1b3c1eec138342545187c9bb8596936300d1b))
+
+
+### Bug Fixes
+
+* Fix the sorting of partials and the placement of priority config. ([624e607](https://www.github.com/blinkk/editor.dev-ui/commit/624e6072afd14b78f6a0e2bc7dd2415810f97188))
+
 ### [3.11.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.11.0...v3.11.1) (2021-11-30)
 
 

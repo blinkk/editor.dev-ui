@@ -2116,8 +2116,8 @@ export class ExampleAmagakiApi implements AmagakiProjectTypeApi {
                   label: 'title',
                 } as TextFieldConfig,
               ],
+              isHidden: true,
             },
-            isHidden: true,
           } as PartialData,
         },
         this.options

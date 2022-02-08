@@ -518,25 +518,10 @@ export interface PartialData {
    */
   partial: string;
   /**
-   * Is the partial hidden?
-   *
-   * Partials can opt to not show the partial in the listing of partials.
-   * This is helpful for partials that are part of the design such as
-   * header and footer partials.
-   */
-  isHidden?: boolean;
-  /**
    * Configuration for how the editor should present the partial in the
    * editor.
    */
   editor?: PartialEditorConfig;
-  /**
-   * When displaying lists of paritals the priority will affect the
-   * sort order of the partials.
-   *
-   * Default priority is 1000
-   */
-  priority?: number;
 }
 
 /**
@@ -556,6 +541,14 @@ export interface PartialEditorConfig {
    */
   fields: Array<FieldConfig>;
   /**
+   * Is the partial hidden?
+   *
+   * Partials can opt to not show the partial in the listing of partials.
+   * This is helpful for partials that are part of the design such as
+   * header and footer partials.
+   */
+  isHidden?: boolean;
+  /**
    * Preview field key.
    *
    * When showing a preview of the partial, use this field key to determine
@@ -569,6 +562,13 @@ export interface PartialEditorConfig {
    * the value to show for the preview.
    */
   previewFields?: Array<string>;
+  /**
+   * When displaying lists of paritals the priority will affect the
+   * sort order of the partials.
+   *
+   * Default priority is 1000
+   */
+  priority?: number;
 }
 
 /**

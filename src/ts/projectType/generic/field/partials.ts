@@ -13,6 +13,10 @@ import {
 } from '@blinkk/selective-edit';
 import {DialogActionLevel, FormDialogModal} from '../../../editor/ui/modal';
 import {
+  IncludeExcludeFilter,
+  IncludeExcludeFilterConfig,
+} from '../../../utility/filter';
+import {
   ListFieldComponent,
   ListFieldItem,
 } from '@blinkk/selective-edit/dist/selective/field/list';
@@ -62,6 +66,10 @@ export interface GenericPartialsFieldConfig extends FieldConfig {
    * Label for when the list is empty.
    */
   emptyLabel?: string;
+  /**
+   * Filtering for valid partials to show in the list.
+   */
+  filter?: IncludeExcludeFilterConfig;
   /**
    * Label for partial.
    */
@@ -224,12 +232,20 @@ export class GenericPartialsField
   ): FormDialogModal {
     const editor = this.globalConfig.editor as LiveEditor;
     if (!editor.ui.partModals.modals[MODAL_KEY_NEW]) {
+      // Determine the possible filtering.
+      const partialFilter = new IncludeExcludeFilter(this.config.filter ?? {});
+
       // Setup the editor.
       const options = [];
       for (const [partialKey, partial] of Object.entries(this.partials || {})) {
         // Without the editor config there are no fields to add for a partial.
         // Also don't show the hidden partials.
         if (!partial.editor || partial.editor.isHidden) {
+          continue;
+        }
+
+        // If there is a filter, only show the partials that match the filter.
+        if (!partialFilter.matches(partialKey)) {
           continue;
         }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.12.1](https://www.github.com/blinkk/editor.dev-ui/compare/v3.12.0...v3.12.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* Do not initialize items in partials list until partials load. ([87ea553](https://www.github.com/blinkk/editor.dev-ui/commit/87ea553c6c68804f8caaefba91f88159b8d02373))
+
 ## [3.12.0](https://www.github.com/blinkk/editor.dev-ui/compare/v3.11.1...v3.12.0) (2022-02-08)
 
 

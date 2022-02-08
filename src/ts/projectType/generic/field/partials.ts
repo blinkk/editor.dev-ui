@@ -231,7 +231,7 @@ export class GenericPartialsField
     selectiveEditor: SelectiveEditor
   ): FormDialogModal {
     const editor = this.globalConfig.editor as LiveEditor;
-    if (!editor.ui.partModals.modals[MODAL_KEY_NEW]) {
+    if (!editor.ui.partModals.modals[`${MODAL_KEY_NEW}_${this.uuid}`]) {
       // Determine the possible filtering.
       const partialFilter = new IncludeExcludeFilter(this.config.filter ?? {});
 
@@ -393,9 +393,11 @@ export class GenericPartialsField
         onClick: handleSubmit,
       });
       modal.addCancelAction();
-      editor.ui.partModals.modals[MODAL_KEY_NEW] = modal;
+      editor.ui.partModals.modals[`${MODAL_KEY_NEW}_${this.uuid}`] = modal;
     }
-    return editor.ui.partModals.modals[MODAL_KEY_NEW] as FormDialogModal;
+    return editor.ui.partModals.modals[
+      `${MODAL_KEY_NEW}_${this.uuid}`
+    ] as FormDialogModal;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
